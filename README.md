@@ -411,16 +411,16 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
    1. id = MongoDB ObjectID
 
 **Response**
-1. If failed to implement CRUD operations:
+- If failed to implement CRUD operations:
    ```
    {
      "success": false,
      "error": ""
    }
 
-2. If implement CRUD operations/Authenticate successfully
+- If implement CRUD operations/Authenticate successfully
 
-   - For Authenticate
+  - For Authenticate
      ``` 
      {
        "success": true,
@@ -434,12 +434,12 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
       "foundUser": [ {/* user data */} ]
     }
 
-   - For Book data
-     ``` 
-     {
-       "success": true,
-       "foundBook": [ {/* book data */} ]
-     }
+  - For Book data
+    ``` 
+    {
+      "success": true,
+      "foundBook": [ {/* book data */} ]
+    }
 
   - For Definition Data
     ```
