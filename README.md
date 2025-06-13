@@ -39,10 +39,14 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
    ```bash
    npm install
 
-3. **Set up environment variable:**
+3. **Import data into MongoDB**
+   - Open MongoDB Compass and import the JSON file located in the MongoDBSchema folder
+   - This JSON file contains the complete data schema required for the application
+
+5. **Set up environment variable:**
    Create a .env file in client directories based on the configuration part
 
-4. **Run the application:**
+6. **Run the application:**
    ```bash
    # For the server side
    nodemon backend/index.ts  
@@ -405,6 +409,64 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
    
    Remarks:
    1. id = MongoDB ObjectID
+
+**Response**
+1. If failed to implement CRUD operations:
+   ```
+   {
+     "success": false,
+     "error": ""
+   }
+
+2. If implement CRUD operations/Authenticate successfully
+   - For Authenticate
+     ``` 
+     {
+       "success": true,
+       "authtoken": ""
+     }
+
+  - For User Data
+    ```
+    {
+      "success": true,
+      "foundUser": [ {/* user data */} ]
+    }
+
+   - For Book data
+     ``` 
+     {
+       "success": true,
+       "foundBook": [ {/* book data */} ]
+     }
+
+  - For Definition Data
+    ```
+    {
+      "success": true,
+      "foundDefinition": [ {/* definition data */} ]
+    }
+
+  - For Contact Data
+    ```
+    {
+      "success": true,
+      "foundContact": [ {/* contact data */}]
+    }
+
+  - For Loan Book Data
+    ```
+    {
+      "success": true,
+      "foundLoanBook": [ {/* loan book data */}]
+    }
+
+  - For Favourite Book Data
+    ```
+    {
+      "success": true,
+      "foundFavouriteBook": [ {/* user favourite book data */}]
+    }
 ## Technology Stack
 - **Front-end:** React, Material-UI for styling
 - **Back-end:** Node.js, Express.js
