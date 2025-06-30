@@ -31,6 +31,7 @@ export const FetchUserData = async(tableName?: string, authToken?:string,  usern
             }
         )
 
+        console.log(localhost);
         const result: GetResultInterface = await response.json();
         return result;
     }

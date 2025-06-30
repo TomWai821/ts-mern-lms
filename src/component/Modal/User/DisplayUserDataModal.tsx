@@ -5,7 +5,7 @@ import ModalTemplate from "../../Templates/ModalTemplate";
 
 import { DisplayDataModalInterface } from "../../../Model/ModelForModal";
 
-// Another COmponent
+// Another Component
 import AllUserDataBody from "./DisplayUserDataBody/AllUserDataBody";
 import BannedUserDataBody from "./DisplayUserDataBody/BannedUserDataBody";
 
