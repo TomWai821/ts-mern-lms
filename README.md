@@ -74,26 +74,26 @@ Sequence Diagram<br>
 **Sequence Diagram (Authentication)**<br>
 <img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/>
 
-<img src="Image/Diagrams/LoginSequenceDiagram.png" style="1000"/>
+<img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:75%;"/>
 
 **Sequence Diagram (Project Features)**<br>
-<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="400"/>
-<img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="400"/>
-<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="400"/>
+<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:75%;"/>
+<img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:75%;"/>
 
 **Sequence Diagram (CRUD operations)**<br>
-<img src="Image/Diagrams/GetDataSequenceDiagram.png" style="400"/>
-<img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="400"/>
-<img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="400"/>
-<img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="400"/>
+<img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:75%;"/>
 
 **Backend**
 Architecture Diagram<br>
-<img src="Image/Diagrams/Systemarchitecture.png" style="400"/>
+<img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/>
 
 **Database**
 Entity-Relational Diagram(ERD)<br>
-<img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" width="400"/>
+<img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" width="width:75%;"/>
 
 ## UI Layout
    
