@@ -71,37 +71,37 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 **Frontend**<br>
 
 **Sequence Diagram (Authentication)**<br>
-<img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of account registeration,
-<img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of account login,
 
 **Sequence Diagram (Project Features)**<br>
-<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:75%;"/>
+<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of get data from Google Book,
-<img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of get Generate QR Code,
-<img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:75%;"/>
+<img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of book recommendation,
 
 **Sequence Diagram (CRUD operations)**<br>
-<img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of GET data,
-<img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of POST method to create data,
-<img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of PUT method to update data,
-<img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:75%;"/>
+<img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram explain the flow of DELETE data,
 
 **Backend**
 Architecture Diagram<br>
-<img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/>
+<img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
 
 
 **Database**
 Entity-Relational Diagram(ERD)<br>
-<img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/>
+<img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 This ERD explain the database schema for the Library Management System
 
 Collections related to book data:
@@ -114,7 +114,7 @@ Collections related to book data:
 Collections related to user data:
 - User
 |Key Attribute|Type|Description|
---------------------------------
+|---|---|---|
 |Username|String|The unique display name chosen by the user|
 |Email|String|Primary identifier for authentication|
 |Password|String|Encrypted storage for login credentials|
