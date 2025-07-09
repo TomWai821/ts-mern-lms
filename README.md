@@ -72,27 +72,28 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 Sequence Diagram<br>
 
 **Sequence Diagram (Authentication)**<br>
-![Sequence Diagram for Register](Image/Diagrams/RegisterSequenceDiagram.png)
-![Sequence Diagram for Login](Image/Diagrams/LoginSequenceDiagram.png)
+<img src="Image/Diagrams/RegisterSequenceDiagram.png />
+
+<img src="Image/Diagrams/LoginSequenceDiagram.png />
 
 **Sequence Diagram (Project Features)**<br>
-![Sequence Diagram for Book Recommendation](Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png)
-![Sequence Diagram for QR Code](Image/Diagrams/QRCodeModalSequenceDiagram.png)
-![Sequence Diagram for Get Data from Google Book](Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png)
+<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" width="400"/>
+<img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" width="400"/>
+<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" width="400"/>
 
 **Sequence Diagram (CRUD operations)**<br>
-![Sequence Diagram for Get Data](Image/Diagrams/GetDataSequenceDiagram.png)
-![Sequence Diagram for Create Data](Image/Diagrams/CreateDataSequenceDiagram.png)
-![Sequence Diagram for Update Data](Image/Diagrams/UpdateDataSequenceDiagram.png)
-![Sequence Diagram for Delete Data](Image/Diagrams/DeleteDataSequenceDiagram.png)
+<img src="Image/Diagrams/GetDataSequenceDiagram.png" width="400"/>
+<img src="Image/Diagrams/CreateDataSequenceDiagram.png" width="400"/>
+<img src="Image/Diagrams/UpdateDataSequenceDiagram.png" width="400"/>
+<img src="Image/Diagrams/DeleteDataSequenceDiagram.png" width="400"/>
 
 **Backend**
 Architecture Diagram<br>
-![Architecture Diagram](Image/Diagrams/Systemarchitecture.png)
+<img src="Image/Diagrams/Systemarchitecture.png" width="400"/>
 
 **Database**
 Entity-Relational Diagram(ERD)<br>
-![Entity Relational Diagram](Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png)
+<img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" width="400"/>
 
 ## UI Layout
    
