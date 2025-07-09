@@ -245,13 +245,13 @@ Login Page<br>
 <img src="Image/UILayout/ProfileCard.png" style="width:50%;"/><br>
 Profile Page<br>
 
-<img src="Image/UILayout/DisplayQRCodeModal.png" style="width:50%;"/><br>
+<img src="Image/UILayout/DisplayQRCodeModal.png" style="width:40%;"/><br>
 QR Code Modal<br>
 
-<img src="Image/UILayout/EditProfileDataModal-username.png" style="width:50%;"/><br>
+<img src="Image/UILayout/EditProfileDataModal-username.png" style="width:40%;"/><br>
 Edit Profile Data Modal (Username)<br>
 
-<img src="Image/UILayout/EditProfileDataModal-password.png" style="width:50%;"/><br>
+<img src="Image/UILayout/EditProfileDataModal-password.png" style="width:40%;"/><br>
 Edit Profile Data Modal (Password)<br>
 
 ### Content Page
