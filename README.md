@@ -67,8 +67,8 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
    # For the user who download concurrency
    npm run both
 
-## Architecture
-# Frontend
+# Architecture
+## Frontend
 **Sequence Diagram (Authentication)**
 <img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services.
@@ -99,7 +99,7 @@ This sequence diagram illustrates the confirmation flow via a frontend PUT reque
 <img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:75%; height: 500px;"/><br>
 This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations.
 
-**Backend**
+##Backend
 **Backend Process Flow Diagram**
 <img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
@@ -113,7 +113,7 @@ Backend side using modular API design, therefore using backend process flow diag
 | Database Interaction | Executes query using processed data and returns results             |
 | API Response         | Structures and sends the response back to the client                |
 
-**Database**
+##Database
 **Entity-Relational Diagram(ERD)**
 <img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 This ERD explain the database schema for the Library Management System
@@ -201,7 +201,7 @@ BookLoaned
 Remarks:
 1. Every collection includes an _id field of type ObjectId, which serves as the unique identifier
 
-## UI Layout
+# UI Layout
    
 ## API Endpoints
 **For Authenication (click to expanded)**
