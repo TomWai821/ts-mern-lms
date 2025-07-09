@@ -40,8 +40,8 @@ const CreateBookModal: FC<CreateBookModalInterface> = ({...bookData}) =>
     );
 
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [errors, setErrors] = useState({bookname: "", author: "", genre: "", publisher: "", description: ""});
-    const [helperTexts, setHelperText] = useState({bookname: "", author: "", genre: "", publisher: "", description: ""});
+    const [errors, setErrors] = useState({bookname: "", author: "", genre: "", publisher: "", publishDate: "", description: ""});
+    const [helperTexts, setHelperText] = useState({bookname: "", author: "", genre: "", publisher: "", publishDate: "", description: ""});
     
     // For book filter
     const CreateBookInputField = useMemo(() => 
@@ -94,7 +94,7 @@ const CreateBookModal: FC<CreateBookModalInterface> = ({...bookData}) =>
     
         Object.keys(book).forEach((field) => 
         {
-            if(["description", "publishDate"].includes(field))
+            if(["publishDate", "description"].includes(field))
             {
                 return;
             }
