@@ -70,34 +70,43 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 ## Architecture
 ### Frontend
 #### Sequence Diagram (Authentication)
-<img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/><br>
-This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services.
+1. Registration
+  <img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services.
 
-<img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:75%;"/><br>
-This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration.
+2. Login
+  <img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration.
 
 #### Sequence Diagram (Project Features)
-<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:75%;"/><br>
-This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface.
+1. External Data from Google Book API
+  <img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface.
 
-<img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:75%;"/><br>
-This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user.
+2. QR Code Generation
+  <img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user.
 
-<img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:75%;"/><br>
-This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging.
+3. Book Recommendation
+  <img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging.
 
 #### Sequence Diagram (CRUD operations)
-<img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:75%;"/><br>
-This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client.
+1. Get data from backend side
+  <img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client.
 
-<img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:75%;"/><br>
-This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process.
+2. Data Creation
+  <img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process.
 
-<img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:75%;"/><br>
-This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback.
+3. Data Modification
+  <img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:75%;"/><br>
+  This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback.
 
-<img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:75%;"/><br>
-This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations.
+4. Data Deletion
+  <img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:75%;"/><br>
+  This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations.
 
 ### Backend
 #### Backend Process Flow Diagram
@@ -119,84 +128,84 @@ Backend side using modular API design, therefore using backend process flow diag
 This ERD explain the database schema for the Library Management System
 
 #### Collections related to book data
-Book
-| Key Attribute |	Type     | Description                                                              |
-| ------------- | -------- | ------------------------------------------------------------------------ |
-| image         |	Object   | Stores book cover image details, including URL and filename              |
-| bookname	    | String   | The title of the book for identification                                 |
-| languageID	  | ObjectID | References for the Language collection, indicating the book's language   |
-| genreID	      | ObjectID | References the Genre collection, categorising the book                   |
-| authorID	    | ObjectID | Links to the Author collection, storing authorship details               |
-| publisherID   |	ObjectID | Associates with the publisher collection for book publishing details     |
-| status	      | String   | Defines the book’s availability, such as OnShelf and Loaned              |
-| description	  | String   | Provides a brief overview or synopsis of the book                        |
-| publishDate	  | Date     | The official publication date of the book, indexed for search efficiency |
+1. Book
+  | Key Attribute |	Type     | Description                                                              |
+  | ------------- | -------- | ------------------------------------------------------------------------ |
+  | image         |	Object   | Stores book cover image details, including URL and filename              |
+  | bookname	    | String   | The title of the book for identification                                 |
+  | languageID	  | ObjectID | References for the Language collection, indicating the book's language   |
+  | genreID	      | ObjectID | References the Genre collection, categorising the book                   |
+  | authorID	    | ObjectID | Links to the Author collection, storing authorship details               |
+  | publisherID   |	ObjectID | Associates with the publisher collection for book publishing details     |
+  | status	      | String   | Defines the book’s availability, such as OnShelf and Loaned              |
+  | description	  | String   | Provides a brief overview or synopsis of the book                        |
+  | publishDate	  | Date     | The official publication date of the book, indexed for search efficiency |
 
-Genre
-| Key Attribute | Type   | Description                                                                   |
-| ------------- | ------ | -----------------------------------------------------------------------------|
-| genre         | String | The full name is used to represent the genre, ensuring correct classification |
-| shortName     |	String | An abbreviated version of the genre name is used for display purposes         |
+2. Genre
+  | Key Attribute | Type   | Description                                                                   |
+  | ------------- | ------ | ------------------------------------------------------------------------------|
+  | genre         | String | The full name is used to represent the genre, ensuring correct classification |
+  | shortName     |	String | An abbreviated version of the genre name is used for display purposes         |
 
-Language
-| Key Attribute | Type   | Description                                                                   |
-| ------------- | ------ | ----------------------------------------------------------------------------- |
-| language      | String | The full name used to represent the language, ensures correct classification  |
-| shortName     |	String | An abbreviated version of the language name is used for display purposes      |
+3. Language
+  | Key Attribute | Type   | Description                                                                   |
+  | ------------- | ------ | ----------------------------------------------------------------------------- |
+  | language      | String | The full name used to represent the language, ensures correct classification  |
+  | shortName     |	String | An abbreviated version of the language name is used for display purposes      |
 
-Author
-| Key Attribute |	Type   | Description                                                                                 |
-| ------------- | ------ | ------------------------------------------------------------------------------------------- |
-| publisher	    | String | The full name of the publisher, stored for identification purposes                          |
-| phoneNumber	  | String | The contact number provided for communication with the publisher                            |
-| email         | String | The email address used for professional or system-related correspondence with the publisher |
+4. Author
+  | Key Attribute |	Type   | Description                                                                                 |
+  | ------------- | ------ | ------------------------------------------------------------------------------------------- |
+  | publisher	    | String | The full name of the publisher, stored for identification purposes                          |
+  | phoneNumber	  | String | The contact number provided for communication with the publisher                            |
+  | email         | String | The email address used for professional or system-related correspondence with the publisher |
 
-Publisher
-| Key Attribute |	Type   | Description                                                                                 |
-| ------------- | ------ | ------------------------------------------------------------------------------------------- |
-| author	      | String | The full name of the author, stored for identification purposes                             |
-| phoneNumber	  | String | The contact number provided for communication with the publisher                            |
-| email         | String | The email address used for professional or system-related correspondence with the publisher |
+5. Publisher
+  | Key Attribute |	Type   | Description                                                                                 |
+  | ------------- | ------ | ------------------------------------------------------------------------------------------- |
+  | author	      | String | The full name of the author, stored for identification purposes                             |
+  | phoneNumber	  | String | The contact number provided for communication with the publisher                            |
+  | email         | String | The email address used for professional or system-related correspondence with the publisher |
 
 ### Collections related to user data
-User
-| Key Attribute | Type   | Description                                   |
-| ------------- | ------ | --------------------------------------------- |
-| Username      | String | The unique display name chosen by the user    |
-| Email         | String | Primary identifier for authentication         |
-| Password      | String | Encrypted storage for login credentials       |
-| Gender        | String | Captures gender identity for the user profile |
-| Role          | String | Defines permissions for admin and user        |
-| birthDay      | Date   | Stores the user’s date of birth               |
-| avatarurl     | String | The URL for the avatar image                  |
+1. User
+  | Key Attribute | Type   | Description                                   |
+  | ------------- | ------ | --------------------------------------------- |
+  | Username      | String | The unique display name chosen by the user    |
+  | Email         | String | Primary identifier for authentication         |
+  | Password      | String | Encrypted storage for login credentials       |
+  | Gender        | String | Captures gender identity for the user profile |
+  | Role          | String | Defines permissions for admin and user        |
+  | birthDay      | Date   | Stores the user’s date of birth               |
+  | avatarurl     | String | The URL for the avatar image                  |
 
-SuspendList
-| Key Attribute |	Type	    | Description                                                                                                |
-| ------------- | --------- |----------------------------------------------------------------------------------------------------------- |
-| userID        |	ObjectID  |	Links to the user collection, ensuring proper tracking of suspended individuals                            |
-| description	  | String	  | Stores details about the reason for the user's suspension, ensuring proper enforcement of library policies |
-| startDate	    | Date	    | The date when the user suspension begins                                                                   |
-| dueDate	      | Date	    | The scheduled date when the suspension will end, allowing access restoration                               |
+2. SuspendList
+  | Key Attribute |	Type	    | Description                                                                                                |
+  | ------------- | --------- |----------------------------------------------------------------------------------------------------------- |
+  | userID        |	ObjectID  |	Links to the user collection, ensuring proper tracking of suspended individuals                            |
+  | description	  | String	  | Stores details about the reason for the user's suspension, ensuring proper enforcement of library policies |
+  | startDate	    | Date	    | The date when the user suspension begins                                                                   |
+  | dueDate	      | Date	    | The scheduled date when the suspension will end, allowing access restoration                               |
 
 
 #### Collections related to interaction between book and user
-BookFavourite
-| Key Attribute |	Type     | Description                                                                                          |
-| ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
-| userID        |	ObjectID | References to the user collection to identify the user who has loaned books                          |
-| bookID        |	ObjectID | References to the user collection to identify the loaned book                                        |
-| loanDate      |	Date     | The date when the user loaned the book                                                               |
-| dueDate       |	Date     | The date on which the book should return                                                             |
-| returnDate    |	Date	   | The actual date when the book returns                                                                |
-| Status	      | String   | Defines the loan status, such as Loaned, Returned                                                    |
-| finesAmount   |	Number	 | The monetary fine for overdue book returns                                                           |
-| finesPaid	    | String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
+1. BookFavourite
+  | Key Attribute |	Type     | Description                                                                                          |
+  | ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+  | userID        |	ObjectID | References to the user collection to identify the user who has loaned books                          |
+  | bookID        |	ObjectID | References to the user collection to identify the loaned book                                        |
+  | loanDate      |	Date     | The date when the user loaned the book                                                               |
+  | dueDate       |	Date     | The date on which the book should return                                                             |
+  | returnDate    |	Date	   | The actual date when the book returns                                                                |
+  | Status	      | String   | Defines the loan status, such as Loaned, Returned                                                    |
+  | finesAmount   |	Number	 | The monetary fine for overdue book returns                                                           |
+  | finesPaid	    | String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
 
-BookLoaned
-| Key Attribute | Type     | Description                                                                  |
-| ------------- | -------- | ---------------------------------------------------------------------------- |
-| userID        | ObjectID | References the user collection to identify the user who favourited the books |
-| bookID        | ObjectID | References the book collection to identify the favourite book                |
+2. BookLoaned
+  | Key Attribute | Type     | Description                                                                  |
+  | ------------- | -------- | ---------------------------------------------------------------------------- |
+  | userID        | ObjectID | References the user collection to identify the user who favourited the books |
+  | bookID        | ObjectID | References the book collection to identify the favourite book                |
 
 Remarks:
 1. Every collection includes an _id field of type ObjectId, which serves as the unique identifier
@@ -323,7 +332,7 @@ Remarks:
    ```
 
    
-###For Suspend List (Require auth token in header)
+### For Suspend List (Require auth token in header)
    1. Modify Suspend List data
       ```
       Endpoint: `PUT /SuspendListData/id=:id`
@@ -341,7 +350,7 @@ Remarks:
       ```
 
 
-###For Book Data (Require auth token in header)
+### For Book Data (Require auth token in header)
    1. Get book data
       ```
       - Endpoint:`GET /api/book/BookData` (For all books)
@@ -411,7 +420,7 @@ Remarks:
       1. id = MongoDB ObjectID in book collection
       ```
 
-###For Loan Books Data (Require auth token in header)
+### For Loan Books Data (Require auth token in header)
 1. Get Loan book record
    ```
    - Endpoint: `GET /api/book/LoanBook` (For all loan book record)
@@ -455,7 +464,7 @@ Remarks:
    ```
 
    
-###For Favourite Book (Require auth token in header)
+### For Favourite Book (Require auth token in header)
 1. Get favourite book record
    ```
    Endpoint:`GET /api/book/FavouriteBook`
