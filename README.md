@@ -224,51 +224,51 @@ Navigation For Guest User<br>
 <img src="Image/UILayout/Navigation-AuthenticateUser.png" style="width:75%;"/><br>
 Navigation For Authenticated User<br>
 
-<img src="Image/UILayout/Navigation-Admin.png" style="width:75%;"/><br>
+<img src="Image/UILayout/Navigation-Admin.png" style="width:60%;"/><br>
 Navigation For Admin(Librarian)<br>
 
 ### Main page (Book recommendation)
-<img src="Image/UILayout/MainPage-Guest.png" style="width:75%;"/><br>
+<img src="Image/UILayout/MainPage-Guest.png" style="width:60%;"/><br>
 Navigation For User / Authenticated User (who does not have a loan book record)<br>
 
-<img src="Image/UILayout/MainPage-AuthenticateUser.png" style="width:75%;"/><br>
+<img src="Image/UILayout/MainPage-AuthenticateUser.png" style="width:60%;"/><br>
 Navigation For Authenticated User (Include Librarian)<br>
 
 ### Authenticate Pages
-<img src="Image/UILayout/RegisterCard.png" style="width:75%;"/><br>
+<img src="Image/UILayout/RegisterCard.png" style="width:50%;"/><br>
 Registration Page<br>
 
-<img src="Image/UILayout/LoginCard.png" style="width:75%;"/><br>
+<img src="Image/UILayout/LoginCard.png" style="width:50%;"/><br>
 Login Page<br>
 
 ### Profile Page
-<img src="Image/UILayout/ProfileCard.png" style="width:75%;"/><br>
+<img src="Image/UILayout/ProfileCard.png" style="width:50%;"/><br>
 Profile Page<br>
 
-<img src="Image/UILayout/DisplayQRCodeModal.png" style="width:75%;"/><br>
+<img src="Image/UILayout/DisplayQRCodeModal.png" style="width:50%;"/><br>
 QR Code Modal<br>
 
-<img src="Image/UILayout/EditProfileDataModal-username.png" style="width:75%;"/><br>
+<img src="Image/UILayout/EditProfileDataModal-username.png" style="width:50%;"/><br>
 Edit Profile Data Modal (Username)<br>
 
-<img src="Image/UILayout/EditProfileDataModal-password.png" style="width:75%;"/><br>
+<img src="Image/UILayout/EditProfileDataModal-password.png" style="width:50%;"/><br>
 Edit Profile Data Modal (Password)<br>
 
 ### Content Page
-<img src="Image/UILayout/TopOfTableContentWithFilter-Guest.png" style="width:75%;"/><br>
+<img src="Image/UILayout/TopOfTableContentWithFilter-User.png" style="width:60%;"/><br>
 Top of Table Content With Filter (For User)<br>
 
-<img src="Image/UILayout/TopOfTableContentWithFilter-Admin.png" style="width:75%;"/><br>
+<img src="Image/UILayout/TopOfTableContentWithFilter-Admin.png" style="width:60%;"/><br>
 Top of Table Content With Filter (For Librarian)<br>
 
 ### Modal for view data
-<img src="Image/UILayout/BookInfoModal-Guest.png" style="width:75%;"/><br>
+<img src="Image/UILayout/BookInfoModal-Guest.png" style="width:50%;"/><br>
 Book data modal (For user)<br>
 
-<img src="Image/UILayout/BookInfo-AuthenticateUser.png" style="width:75%;"/><br>
+<img src="Image/UILayout/BookInfo-AuthenticateUser.png" style="width:50%;"/><br>
 Book data modal (For Authenticated User)<br>
 
-<img src="Image/UILayout/BookInfo_GoogleBook-AuthenicateUser.png" style="width:75%;"/><br>
+<img src="Image/UILayout/BookInfo_GoogleBook-AuthenicateUser.png" style="width:50%;"/><br>
 Book data modal - Google Book (For Authenticated User)<br>
 
 ### Modal for CRUD operations
