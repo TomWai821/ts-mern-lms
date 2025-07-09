@@ -95,16 +95,25 @@ This sequence diagram explain the flow of PUT method to update data,
 This sequence diagram explain the flow of DELETE data,
 
 **Backend**
-Architecture Diagram
+**Backend Process Flow Diagram**
 <img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
-
+Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
+| Component            | Usage                                                               |
+| -------------------- | ------------------------------------------------------------------  |
+| Request              | User initiates an API call from the frontend                        |
+| Router               | Directs the request to appropriate route modules (e.g. Book, User)  |
+| Route                | Defines endpoint logic and links to relevant controller functions   |
+| Middleware           | Validates headers, URL parameters, and request body for consistency |
+| Service              | Processes business logic and prepares database queries              |
+| Database Interaction | Executes query using processed data and returns results             |
+| API Response         | Structures and sends the response back to the client                |
 
 **Database**
-Entity-Relational Diagram(ERD)
+**Entity-Relational Diagram(ERD)**
 <img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 This ERD explain the database schema for the Library Management System
 
-Collections related to book data:
+Collections related to book data:<br>
 **Book**
 | Key Attribute |	Type     | Description                                                              |
 | ------------- | -------- | ------------------------------------------------------------------------ |
@@ -144,7 +153,7 @@ Collections related to book data:
 | phoneNumber	  | String | The contact number provided for communication with the publisher                            |
 | email         | String | The email address used for professional or system-related correspondence with the publisher |
 
-Collections related to user data:
+Collections related to user data:<br>
 **User**
 | Key Attribute | Type   | Description                                   |
 | ------------- | ------ | --------------------------------------------- |
@@ -165,7 +174,7 @@ Collections related to user data:
 | dueDate	      | Date	    | The scheduled date when the suspension will end, allowing access restoration                               |
 
 
-Collections related to interaction between book and user:
+Collections related to interaction between book and user:<br>
 **BookFavourite**
 | Key Attribute |	Type     | Description                                                                                          |
 | ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
