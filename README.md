@@ -68,14 +68,31 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
    npm run both
 
 ## Architecture
-**Frontend**
-Sequence Diagram
+**Frontend**<br>
+Sequence Diagram<br>
+
+**Sequence Diagram (Authentication)**<br>
+![Sequence Diagram for Register](Image/RegisterSequenceDiagram.png)
+![Sequence Diagram for Login](Image/LoginSequenceDiagram.png)
+
+**Sequence Diagram (Project Features)**<br>
+![Sequence Diagram for Book Recommendation](Image/SequenceDiagramForGetDataFromGoogleBook.png)
+![Sequence Diagram for QR Code](Image/QRCodeModalSequenceDiagram.png)
+![Sequence Diagram for Get Data from Google Book](Image/SequenceDiagramForGetDataFromGoogleBook.png)
+
+**Sequence Diagram (CRUD operations)**<br>
+![Sequence Diagram for Get Data](Image/GetDataSequenceDiagram.png)
+![Sequence Diagram for Create Data](Image/CreateDataSequenceDiagram.png)
+![Sequence Diagram for Update Data](Image/UpdateDataSequenceDiagram.png)
+![Sequence Diagram for Delete Data](Image/DeleteDataSequenceDiagram.png)
 
 **Backend**
-Architecture Diagram
+Architecture Diagram<br>
+![Architecture Diagram](Image/Systemarchitecture.png)
 
 **Database**
-Entity-Relational Diagram(ERD)
+Entity-Relational Diagram(ERD)<br>
+![Entity Relational Diagram](Image/EntityRelationDiagram-LibraryManagementSystem.png)
 
 ## UI Layout
    
