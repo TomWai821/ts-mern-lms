@@ -67,16 +67,16 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
    # For the user who download concurrency
    npm run both
 
-# Architecture
-## Frontend
-**Sequence Diagram (Authentication)**
+## Architecture
+### Frontend
+#### Sequence Diagram (Authentication)
 <img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services.
 
 <img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:75%;"/><br>
 This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration.
 
-**Sequence Diagram (Project Features)**
+#### Sequence Diagram (Project Features)
 <img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:75%;"/><br>
 This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface.
 
@@ -86,7 +86,7 @@ This sequence diagram illustrates the QR Code generation flow initiated by a use
 <img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:75%;"/><br>
 This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging.
 
-**Sequence Diagram (CRUD operations)**
+#### Sequence Diagram (CRUD operations
 <img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:75%; height: 500px;"/><br>
 This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client.
 
@@ -99,8 +99,8 @@ This sequence diagram illustrates the confirmation flow via a frontend PUT reque
 <img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:75%; height: 500px;"/><br>
 This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations.
 
-##Backend
-**Backend Process Flow Diagram**
+### Backend
+#### Backend Process Flow Diagram
 <img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
 | Component            | Usage                                                               |
@@ -113,12 +113,12 @@ Backend side using modular API design, therefore using backend process flow diag
 | Database Interaction | Executes query using processed data and returns results             |
 | API Response         | Structures and sends the response back to the client                |
 
-##Database
-**Entity-Relational Diagram(ERD)**
+### Database
+#### Entity-Relational Diagram(ERD)
 <img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 This ERD explain the database schema for the Library Management System
 
-**Collections related to book data**<br>
+#### Collections related to book data
 Book
 | Key Attribute |	Type     | Description                                                              |
 | ------------- | -------- | ------------------------------------------------------------------------ |
@@ -158,7 +158,7 @@ Publisher
 | phoneNumber	  | String | The contact number provided for communication with the publisher                            |
 | email         | String | The email address used for professional or system-related correspondence with the publisher |
 
-**Collections related to user data**<br>
+### Collections related to user data
 User
 | Key Attribute | Type   | Description                                   |
 | ------------- | ------ | --------------------------------------------- |
@@ -179,7 +179,7 @@ SuspendList
 | dueDate	      | Date	    | The scheduled date when the suspension will end, allowing access restoration                               |
 
 
-**Collections related to interaction between book and user**<br>
+#### Collections related to interaction between book and user
 BookFavourite
 | Key Attribute |	Type     | Description                                                                                          |
 | ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
