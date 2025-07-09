@@ -72,27 +72,27 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 Sequence Diagram<br>
 
 **Sequence Diagram (Authentication)**<br>
-![Sequence Diagram for Register](Image/RegisterSequenceDiagram.png)
-![Sequence Diagram for Login](Image/LoginSequenceDiagram.png)
+![Sequence Diagram for Register](Image/Diagrams/RegisterSequenceDiagram.png)
+![Sequence Diagram for Login](Image/Diagrams/LoginSequenceDiagram.png)
 
 **Sequence Diagram (Project Features)**<br>
-![Sequence Diagram for Book Recommendation](Image/SequenceDiagramForGetDataFromGoogleBook.png)
-![Sequence Diagram for QR Code](Image/QRCodeModalSequenceDiagram.png)
-![Sequence Diagram for Get Data from Google Book](Image/SequenceDiagramForGetDataFromGoogleBook.png)
+![Sequence Diagram for Book Recommendation](Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png)
+![Sequence Diagram for QR Code](Image/Diagrams/QRCodeModalSequenceDiagram.png)
+![Sequence Diagram for Get Data from Google Book](Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png)
 
 **Sequence Diagram (CRUD operations)**<br>
-![Sequence Diagram for Get Data](Image/GetDataSequenceDiagram.png)
-![Sequence Diagram for Create Data](Image/CreateDataSequenceDiagram.png)
-![Sequence Diagram for Update Data](Image/UpdateDataSequenceDiagram.png)
-![Sequence Diagram for Delete Data](Image/DeleteDataSequenceDiagram.png)
+![Sequence Diagram for Get Data](Image/Diagrams/GetDataSequenceDiagram.png)
+![Sequence Diagram for Create Data](Image/Diagrams/CreateDataSequenceDiagram.png)
+![Sequence Diagram for Update Data](Image/Diagrams/UpdateDataSequenceDiagram.png)
+![Sequence Diagram for Delete Data](Image/Diagrams/DeleteDataSequenceDiagram.png)
 
 **Backend**
 Architecture Diagram<br>
-![Architecture Diagram](Image/Systemarchitecture.png)
+![Architecture Diagram](Image/Diagrams/Systemarchitecture.png)
 
 **Database**
 Entity-Relational Diagram(ERD)<br>
-![Entity Relational Diagram](Image/EntityRelationDiagram-LibraryManagementSystem.png)
+![Entity Relational Diagram](Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png)
 
 ## UI Layout
    
