@@ -228,10 +228,10 @@ Image 1.2 - Navigation For Authenticated User<br>
 Image 1.3 - Navigation For Admin(Librarian)<br>
 
 ### 2. Main page (Book recommendation)
-<img src="Image/UILayout/MainPage-Guest.png" style="width:60%;"/><br>
+<img src="Image/UILayout/MainPage-Guest.png" style="width:75%;"/><br>
 Image 2.1 - Navigation For User / Authenticated User (who does not have a loan book record)<br>
 
-<img src="Image/UILayout/MainPage-AuthenticateUser.png" style="width:60%;"/><br>
+<img src="Image/UILayout/MainPage-AuthenticateUser.png" style="width:75%;"/><br>
 Image 2.2 - Navigation For Authenticated User (Include Librarian)<br>
 
 ### 3. Authenticate Pages
