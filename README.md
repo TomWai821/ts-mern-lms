@@ -261,17 +261,39 @@ Image 5.1 - Top of Table Content With Filter (For User)<br>
 <img src="Image/UILayout/TopOfTableContentWithFilter-Admin.png" style="width:75%;"/><br>
 Image 5.2 - Top of Table Content With Filter (For Librarian)<br>
 
-### Modal for view data
+### 6. Modal for view data
 <img src="Image/UILayout/BookInfoModal-Guest.png" style="width:40%;"/><br>
-Image 5.3 - Book data modal (For user)<br>
+Image 6.1 - Book data modal (For user)<br>
 
 <img src="Image/UILayout/BookInfo-AuthenticateUser.png" style="width:40%;"/><br>
-Image 5.4 - Book data modal (For Authenticated User)<br>
+Image 6.2 - Book data modal (For Authenticated User)<br>
 
 <img src="Image/UILayout/BookInfo_GoogleBook-AuthenicateUser.png" style="width:40%;"/><br>
-Image 5.5 - Book data modal - Google Book (For Authenticated User)<br>
+Image 6.3 - Book data modal (Google Book - For Authenticated User)<br>
 
-### 6. Modal for CRUD operations
+### 7. Modal for CRUD operations
+<img src="Image/UILayout/CreateBookModal.png" style="width:40%;"/><br>
+Image 7.1 - Book record Creation Modal <br>
+
+<img src="Image/UILayout/CreateBookConfrimationModal.png" style="width:40%;"/><br>
+Image 7.2 - Book record Create Confirmation Modal <br>
+
+<img src="Image/UILayout/EditBookRecordModal.png" style="width:40%;"/><br>
+Image 7.3 - Book data Modification Modal <br>
+
+<img src="Image/UILayout/EditBookConfirmationModal.png" style="width:40%;"/><br>
+Image 7.4 - Book data Modify Confirmation Modal <br>
+
+<img src="Image/UILayout/DeleteBookConfrimationModal.png" style="width:40%;"/><br>
+Image 7.5 - Book record Delete Confirmation Modal <br>
+
+### 8. Way to display data
+
+<img src="Image/UILayout/TableCell_BookManagementPage.png" style="width:40%;"/><br>
+Image 8.1 - Table Cell with buttons
+
+<img src="Image/UILayout/DefinitionPage.png" style="width:40%;"/><br>
+Image 8.2 - Chip set
 
 
 ## API Endpoints
