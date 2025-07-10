@@ -73,11 +73,11 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 
 #### Sequence Diagram (Authentication)
 1. **Registration**<br>
-  <img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:75%;"/><br>
+  <img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
   This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services.
 
 2. **Login**<br>
-  <img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:75%;"/><br>
+  <img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
   This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration.
 
 
