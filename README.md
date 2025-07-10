@@ -2,10 +2,14 @@
 A full-stack application that streamlines library operations built as a Information Technology Project (ITP)
 
 ## Video for presentation and demonstration
-- **[Presentation Video](https://youtu.be/QuyYn-r9Nr4):** An overview of the project concept, goals, and the inspiration behind it 
+### SpeedRun version
+- **[Features Speedrun Video]():** A quick showcase of the system's core features for fast-paced viewing
+
+### Detailed version
+- **[Presentation Video - 12 minutes](https://youtu.be/QuyYn-r9Nr4):** An overview of the project concept, goals, and the inspiration behind it 
 - **Demonstration Video:** A walkthrough of the project's features and live functionalities for each role
-  - [For Non-Librarian (Guest User and Authenticate User)](https://youtu.be/CtT22CMBoSo)
-  - [For Librarian](https://youtu.be/ae6o5S0cZn0)
+  - [For Non-Librarian (Guest User and Authenticate User) - 15 minutes](https://youtu.be/CtT22CMBoSo)
+  - [For Librarian - 18 minutes](https://youtu.be/ae6o5S0cZn0)
 
 ## Table of Contents
 - [Introduction](#introduction)
