@@ -40,7 +40,7 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 ## Automated Logic Overview
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
-<img src="Image/Functions/DetectRecordDaily.png" style="width:90%;"/><br>
+<img src="Image/Functions/DetectRecordDaily.png" style="width:75%;"/><br>
 Performs scheduled scans for:
     - Expired Loan Records
     - Suspension Records
@@ -65,7 +65,7 @@ This source code (located in backend/schema/book/bookloaned.ts, Line 198–232) 
         - finesPaidStatus set to "Not Paid"
     - Message Logged: “Loan Record [ID] fines amount and paid status modified successfully!”
 
-<img src="Image/Functions/SuspendRecordDetection" style="width:90%;"/><br>
+<img src="Image/Functions/SuspendRecordDetection.png" style="width:90%;"/><br>
 This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) automatically performs the process of unsuspending users whose suspension period has expired:
     - Compare Dates: Compares each dueDate with today’s date
     - User Status Update: "Suspended" → "Normal"
