@@ -3,14 +3,14 @@ A full-stack application that streamlines library operations built as a Informat
 
 ## Video for presentation and demonstration
 ### SpeedRun version
-**[Features Speedrun Video]():** A quick showcase of the system's core features for fast-paced viewing
+- **[Features Speedrun Video]():** A quick showcase of the system's core features for fast-paced viewing
 
 ### Detailed version
-**[Presentation Video](https://youtu.be/QuyYn-r9Nr4) (12 min):** An overview of the project concept, goals, and the inspiration behind it 
+- **[Presentation Video](https://youtu.be/QuyYn-r9Nr4) (12 min):** An overview of the project concept, goals, and the inspiration behind it 
     
-**Demonstration Video (Total: 33 min):** A walkthrough of the project's features and live functionalities for each role<br>
-- [For Non-Librarian (Guest User and Authenticate User)](https://youtu.be/CtT22CMBoSo) - 15 min<br>
-- [For Librarian](https://youtu.be/ae6o5S0cZn0) - 18 min<br>
+- **Demonstration Video (Total: 33 min):** A walkthrough of the project's features and live functionalities for each role<br>
+    - [For Non-Librarian (Guest User and Authenticate User)](https://youtu.be/CtT22CMBoSo) - 15 min<br>
+    - [For Librarian](https://youtu.be/ae6o5S0cZn0) - 18 min<br>
 
 ## Table of Contents
 - [Introduction](#introduction)
