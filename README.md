@@ -40,7 +40,7 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 ## Automated Logic Overview
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
-<img src="Image/Functions/DetectRecordDaily.png" style="width:75%;"/><br>
+<img src="Image/Functions/DetectRecordDaily.png" style="width:40%;"/><br>
 Performs scheduled scans for:
     - Expired Loan Records
     - Suspension Records
