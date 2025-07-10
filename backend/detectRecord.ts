@@ -3,7 +3,7 @@ import { detectExpiredSuspendRecord } from "./schema/user/suspendList";
 
 export const detectRecordsDaily = () => 
 {
-    const DayToMillionSeconds = 60 * 60 * 1000;
+    const DayToMillionSeconds = 24 * 60 * 60 * 1000;
     setInterval(detectExpiredSuspendRecord, DayToMillionSeconds);
     setInterval(modifyFinesAmount, DayToMillionSeconds);
     setInterval(detectExpiredLoanRecord, DayToMillionSeconds);
