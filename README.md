@@ -3,7 +3,7 @@ A full-stack application that streamlines library operations built as a Informat
 
 ## Video for presentation and demonstration
 ### SpeedRun version
-- **[Features Speedrun Video]():** A quick showcase of the system's core features for fast-paced viewing
+- **[Features Speedrun Video](https://youtu.be/hBoIlaJ-brY) (10 min):** A quick showcase of the system's core features for fast-paced viewing
 
 ### Detailed version
 - **[Presentation Video](https://youtu.be/QuyYn-r9Nr4) (12 min):** An overview of the project concept, goals, and the inspiration behind it 
