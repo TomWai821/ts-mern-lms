@@ -177,42 +177,42 @@ This ERD explain the database schema for the Library Management System
 <details>
 <summary>Collections related to book data</summary>
 Book
-| Key Attribute |	Type     | Description                                                              |
+| Key Attribute | Type     | Description                                                              |
 | ------------- | -------- | ------------------------------------------------------------------------ |
-| image         |	Object   | Stores book cover image details, including URL and filename              |
+| image         | Object   | Stores book cover image details, including URL and filename              |
 | bookname	    | String   | The title of the book for identification                                 |
-| languageID	  | ObjectID | References for the Language collection, indicating the book's language   |
-| genreID	      | ObjectID | References the Genre collection, categorising the book                   |
+| languageID    | ObjectID | References for the Language collection, indicating the book's language   |
+| genreID       | ObjectID | References the Genre collection, categorising the book                   |
 | authorID	    | ObjectID | Links to the Author collection, storing authorship details               |
-| publisherID   |	ObjectID | Associates with the publisher collection for book publishing details     |
-| status	      | String   | Defines the book’s availability, such as OnShelf and Loaned              |
-| description	  | String   | Provides a brief overview or synopsis of the book                        |
-| publishDate	  | Date     | The official publication date of the book, indexed for search efficiency |
+| publisherID   | ObjectID | Associates with the publisher collection for book publishing details     |
+| status        | String   | Defines the book’s availability, such as OnShelf and Loaned              |
+| description   | String   | Provides a brief overview or synopsis of the book                        |
+| publishDate   | Date     | The official publication date of the book, indexed for search efficiency |
 
 Genre
 | Key Attribute | Type   | Description                                                                   |
 | ------------- | ------ | ------------------------------------------------------------------------------|
 | genre         | String | The full name is used to represent the genre, ensuring correct classification |
-| shortName     |	String | An abbreviated version of the genre name is used for display purposes         |
+| shortName     | String | An abbreviated version of the genre name is used for display purposes         |
 
 Language
 | Key Attribute | Type   | Description                                                                   |
 | ------------- | ------ | ----------------------------------------------------------------------------- |
 | language      | String | The full name used to represent the language, ensures correct classification  |
-| shortName     |	String | An abbreviated version of the language name is used for display purposes      |
+| shortName     | String | An abbreviated version of the language name is used for display purposes      |
 
 Author
-| Key Attribute |	Type   | Description                                                                                 |
+| Key Attribute | Type   | Description                                                                                 |
 | ------------- | ------ | ------------------------------------------------------------------------------------------- |
 | publisher	    | String | The full name of the publisher, stored for identification purposes                          |
-| phoneNumber	  | String | The contact number provided for communication with the publisher                            |
+| phoneNumber	| String | The contact number provided for communication with the publisher                            |
 | email         | String | The email address used for professional or system-related correspondence with the publisher |
 
 Publisher
-| Key Attribute |	Type   | Description                                                                                 |
+| Key Attribute |  Type  | Description                                                                                 |
 | ------------- | ------ | ------------------------------------------------------------------------------------------- |
-| author	      | String | The full name of the author, stored for identification purposes                             |
-| phoneNumber	  | String | The contact number provided for communication with the publisher                            |
+| author	    | String | The full name of the author, stored for identification purposes                             |
+| phoneNumber   | String | The contact number provided for communication with the publisher                            |
 | email         | String | The email address used for professional or system-related correspondence with the publisher |
 
 
@@ -229,27 +229,27 @@ User
 | avatarurl     | String | The URL for the avatar image                  |
 
 SuspendList
-| Key Attribute |	Type	    | Description                                                                                                |
-| ------------- | --------- |----------------------------------------------------------------------------------------------------------- |
-| userID        |	ObjectID  |	Links to the user collection, ensuring proper tracking of suspended individuals                            |
-| description	  | String	  | Stores details about the reason for the user's suspension, ensuring proper enforcement of library policies |
+| Key Attribute |	Type    | Description                                                                                                |
+| ------------- | --------- |------------------------------------------------------------------------------------------------------------|
+| userID        | ObjectID  |	Links to the user collection, ensuring proper tracking of suspended individuals                          |
+| description	| String	| Stores details about the reason for the user's suspension, ensuring proper enforcement of library policies |
 | startDate	    | Date	    | The date when the user suspension begins                                                                   |
-| dueDate	      | Date	    | The scheduled date when the suspension will end, allowing access restoration                               |
+| dueDate	    | Date	    | The scheduled date when the suspension will end, allowing access restoration                               |
 </details>
 
 <details>
 <summary>Collections related to interaction between book and user</summary>
 BookFavourite
 | Key Attribute |	Type     | Description                                                                                          |
-| ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| ------------- | ---------- | ---------------------------------------------------------------------------------------------------- |
 | userID        |	ObjectID | References to the user collection to identify the user who has loaned books                          |
 | bookID        |	ObjectID | References to the user collection to identify the loaned book                                        |
 | loanDate      |	Date     | The date when the user loaned the book                                                               |
 | dueDate       |	Date     | The date on which the book should return                                                             |
-| returnDate    |	Date	   | The actual date when the book returns                                                                |
-| Status	      | String   | Defines the loan status, such as Loaned, Returned                                                    |
+| returnDate    |	Date	 | The actual date when the book returns                                                                |
+| Status	    |   String   | Defines the loan status, such as Loaned, Returned                                                    |
 | finesAmount   |	Number	 | The monetary fine for overdue book returns                                                           |
-| finesPaid	    | String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
+| finesPaid	    |   String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
 
 BookLoaned
 | Key Attribute | Type     | Description                                                                  |
@@ -259,6 +259,7 @@ BookLoaned
 
 Remarks:
 1. Every collection includes an _id field of type ObjectId, which serves as the unique identifier
+</details>
 </details>
 
 ## UI Layout
