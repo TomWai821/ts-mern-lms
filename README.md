@@ -85,7 +85,6 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     - unSuspendDate → today
 - Feedback Message: “Unsuspend user [ID] successfully!”
 </details>
-</details>
 
 ## Installation
 1. **Clone the repository:**
@@ -148,21 +147,21 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface
     </details>
     <details>
-    <summary>QR Code Generation<summary>
+    <summary>QR Code Generation</summary>
     <img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user
     </details>
     <details>
-    <summary>Book Recommendation<summary>
+    <summary>Book Recommendation</summary>
     <img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:90%;"/><br>
     This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging
-    </summary>
+    </details>
 </details>
 
 <details>
     <summary>Sequence Diagram (CRUD operations)</summary>
     <details>
-    <summary>Get data from backend side<summary>
+    <summary>Get data from backend side</summary>
     <img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client
     </details>
@@ -170,6 +169,8 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     <summary>Data Creation</summary>
     <img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process.
+    </details>
+    <details>
     <summary>Data Modification</summary>
     <img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback.
