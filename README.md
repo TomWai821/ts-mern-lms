@@ -40,13 +40,18 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 ## Automated Logic Overview
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
+<details>
+<summary>Detect Record Functions</summary>
 <img src="Image/Functions/DetectRecordDaily.png" style="width:40%;"/><br>
 Performs scheduled scans for:
 - Expired Loan Records
 - Suspension Records
 - Fine Calculations
-This function acts as the entry point for daily automation checks (located in "backend/detectRecord.ts").
+This function acts as the entry point for daily automation checks (located in "backend/detectRecord.ts")
+</details>details>
 
+<details>
+<summary>Detect Expired Loan Book Records</summary>
 <img src="Image/Functions/DetectExpiredLoanRecord.png" style="width:90%;"/><br>
 This source code (located in backend/schema/book/bookloaned.ts, Line 159–196) automatically performs detection and handling of expired loan records:
 - Fetch: All loan records with "Loaned" status
@@ -55,7 +60,10 @@ This source code (located in backend/schema/book/bookloaned.ts, Line 159–196) 
     - Set finesPaidStatus to "Not Paid"
     - Apply flat fineAmount of $1.5
 - Message Logged: “Loan Record [ID] fines amount and paid status modified successfully!”
+</details>
 
+<details>
+<summary>Automatically Fines Calculation</summary>
 <img src="Image/Functions/FinesAmountCalculation.png" style="width:90%;"/><br>
 This source code (located in backend/schema/book/bookloaned.ts, Line 198–232) automatically performs detection and handling of fines amount calculation:
 - Days Overdue: Calculated from due date
@@ -64,7 +72,10 @@ This source code (located in backend/schema/book/bookloaned.ts, Line 198–232) 
     - fineAmount set dynamically
     - finesPaidStatus set to "Not Paid"
 - Message Logged: “Loan Record [ID] fines amount and paid status modified successfully!”
+</details>
 
+<details>
+<summary>Automatically Unsuspend User</summary>
 <img src="Image/Functions/SuspendRecordDetection.png" style="width:90%;"/><br>
 This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) automatically performs the process of unsuspending users whose suspension period has expired:
 - Compare Dates: Compares each dueDate with today’s date
@@ -73,6 +84,7 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     - Suspension status → "Unsuspend"
     - unSuspendDate → today
 - Feedback Message: “Unsuspend user [ID] successfully!”
+</details>
 
 ## Installation
 1. **Clone the repository:**
@@ -115,39 +127,39 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
 ### Frontend
 <details>
     <summary>Sequence Diagram (Authentication)</summary>
-    1. **Registration**<br>
+    1. Registration<br>
     <img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services
-    2. **Login**<br>
+    2. Login<br>
     <img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration.
 </details>
 
 <details>
 <summary>Sequence Diagram (Project Features)</summary>
-    1. **External Data from Google Book API**<br>
+    1. External Data from Google Book API<br>
     <img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
     This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface.
-    2. **QR Code Generation**<br>
+    2. QR Code Generation<br>
     <img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user.
-    3. **Book Recommendation**<br>
+    3. Book Recommendation<br>
     <img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:90%;"/><br>
     This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging.
 </details>
 
 <details>
     <summary>Sequence Diagram (CRUD operations)</summary>
-    1. **Get data from backend side**<br>
+    1. Get data from backend side<br>
     <img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client.
-    2. **Data Creation**<br>
+    2. Data Creation<br>
     <img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process.
-    3. **Data Modification**<br>
+    3. Data Modification<br>
     <img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback.
-    4. **Data Deletion**<br>
+    4. Data Deletion<br>
     <img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:90%;"/><br>
     This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations.
 </details>
@@ -183,7 +195,7 @@ Book
 | bookname	    | String   | The title of the book for identification                                 |
 | languageID    | ObjectID | References for the Language collection, indicating the book's language   |
 | genreID       | ObjectID | References the Genre collection, categorising the book                   |
-| authorID	    | ObjectID | Links to the Author collection, storing authorship details               |
+| authorID      | ObjectID | Links to the Author collection, storing authorship details               |
 | publisherID   | ObjectID | Associates with the publisher collection for book publishing details     |
 | status        | String   | Defines the book’s availability, such as OnShelf and Loaned              |
 | description   | String   | Provides a brief overview or synopsis of the book                        |
@@ -214,9 +226,10 @@ Publisher
 | author	    | String | The full name of the author, stored for identification purposes                             |
 | phoneNumber   | String | The contact number provided for communication with the publisher                            |
 | email         | String | The email address used for professional or system-related correspondence with the publisher |
+</details>
 
-
-### Collections related to user data
+<details>
+<summary>Collections related to user data<summary>
 User
 | Key Attribute | Type   | Description                                   |
 | ------------- | ------ | --------------------------------------------- |
@@ -240,16 +253,16 @@ SuspendList
 <details>
 <summary>Collections related to interaction between book and user</summary>
 BookFavourite
-| Key Attribute |	Type     | Description                                                                                          |
-| ------------- | ---------- | ---------------------------------------------------------------------------------------------------- |
-| userID        |	ObjectID | References to the user collection to identify the user who has loaned books                          |
-| bookID        |	ObjectID | References to the user collection to identify the loaned book                                        |
-| loanDate      |	Date     | The date when the user loaned the book                                                               |
-| dueDate       |	Date     | The date on which the book should return                                                             |
-| returnDate    |	Date	 | The actual date when the book returns                                                                |
-| Status	    |   String   | Defines the loan status, such as Loaned, Returned                                                    |
-| finesAmount   |	Number	 | The monetary fine for overdue book returns                                                           |
-| finesPaid	    |   String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
+| Key Attribute | Type     | Description                                                                                          |
+| ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| userID        | ObjectID | References to the user collection to identify the user who has loaned books                          |
+| bookID        | ObjectID | References to the user collection to identify the loaned book                                        |
+| loanDate      | Date     | The date when the user loaned the book                                                               |
+| dueDate       | Date     | The date on which the book should return                                                             |
+| returnDate    | Date	   | The actual date when the book returns                                                                |
+| Status	    | String   | Defines the loan status, such as Loaned, Returned                                                    |
+| finesAmount   | Number   | The monetary fine for overdue book returns                                                           |
+| finesPaid	    | String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
 
 BookLoaned
 | Key Attribute | Type     | Description                                                                  |
