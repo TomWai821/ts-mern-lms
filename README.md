@@ -40,7 +40,7 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 ## Automated Logic Overview
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
-***1. Detect Record Functions***
+***1. Detect Record Functions***<br>
 <img src="Image/Functions/DetectRecordDaily.png" style="width:40%;"/><br>
 Performs scheduled scans for:
 - Expired Loan Records
@@ -48,7 +48,7 @@ Performs scheduled scans for:
 - Fine Calculations
 This function acts as the entry point for daily automation checks (located in "backend/detectRecord.ts")
 
-***2. Detect Expired Loan Book Records***
+***2. Detect Expired Loan Book Records***<br>
 <img src="Image/Functions/DetectExpiredLoanRecord.png" style="width:90%;"/><br>
 This source code (located in backend/schema/book/bookloaned.ts, Line 159–196) automatically performs detection and handling of expired loan records:
 - Fetch: All loan records with "Loaned" status
@@ -58,7 +58,7 @@ This source code (located in backend/schema/book/bookloaned.ts, Line 159–196) 
     - Apply flat fineAmount of $1.5
 - Message Logged: “Loan Record [ID] fines amount and paid status modified successfully!”
 
-***3. Automatically Fines Calculation***
+***3. Automatically Fines Calculation***<br>
 <img src="Image/Functions/FinesAmountCalculation.png" style="width:90%;"/><br>
 This source code (located in backend/schema/book/bookloaned.ts, Line 198–232) automatically performs detection and handling of fines amount calculation:
 - Days Overdue: Calculated from due date
@@ -69,7 +69,7 @@ This source code (located in backend/schema/book/bookloaned.ts, Line 198–232) 
 - Message Logged: “Loan Record [ID] fines amount and paid status modified successfully!”
 
 
-***4. Automatically Unsuspend User***
+***4. Automatically Unsuspend User***<br>
 <img src="Image/Functions/SuspendRecordDetection.png" style="width:90%;"/><br>
 This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) automatically performs the process of unsuspending users whose suspension period has expired:
 - Compare Dates: Compares each dueDate with today’s date
@@ -167,7 +167,7 @@ This sequence diagram captures the user confirmation flow initiated via a fronte
 
 ### Backend
 
-***Backend Process Flow Diagram***
+***Backend Process Flow Diagram***<br>
 <img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
 | Component            | Usage                                                               |
@@ -182,7 +182,7 @@ Backend side using modular API design, therefore using backend process flow diag
 
 ### Database
 
-***Entity-Relational Diagram(ERD)***
+***Entity-Relational Diagram(ERD)***<br>
 <img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 This ERD explain the database schema for the Library Management System
 
@@ -275,7 +275,7 @@ Remarks:
 
 ## UI Layout
 
-***1. Navigation***
+***1. Navigation***<br>
 <img src="Image/UILayout/Navigation-Guest.png" style="width:90%;"/><br>
 Image 1.1 - Navigation For Guest User<br>
 
@@ -291,7 +291,7 @@ Image 1.3 - Navigation For Admin(Librarian)<br>
 - Administrator (Librarian) can manage book, user, contact and book definition data. And the right-hand side function is the same as Authenticated User<br>
 
 
-***2. Main page (Book recommendation)***
+***2. Main page (Book recommendation)***<br>
 <img src="Image/UILayout/MainPage-Guest.png" style="width:90%;"/><br>
 Image 2.1 - Main Page For User / Authenticated User (who does not have a loan book record)<br>
 
@@ -303,7 +303,7 @@ Image 2.2 - Main Page For Authenticated User (Include Librarian)<br>
 - Authenticated Users who have a loan book record could view recommended books from the backend system, just as with Guest users and Authenticated Users who do not have a loan book record<br>
 
 
-***3. Authenticate Pages***
+***3. Authenticate Pages***<br>
 <img src="Image/UILayout/RegisterCard.png" style="width:40%;"/><br>
 Image 3.1 - Registration Page<br>
 
@@ -315,7 +315,7 @@ Image 3.2 - Login Page<br>
 - The Login Page requires input of all the data to log in, and it also has a validator to verify the data in the input field. Furthermore, it has a checkbox to decide whether to store data in session storage or cookie storage<br>
 
 
-***4. Profile Page***
+***4. Profile Page***<br>
 <img src="Image/UILayout/ProfileCard.png" style="width:40%;"/><br>
 Image 4.1 - Profile Page<br>
 
@@ -335,7 +335,7 @@ Image 4.4 - Edit Profile Data Modal (Password)<br>
 - The edit modal for password, it requires input new password and confirm password<br>
 
 
-***5. Content Page***
+***5. Content Page***<br>
 <img src="Image/UILayout/TopOfTableContentWithFilter-User.png" style="width:90%;"/><br>
 Image 5.1 - Top of Table Content With Filter (For User)<br>
 
@@ -347,7 +347,7 @@ Image 5.2 - Top of Table Content With Filter (For Librarian)<br>
 - The top of the table content for the librarian, which has a tab to change the table and has an action button between the search button, another function is the same as that of the user<br>
 
 
-***6. Modal for view data***
+***6. Modal for view data***<br>
 <img src="Image/UILayout/BookInfoModal-Guest.png" style="width:40%;"/><br>
 Image 6.1 - Book data modal (For Guest user)<br>
 
@@ -363,7 +363,7 @@ Image 6.3 - Book data modal (Google Book - For Authenticated User)<br>
 - The book data modal for authenticated users (including librarians) allows them to view Google Book data, and ISBM display as a BarCode Image<br>
 
 
-***7. Modal for CRUD operations***
+***7. Modal for CRUD operations***<br>
 <img src="Image/UILayout/CreateBookModal.png" style="width:50%;"/><br>
 Image 7.1 - Book record Creation Modal <br>
 
@@ -387,7 +387,7 @@ Image 7.5 - Book record Delete Confirmation Modal <br>
 - The modal for book record delete confirmation, it allows the librarian to view which data will be deleted and let the librarian confirm the process<br>
 
 
-***8. Way to display data*** 
+***8. Way to display data***<br>
 <img src="Image/UILayout/TableCell_BookManagementPage.png" style="width:90%;"/><br>
 Image 8.1 - Table Cell with buttons
 
