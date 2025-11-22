@@ -2,13 +2,13 @@ import { UserInterface } from "./userSchemaInterface";
 import { Request } from 'express'
 import { AuthorInterface, BookFavouriteInterface, BookInterface, BookLoanedInterface, PublisherInterface } from "./bookSchemaInterface";
 
-interface LoginInterface
+export interface LoginInterface
 {
     email:string;
     password:string;
 }
 
-interface CreateUserInterface extends LoginInterface
+export interface CreateUserInterface extends LoginInterface
 {
     username: string;
     gender: string;
@@ -18,7 +18,7 @@ interface CreateUserInterface extends LoginInterface
     avatarUrl: string;
 }
 
-interface ModifyUserDataInterface
+export interface ModifyUserDataInterface
 {
     username: string;
     email: string;
@@ -30,7 +30,7 @@ interface ModifyUserDataInterface
     dueDate: Date;
 }
 
-interface AuthRequest extends Request
+export interface AuthRequest extends Request
 {
     user?: UserInterface;
     foundUser?: UserInterface | UserInterface[] | null;
@@ -42,7 +42,7 @@ interface AuthRequest extends Request
     foundFavouriteBook?: BookFavouriteInterface | BookFavouriteInterface[] | null;
 }
 
-interface Book 
+export interface Book 
 {
     _id: string;
     bookname: string;
@@ -50,5 +50,3 @@ interface Book
     author: string;
     publisher: string;
 }
-
-export type {LoginInterface, CreateUserInterface, ModifyUserDataInterface, AuthRequest, Book}

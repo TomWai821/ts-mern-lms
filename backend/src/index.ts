@@ -1,17 +1,28 @@
+// packages
 import express from 'express';
 import cors from 'cors';
+import dotenv from "dotenv";
+
+// another file functions
 import { connectToMongoDB } from './connectToMongo';
 import { detectRecordsDaily } from './detectRecord';
 
-connectToMongoDB();
+// routes
+import userRoutes from './routes/user';
+import bookRoutes from './routes/books';
 
+dotenv.config({ debug: false });
+
+const PORT = process.env.PORT || 5000;
+const ORIGIN_URI = process.env.ORIGIN_URI as string;
+
+connectToMongoDB();
 const app = express();
-const PORT = 5000;
 
 app.use(cors
 (
     {
-        origin: "http://localhost:3000",
+        origin: ORIGIN_URI,
         methods: ["GET", "POST", "DELETE", "PUT"],
         allowedHeaders: ["content-type", "authToken"]
     }
@@ -19,8 +30,8 @@ app.use(cors
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/user', require('./routes/user'));
-app.use('/api/book', require('./routes/books'));
+app.use('/api/user', userRoutes);
+app.use('/api/book', bookRoutes);
 
 app.listen(PORT, () => 
 { 

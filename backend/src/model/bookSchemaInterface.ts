@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { IDInterface } from "./userSchemaInterface";
 
-interface BookInterface extends IDInterface
+export interface BookInterface extends IDInterface
 {
     image: ImageInterface;
     bookname: string;
@@ -15,30 +15,30 @@ interface BookInterface extends IDInterface
     publishDate:Date;
 }
 
-interface ImageInterface
+export interface ImageInterface
 {
     url:string;
     filename:string;
 }
 
-interface GenreInterface extends IDInterface
+export interface GenreInterface extends IDInterface
 {
     genre:string,
     shortName:string;
 }
 
-interface LanguageInterface extends IDInterface
+export interface LanguageInterface extends IDInterface
 {
     shortName:string;
     language:string;
 }
 
-interface PublisherInterface extends IDInterface, ContractDataInterface
+export interface PublisherInterface extends IDInterface, ContractDataInterface
 {
     publisher:string;
 }
 
-interface AuthorInterface extends IDInterface, ContractDataInterface
+export interface AuthorInterface extends IDInterface, ContractDataInterface
 {
     author:string;
 }
@@ -49,14 +49,14 @@ interface ContractDataInterface
     email:string;
 }
 
-interface BookFavouriteInterface extends IDInterface
+export interface BookFavouriteInterface extends IDInterface
 {
     bookID: mongoose.Schema.Types.ObjectId;
     userID: mongoose.Schema.Types.ObjectId;
     bookDetails?: BookInterface;
 }
 
-interface BookLoanedInterface extends IDInterface, BookFavouriteInterface
+export interface BookLoanedInterface extends IDInterface, BookFavouriteInterface
 {
     dueDate: Date;
     loanDate: Date;
@@ -65,5 +65,3 @@ interface BookLoanedInterface extends IDInterface, BookFavouriteInterface
     fineAmount: number;
     finesPaid: string;
 }
-
-export { BookInterface, ImageInterface, GenreInterface, LanguageInterface, PublisherInterface, AuthorInterface, BookFavouriteInterface, BookLoanedInterface}

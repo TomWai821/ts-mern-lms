@@ -25,4 +25,4 @@ router.put('/SuspendListData/id=:id', UserModifyDataRules, ...LoginAndFindUser, 
 
 router.delete('/User/id=:id', ...LoginAndFindUser, FoundUserFromParams, DeleteUser);
 
-module.exports = router;
+export default router;

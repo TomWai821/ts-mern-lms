@@ -1,34 +1,34 @@
 import mongoose from "mongoose";
 import { CreateUserInterface } from "./requestInterface";
 
-interface IDInterface
+export interface IDInterface
 {
     _id: mongoose.Schema.Types.ObjectId;
 }
 
-interface UserInterface extends IDInterface, CreateUserInterface
+export interface UserInterface extends IDInterface, CreateUserInterface
 {
     email: string;
     password: string;
 }
 
-interface RoleInterface extends IDInterface
+export interface RoleInterface extends IDInterface
 {
     role:string;
 }
 
-interface GenderInterface extends IDInterface
+export interface GenderInterface extends IDInterface
 {
     gender:string;
 }
 
-interface StatusInterface extends IDInterface
+export interface StatusInterface extends IDInterface
 {
     status:string;
     description:string;
 }
 
-interface SuspendListInterface extends IDInterface
+export interface SuspendListInterface extends IDInterface
 {
     userID: mongoose.Schema.Types.ObjectId;
     startDate: Date;
@@ -37,5 +37,3 @@ interface SuspendListInterface extends IDInterface
     description: string;
     status:string;
 }
-
-export {IDInterface, UserInterface, RoleInterface, GenderInterface, StatusInterface, SuspendListInterface}

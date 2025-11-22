@@ -52,4 +52,4 @@ router.delete('/contact/type=:type', ...LoginAndFindUser, ContactTypeValidation,
 // For image
 router.get("/uploads/:filename", GetBookImage);
 
-module.exports = router;
+export default router;

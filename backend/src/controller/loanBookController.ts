@@ -12,8 +12,6 @@ export const GetLoanBookRecord = async (req: AuthRequest, res:Response) =>
     const {bookname, username, status, finesPaid} = req.query;
     const userId = req.user?._id;
     let success = false;
-
-    console.log(suggestType);
     
     try
     {
