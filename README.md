@@ -41,7 +41,7 @@ With features like QR code-based book loans, automated return tracking, TF-IDF-p
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
 ***1. Detect Record Functions***<br>
-<img src="Image/Functions/DetectRecordDaily.png" style="width:40%;"/><br>
+<img src="doc/Image/Functions/DetectRecordDaily.png" style="width:40%;"/><br>
 Performs scheduled scans for:
 - Expired Loan Records
 - Suspension Records
@@ -49,7 +49,7 @@ Performs scheduled scans for:
 This function acts as the entry point for daily automation checks (located in "backend/detectRecord.ts")
 
 ***2. Detect Expired Loan Book Records***<br>
-<img src="Image/Functions/DetectExpiredLoanRecord.png" style="width:90%;"/><br>
+<img src="doc/Image/Functions/DetectExpiredLoanRecord.png" style="width:90%;"/><br>
 This source code (located in backend/schema/book/bookloaned.ts, Line 159–196) automatically performs detection and handling of expired loan records:
 - Fetch: All loan records with "Loaned" status
 - Compare: Each dueDate vs today
@@ -59,7 +59,7 @@ This source code (located in backend/schema/book/bookloaned.ts, Line 159–196) 
 - Message Logged: “Loan Record [ID] fines amount and paid status modified successfully!”
 
 ***3. Automatically Fines Calculation***<br>
-<img src="Image/Functions/FinesAmountCalculation.png" style="width:90%;"/><br>
+<img src="doc/Image/Functions/FinesAmountCalculation.png" style="width:90%;"/><br>
 This source code (located in backend/schema/book/bookloaned.ts, Line 198–232) automatically performs detection and handling of fines amount calculation:
 - Days Overdue: Calculated from due date
 - Fine Formula: $1.5 × days overdue, capped at $130
@@ -70,7 +70,7 @@ This source code (located in backend/schema/book/bookloaned.ts, Line 198–232) 
 
 
 ***4. Automatically Unsuspend User***<br>
-<img src="Image/Functions/SuspendRecordDetection.png" style="width:90%;"/><br>
+<img src="doc/Image/Functions/SuspendRecordDetection.png" style="width:90%;"/><br>
 This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) automatically performs the process of unsuspending users whose suspension period has expired:
 - Compare Dates: Compares each dueDate with today’s date
 - User Status Update: "Suspended" → "Normal"
@@ -122,53 +122,53 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
 ***Sequence Diagram (Authentication)***
     
 1. Registration<br>
-<img src="Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
 This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services
        
 2. Login<br>
-<img src="Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
 This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration<br>
     
 ***Sequence Diagram (Project Features)***
 1. External Data from Google Book API
-<img src="Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
 This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface<br>
     
 2. QR Code Generation<br>
-<img src="Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
 This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user<br>
     
     
 3. Book Recommendation<br>
-<img src="Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:90%;"/><br>
 This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging<br>
 
     
 ***Sequence Diagram (CRUD operations)***
 1. Get data from backend side<br>
-<img src="Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
 This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client<br>
     
     
 2. Data Creation<br>
-<img src="Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
 This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process<br>
     
     
 3. Data Modification
-<img src="Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
 This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback
     
     
 4. Data Deletion
-<img src="Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:90%;"/><br>
 This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations<br>
     
 
 ### Backend
 
 ***Backend Process Flow Diagram***<br>
-<img src="Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
+<img src="doc/Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
 | Component            | Usage                                                               |
 | -------------------- | ------------------------------------------------------------------- |
@@ -183,7 +183,7 @@ Backend side using modular API design, therefore using backend process flow diag
 ### Database
 
 ***Entity-Relational Diagram(ERD)***<br>
-<img src="Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
+<img src="doc/Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 This ERD explain the database schema for the Library Management System
 
 
