@@ -250,7 +250,7 @@ SuspendList
 
 
 ****Collections related to interaction between book and user****<br>
-BookFavourite
+BookLoaned
 | Key Attribute | Type     | Description                                                                                          |
 | ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
 | userID        | ObjectID | References to the user collection to identify the user who has loaned books                          |
@@ -262,7 +262,7 @@ BookFavourite
 | finesAmount   | Number   | The monetary fine for overdue book returns                                                           |
 | finesPaid	    | String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
 
-BookLoaned
+BookFavourite
 | Key Attribute | Type     | Description                                                                  |
 | ------------- | -------- | ---------------------------------------------------------------------------- |
 | userID        | ObjectID | References the user collection to identify the user who favourited the books |
