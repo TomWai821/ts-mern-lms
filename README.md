@@ -97,16 +97,28 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
 4. **Set up environment variable:**
    Create a .env file in the root directory with Configuration variables
    ```
-   - `REACT_APP_GOOGLE_BOOKS_API_KEY` - The API key of Google Books
-   - `REACT_APP_GOOGLE_BOOKS_BASE_URL` - The base URL for google books API (like https://www.googleapis.com/books/v1/volumes)
-   - `REACT_APP_LOCAL_HOST` - The local host for backend (like http://localhost:${port}/api) 
-   - `REACT_APP_MAIN_PAGE` - The local host for the main page (like http://localhost:${port})
+   frontend/.env:
+   - REACT_APP_GOOGLE_BOOKS_API_KEY  -> Google Books API key
+   - REACT_APP_GOOGLE_BOOKS_BASE_URL -> Base URL for google books API (e.g. https://www.googleapis.com/books/v1/volumes)
+   - REACT_APP_LOCAL_HOST            -> Backend API endpoint (e.g. http://localhost:5000/api) 
+   - REACT_APP_MAIN_PAGE             -> Frontend main page URL (e.g. http://localhost:3000)
+   ```
+   
+   ```
+   backend/.env:
+   - PORT       -> The backend port
+   - MONGO_URI  -> MongoDB Connection String (e.g. mongodb://localhost:${portNumber})
+   - JWT_SECRET -> Secret key for JWT authentication
+   - ORIGIN_URI -> Frontend URL (e.g. http://localhost:${port})
+   ```
 
+   ```
    Remarks:
    - Express backend runs by default on port 5000
    - React frontend runs on port 3000
+   ```
   
-5. **Run the application:**
+6. **Run the application:**
    ```bash
    # For the server side
    nodemon backend/index.ts  
