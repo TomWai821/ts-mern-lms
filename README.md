@@ -276,13 +276,13 @@ Remarks:
 ## UI Layout
 
 ***1. Navigation***<br>
-<img src="Image/UILayout/Navigation-Guest.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/Navigation-Guest.png" style="width:90%;"/><br>
 Image 1.1 - Navigation For Guest User<br>
 
-<img src="Image/UILayout/Navigation-AuthenticateUser.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/Navigation-AuthenticateUser.png" style="width:90%;"/><br>
 Image 1.2 - Navigation For Authenticated User<br>
 
-<img src="Image/UILayout/Navigation-Admin.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/Navigation-Admin.png" style="width:90%;"/><br>
 Image 1.3 - Navigation For Admin(Librarian)<br>
 
 #### Description:<br>
@@ -292,10 +292,10 @@ Image 1.3 - Navigation For Admin(Librarian)<br>
 
 
 ***2. Main page (Book recommendation)***<br>
-<img src="Image/UILayout/MainPage-Guest.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/MainPage-Guest.png" style="width:90%;"/><br>
 Image 2.1 - Main Page For User / Authenticated User (who does not have a loan book record)<br>
 
-<img src="Image/UILayout/MainPage-AuthenticateUser.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/MainPage-AuthenticateUser.png" style="width:90%;"/><br>
 Image 2.2 - Main Page For Authenticated User (Include Librarian)<br>
 
 #### Description:<br>
@@ -304,10 +304,10 @@ Image 2.2 - Main Page For Authenticated User (Include Librarian)<br>
 
 
 ***3. Authenticate Pages***<br>
-<img src="Image/UILayout/RegisterCard.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/RegisterCard.png" style="width:40%;"/><br>
 Image 3.1 - Registration Page<br>
 
-<img src="Image/UILayout/LoginCard.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/LoginCard.png" style="width:40%;"/><br>
 Image 3.2 - Login Page<br>
 
 #### Description:<br>
@@ -316,16 +316,16 @@ Image 3.2 - Login Page<br>
 
 
 ***4. Profile Page***<br>
-<img src="Image/UILayout/ProfileCard.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/ProfileCard.png" style="width:40%;"/><br>
 Image 4.1 - Profile Page<br>
 
-<img src="Image/UILayout/DisplayQRCodeModal.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/DisplayQRCodeModal.png" style="width:40%;"/><br>
 Image 4.2 - QR Code Modal<br>
 
-<img src="Image/UILayout/EditProfileDataModal-username.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/EditProfileDataModal-username.png" style="width:40%;"/><br>
 Image 4.3 - Edit Profile Data Modal (Username)<br>
 
-<img src="Image/UILayout/EditProfileDataModal-password.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/EditProfileDataModal-password.png" style="width:40%;"/><br>
 Image 4.4 - Edit Profile Data Modal (Password)<br>
 
 #### Description:<br>
@@ -336,10 +336,10 @@ Image 4.4 - Edit Profile Data Modal (Password)<br>
 
 
 ***5. Content Page***<br>
-<img src="Image/UILayout/TopOfTableContentWithFilter-User.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/TopOfTableContentWithFilter-User.png" style="width:90%;"/><br>
 Image 5.1 - Top of Table Content With Filter (For User)<br>
 
-<img src="Image/UILayout/TopOfTableContentWithFilter-Admin.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/TopOfTableContentWithFilter-Admin.png" style="width:90%;"/><br>
 Image 5.2 - Top of Table Content With Filter (For Librarian)<br>
 
 #### Description:<br>
@@ -348,13 +348,13 @@ Image 5.2 - Top of Table Content With Filter (For Librarian)<br>
 
 
 ***6. Modal for view data***<br>
-<img src="Image/UILayout/BookInfoModal-Guest.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/BookInfoModal-Guest.png" style="width:40%;"/><br>
 Image 6.1 - Book data modal (For Guest user)<br>
 
-<img src="Image/UILayout/BookInfo-AuthenticateUser.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/BookInfo-AuthenticateUser.png" style="width:40%;"/><br>
 Image 6.2 - Book data modal (For Authenticated User)<br>
 
-<img src="Image/UILayout/BookInfo_GoogleBook-AuthenicateUser.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/BookInfo_GoogleBook-AuthenicateUser.png" style="width:40%;"/><br>
 Image 6.3 - Book data modal (Google Book - For Authenticated User)<br>
 
 #### Description:<br>
@@ -364,19 +364,19 @@ Image 6.3 - Book data modal (Google Book - For Authenticated User)<br>
 
 
 ***7. Modal for CRUD operations***<br>
-<img src="Image/UILayout/CreateBookModal.png" style="width:50%;"/><br>
+<img src="doc/Image/UILayout/CreateBookModal.png" style="width:50%;"/><br>
 Image 7.1 - Book record Creation Modal <br>
 
-<img src="Image/UILayout/CreateBookConfrimationModal.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/CreateBookConfrimationModal.png" style="width:40%;"/><br>
 Image 7.2 - Book record Create Confirmation Modal <br>
 
-<img src="Image/UILayout/EditBookRecordModal.png" style="width:50%;"/><br>
+<img src="doc/Image/UILayout/EditBookRecordModal.png" style="width:50%;"/><br>
 Image 7.3 - Book data Modification Modal <br>
 
-<img src="Image/UILayout/EditBookConfirmationModal.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/EditBookConfirmationModal.png" style="width:40%;"/><br>
 Image 7.4 - Book data Modify Confirmation Modal <br>
 
-<img src="Image/UILayout/DeleteBookConfrimationModal.png" style="width:40%;"/><br>
+<img src="doc/Image/UILayout/DeleteBookConfrimationModal.png" style="width:40%;"/><br>
 Image 7.5 - Book record Delete Confirmation Modal <br>
 
 #### Description:<br>
@@ -388,10 +388,10 @@ Image 7.5 - Book record Delete Confirmation Modal <br>
 
 
 ***8. Way to display data***<br>
-<img src="Image/UILayout/TableCell_BookManagementPage.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/TableCell_BookManagementPage.png" style="width:90%;"/><br>
 Image 8.1 - Table Cell with buttons
 
-<img src="Image/UILayout/DefinitionPage.png" style="width:90%;"/><br>
+<img src="doc/Image/UILayout/DefinitionPage.png" style="width:90%;"/><br>
 Image 8.2 - Chip set
 
 #### Description:<br>
