@@ -21,7 +21,7 @@ A full-stack application that streamlines library operations built as a Informat
 - [Architecture](#architecture)
 - [UI Layout](#ui-layout)
 - [API endpoints](#api-endpoints)
-- [Improvments](#improvments)
+- [Improvements](#improvements)
 - [Contributing](#contributing)
 - [License](#license)
 
