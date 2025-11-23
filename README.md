@@ -905,7 +905,9 @@ Image 8.2 - Chip set
 - Refactor Context API into two smaller custom hooks  
   → One dedicated to managing data state, another for CRUD operations, improving maintainability and reducing complexity in view components
 
-    
+- Implement server-side pagination
+  → Limit data returned in each GET request, improving frontend performance and user experience
+
 ## Contributing
 1. Fork the repository.
 2. Create a new branch (`git checkout -b ${branchname}`).
