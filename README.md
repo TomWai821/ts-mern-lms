@@ -889,30 +889,30 @@ Image 8.2 - Chip set
 ## Improvements
 
 ### Completed
-1. Introduced dotenv for environment variable management (backend side)<br>
-- Sensitive configuration (API keys, DB URI, JWT secret) now stored securely in `.env` instead of hardcoding (backend side)
+1. **Introduced dotenv for environment variable management (backend side)**<br>
+    - Sensitive configuration (API keys, DB URI, JWT secret) now stored securely in `.env` instead of hardcoding (backend side)
 
-2. Redirected packages into separate frontend and backend directories<br>
-- Independent `package.json` and `node_modules`, ensuring clean separation and avoiding mixed dependencies
+2. **Redirected packages into separate frontend and backend directories**<br>
+    - Independent `package.json` and `node_modules`, ensuring clean separation and avoiding mixed dependencies
 
-3. Modularised backend routes for cleaner structure<br>
-- Reduced redundant code in authentication and data verification, improving maintainability
+3. **Modularised backend routes for cleaner structure**<br>
+    - Reduced redundant code in authentication and data verification, improving maintainability
 
-4. Implemented server-side scheduled data updates (Node.js Interval)<br>
-- Backend automatically refreshes or syncs data at defined intervals, reducing manual triggers (located in `./backend/src/detectRecord.ts`)
+4. **Implemented server-side scheduled data updates (Node.js Interval)**<br>
+    - Backend automatically refreshes or syncs data at defined intervals, reducing manual triggers (located in `./backend/src/detectRecord.ts`)
 
 ### Planned Improvements
-1. Apply custom hooks to centralise commonly used state<br>
-- Reduce redundant state creation in view components (located in `./frontend/src/customhook.tsx`)
+1. **Apply custom hooks to centralise commonly used state**<br>
+    - Reduce redundant state creation in view components (located in `./frontend/src/customhook.tsx`)
 
-2. Refactor Context API into two smaller custom hooks<br>
-- One dedicated to managing data state, another for CRUD operations, improving maintainability and reducing complexity in view components
+2. **Refactor Context API into two smaller custom hooks**<br>
+    - One dedicated to managing data state, another for CRUD operations, improving maintainability and reducing complexity in view components
 
-3. Implement server-side pagination<br>
-- Limit data returned in each GET request, improving frontend performance and user experience
+3. **Implement server-side pagination**<br>
+    - Limit data returned in each GET request, improving frontend performance and user experience
 
-4. Upgrade server-side scheduled data updates<br>
-- Replace prototype-level Node.js Interval with a production-grade scheduler (e.g. node-cron or cloud-based job scheduler) to ensure reliability, scalability, and better error handling
+4. **Upgrade server-side scheduled data updates**<br>
+    - Replace prototype-level Node.js Interval with a production-grade scheduler (e.g. node-cron or cloud-based job scheduler) to ensure reliability, scalability, and better error handling
 
 ## Contributing
 1. Fork the repository.
