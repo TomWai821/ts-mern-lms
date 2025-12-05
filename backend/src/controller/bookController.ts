@@ -5,6 +5,7 @@ import { deleteImage } from '../storage';
 import fs from 'fs'
 import { BookInterface } from '../model/bookSchemaInterface';
 import { FindBookLoanedAndDelete } from '../schema/book/bookLoaned';
+import { FindBookFavouriteAndDeleteMany } from '../schema/book/bookFavourite';
 
 export const GetBookRecord = async (req: AuthRequest, res: Response) => 
 {
@@ -125,13 +126,6 @@ export const DeleteBookRecord = async(req:Request, res:Response) =>
 
     try
     {
-        const deleteBookRecord = await FindBookByIDAndDelete(bookID);
-
-        if(!deleteBookRecord)
-        {
-            return res.status(400).json({success, error: "Failed to Delete book record"});
-        }
-
         const deleteLoanBookRecord = await FindBookLoanedAndDelete({bookID: bookID});
 
         if(!deleteLoanBookRecord)
@@ -139,6 +133,19 @@ export const DeleteBookRecord = async(req:Request, res:Response) =>
             return res.status(400).json({success, error: "Failed to Delete loaned book record"});
         }
 
+        const deleteFavouriteBookRecord = await FindBookFavouriteAndDeleteMany({bookID: bookID});
+
+        if(!deleteFavouriteBookRecord)
+        {
+            return res.status(400).json({success, error: "Failed to Delete favourite book record"});
+        }
+
+        const deleteBookRecord = await FindBookByIDAndDelete(bookID);
+
+        if(!deleteBookRecord)
+        {
+            return res.status(400).json({success, error: "Failed to Delete book record"});
+        }
         success = true;
         res.json({success, message: "Book Record Delete Successfully!"});
     }

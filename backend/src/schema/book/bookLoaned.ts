@@ -148,7 +148,7 @@ export const FindBookLoanedAndDelete = async (data: Record<string, any>) =>
 {
     try
     {
-        return await BookLoaned.deleteOne(data);
+        return await BookLoaned.deleteMany(data);
     }
     catch(error)
     {

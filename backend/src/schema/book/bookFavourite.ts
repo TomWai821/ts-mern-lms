@@ -81,6 +81,18 @@ export const FindBookFavouriteByID = async (bookFavouriteId: string, select?: Re
     }
 }
 
+export const FindBookFavouriteAndDeleteMany = async (data: Record<string, any>) =>
+{
+    try
+    {
+        return await BookFavourite.deleteMany(data);
+    }
+    catch(error)
+    {
+        printError(error);
+    }
+}
+
 export const FindBookFavouriteByIDAndDelete = async (bookFavouriteId: string) =>
 {
     try
