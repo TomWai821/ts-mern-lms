@@ -37,13 +37,13 @@ Key features include QR code-based book loans, automated return tracking, a TF-I
 This project allowed me to develop skills in designing and implementing scalable single-page applications, managing global state with React’s Context API and useState, and building modular RESTful APIs with Express.js, while also gaining practical experience with React Router for SPA navigation. I also developed awareness of testing and performance optimization practices essential for scalable frontend development
 
 ## Technology Stack
-- **Frontend:** React, Material-UI for styling
+- **Frontend:** React, Material-UI for styling(Leveraging CSS3 Standard), React Router for SPA(Single Page Application) naviation
 - **Backend:** Node.js, Express.js
-- **Database:** MongoDB, Mongoose (With Nodemon for development)
-- **Image Data Handling:** Multer
+- **Database:** MongoDB with Mongoose (With Nodemon for development)
+- **Image Data Handling:** Multer for file uploads
 - **Data security:** JWT(JSON web token) for Authentication, Bcrypt for password hashing
 - **Environment Configuration:** dotenv for managing environment variables
-- **Algorithms:** TF-IDF (natural)
+- **Algorithms:** TF‑IDF for recommendation engine (Implemented with the natural library in Node.js)
 - **Other**: RESTful APIs with modular design
 
 ## Features
@@ -53,7 +53,7 @@ This project allowed me to develop skills in designing and implementing scalable
 - **Loan & Return Tracking:** Log borrowing transactions, returns, and fine management
 - **Book Recommendation System:** Uses TF-IDF and loan data analysis for personalized suggestions
 - **Third-Party API Integration:** Fetch book details (ratings, ISBN, etc.) via the Google Books API
-- **Auto Detect Data Duration:** Automatically identifies overdue borrowings with fine calculation and reinstates suspended users on their scheduled unsuspend date.
+- **Auto Detect Data Duration:** Automatically identifies overdue borrowings with fine calculation and reinstates suspended users on their scheduled unsuspend date
 
 ## QR Code Handling (Frontend Only)
 - The QR code is generated entirely on the frontend
