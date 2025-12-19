@@ -27,8 +27,14 @@ A full-stack application that streamlines library operations built as a Informat
 - [License](#license)
 
 ## Introduction
-The MERN Library Management System is designed to modernize library operations by tackling key inefficiencies such as dependency on physical library cards and the absence of a recommendation system. Developed as part of the Information Technology Project (ITP), this system leverages the MERN stack with a TypeScript template to deliver an intuitive and efficient solution for librarians, library users, and guests.<br>
-With features like QR code-based book loans, automated return tracking, TF-IDF-powered recommendations, and third-party API integration, this project showcases cutting-edge web technologies aimed at enhancing user experience and optimizing data management.
+### Project Purpose 
+The Library Management System was developed to modernise library operations by addressing inefficiencies such as reliance on physical library cards and the lack of a recommendation system. Built with the MERN stack and TypeScript, the goal was to create a secure, scalable, and user-friendly platform that improves both librarian workflows and user experience
+
+### Features 
+Key features include QR code-based book loans, automated return tracking, a TF-IDF-powered recommendation engine for book discovery, and seamless third-party API integration (Google Books). The system also incorporates role-based access control (RBAC) to ensure secure authentication and permission management. Together, these features highlight the ability to combine modern web technologies with practical library needs, delivering both secure access and an intuitive user experience
+
+### Technical Learns 
+This project allowed me to develop skills in designing and implementing scalable single-page applications, managing global state with React’s Context API and useState, and building modular RESTful APIs with Express.js, while also gaining practical experience with React Router for SPA navigation. I also developed awareness of testing and performance optimization practices essential for scalable frontend development
 
 ## Technology Stack
 - **Frontend:** React, Material-UI for styling
