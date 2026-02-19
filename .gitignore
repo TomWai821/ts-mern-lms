@@ -5,7 +5,6 @@ frontend/node_modules/
 
 # env files
 .env
-.env.*
 
 # build & coverage
 /build
