@@ -246,18 +246,29 @@ This sequence diagram captures the user confirmation flow initiated via a fronte
 
 ### Backend
 
-***Backend Process Flow Diagram***<br>
+***Backend Process Flow Diagram and another function***<br>
 <img src="doc/Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
-| Component            | Usage                                                               |
-| -------------------- | ------------------------------------------------------------------- |
-| Request              | User initiates an API call from the frontend                        |
-| Router               | Directs the request to appropriate route modules (e.g. Book, User)  |
-| Route                | Defines endpoint logic and links to relevant controller functions   |
-| Middleware           | Validates headers, URL parameters, and request body for consistency |
-| Service              | Processes business logic and prepares database queries              |
-| Database Interaction | Executes query using processed data and returns results             |
-| API Response         | Structures and sends the response back to the client                |
+| Component                            | Usage                                                                                               | Example Path (Backend - Book data)                                      |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Request                              | User initiates an API call from the frontend                                                        | frontend/src/Controller/* (e.g.frontend/src/Controller/bookController)  |
+| Router                               | Mounts resource route modules and starts the Express app                                            | backend/src/index.ts                                                    |
+| Route                                | Defines endpoints, attaches middleware, and calls controllers                                       | backend/src/routes/* (e.g., backend/src/routes/book.ts)                 |
+| Middleware                           | Validates headers, URL parameters, request body, JWT and roles                                      | backend/src/controller/middleware/Book/bookValidationMiddleware.ts      |
+| Controller (includes business logic) | Handles request/response in this repo controllers, it also contain most business logic and DB calls | backend/src/controller/bookController.ts                                |
+| Database Interaction/ Model          | Mongoose schemas and data access (or seed files)                                                    | backend/src/schema/book/book.ts                                         |
+| API Response                         | Controller assembles and returns the response to the frontend                                       | backend/src/controller/bookController.ts                                |
+
+Remarks
+- Controllers in this repo perform business logic (act like the service) and send the final HTTP response at the end of the handler using res.status(...).json(...)
+- Helper functions may return values for unit tests, but controllers must call res in runtime
+
+Other functions (grouped, not on main synchronous path)
+| Function        | Usage                                                            | Example Path                                                      |
+| ----------------| -----------------------------------------------------------------| ----------------------------------------------------------------- |
+| Scheduled Jobs  | Background tasks such as overdue detection and fine calculation  | backend/detectRecord.ts                                           |
+| Recommendation  | TF‑IDF and search/recommendation utilities                       | backend/src/controller/Utils.ts (calculateTFIDF)                  |
+| Deployment/Init | Container orchestration and DB initialisation / seed             | docker-compose.yml/compose.yaml; backend/MongoDBSchema/*;         |
 
 ### Database
 
