@@ -14,6 +14,7 @@ A full-stack application that streamlines library operations built as a Informat
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
 - [Features](#features)
 - [QR Code Handling (Frontend Only)](#qr-code-handling-frontend-only)
@@ -35,6 +36,143 @@ Key features include QR code-based book loans, automated return tracking, a TF-I
 
 ### Technical Learns 
 This project allowed me to develop skills in designing and implementing scalable single-page applications, managing global state with React’s Context API and useState, and building modular RESTful APIs with Express.js, while also gaining practical experience with React Router for SPA navigation. I also developed awareness of testing and performance optimization practices essential for scalable frontend development
+
+## Quick Start
+
+### 1 Copy example environment variables and edit
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+# Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI
+# Edit frontend/.env: set at minimum: REACT_APP_GOOGLE_BOOKS_API_KEY, REACT_APP_API_URL, REACT_APP_MAIN_PAGE
+
+**Notes about ports and hostnames** 
+- If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`). Docker Compose maps container ports to the host automatically
+- If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
+- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:3000`, `REACT_APP_API_URL=http://localhost:3000/api`, `REACT_APP_MAIN_PAGE=http://localhost:3000`
+
+### 2. Launch with Docker Compose
+```bash
+docker-compose up --build -d
+```
+
+### 3. Postman Smoke Test
+#### Postman Environment
+- base_url = http://localhost:5000
+- email = IamTester@gmail.com
+- password = IamTester
+- token =
+
+#### Pre-request Script (Collection -> Pre-request Script)
+``` javascript
+// Pre-request Script: auto-login and save token to environment
+const baseUrl = pm.environment.get("base_url") || "http://localhost:5000";
+const email = pm.environment.get("email") || "IamTester@gmail.com";
+const password = pm.environment.get("password") || "IamTester";
+
+// Remove the if-check to always refresh token
+if (!pm.environment.get("token")) {
+  const loginRequest = {
+    url: baseUrl + "/api/user/login",
+    method: "POST",
+    header: { "Content-Type": "application/json" },
+    body: { mode: "raw", raw: JSON.stringify({ email, password }) }
+  };
+
+  pm.sendRequest(loginRequest, function (err, res) {
+    if (err) {
+      console.error("Login request failed", err);
+      return;
+    }
+
+    let json = null;
+    try { json = res.json(); } catch (e) { console.log(e); }
+
+    let token = null;
+    if (json) {
+      token = json.token || (json.data && (json.data.token || json.data.authToken)) || json.accessToken || null;
+    }
+
+    if (!token) {
+      try {
+        const headerCandidates = ["authToken", "Authorization", "x-auth-token"];
+        for (let i = 0; i < headerCandidates.length; i++) {
+          const h = pm.response.headers.get(headerCandidates[i]);
+          if (h) {
+            token = h.replace(/^Bearer\s+/i, "");
+            break;
+          }
+        }
+      } catch (e) { console.log(e); }
+    }
+
+    if (token) {
+      pm.environment.set("token", token);
+      console.log("Token saved to environment");
+    } else {
+      console.warn("Token not found in login response", json || res.text());
+    }
+  });
+}
+```
+
+
+#### Request to run
+1. Login
+``` 
+POST {{base_url}}/api/user/login
+```
+
+Body JSON:
+```json
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+```
+
+2. Get books (All books) 
+``` 
+GET {{base_url}}/api/book/bookData
+```
+
+3. Get Books (With Filter)
+```
+GET {{base_url}}/api/book/bookData?paginationAmount=10&pageAmount=1&genreID=67e7a3bf0ccdaa9c1766e958
+```
+
+4. Get Loaned Record (Protected) - Require Login
+```
+GET {{base_url}}/api/book/LoanBook
+```
+
+Header: 
+authToken: {{token}}
+
+Remarks and Test Cases (For Get Books with filter and Loaned Record)
+    - GenreID examples
+        - 67e7a3bf0ccdaa9c1766e958 → Japanese Comic
+        - 67e26e59715e8a63743b7951 → Academic Textbooks<br> 
+    - Other supported filters
+        - publisherID (Example: 67e217b0b135608ea8ba432c → Bloomsbury)
+        - languageID (Example: 67d101b76682366b8515c636 → English)
+        - authorID (Example: 67e215c1ad7b49fc068fa048 → J.K. Rowling)
+        - languageID with authorID (Example: authorID=67e215c1ad7b49fc068fa048&languageID=67d101cf6682366b8515c638) => It will return [] (67d101cf6682366b8515c638 → Simplified Chinese)<br>
+    - Pagination
+       - Pagination = items per page (Allow value: 10, 20, 50, 100)
+       - pageAmount = page number<br>
+       
+
+- Book Recommendation (Most Popular)
+```
+GET {{base_url}}/api/book/LoanBook/type=mostPopular
+```
+
+Notes:
+- Only 4 loan records exist in the system, so this endpoint currently returns at most 4 results
+- The API may return [] or null when no matching data exists or seed data is not present
+
 
 ## Technology Stack
 - **Frontend:** React, Material-UI for styling(Leveraging CSS3 Standard), integrated react-router-dom for SPA(Single Page Application) navigation
