@@ -249,15 +249,16 @@ This sequence diagram captures the user confirmation flow initiated via a fronte
 ***Backend Process Flow Diagram and another function***<br>
 <img src="doc/Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
-| Component                            | Usage                                                                                               | Example Path (Backend - Book data)                                      |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Request                              | User initiates an API call from the frontend                                                        | frontend/src/Controller/* (e.g.frontend/src/Controller/bookController)  |
-| Router                               | Mounts resource route modules and starts the Express app                                            | backend/src/index.ts                                                    |
-| Route                                | Defines endpoints, attaches middleware, and calls controllers                                       | backend/src/routes/* (e.g., backend/src/routes/book.ts)                 |
-| Middleware                           | Validates headers, URL parameters, request body, JWT and roles                                      | backend/src/controller/middleware/Book/bookValidationMiddleware.ts      |
-| Controller (includes business logic) | Handles request/response in this repo controllers, it also contain most business logic and DB calls | backend/src/controller/bookController.ts                                |
-| Database Interaction/ Model          | Mongoose schemas and data access (or seed files)                                                    | backend/src/schema/book/book.ts                                         |
-| API Response                         | Controller assembles and returns the response to the frontend                                       | backend/src/controller/bookController.ts                                |
+| Component                                    | Usage                                                                                               | Example Path (Backend - Book data)                                                                        |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- ---- |
+| Request                                      | User initiates an API call from the frontend                                                        | frontend/src/Controller/* (e.g.frontend/src/Controller/bookController)                                    |
+| Router                                       | Mounts resource route modules and starts the Express app                                            | backend/src/index.ts                                                                                      |
+| Route                                        | Defines endpoints, attaches middleware, and calls controllers                                       | backend/src/routes/* (e.g., backend/src/routes/book.ts)                                                   |
+| Validator (request body checks)              | Validates request body using express-validator rules                                                | backend/src/validator/expressBodyValidator.ts (e.g. BookCreateRules for book creation validate)           |
+| Middleware (JWT / Role checks, DB existence) | Validates headers, URL parameters, request body, JWT and roles                                      | backend/src/controller/middleware/Book/bookValidationMiddleware.ts (e.g. check if book data exists in DB) |
+| Controller (includes business logic)         | Handles request/response in this repo controllers, it also contain most business logic and DB calls | backend/src/controller/bookController.ts                                                                  |
+| Database Interaction/ Model                  | Mongoose schemas and data access (or seed files)                                                    | backend/src/schema/book/book.ts                                                                           |
+| API Response                                 | Controller assembles and returns the response to the frontend                                       | backend/src/controller/bookController.ts                                                                  |
 
 Remarks
 - Controllers in this repo perform business logic (act like the service) and send the final HTTP response at the end of the handler using res.status(...).json(...)
