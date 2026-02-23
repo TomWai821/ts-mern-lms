@@ -1,5 +1,5 @@
 import express from 'express';
-import { UserRegisterRules, UserLoginRules, UserModifyDataRules, UserModifySelfDataRules } from '../model/expressBodyRules'
+import { UserRegisterRules, UserLoginRules, UserModifyDataRules, UserModifySelfDataRules } from '../validator/expressBodyValidator'
 import { DeleteUser, GetUserData, ChangeUserData, UserLogin, UserRegister, ChangeStatus, ModifySuspendListData, UpdateUserData, GetSelfUserData } from '../controller/userController';
 import { FetchUserFromHeader } from '../controller/middleware/User/authMiddleware';
 import { SuspendListValidation, CompareUserStatus, FoundUserFromParams, UserLoginDataValidation, UserRegisterDataValidation } from '../controller/middleware/User/userValidationMiddleware';

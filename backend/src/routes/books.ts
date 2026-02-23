@@ -4,7 +4,7 @@ import { GetDefinition, CreateDefinitionData, EditDefinitionData, DeleteDefiniti
 import { LoginAndFindUser } from '../data/middlewareGroup';
 import { CreateBookRecord, DeleteBookRecord, EditBookRecord, GetBookImage, GetBookRecord } from '../controller/bookController';
 
-import { BookCreateRules } from '../model/expressBodyRules';
+import { BookCreateRules } from '../validator/expressBodyValidator';
 import { BuildBookQueryAndGetData, BuildFavouriteBookQueryAndGetData, BuildSuggestBookQueryAndGetData } from '../controller/middleware/Book/bookGetDataMiddleware';
 import { DefinitionDataValidation, DefinitionTypeValidation } from '../controller/middleware/Definition/DefinitonValidationMiddleware';
 import { CreateContactRecord, DeleteContactRecord, GetContactRecord, UpdateContactRecord } from '../controller/contactController';
