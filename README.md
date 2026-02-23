@@ -37,8 +37,7 @@ Key features include QR code-based book loans, automated return tracking, a TF-I
 ### Technical Learns 
 This project allowed me to develop skills in designing and implementing scalable single-page applications, managing global state with React’s Context API and useState, and building modular RESTful APIs with Express.js, while also gaining practical experience with React Router for SPA navigation. I also developed awareness of testing and performance optimisation practices essential for scalable frontend development
 
-Disclaimer
-- All contact information provided in this file is fictitious and used solely for demonstration purposes
+Disclaimer: All contact information provided in this file is fictitious and used solely for demonstration purposes
 
 ## Quick Start
 ### 1. Copy example environment variables and edit
@@ -66,8 +65,7 @@ docker-compose up --build -d
 - password = IamTester
 - token = (null if not logged in or absent)
 
-Disclaimer
-- All contact information provided in this file is fictitious and used solely for demonstration purposes
+Disclaimer: All contact information provided in this file is fictitious and used solely for demonstration purposes
 
 #### Pre-request Script (Collection -> Pre-request Script)
 ``` javascript
