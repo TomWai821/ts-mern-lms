@@ -14,9 +14,10 @@ export class CRUDService<T>
         return await this.model.create(data);
     } 
     
-    async get(filter?: Record<string, any>) 
+    async get(limitAmount: number, pageNumber?:number, filter?: Record<string, any>) 
     { 
-        return filter ? await this.model.find(filter) : await this.model.find({}); 
+        const skipAmount = limitAmount * (pageNumber || 0);
+        return filter ? await this.model.find(filter).limit(limitAmount).skip(skipAmount) : await this.model.find({}).limit(limitAmount).skip(skipAmount) ; 
     } 
     
     async findOne(filter: Record<string, any>) 
