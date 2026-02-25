@@ -1123,43 +1123,43 @@ Image 8.2 - Chip set
 
 ### Completed
 1. **Introduced dotenv for environment variable management (backend side)**
-- Sensitive configuration (API keys, DB URI, JWT secret) now stored securely in `.env` instead of hardcoding
+    - Sensitive configuration (API keys, DB URI, JWT secret) now stored securely in `.env` instead of hardcoding
 
 2. **Redirected packages into separate frontend and backend directories**
-- Independent `package.json` and `node_modules`, ensuring clean separation and avoiding mixed dependencies
+    - Independent `package.json` and `node_modules`, ensuring clean separation and avoiding mixed dependencies
 
 3. **Modularised backend routes for cleaner structure**
-- Reduced redundant code in authentication and data verification, improving maintainability
+    - Reduced redundant code in authentication and data verification, improving maintainability
 
 4. **Implemented server-side scheduled data updates (Node.js Interval)**
-- Backend automatically refreshes or syncs data at defined intervals, reducing manual triggers (located in `./backend/src/detectRecord.ts`)
+    - Backend automatically refreshes or syncs data at defined intervals, reducing manual triggers (located in `./backend/src/detectRecord.ts`)
 
 ### Planned Improvements
 #### Frontend side
 1. **Apply custom hooks to centralize commonly used state**
-- Reduce redundant state creation in view components (located in ./frontend/src/customhook.tsx)
+    - Reduce redundant state creation in view components (located in ./frontend/src/customhook.tsx)
 
 2. **Refactor Context API into two smaller custom hooks**
-- One dedicated to managing data state, another for CRUD operations. This improves maintainability and reduces complexity in view components.
+    - One dedicated to managing data state, another for CRUD operations. This improves maintainability and reduces complexity in view components
 
 3. **Use index input instead of passing entire data into modal (for table cells)**
-- Context hook will provide a getter function that accepts an index number, improving maintainability.
+    - Context hook will provide a getter function that accepts an index number, improving maintainability
 
 4. **Support multiple contact (Publisher/Author) inputs via JSON**
-- Enhance efficiency by allowing bulk input rather than filling fields one by one
+    - Enhance efficiency by allowing bulk input rather than filling fields one by one
 
 #### Backend Side
 1. **Implement server-side pagination**
-- Limit data returned in each GET request, improving frontend performance and user experience
+    - Limit data returned in each GET request, improving frontend performance and user experience
 
 2. **Upgrade server-side scheduled data updates**
-- Replace prototype-level Node.js Interval with a production-grade scheduler (e.g. node-cron or cloud-based job scheduler) to ensure reliability, scalability, and better error handling
+    - Replace prototype-level Node.js Interval with a production-grade scheduler (e.g. node-cron or cloud-based job scheduler) to ensure reliability, scalability, and better error handling
   
 3. **Improve the Response design**
-- Include errorMessage and errorCode for better error handling, and return total record counts to improve usability (located in `./backend/src/improvement/ErrorResponse.ts` or `./backend/src/improvement/SuccessResponse.ts`)
+    - Include errorMessage and errorCode for better error handling, and return total record counts to improve usability (located in `./backend/src/improvement/ErrorResponse.ts` or `./backend/src/improvement/SuccessResponse.ts`)
   
 4. **Built CRUD Query with OOP + Factory design pattern and Generic**
-- Create a CRUD Factory with commonly used queries for each collection (located in `./backend/src/improvement/CRUDFactory.ts`)
+    - Create a CRUD Factory with commonly used queries for each collection (located in `./backend/src/improvement/CRUDFactory.ts`)
 
 ## Contributing
 1. Fork the repository.
