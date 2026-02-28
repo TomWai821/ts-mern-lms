@@ -50,3 +50,43 @@ export interface Book
     author: string;
     publisher: string;
 }
+
+export interface externalDataInterface
+{
+    items: ItemsInterface[];
+    totalItems?: number;
+}
+
+export interface ItemsInterface
+{
+    volumeInfo: VolumeInfoInterface;
+    saleInfo: SaleInfoInterface;
+}
+
+interface VolumeInfoInterface
+{
+    averageRating:string;
+    ratingsCount:string;
+    industryIdentifiers?: IndustryIdentifiersInterface[];
+    categories?:string;
+}
+
+interface IndustryIdentifiersInterface
+{
+    type:string;
+    identifier:string;
+}
+
+interface SaleInfoInterface
+{
+    saleability: string;
+    isEbook: boolean;
+    listPrice?: PriceInterface;
+    retailPrice?: PriceInterface;
+}
+
+interface PriceInterface
+{
+    amount:number;
+    currencyCode:string;
+}

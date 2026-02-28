@@ -2,7 +2,7 @@ import express from 'express';
 import { upload } from '../storage';
 import { GetDefinition, CreateDefinitionData, EditDefinitionData, DeleteDefinitionData } from '../controller/definitionController';
 import { LoginAndFindUser } from '../data/middlewareGroup';
-import { CreateBookRecord, DeleteBookRecord, EditBookRecord, GetBookImage, GetBookRecord } from '../controller/bookController';
+import { CreateBookRecord, DeleteBookRecord, EditBookRecord, GetBookImage, GetBookRecord, GetDataFromGoogleBook } from '../controller/bookController';
 
 import { BookCreateRules } from '../validator/expressBodyValidator';
 import { BuildBookQueryAndGetData, BuildFavouriteBookQueryAndGetData, BuildSuggestBookQueryAndGetData } from '../controller/middleware/Book/bookGetDataMiddleware';
@@ -51,5 +51,6 @@ router.delete('/contact/type=:type', ...LoginAndFindUser, ContactTypeValidation,
 
 // For image
 router.get("/uploads/:filename", GetBookImage);
+router.get("/external", ...LoginAndFindUser, GetDataFromGoogleBook)
 
 export default router;

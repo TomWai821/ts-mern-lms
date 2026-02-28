@@ -149,3 +149,19 @@ const BuildQuery = (params:Record<string, number | string | Date | boolean | und
 
     return queryParams.toString();
 }
+
+export const GetExternalData = async (authToken:string, bookname:string, author:string) =>
+{
+      const response = await fetch(`${localhost}/book/external?bookname=${bookname}&author=${author}`,
+        {
+            method: 'GET',
+            headers: { 'content-type': contentType, 'authToken': authToken },
+        }
+    );
+
+    if(response.ok)
+    {
+        const result: GetResultInterface = await response.json();
+        return result;
+    }
+}

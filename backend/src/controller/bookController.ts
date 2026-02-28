@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
 import { CreateBook, FindBookByID, FindBookByIDAndDelete, FindBookByIDAndUpdate } from '../schema/book/book';
-import { AuthRequest } from '../model/requestInterface';
+import { AuthRequest, externalDataInterface, ItemsInterface } from '../model/requestInterface';
 import { deleteImage } from '../storage';
 import { BookInterface } from '../model/bookSchemaInterface';
 import { FindBookLoanedAndDelete } from '../schema/book/bookLoaned';
 import { FindBookFavouriteAndDeleteMany } from '../schema/book/bookFavourite';
 
 import fs from "fs";
+
 export const GetBookRecord = async (req: AuthRequest, res: Response) => 
 {
     try 
@@ -161,5 +162,58 @@ export const DeleteBookRecord = async(req:Request, res:Response) =>
     catch(error)
     {
         res.status(500).json({ success, error: 'Internal Server Error!' });
+    }
+}
+
+export const GetDataFromGoogleBook = async (req:Request, res:Response) => 
+{
+    try
+    {
+        const {bookname, author} = req.query;
+        
+        const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+        const baseUrl = process.env.GOOGLE_BOOKS_BASE_URL; 
+
+        const query = `${bookname} inauthor:${author}`;
+        const url = `${baseUrl}?q=${query}&key=${apiKey}`;
+
+        const response = await fetch(url);
+        const result = await response.json() as externalDataInterface;
+        let externalBookData =  { averageRating: "N/A", ratingsCount: "N/A", categories: "N/A", saleability: "N/A", listPrice: "N/A", retailPrice: "N/A", 
+            ISBN_13_Code: "N/A", ISBN_10_Code:"N/A"};
+
+        if (result?.items?.length && (result.totalItems ?? 0) >= 0)
+        {
+            const book = result.items[0];
+            const volumeInfo = book.volumeInfo || {};
+            const saleInfo = book.saleInfo || {};
+                
+            const saleability = saleInfo.saleability;
+            const identifiers = volumeInfo.industryIdentifiers || [];
+                
+            externalBookData = 
+            {
+                averageRating: volumeInfo.averageRating ? `${volumeInfo.averageRating} (From Google Books)` : "N/A",
+                ratingsCount: volumeInfo.ratingsCount ? `${volumeInfo.ratingsCount}` : "N/A",
+                categories: volumeInfo.categories ? `${volumeInfo.categories}` : "N/A",
+                saleability: saleability ?? "N/A",
+                listPrice: "N/A",
+                retailPrice: "N/A",
+                ISBN_13_Code: identifiers.find(item => item.type === "ISBN_13")?.identifier ?? "N/A",
+                ISBN_10_Code: identifiers.find(item => item.type === "ISBN_10")?.identifier ?? "N/A"
+            };
+
+            if (saleability !== "NOT_FOR_SALE") 
+            {
+                externalBookData.listPrice = saleInfo.listPrice?.amount ? `${saleInfo.listPrice.currencyCode}$${saleInfo.listPrice.amount}` : "N/A";
+                externalBookData.retailPrice = saleInfo.retailPrice?.amount ? `${saleInfo.retailPrice.currencyCode}$${saleInfo.retailPrice.amount}` : "N/A";
+            }
+        }
+
+        res.json({success: true, foundExternalBook: externalBookData});
+    }
+    catch(error)
+    {
+        res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }

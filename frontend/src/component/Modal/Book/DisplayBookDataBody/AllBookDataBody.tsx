@@ -4,7 +4,7 @@ import { Avatar, Box, Tab, Tabs } from "@mui/material";
 import { DisplayDataModalBody } from "../../../../Model/ModelForModal"
 
 import { BookImageFormat, displayAsRow} from "../../../../Data/Style";
-import { BookDataInterface, GetResultInterface, LoanBookInterface } from "../../../../Model/ResultModel";
+import { BookDataInterface, ExternalBookDataInterface, LoanBookInterface } from "../../../../Model/ResultModel";
 import { TransferDateToISOString } from "../../../../Controller/OtherController";
 
 import { BookDataTabLabel } from "../../../../Data/TableData";
@@ -13,10 +13,14 @@ import BookDataBody from "./ModalBody/BookDataBody";
 import GoogleBookDataBody from "./ModalBody/GoogleBookDataBody";
 import { TabProps } from "../../../../Controller/OtherUsefulController";
 import { useAuthContext } from "../../../../Context/User/AuthContext";
+import { useBookContext } from "../../../../Context/Book/BookContext";
+
+import CircularProgress from '@mui/material/CircularProgress';
 
 const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) => 
 {
-    const {IsLoggedIn} = useAuthContext();
+    const { IsLoggedIn } = useAuthContext();
+    const { getExternalData } = useBookContext();
     const {data} = AllUserData;
     const Data = data as BookDataInterface;
     const LoanData = data as LoanBookInterface;
@@ -25,10 +29,11 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
     const descriptionData = Data.description || LoanData.bookDetails?.description;
     const status = Data.status || LoanData.bookDetails?.status;
 
-    const [externalBookData, setExternalBookData] = useState({averageRating:  "N/A", ratingsCount: "N/A", categories: "N/A", listPrice: "N/A", retailPrice: "N/A", ISBN_13_Code: "N/A", ISBN_10_Code: "N/A"});
+    const [externalBookData, setExternalBookData] = useState({averageRating: "N/A", ratingsCount: "N/A", categories: "N/A", listPrice: "N/A", retailPrice: "N/A", ISBN_13_Code: "N/A", ISBN_10_Code: "N/A"});
     const [tabValue, setTabValue] = useState(0);
-
     const RatingAsNumber = Number.parseInt(externalBookData.averageRating);
+
+    const [loading, setLoading] = useState(true);
 
     const changeTabValue = (event: React.SyntheticEvent, newValue: number) =>
     {
@@ -37,46 +42,9 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
 
     const getBookDataFromExternal = async () => 
     {
-        const apiKey = process.env.REACT_APP_GOOGLE_BOOKS_API_KEY;
-        const baseUrl = process.env.REACT_APP_GOOGLE_BOOKS_BASE_URL; 
-        const bookName = Data.bookname || LoanData.bookDetails?.bookname;
-        const author = Data.authorDetails?.author || LoanData.authorDetails?.author;
-        const query = `${bookName} inauthor:${author}`;
-        const url = `${baseUrl}?q=${query}&key=${apiKey}`;
-
-        const response = await fetch(url);
-        const result = await response.json() as GetResultInterface;
-
-        if (result.items && result.items.length > 0) 
-        {
-            const book = result.items[0];
-            const volumeInfo = book.volumeInfo || {};
-            const saleInfo = book.saleInfo || {};
-        
-            const saleability = saleInfo.saleability;
-        
-            const externalBookData = 
-            {
-                averageRating: volumeInfo.averageRating ? `${volumeInfo.averageRating} (From Google Books)` : "N/A",
-                ratingsCount: volumeInfo.ratingsCount ? `${volumeInfo.ratingsCount}` : "N/A",
-                categories: volumeInfo.categories ? `${volumeInfo.categories}` : "N/A",
-                saleability: saleability || "N/A",
-                listPrice: "N/A",
-                retailPrice: "N/A",
-                ISBN_13_Code: volumeInfo.industryIdentifiers?.find(identifier => identifier.type === "ISBN_13")?.identifier as string || "N/A",
-                ISBN_10_Code: volumeInfo.industryIdentifiers?.find(identifier => identifier.type === "ISBN_10")?.identifier as string || "N/A"
-            };
-        
-            if (saleability !== "NOT_FOR_SALE") 
-            {
-                externalBookData.listPrice = saleInfo.listPrice?.amount ? `${saleInfo.listPrice.currencyCode}$${saleInfo.listPrice.amount}` : "N/A";
-                externalBookData.retailPrice = saleInfo.retailPrice?.amount ? `${saleInfo.retailPrice.currencyCode}$${saleInfo.retailPrice.amount}` : "N/A";
-            }
-        
-            setExternalBookData(externalBookData);
-        }
-
-        return result;
+        const result = await getExternalData(Data.bookname || LoanData.bookDetails?.bookname as string, Data.authorDetails?.author || LoanData.authorDetails?.author);
+        setExternalBookData(result?.foundExternalBook as ExternalBookDataInterface);
+        setLoading(false);
     }
 
     const BookData:Record<string, {label:string, value:any}> =
@@ -91,9 +59,9 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
 
     useEffect(() => 
     {
-        getBookDataFromExternal();
+        getBookDataFromExternal()
     },[])
-    
+
     return(
         <Box>
             {
@@ -116,7 +84,15 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
                 </CustomTabPanel>
                
                 <CustomTabPanel index={tabValue} value={1}>
-                    <GoogleBookDataBody externalBookData={externalBookData} RatingAsNumber={RatingAsNumber}/>
+                    {
+                        loading ? 
+                        <Box sx={{ display: 'grid', gap: '20px 50px', width:'350px', gridTemplateColumns: '100%', paddingLeft: '10px'}}>
+                            Loading... 
+                            <CircularProgress/>
+                        </Box> 
+                        : 
+                        <GoogleBookDataBody externalBookData={externalBookData} RatingAsNumber={RatingAsNumber}/>
+                    }
                 </CustomTabPanel>
             </Box>
         </Box>

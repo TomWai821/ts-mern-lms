@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { BookDataInterface, ContactInterface, DefinitionState, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
+import { BookDataInterface, ContactInterface, DefinitionState, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
 import { UserDataInterface } from "./UserTableModel";
 import { BookTableDataInterface } from "./BookTableModel";
 
@@ -72,6 +72,7 @@ export interface BookContextProps
     loanBook: (bookID:string, userID?:string) => Promise<Response>;
     returnBook: (loanRecordID:string, finesPaid?:string) => Promise<boolean>;
     deleteBook: (bookID:string) => Promise<boolean>;
+    getExternalData: (bookname: string, author: string) => Promise<GetResultInterface | undefined>;
 }
 
 export interface RecommendBookContextProps

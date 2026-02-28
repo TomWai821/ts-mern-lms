@@ -27,41 +27,19 @@ export interface GetResultInterface
     foundContact?: ContactInterface | ContactInterface[];
     foundLoanBook?: LoanBookInterface | LoanBookInterface[];
     foundFavouriteBook?: BookDataInterface | BookDataInterface[];
-    items?: ItemsInterface[];
+    foundExternalBook?: ExternalBookDataInterface;
 }
 
-export interface ItemsInterface
+export interface ExternalBookDataInterface
 {
-    volumeInfo: VolumeInfoInterface;
-    saleInfo: SaleInfoInterface;
-}
-
-interface VolumeInfoInterface
-{
-    averageRating:string;
-    ratingsCount:string;
-    industryIdentifiers?: IndustryIdentifiersInterface[];
-    categories?:string;
-}
-
-interface IndustryIdentifiersInterface
-{
-    type:string;
-    identifier:string;
-}
-
-interface SaleInfoInterface
-{
-    saleability: string;
-    isEbook: boolean;
-    listPrice?: PriceInterface;
-    retailPrice?: PriceInterface;
-}
-
-interface PriceInterface
-{
-    amount:number;
-    currencyCode:string;
+    averageRating: string,
+    ratingsCount: string,
+    categories: string,
+    saleability: string,
+    listPrice: string,
+    retailPrice: string,
+    ISBN_13_Code: string,
+    ISBN_10_Code: string
 }
 
 export interface UserResultDataInterface extends UserDataInterface

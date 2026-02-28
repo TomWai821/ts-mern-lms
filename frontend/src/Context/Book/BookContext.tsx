@@ -2,7 +2,7 @@ import { createContext, FC, useCallback, useContext, useEffect, useState } from 
 import { BookContextProps, ChildProps } from "../../Model/ContextAndProviderModel";
 import { CalculateDueDate, GetCurrentDate } from "../../Controller/OtherController";
 import { BookDataInterface, GetResultInterface, LoanBookInterface } from "../../Model/ResultModel";
-import { fetchBook, fetchLoanBook } from "../../Controller/BookController/BookGetController";
+import { fetchBook, fetchLoanBook, GetExternalData } from "../../Controller/BookController/BookGetController";
 import { createBookRecord, createLoanBookRecord } from "../../Controller/BookController/BookPostController";
 import { returnBookAndChangeStatus, updateBookRecord } from "../../Controller/BookController/BookPutController";
 import { deleteBookRecord } from "../../Controller/BookController/BookDeleteController";
@@ -136,13 +136,20 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
 
     },[fetchAllBook])
 
+    const getExternalData = useCallback(async(bookname:string, author:string) => 
+    {
+        const result = await GetExternalData(authToken, bookname, author);
+
+        return result;
+    },[])
+
     useEffect(() => 
     {
         fetchAllRecord();
     },[fetchAllRecord])
 
     return (
-        <BookContext.Provider value={{ bookData, fetchAllRecord, fetchAllBook, fetchBookWithFliterData, fetchLoanBookWithFliterData, createBook, editBook, loanBook, returnBook, deleteBook }}>
+        <BookContext.Provider value={{ bookData, fetchAllRecord, fetchAllBook, fetchBookWithFliterData, fetchLoanBookWithFliterData, createBook, editBook, loanBook, returnBook, deleteBook, getExternalData }}>
             {children}
         </BookContext.Provider>
     );
