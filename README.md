@@ -232,7 +232,7 @@ Notes:
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
 ***1. Detect Record Functions***<br>
-<img src="doc/Image/Functions/DetectRecordDaily.png" style="width:90%;"/><br>
+<img src="doc/Image/Functions/DetectRecordDaily.png" style="width:80%;"/><br>
 Performs scheduled scans for:
 - Expired Loan Records
 - Suspension Records
