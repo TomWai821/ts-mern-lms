@@ -6,7 +6,10 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --coverage"
+    
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

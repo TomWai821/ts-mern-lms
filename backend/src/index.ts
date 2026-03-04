@@ -6,10 +6,7 @@ import dotenv from "dotenv";
 // another file functions
 import { connectToMongoDB } from './connectToMongo';
 import { scheduleDailyMidnightTasks  } from './detectRecord';
-
-// routes
-import userRoutes from './routes/user';
-import bookRoutes from './routes/books';
+import { routerHandler } from './routerList';
 
 dotenv.config({ debug: false });
 
@@ -30,8 +27,8 @@ app.use(cors
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/user', userRoutes);
-app.use('/api/book', bookRoutes);
+
+routerHandler(app);
 
 app.listen(PORT, () => 
 { 

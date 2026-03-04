@@ -21,7 +21,7 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
 {
     const { IsLoggedIn } = useAuthContext();
     const { getExternalData } = useBookContext();
-    const {data} = AllUserData;
+    const { data } = AllUserData;
     const Data = data as BookDataInterface;
     const LoanData = data as LoanBookInterface;
 
@@ -42,9 +42,12 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
 
     const getBookDataFromExternal = async () => 
     {
-        const result = await getExternalData(Data.bookname || LoanData.bookDetails?.bookname as string, Data.authorDetails?.author || LoanData.authorDetails?.author);
-        setExternalBookData(result?.foundExternalBook as ExternalBookDataInterface);
-        setLoading(false);
+        if(IsLoggedIn())
+        {
+            const result = await getExternalData(Data.bookname || LoanData.bookDetails?.bookname as string, Data.authorDetails?.author || LoanData.authorDetails?.author);
+            setExternalBookData(result?.foundExternalBook as ExternalBookDataInterface);
+            setLoading(false);
+        }
     }
 
     const BookData:Record<string, {label:string, value:any}> =
