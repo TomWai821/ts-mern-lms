@@ -46,8 +46,8 @@ jobs:
           done
       # Import seed data (Collection Schemas)
       - run: docker compose exec -T mongo \
-          mongoimport --db mydb --collection mycollection \
-          --file /docker-entrypoint-initdb.d/data.json --jsonArray
+          mongosh mydb --eval 'db.mycollection.insertMany(JSON.parse(cat("/docker-entrypoint-initdb.d/data.json")))'
+
 
       # Integration test
       - run: npm run test:e2e --prefix backend
