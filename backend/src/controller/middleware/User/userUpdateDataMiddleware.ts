@@ -1,8 +1,7 @@
 import { NextFunction, Response } from "express";
 import { AuthRequest } from "../../../model/requestInterface";
 import { FindUser } from "../../../schema/user/user";
-import { ObjectId } from "mongoose";
-import { CreateSuspendList, FindSuspendList, FindSuspendListByIDAndUpdate } from "../../../schema/user/suspendList";
+import { CreateSuspendList, FindSuspendList } from "../../../schema/user/suspendList";
 import { UserInterface } from "../../../model/userSchemaInterface";
 
 // For user update(Require login)

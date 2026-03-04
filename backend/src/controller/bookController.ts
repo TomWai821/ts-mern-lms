@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { CreateBook, FindBookByID, FindBookByIDAndDelete, FindBookByIDAndUpdate } from '../schema/book/book';
-import { AuthRequest, externalDataInterface, ItemsInterface } from '../model/requestInterface';
+import { AuthRequest, externalDataInterface } from '../model/requestInterface';
 import { deleteImage } from '../storage';
 import { BookInterface } from '../model/bookSchemaInterface';
 import { FindBookLoanedAndDelete } from '../schema/book/bookLoaned';

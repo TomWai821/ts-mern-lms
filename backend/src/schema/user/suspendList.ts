@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { SuspendListInterface } from "../../model/userSchemaInterface";
 import { printError } from "../../controller/Utils";
 import { FindUserByIDAndUpdate } from "./user";

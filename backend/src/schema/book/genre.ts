@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import { GenreInterface } from '../../model/bookSchemaInterface';
 import { printError } from '../../controller/Utils';
 

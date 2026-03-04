@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import { PublisherInterface } from '../../model/bookSchemaInterface';
 import { printError } from '../../controller/Utils';
 

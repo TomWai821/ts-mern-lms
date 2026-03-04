@@ -1,4 +1,4 @@
-import mongoose, { ObjectId, PipelineStage } from 'mongoose';
+import mongoose, { PipelineStage } from 'mongoose';
 import { UserInterface } from '../../model/userSchemaInterface';
 import { printError } from '../../controller/Utils';
 import { userRole, userStatus } from '../../data/enums';

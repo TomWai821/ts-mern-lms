@@ -29,7 +29,6 @@ export const BuildFavouriteBookQueryAndGetData = async (req: AuthRequest, res: R
 {
     const userID = req.user?._id;
     const queryParams = req.query;
-    let foundFavouriteBook: BookFavouriteInterface | BookFavouriteInterface[] | null | undefined;
     let query:any;
 
     const hasBodyParameter = Object.keys(queryParams).length > 0;
@@ -43,7 +42,7 @@ export const BuildFavouriteBookQueryAndGetData = async (req: AuthRequest, res: R
 
     const completeQuery = hasBodyParameter ? {...query, userID: userObjectId} : {userID: userObjectId};
     
-    foundFavouriteBook = await GetBookFavourite(completeQuery);
+    let foundFavouriteBook = await GetBookFavourite(completeQuery);
 
     if(!foundFavouriteBook)
     {

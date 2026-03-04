@@ -1,7 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 import { AuthRequest, LoginInterface } from "../../../model/requestInterface";
 import { FindUser, FindUserByID } from "../../../schema/user/user";
-import { ObjectId } from "mongoose";
 import { comparePassword } from "../../hashing";
 import { UserInterface } from "../../../model/userSchemaInterface";
 import { FindSuspendListByID } from "../../../schema/user/suspendList";

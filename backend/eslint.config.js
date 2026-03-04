@@ -8,10 +8,16 @@ module.exports = [
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parser: tseslint.parser,
+      globals: {
+        require: "readonly",
+        module: "readonly",
+        __dirname: "readonly"
+      }
     },
     rules: {
       "no-unused-vars": "warn",
-      "no-console": "off"
+      "no-console": "off",
+      "@typescript-eslint/no-require-imports": "off"
     }
   }
 ];

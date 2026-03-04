@@ -82,7 +82,6 @@ export const BookGenreIDAndLanguageIDValidation = async (req:Request, res:Respon
 export const FoundBookLoanRecord = async (req:AuthRequest, res:Response, next: NextFunction) => 
 {
     const loanBookID = req.params.id;
-    let success = false;
 
     try
     {
@@ -90,7 +89,7 @@ export const FoundBookLoanRecord = async (req:AuthRequest, res:Response, next: N
 
         if(!foundLoanRecord)
         {
-            return res.status(404).json({success, error: `Could not found Loan Record!`});
+            return res.status(404).json({success: false, error: `Could not found Loan Record!`});
         }
 
         req.foundLoanedRecord = foundLoanRecord;
@@ -99,7 +98,7 @@ export const FoundBookLoanRecord = async (req:AuthRequest, res:Response, next: N
     catch(error)
     {
         console.log(error);
-        res.status(500).json({ success, error: 'Internal Server Error!' });
+        res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }
 
