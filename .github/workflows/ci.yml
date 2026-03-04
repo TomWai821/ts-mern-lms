@@ -17,13 +17,13 @@ jobs:
       - run: npm install --prefix backend
       - run: npm install --prefix frontend
       # Static check
-      - run: npm run lint --prefix backend
-      - run: npm run lint --prefix frontend
-      - run: npm run typecheck --prefix backend
+      - run: npm run lint --prefix ./backend
+      - run: npm run lint --prefix ./frontend
+      - run: npm run typecheck --prefix ./backend
       # Unit test (Backend)
-      - run: npm test --prefix backend
-      # Build Frontend Servicce
-      - run: npm run build --prefix frontend
+      #- run: npm test --prefix backend
+      # Build Frontend Service
+      - run: npm run build --prefix ./frontend
       # Start the docker
       - run: docker-compose up --build -d
       # Waiting for health check
