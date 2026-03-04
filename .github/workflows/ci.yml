@@ -26,13 +26,17 @@ jobs:
       # Unit test (Backend)
       #- run: npm test --prefix backend
 
-      # Build Frontend Service
+      # Build Service
+      - run: npm run build --prefix ./backend
+        env: 
+          CI: false
+
       - run: npm run build --prefix ./frontend
         env: 
           CI: false
 
       # Start the docker
-      - run: docker compose up --build -d --wait
+      - run: docker compose up --build -d
       # Waiting for health check
       - run: |
           for i in {1..10}; do
