@@ -10,6 +10,8 @@ on:
 jobs:
   lint-typecheck:
     runs-on: ubuntu-latest
+    env:
+      MONGO_URI: mongodb://localhost:27017/test
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -26,10 +28,6 @@ jobs:
     needs: lint-typecheck
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci --prefix backend
-      - run: npm test --prefix backend
-      - run: npm ci --prefix frontend
-      - run: npm test --prefix frontend
       - run: docker compose -f docker-compose.test.yml up --abort-on-container-exit
       - run: docker compose -f docker-compose.test.yml down
 

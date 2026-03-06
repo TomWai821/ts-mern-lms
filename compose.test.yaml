@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-test:
+    build:
+      context: ./backend
+      target: test
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/test"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  frontend-test:
+    build:
+      context: ./frontend
+      target: test
+    depends_on:
+      - mongo
