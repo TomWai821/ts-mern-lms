@@ -16,9 +16,13 @@ A full-stack application that streamlines library operations built as a Informat
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
+- [CI/CD Pipeline](#ci-cd-pipeline)
 - [Features](#features)
+- [Testing Strategy](#testing-strategy)
+- [Test Cases](#test-cases)
 - [QR Code Handling (Frontend Only)](#qr-code-handling-frontend-only)
 - [Automated Logic Overview](#automated-logic-overview)
+- [TF-IDF Logic Overview](#tf-idf-logic-overview)
 - [Installation](#installation)
 - [Architecture](#architecture)
 - [UI Layout](#ui-layout)
@@ -31,13 +35,19 @@ A full-stack application that streamlines library operations built as a Informat
 ### Project Purpose 
 The Library Management System was developed to modernise library operations by addressing inefficiencies such as reliance on physical library cards and the lack of a recommendation system. Built with the MERN stack and TypeScript, the goal was to create a secure, scalable, and user-friendly platform that improves both librarian workflows and user experience
 
+
+
 ### Features 
 Key features include QR code-based book loans, automated return tracking, a TF-IDF-powered recommendation engine for book discovery, and seamless third-party API integration (Google Books). Due to project time constraints, role‑based access control (RBAC) is currently implemented on the frontend only. Together, these features highlight the ability to combine modern web technologies with practical library needs, and improves UX for the prototype but is not a substitute for backend authorisation.
+
+
 
 ### Technical Learns 
 This project allowed me to develop skills in designing and implementing scalable single-page applications, managing global state with React’s Context API and useState, and building modular RESTful APIs with Express.js, while also gaining practical experience with React Router for SPA navigation. I also developed awareness of testing and performance optimisation practices essential for scalable frontend development
 
 Disclaimer: All contact information provided in this file is fictitious and used solely for demonstration purposes
+
+
 
 ## Quick Start
 ### 1. Copy example environment variables and edit
@@ -55,10 +65,70 @@ cp frontend/.env.example frontend/.env
 
 ### 2. Launch with Docker Compose
 ```bash
-docker-compose up --build -d
+docker-compose -f compose.yaml up --build -d
 ```
 
-### 3. Postman Smoke Test
+
+## Technology Stack
+- **Frontend:** React, Material-UI for styling(Leveraging CSS3 Standard), integrated react-router-dom for SPA(Single Page Application) navigation
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB with Mongoose (With Nodemon for development)
+- **Image Data Handling:** Multer for file uploads
+- **Data security:** JWT(JSON web token) for Authentication, Bcrypt for password hashing
+- **Environment Configuration:** dotenv for managing environment variables
+- **Algorithms:** TF‑IDF for recommendation engine
+- **CI/CD & Code quality:** GitHub Actions for CI/CD, Jest for testing, ESLint for linting, Prettier for formatting
+- **Other**: RESTful APIs with modular design, Docker for containerization and environment consistency
+
+
+
+### CI/CD Pipeline
+- **CI:** Implemented with GitHub Actions  
+    - Runs Jest tests automatically on push/PR  
+    - ESLint checks for code quality  
+    - Logs kept clean for recruiter/demo clarity
+- **CD:** Deployment pipeline planned (Render integration pending)  
+
+
+
+## Testing Strategy
+
+### Overview
+- **Frontend:** Unit tests with Jest + React Testing Library (mock APIs, setup/teardown hooks)  
+- **Backend:** Integration tests with Jest + Supertest (in-memory MongoDB, setup/teardown hooks)  
+- **Result:** CI pipeline runs tests automatically on push/PR, logs kept clean for recruiter/demo clarity
+
+#### 1. Docker test compose (Jest)
+- Build test containers
+  ```bash
+  docker compose -f compose.test.yaml build
+  ```
+- Start test environment
+  ```bash
+  docker-compose -f docker-compose.test.yml up
+  ```
+- Run Jest tests inside container  
+  ```bash
+  docker exec backend npm test
+  ```
+
+#### 2. Local test (Jest)
+1. Start local server
+   - For backend side
+   ```bash
+   npm run dev
+   ```
+   - For frontend side:
+   ```bash
+   npm run start
+   ``` 
+2. Run tests locally  
+   ```bash
+     npm run test
+   ```  
+
+### Postman Smoke Test (Prefer docker environment)
+
 #### Postman Environment
 - base_url = http://localhost:5000
 - email = IamTester@gmail.com
@@ -198,16 +268,169 @@ Notes:
 - The API may return [] or null when no matching data exists, or seed data is not present
 
 
-## Technology Stack
-- **Frontend:** React, Material-UI for styling(Leveraging CSS3 Standard), integrated react-router-dom for SPA(Single Page Application) navigation
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB with Mongoose (With Nodemon for development)
-- **Image Data Handling:** Multer for file uploads
-- **Data security:** JWT(JSON web token) for Authentication, Bcrypt for password hashing
-- **Environment Configuration:** dotenv for managing environment variables
-- **Algorithms:** TF‑IDF for recommendation engine (Implemented with the natural library in Node.js)
-- **Other**: RESTful APIs with modular design, Docker for containerization and environment consistency
-  
+
+## Test cases
+
+#### Frontend
+   
+1. Register an account (In Register Page)
+   Expectation:
+       - Alert is shown with success colour (green)
+       - Alert message is 'Registration successful! Redirecting...'
+   Result:
+       - Same as expectation
+
+2. Input the already registered data (In Register Page)
+   Expectation:
+       - Alert is shown with error colour (red)
+       - Alert message is 'Failed to register! Please try again'
+   Result:
+       - Same as expectation
+   
+3. Input DOB that is younger than 6 years old (In Register Page)
+   Expectation:
+       - HelperText is shown
+       - HelperText message is 'Only users aged 6 years and older can register'
+   Result:
+       - Same as expectation
+   
+5. Login account (In Login Page)
+   Expectation:
+       - Alert is shown with success colour (green)
+       - Alert message is 'Login successfully'
+   Result:
+       - Same as expectation
+   
+6. Input an invalid password (In the login page)
+   Expectation:
+       - Alert is shown with error colour (red)
+       - Alert message is 'Invalid email or password!'
+   Result:
+       - Same as expectation
+
+7. Let the email input field become empty (In the login page)
+   Expectation:
+       - HelperText is shown
+       - HelperText message is 'Please enter a valid email address'
+   Result:
+       - Same as expectation
+   
+8. Let the password input field become empty (In the login page)
+   Expectation:
+       - HelperText is shown
+       - HelperText message is 'password must be at least 6 characters long'
+   Result:
+       - Same as expectation
+
+***Remarks***
+- Frontend test case in './frontend/src/__test__/Login.test.tsx'
+- It will remove session storage and cookie storage data after completing each test case
+
+#### Backend
+
+***For User Data***
+1. Account Registeration
+   Expectation:
+       - Status Code 200
+   Result:
+       - Same as expectation
+
+2. Account Registeration (with already registeration data)
+   Expectation:
+       - Status Code 400
+       - error message should be 'Email already in use'
+   Result:
+       - Same as expectation
+
+3. Account Login
+   Expectation:
+       - Status Code 200
+       - message should be 'Login Successfully!'
+   Result:
+       - Same as expectation
+
+4. Account Login (With Invalid email)
+   Expectation:
+       - Status Code 400
+       - message should be 'Invalid email address'
+   Result:
+       - Same as expectation
+
+5. Account Login (With Invalid password)
+   Expectation:
+       - Status Code 400
+       - message should be 'Invalid password'
+   Result:
+       - Same as expectation
+
+6. Get User Profile data
+   Expectation:
+       - Status Code 200
+       - It should return an object which include username, gender, role in data column
+   Result:
+       - Same as expectation
+
+7. Get User Profile data (With Invalid JWT Token)
+   Expectation:
+       - Status Code 401
+   Result:
+       - Same as expectation
+
+8. Get User Loan Book Record
+   Expectation:
+       - Status Code 200
+       - It should return [] (It is new account)
+   Result:
+       - Same as expectation
+
+9. Get User Favourite Book Record
+   Expectation:
+       - Status Code 200
+       - It should return [] (It is new account)
+   Result:
+       - Same as expectation
+
+***For Book Data***
+1. Get the whole book data
+   Expectation:
+       - Status Code 200
+   Result:
+       - Same as expectation
+
+2. Get the whole book data with filter data (bookname=Harry)
+   Expectation:
+       - Status Code 200
+   Result:
+       - Same as expectation
+
+3. Get the whole book data with invalid filter data (bookname=zzz)
+   Expectation:
+       - Status Code 200
+       - It should return []
+   Result:
+       - Same as expectation
+
+4. Get recommend book data (Based on publish date)
+   Expectation:
+       - Status Code 200
+       - It should return 8 records
+   Result:
+       - Same as expectation
+
+5. Get recommend book data (Based on publish date)
+   Expectation:
+       - Status Code 200
+       - It should has data in body(foundbook)
+   Result:
+       - Same as expectation
+
+***Remarks***
+- Backend test case in './backend/tests/*.ts'
+- It will remove the create data after complete the whole test case
+- It will connect the mongoDB at start and unconnect it after the whole test case
+
+
+
 ## Features
 - **User Authentication:** Secure login system for librarians and users, leveraging JWT
 - **Library Data Management:** CRUD functionality for users, books, contacts, and book metadata
@@ -216,6 +439,8 @@ Notes:
 - **Book Recommendation System:** Uses TF-IDF and loan data analysis for personalized suggestions
 - **Third-Party API Integration:** Fetch book details (ratings, ISBN, etc.) via the Google Books API
 - **Auto Detect Data Duration:** Automatically identifies overdue borrowings with fine calculation and reinstates suspended users on their scheduled unsuspend date
+
+
 
 ## QR Code Handling (Frontend Only)
 - The QR code is generated entirely on the frontend
@@ -228,12 +453,14 @@ Notes:
 - No backend API endpoint is required for QR code generation
 - The QR code is used within the frontend modal for loan verification
 
+
+
 ## Automated Logic Overview
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
 ***1. Detect Record Functions***<br>
 <img src="doc/Image/Functions/DetectRecordDaily.png" style="width:60%;"/><br>
-Performs scheduled scans for:(\
+Performs scheduled scans for:
 - Expired Loan Records
 - Suspension Records
 - Fine Calculations
@@ -276,6 +503,80 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     - Suspension status → "Unsuspend"
     - unSuspendDate → today
 - Feedback Message: “Unsuspend user [ID] successfully!”
+
+
+
+## TF-IDF Logic Overview
+
+***1. Calculate Term Frequence and Inverse Document Frequence***<br>
+<img src="doc/Image/Functions/TF-IDF_BasicFunction.png" style="width:60%;"/><br>
+
+****Term Frequence (TF)****
+- It measures how often a word appears in a document relative to its length
+- Formula: <img src="doc/Image/Formula/TF-formula.png" style="width:60%;"/>
+
+****Inverse Document Frequence (IDF)****
+- It reduces the weight of common words by considering how many documents contain the term
+- Formula: <img src="doc/Image/Formula/IDF-formula.png" style="width:60%;"/>
+
+****TF-IDF Vector****
+- Each document (user history or book metadata) is represented as a vector of TF‑IDF values across the vocabulary
+
+***Cosine Similarity***<br>
+- It compares two vectors by measuring the cosine of the angle between them
+- It produces a score between 0 and 1:
+    - 1 → vectors point in the same direction (high similarity)
+    - 0 → vectors are orthogonal (no similarity)
+- Formula:<img src="doc/Image/Formula/CosineSimilarity-formula.png" style="width:60%;"/>
+
+
+***2. Calculation Logic (TF-IDF + Genre Weight)***<br>
+<img src="doc/Image/Functions/TF-IDF_CalculateFunction.png" style="width:60%;"/><br>
+
+****Corpus Construction****
+- User loan history → loanCorpus
+- All books in the collection → allBooksCorpus
+
+****Vocabulary & Vectors****
+- Build a vocabulary (vocab) from all documents
+- Generate a TF‑IDF vector for the user’s loan history (loanCorpus)
+- Generate TF‑IDF vectors for each book (allBooksCorpus)
+
+****Similarity Calculation****
+- Apply Cosine Similarity between the user vector and each book vector
+- Obtain tfidfScore representing textual similarity
+
+Genre Weighting
+- If a book’s genre matches the user’s loan history → genreScore = 1
+- Otherwise → genreScore = 0
+- Final score is a weighted sum: finalScore = 0.7 * tdidfScore + 0.3 * genreScore
+
+
+***3. TF-IDF Implementation***<br>
+<img src="doc/Image/Functions/TF-IDF_Implementation" style="width:60%;"/><br>
+
+****Retrieve user history****
+- Fetch the latest 5 loan records (limited by collection size)
+- Extract metadata: book ID, name, genre, author, publisher
+- Build loanedBooksCorpus (text corpus) and mark preferred genres (higher weight)
+
+****Build global corpus****
+- Fetch all books in collection
+- Construct allBooksCorpus with metadata strings
+
+****Apply TF‑IDF****
+- Compute similarity scores between loanedBooksCorpus and allBooksCorpus
+- Store results in scoreMap
+
+****Filter & rank recommendations****
+- Exclude books already loaned (avoid duplicates)
+- Sort by TF‑IDF score.
+- Return the top 8 books to the client
+
+****Remarks****
+- Only 5 loan records are used due to collection limits
+- All books are included in the corpus because the dataset size is small
+
 
 
 ## Installation
@@ -322,7 +623,7 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     ### Using Docker
     ```bash
     # Start the project (use --detach to run in background)
-    docker compose up --build --detach
+    docker compose -f compose.yaml up --build --detach
 
     # If you need to reset the demo database and re-run initialisation scripts, stop containers and remove volumes
     # WARNING: this will permanently delete all persisted DB data
@@ -334,8 +635,8 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     - The `./backend/MongoDBSchema` folder is mounted to `/docker-entrypoint-initdb.d` in the MongoDB container
     - These initialization scripts run **only when the `db-data` volume is created for the first time**; if the `db-data` volume already contains data, the scripts will be skipped
     - To re-run initialization and restore the demo data, remove the volume and restart the stack:
-      1. `docker compose down -v`  # WARNING: permanently deletes all persisted DB data
-      2. `docker compose up --build`
+      1. `docker compose -f compose.yaml down -v`  # WARNING: permanently deletes all persisted DB data
+      2. `docker compose -f compose.yaml up --build`
     - The backend requires this demo data for proper functionality; if you run MongoDB locally instead of via Docker, import the JSON files in `./backend/MongoDBSchema` (e.g., via MongoDB Compass)
     - Changing `JWT_SECRET` will invalidate existing JWTs and require users to re-login
 
