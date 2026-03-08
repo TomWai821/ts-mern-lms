@@ -19,7 +19,6 @@ A full-stack application that streamlines library operations built as a Informat
 - [CI/CD Pipeline](#ci-cd-pipeline)
 - [Features](#features)
 - [Testing Strategy](#testing-strategy)
-- [Test Cases](#test-cases)
 - [QR Code Handling (Frontend Only)](#qr-code-handling-frontend-only)
 - [Automated Logic Overview](#automated-logic-overview)
 - [TF-IDF Logic Overview](#tf-idf-logic-overview)
@@ -124,8 +123,170 @@ docker-compose -f compose.yaml up --build -d
    ``` 
 2. Run tests locally  
    ```bash
-     npm run test
-   ```  
+   npm run test
+   ```
+
+### Test cases
+
+THe following test case are using docker test compose (Jest)
+
+#### Frontend
+   
+1. Register an account (In Register Page)
+    - Expectation
+        - Alert is shown with success colour (green)
+        - Alert message is 'Registration successful! Redirecting...'
+    - Result
+        - Same as expectation
+
+2. Input the already registered data (In Register Page)
+    - Expectation
+        - Alert is shown with error colour (red)
+        - Alert message is 'Failed to register! Please try again'
+    - Result
+        - Same as expectation
+   
+3. Input DOB that is younger than 6 years old (In Register Page)
+    - Expectation
+        - HelperText is shown
+        - HelperText message is 'Only users aged 6 years and older can register'
+    - Result
+        - Same as expectation
+   
+5. Login account (In Login Page)
+    - Expectation
+        - Alert is shown with success colour (green)
+        - Alert message is 'Login successfully'
+    - Result
+        - Same as expectation
+   
+6. Input an invalid password (In the login page)
+    - Expectation
+        - Alert is shown with error colour (red)
+        - Alert message is 'Invalid email or password!'
+    - Result
+        - Same as expectation
+
+7. Let the email input field become empty (In the login page)
+    - Expectation
+        - HelperText is shown
+        - HelperText message is 'Please enter a valid email address'
+    - Result
+        - Same as expectation
+   
+8. Let the password input field become empty (In the login page)
+    - Expectation
+        - HelperText is shown
+        - HelperText message is 'password must be at least 6 characters long'
+    - Result
+        - Same as expectation
+
+****Remarks****
+- Frontend test case in './frontend/src/__test__/Login.test.tsx'
+- It will remove session storage and cookie storage data after completing each test case
+
+#### Backend
+
+***For User Data***
+1. Account Registeration
+    - Expectation:
+        - Status Code 200
+    - Result
+        - Same as expectation
+
+2. Account Registeration (with already registeration data)
+    - Expectation
+        - Status Code 400
+        - error message should be 'Email already in use'
+    - Result
+        - Same as expectation
+
+3. Account Login
+    - Expectation
+        - Status Code 200
+        - message should be 'Login Successfully!'
+    - Result
+        - Same as expectation
+
+4. Account Login (With Invalid email)
+    - Expectation
+        - Status Code 400
+        - message should be 'Invalid email address'
+    - Result
+        - Same as expectation
+
+5. Account Login (With Invalid password)
+    - Expectation
+        - Status Code 400
+        - message should be 'Invalid password'
+    - Result
+        - Same as expectation
+
+6. Get User Profile data
+    - Expectation
+        - Status Code 200
+        - It should return an object which include username, gender, role in data column
+    - Result
+        - Same as expectation
+
+7. Get User Profile data (With Invalid JWT Token)
+    - Expectation
+        - Status Code 401
+    - Result
+        - Same as expectation
+
+8. Get User Loan Book Record
+    - Expectation
+        - Status Code 200
+        - It should return [] (It is new account)
+    - Result
+        - Same as expectation
+
+9. Get User Favourite Book Record
+    - Expectation
+        - Status Code 200
+        - It should return [] (It is new account)
+    - Result
+        - Same as expectation
+
+***For Book Data***
+1. Get the whole book data
+    - Expectation
+        - Status Code 200
+    - Result
+        - Same as expectation
+
+2. Get the whole book data with filter data (bookname=Harry)
+    - Expectation
+        - Status Code 200
+    - Result
+        - Same as expectation
+
+3. Get the whole book data with invalid filter data (bookname=zzz)
+    - Expectation:
+        - Status Code 200
+        - It should return []
+    - Result
+        - Same as expectation
+
+4. Get recommend book data (Based on publish date)
+    - Expectation
+        - Status Code 200
+        - It should return 8 records
+    - Result
+        - Same as expectation
+
+5. Get recommend book data (Based on publish date)
+    - Expectation
+        - Status Code 200
+        - It should has data in body(foundbook)
+    - Result
+        - Same as expectation
+
+***Remarks***
+- Backend test case in './backend/tests/*.ts'
+- It will remove the create data after complete the whole test case
+- It will connect the mongoDB at start and unconnect it after the whole test case
 
 ### Postman Smoke Test (Prefer docker environment)
 
@@ -267,170 +428,6 @@ Reminder
 Notes:
 - The API may return [] or null when no matching data exists, or seed data is not present
 
-
-
-## Test cases
-
-#### Frontend
-   
-1. Register an account (In Register Page)
-    - Expectation
-        - Alert is shown with success colour (green)
-        - Alert message is 'Registration successful! Redirecting...'
-    - Result
-        - Same as expectation
-
-2. Input the already registered data (In Register Page)
-    - Expectation
-        - Alert is shown with error colour (red)
-        - Alert message is 'Failed to register! Please try again'
-    - Result
-        - Same as expectation
-   
-3. Input DOB that is younger than 6 years old (In Register Page)
-    - Expectation
-        - HelperText is shown
-        - HelperText message is 'Only users aged 6 years and older can register'
-    - Result
-        - Same as expectation
-   
-5. Login account (In Login Page)
-    - Expectation
-        - Alert is shown with success colour (green)
-        - Alert message is 'Login successfully'
-    - Result
-        - Same as expectation
-   
-6. Input an invalid password (In the login page)
-    - Expectation
-        - Alert is shown with error colour (red)
-        - Alert message is 'Invalid email or password!'
-    - Result
-        - Same as expectation
-
-7. Let the email input field become empty (In the login page)
-    - Expectation
-        - HelperText is shown
-        - HelperText message is 'Please enter a valid email address'
-    - Result
-        - Same as expectation
-   
-8. Let the password input field become empty (In the login page)
-    - Expectation
-        - HelperText is shown
-        - HelperText message is 'password must be at least 6 characters long'
-    - Result
-        - Same as expectation
-
-***Remarks***
-- Frontend test case in './frontend/src/__test__/Login.test.tsx'
-- It will remove session storage and cookie storage data after completing each test case
-
-#### Backend
-
-***For User Data***
-1. Account Registeration
-    - Expectation:
-        - Status Code 200
-    - Result
-        - Same as expectation
-
-2. Account Registeration (with already registeration data)
-    - Expectation
-        - Status Code 400
-        - error message should be 'Email already in use'
-    - Result
-        - Same as expectation
-
-3. Account Login
-    - Expectation
-        - Status Code 200
-        - message should be 'Login Successfully!'
-    - Result
-        - Same as expectation
-
-4. Account Login (With Invalid email)
-    - Expectation
-        - Status Code 400
-        - message should be 'Invalid email address'
-    - Result
-        - Same as expectation
-
-5. Account Login (With Invalid password)
-    - Expectation
-        - Status Code 400
-        - message should be 'Invalid password'
-    Result
-        - Same as expectation
-
-6. Get User Profile data
-    - Expectation
-        - Status Code 200
-        - It should return an object which include username, gender, role in data column
-    - Result
-        - Same as expectation
-
-7. Get User Profile data (With Invalid JWT Token)
-    - Expectation
-        - Status Code 401
-    - Result
-        - Same as expectation
-
-8. Get User Loan Book Record
-    - Expectation
-        - Status Code 200
-        - It should return [] (It is new account)
-    - Result
-        - Same as expectation
-
-9. Get User Favourite Book Record
-    - Expectation
-        - Status Code 200
-        - It should return [] (It is new account)
-    - Result
-        - Same as expectation
-
-***For Book Data***
-1. Get the whole book data
-    - Expectation
-        - Status Code 200
-    - Result
-        - Same as expectation
-
-2. Get the whole book data with filter data (bookname=Harry)
-    - Expectation
-        - Status Code 200
-    - Result
-        - Same as expectation
-
-3. Get the whole book data with invalid filter data (bookname=zzz)
-    - Expectation:
-        - Status Code 200
-        - It should return []
-    - Result
-        - Same as expectation
-
-4. Get recommend book data (Based on publish date)
-    - Expectation
-        - Status Code 200
-        - It should return 8 records
-    - Result
-        - Same as expectation
-
-5. Get recommend book data (Based on publish date)
-    - Expectation
-        - Status Code 200
-        - It should has data in body(foundbook)
-    - Result
-        - Same as expectation
-
-***Remarks***
-- Backend test case in './backend/tests/*.ts'
-- It will remove the create data after complete the whole test case
-- It will connect the mongoDB at start and unconnect it after the whole test case
-
-
-
 ## Features
 - **User Authentication:** Secure login system for librarians and users, leveraging JWT
 - **Library Data Management:** CRUD functionality for users, books, contacts, and book metadata
@@ -509,15 +506,17 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
 ## TF-IDF Logic Overview
 
 ***1. Calculate Term Frequence and Inverse Document Frequence***<br>
-<img src="doc/Image/Functions/TF-IDF_BasicFunction.png" style="width:70%;"/><br>
+<img src="doc/Image/Functions/TF-IDF_BasicFunction.png" style="width:60%;"/><br>
 
 ****Term Frequence (TF)****
 - It measures how often a word appears in a document relative to its length
-- Formula: <img src="doc/Image/Formula/TF-formula.png" style="width:30%;"/>
+- Formula:<br>
+  <img src="doc/Image/Formula/TF-formula.png" style="width:30%;"/><br>
 
 ****Inverse Document Frequence (IDF)****
 - It reduces the weight of common words by considering how many documents contain the term
-- Formula: <img src="doc/Image/Formula/IDF-formula.png" style="width:30%;"/>
+- Formula:<br>
+  <img src="doc/Image/Formula/IDF-formula.png" style="width:30%;"/><br>
 
 ****TF-IDF Vector****
 - Each document (user history or book metadata) is represented as a vector of TF‑IDF values across the vocabulary
@@ -527,7 +526,8 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
 - It produces a score between 0 and 1:
     - 1 → vectors point in the same direction (high similarity)
     - 0 → vectors are orthogonal (no similarity)
-- Formula:<img src="doc/Image/Formula/CosineSimilarity-formula.png" style="width:30%;"/>
+- Formula:<br>
+  <img src="doc/Image/Formula/CosineSimilarity-formula.png" style="width:30%;"/><br>
 
 
 ***2. Calculation Logic (TF-IDF + Genre Weight)***<br>
@@ -721,7 +721,7 @@ The application uses a Node.js middleware to bridge the React frontend with the 
 ### Backend
 
 ***Backend Process Flow Diagram and another function***<br>
-<img src="doc/Image/Diagrams/Systemarchitecture.png" style="width:75%;"/><br>
+<img src="doc/Image/Diagrams/Systemarchitecture.png" style="width:90%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
 | Component                                    | Usage                                                                                               | Example Path (Backend - Book data)                                                                        |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
