@@ -32,7 +32,7 @@ export const BookRecordIDValidation = async (req:AuthRequest, res:Response, next
 
     try
     {
-        const findRecordWithID = await FindBookByID(bookID);
+        const findRecordWithID = await FindBookByID(bookID as string);
 
         if(!findRecordWithID)
         {

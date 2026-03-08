@@ -76,7 +76,7 @@ export const EditBookRecord = async (req: Request, res: Response) =>
 
     try 
     {
-        const bookData = await FindBookByID(bookID) as BookInterface;
+        const bookData = await FindBookByID(bookID as string) as BookInterface;
         const ImageName = bookData.image.filename;
         const ImageUrl = bookData.image.url;
 
@@ -102,7 +102,7 @@ export const EditBookRecord = async (req: Request, res: Response) =>
             }
         }
     
-        const updateBookRecord = await FindBookByIDAndUpdate(bookID, {$set: {image: { url: imageUrl, filename: newImageName }, bookname, languageID, 
+        const updateBookRecord = await FindBookByIDAndUpdate(bookID as string, {$set: {image: { url: imageUrl, filename: newImageName }, bookname, languageID, 
             genreID, authorID, publisherID, description, publishDate:new Date(publishDate) }});
 
         if (!updateBookRecord) 
@@ -127,7 +127,7 @@ export const DeleteBookRecord = async(req:Request, res:Response) =>
 
     try
     {
-        const bookRecord = await FindBookByID(bookID) as BookInterface;
+        const bookRecord = await FindBookByID(bookID as string) as BookInterface;
 
         if (!bookRecord) 
         {
@@ -150,7 +150,7 @@ export const DeleteBookRecord = async(req:Request, res:Response) =>
             return res.status(400).json({success, error: "Failed to Delete favourite book record"});
         }
 
-        const deleteBookRecord = await FindBookByIDAndDelete(bookID);
+        const deleteBookRecord = await FindBookByIDAndDelete(bookID as string);
 
         if(!deleteBookRecord)
         {

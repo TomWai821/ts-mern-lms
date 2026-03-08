@@ -14,7 +14,7 @@ export const BuildUserQueryAndGetData = async (req: AuthRequest, res: Response, 
     if (userId) 
     {
         const hasBodyParameter = Object.keys(queryParams).length > 0;
-        foundUser = (!hasBodyParameter && !tableName)? await FindUserByID(userId as unknown as string) : await fetchUserData(tableName, queryParams, userId as unknown as string);
+        foundUser = (!hasBodyParameter && !tableName)? await FindUserByID(userId as unknown as string) : await fetchUserData(tableName as string, queryParams, userId as unknown as string);
     } 
     else 
     {

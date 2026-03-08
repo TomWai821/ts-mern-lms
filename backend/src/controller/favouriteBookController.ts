@@ -46,7 +46,7 @@ export const DeleteFavouriteBookRecord = async (req:AuthRequest, res:Response) =
     
     try
     {
-        const DeleteFavrouiteBook = await FindBookFavouriteByIDAndDelete(favouriteRecordID);
+        const DeleteFavrouiteBook = await FindBookFavouriteByIDAndDelete(favouriteRecordID as string);
 
         if(!DeleteFavrouiteBook)
         {
