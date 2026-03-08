@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react"
+import { FC, useCallback, useContext, useEffect, useState } from "react"
 import ModalTemplate from "../../../Templates/ModalTemplate"
 import { EditModalInterface } from "../../../../Model/ModelForModal"
 import EditContactModal from "../../Contact/EditContactModal";
@@ -27,29 +27,35 @@ const EditContactConfirmModal:FC<EditModalInterface> = (data) =>
 
     const editDefinitionAction = async () => 
     {
-        let response;
+        let response: Response;
 
         switch(value)
         {
             case 0:
-                response = editContactData(type, compareData._id, editData.author, detectNullData(editData.phoneNumber), detectNullData(editData.email));
+                response = await editContactData(type, compareData._id, editData.author, detectNullData(editData.phoneNumber), detectNullData(editData.email));
                 break;
 
             case 1:
-                response = editContactData(type, compareData._id, editData.publisher, detectNullData(editData.phoneNumber), detectNullData(editData.email));
+                response = await editContactData(type, compareData._id, editData.publisher, detectNullData(editData.phoneNumber), detectNullData(editData.email));
                 break;
+            
+            default:
+                console.log("Invalid value");
+                return;
         }
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Edit ${type} record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to edit ${type} record! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Edit ${type} record successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to edit ${type} record! Please try again later` });
+                    break;
             }
         }
     }
@@ -59,7 +65,7 @@ const EditContactConfirmModal:FC<EditModalInterface> = (data) =>
         return data === "" ? "N/A" : data;
     }
 
-    const compareDifference = (editData: ContactInterface, compareData: ContactInterface) => 
+    const compareDifference = useCallback((editData: ContactInterface, compareData: ContactInterface) => 
     {
         let ignoreList: string | string[] = [];
 
@@ -98,12 +104,12 @@ const EditContactConfirmModal:FC<EditModalInterface> = (data) =>
             }
         }
         setDifferences(newDifferences);
-    }
+    },[value])
 
     useEffect(() => 
     {
         compareDifference(editData as ContactInterface, compareData as ContactInterface);
-    },[editData, compareData]);
+    },[editData, compareData, compareDifference]);
 
     return(
         <ModalTemplate title={`Edit ${type} Record`} width="400px" cancelButtonName={"Exit"} cancelButtonEvent={returnEditDefinitionModal}>

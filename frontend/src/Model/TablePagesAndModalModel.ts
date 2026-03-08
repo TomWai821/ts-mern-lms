@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { BookDataInterface, ContactInterface, DefinitionInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
+import { BookDataInterface, ContactInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
 import { UserDataInterface } from "./UserTableModel";
 import { BookTableDataInterface, BookSearchInterface, SelfLoanBookSearchInterface, ContactSearchInterface } from "./BookTableModel"
 

@@ -35,7 +35,7 @@ describe("Book API Test (with filter data)", () =>
     {
         const res = await request(app).get("/api/book/BookData?bookname=Harry")
 
-        expect(res.statusCode).toBe(200)
+        expect(res.statusCode).toBe(200);
     });
 });
 
@@ -46,8 +46,8 @@ describe("Book API Test (with invalid filter data)", () =>
     {
         const res = await request(app).get("/api/book/BookData?bookname=zzz")
 
-        expect(res.statusCode).toBe(200),
-        expect(res.body.foundBook).toBeNull
+        expect(res.statusCode).toBe(200);
+        expect(res.body.foundBook).toEqual([])
     });
 });
 
@@ -58,8 +58,8 @@ describe("Book API Test (Get Recommend Book which new publish)", () =>
     {
         const res = await request(app).get("/api/book/BookData/type=newPublish")
 
-        expect(res.statusCode).toBe(200),
-        expect(res.body.foundBook).toHaveLength(8)
+        expect(res.statusCode).toBe(200);
+        expect(res.body.foundBook).toHaveLength(8);
     });
 });
 
@@ -70,7 +70,7 @@ describe("Book API Test (Get Recommend Book which most loaned)", () =>
     {
         const res = await request(app).get("/api/book/LoanBook/type=mostPopular")
 
-        expect(res.statusCode).toBe(200),
+        expect(res.statusCode).toBe(200);
         expect(res.body.foundLoanBook)
     });
 });

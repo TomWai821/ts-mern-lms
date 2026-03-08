@@ -38,28 +38,30 @@ const EditDefinitionConfirmModal:FC<EditModalInterface>  = (data) =>
     const editDefinitionAction = async () => 
     {
         const EditData = editData as DefinitionInterface;
-        let response;
+        let response: Response;
         switch(type)
         {
             case "Genre":
-                response = editDefinition(type, EditData._id, EditData.shortName, EditData.genre as string);
+                response = await editDefinition(type, EditData._id, EditData.shortName, EditData.genre as string);
                 break;
 
             case "Language":
-                response = editDefinition(type, EditData._id, EditData.shortName, EditData.language as string);
+                response = await editDefinition(type, EditData._id, EditData.shortName, EditData.language as string);
                 break;
         }
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Edit ${type} record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to edit ${type} record! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Edit ${type} record successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to edit ${type} record! Please try again later` });
+                    break;
             }
         }
     }

@@ -12,7 +12,7 @@ const LoginController = async (email:String, password:String, stayLogin:boolean)
 
     try
     {
-        const response = await fetch(`${url}/Login`, 
+        const response:Response = await fetch(`${url}/Login`, 
             {
                 method: 'POST',
                 headers: { 'content-type': contentType },
@@ -25,7 +25,8 @@ const LoginController = async (email:String, password:String, stayLogin:boolean)
             const result: ResultInterface = await response.json();
             handleSuccess(result, stayLogin);
         }
-        return response as Response;
+
+        return response;
     }
     catch(error)
     {
@@ -39,7 +40,7 @@ const RegisterController = async (registerPosition:string, username:string, emai
 
     try
     {
-        const response = await fetch(`${url}/Register`,
+        const response: Response = await fetch(`${url}/Register`,
             {
                 method: 'POST',
                 headers: { 'content-type': contentType },
@@ -47,16 +48,13 @@ const RegisterController = async (registerPosition:string, username:string, emai
             }
         )
 
-        if (!response) 
-        {
-            throw new Error("No response from fetch");
-        }
-
         if(registerPosition === "RegisterPanel" && response.ok)
         {
             const result: ResultInterface = await response.json();
             handleSuccess(result, false);
         }
+        
+        console.log(response);
         return response;
     }
     catch(error)

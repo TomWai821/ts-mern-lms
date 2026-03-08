@@ -60,7 +60,7 @@ const EditProfileDataModal = () =>
             }
         });
 
-        if(editedData.confirmPassword.trim() != editedData.password.trim())
+        if(editedData.confirmPassword.trim() !== editedData.password.trim())
         {
             newHelperTexts.confirmPassword = "Confirm password does not pair with password!";
             newErrors.confirmPassword = "Confirm password does not pair with password!";
@@ -83,19 +83,20 @@ const EditProfileDataModal = () =>
 
         const response = await ModifyProfileDataController(GetData("authToken") as string, option, bodyData);
 
-        const result = await response as GetResultInterface;
+        const result = response as unknown as GetResultInterface;
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
-                setTimeout(() => {handleClose(); window.location.reload()}, 2000);
-                
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to edit ${option}!` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
+                    setTimeout(() => {handleClose(); window.location.reload()}, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to edit ${option}!` });
+                    break;
             }
         }
     }

@@ -36,17 +36,20 @@ const CreateUserConfirmModal = ({...userData}) =>
 
     const registerUser = async () => 
     {
-        const response = createUser("UserManagementPanel", username, email, password, role, gender, birthDay);
+        const response: Response  = await createUser("UserManagementPanel", username, email, password, role, gender, birthDay);
+
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Create User record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to create User record! Please try again later` });
+                case 200:
+                   alertContext.setAlertConfig({ AlertType: "success", Message: `Create User record successfully!` });
+                setTimeout(() => { handleClose() }, 2000)
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to create User record! Please try again later` });
+                    break;
             }
         }
     }

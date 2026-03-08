@@ -8,7 +8,6 @@ import { FindBookLoaned } from '../../../schema/book/bookLoaned';
 export const BookNameValidation = async (req:Request, res:Response, next: NextFunction) => 
 {
     const { bookname } = req.body;
-    let success = false;
 
     try
     {
@@ -16,21 +15,20 @@ export const BookNameValidation = async (req:Request, res:Response, next: NextFu
 
         if(findBookname)
         {
-            return res.status(400).json({success, error: "Book with this name are already exist!"});
+            return res.status(400).json({success: false, error: "Book with this name are already exist!"});
         }
         next();
     }
     catch(error)
     {
         console.log(error);
-        res.status(500).json({ success, error: 'Internal Server Error!' });
+        res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }
 
 export const BookRecordIDValidation = async (req:AuthRequest, res:Response, next:NextFunction) => 
 {
     const bookID = req.params.id;
-    let success = false;
 
     try
     {
@@ -38,21 +36,20 @@ export const BookRecordIDValidation = async (req:AuthRequest, res:Response, next
 
         if(!findRecordWithID)
         {
-            return res.status(404).json({success, error: "Could not found this book record!"});
+            return res.status(404).json({success: false, error: "Could not found this book record!"});
         }
 
         next();
     }
     catch(error)
     {
-        res.status(500).json({ success, error: 'Internal Server Error!' });
+        res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }
 
 export const BookGenreIDAndLanguageIDValidation = async (req:Request, res:Response, next: NextFunction) => 
 {   
     const { languageID, genreID } = req.body;
-    let success = false;
 
     try
     {
@@ -60,14 +57,14 @@ export const BookGenreIDAndLanguageIDValidation = async (req:Request, res:Respon
 
         if(!findLanguageID)
         {
-            return res.status(404).json({success, error: `Could not found Language ID: ${languageID}!`});
+            return res.status(404).json({success: false, error: `Could not found Language ID: ${languageID}!`});
         }
 
         const findGenreID = await FindGenreByID(genreID);
 
         if(!findGenreID)
         {
-            return res.status(404).json({success, error: `Could not found Genre ID: ${genreID}!`});
+            return res.status(404).json({success: false, error: `Could not found Genre ID: ${genreID}!`});
         }
 
         next();
@@ -75,7 +72,7 @@ export const BookGenreIDAndLanguageIDValidation = async (req:Request, res:Respon
     catch(error)
     {
         console.log(error);
-        res.status(500).json({ success, error: 'Internal Server Error!' });
+        res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }
 

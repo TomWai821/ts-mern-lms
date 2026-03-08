@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { Box, TextField, Button, MenuItem, Avatar, Typography } from '@mui/material';
 
 // Template
@@ -36,13 +36,13 @@ const EditBookModal:FC<EditModalInterface> = (editModalData) =>
     const EditBookInputField = useMemo(() => 
     [
         {name: "bookname", label: "Book Name", type:"text", select: false, slotProps: {}, multiline: false, rows: 1 },
-        {name: "language", label: "Language", type:"text", select: true, options:definition.Language, slotProps: {}, multiline: false, rows: 1},
-        {name: "genre", label: "Genre", type:"text", select: true, options:definition.Genre, slotProps:{}, multiline: false, rows: 1},
-        {name: "author", label: "Author", type:"text", select: true, options:contact.Author, slotProps:{}, multiline: false, rows: 1},
-        {name: "publisher", label: "Publisher", type:"text", select: true, options:contact.Publisher, slotProps:{}, multiline: false, rows: 1},
+        {name: "language", label: "Language", type:"text", select: true, options: definition.Language, slotProps: {}, multiline: false, rows: 1},
+        {name: "genre", label: "Genre", type:"text", select: true, options: definition.Genre, slotProps:{}, multiline: false, rows: 1},
+        {name: "author", label: "Author", type:"text", select: true, options: contact.Author, slotProps:{}, multiline: false, rows: 1},
+        {name: "publisher", label: "Publisher", type:"text", select: true, options: contact.Publisher, slotProps:{}, multiline: false, rows: 1},
         {name: "publishDate", label: "Publish Date", type: "date", select: false, slotProps:{}, multiline: false, rows: 1},
         {name: "description", label: "Description", type: "text", select:false, slotProps:{}, multiline: true, rows: 8}
-    ],[definition])
+    ],[definition, contact.Author, contact.Publisher])
     
     const [book, setBook] = useState(
         {   
@@ -74,7 +74,7 @@ const EditBookModal:FC<EditModalInterface> = (editModalData) =>
         setBook({ ...book, [name]: value });
     }
     
-    const fetchImage = async (imageURL: string) => 
+    const fetchImage = useCallback(async (imageURL: string) => 
     {
         try 
         {
@@ -96,7 +96,7 @@ const EditBookModal:FC<EditModalInterface> = (editModalData) =>
         {
             console.error("Error fetching image:", error);
         }
-    };
+    },[CompareData.filename])
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -164,7 +164,7 @@ const EditBookModal:FC<EditModalInterface> = (editModalData) =>
     useEffect(() => 
     {
         fetchImage(CompareData.imageUrl);
-    }, [EditData.imageUrl, CompareData.imageUrl, CompareData.filename]);
+    }, [EditData.imageUrl, CompareData.imageUrl, CompareData.filename, fetchImage]);
 
     return (
         <ModalTemplate title={"Edit Book Record"} minWidth="500px" maxWidth="750px" width="100%" cancelButtonName={"Exit"}>

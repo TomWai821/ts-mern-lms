@@ -40,7 +40,7 @@ const UserPage = () =>
         const TableName = ["AllUser", "SuspendUser", "DeleteUser"];
         fetchUser(TableName[tabValue], searchUserData);
     }
-    ,[searchUserData])
+    ,[searchUserData, fetchUser, tabValue])
 
     const changeValue = useCallback((type:string, newValue: number) =>
     {

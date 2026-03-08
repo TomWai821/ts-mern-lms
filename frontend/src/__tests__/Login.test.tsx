@@ -3,32 +3,73 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithProviders } from './renderWithProviders'
 
+const mockResponse = ({ ok, status, body }: { ok: boolean; status: number; body: any }) =>
+{
+  return { ok, status, json: async () => body} as Response;
+}
+
 beforeEach(() => 
 {
-    global.fetch = jest.fn()
+    document.cookie = "";
+    sessionStorage.clear();
+    (global.fetch as jest.Mock) = jest.fn();
 });
 
 const user = userEvent.setup();
 
+test('fail to register (Use duplicate data)', async () => 
+{
+    (global.fetch as jest.Mock).mockResolvedValueOnce(
+        mockResponse(
+        {
+            ok: false,
+            status: 400,
+            body: 
+            { 
+                success: false,
+                error: "Invalid email address"
+            }
+        })
+    );
+
+    renderWithProviders(<App />, { route: '/register' } );
+
+    await user.type(screen.getByPlaceholderText(/email/i), "TestUser1@example.com");
+    await user.type(screen.getByPlaceholderText(/username/i), "TestUser1");
+    await user.type(screen.getByPlaceholderText(/password/i), "TestUser1Password");
+    await user.clear(screen.getByPlaceholderText(/birthDay/i));
+    await user.type(screen.getByPlaceholderText(/birthDay/i), "2000-01-01");
+
+    await user.click(screen.getByRole('button', { name: /Register/i }));
+    console.log((global.fetch as jest.Mock).mock.calls);
+
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(/Failed to register! Please try again./);
+});
+
 // Test case for register page
 test('register successfully', async () => 
 {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => 
-        ({
-            success: true, 
-            message: "Register successfully!",
-            data: 
-            {
-                username: "TestUser1",
-                role: "User",
-                status: "Normal",
-                avatarUrl: "https://via.placeholder.com/150?text=T"
-            } 
+    (global.fetch as jest.Mock).mockResolvedValueOnce(
+        mockResponse(
+        {
+            ok: true,
+            status: 200,
+            body: 
+            { 
+                success: true, 
+                message: "Register successfully!",
+                data: 
+                {
+                    username: "TestUser1",
+                    role: "User",
+                    status: "Normal",
+                    avatarUrl: "https://via.placeholder.com/150?text=T"
+                }  
+            }
         })
-    });
+    );
 
     renderWithProviders(<App />, { route: '/register' } );
     
@@ -42,32 +83,6 @@ test('register successfully', async () =>
 
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent(/Registration successful! Redirecting.../);
-});
-
-test('fail to register (Use duplicate data)', async () => 
-{
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        status: 400,
-        json: async () => 
-        ({
-            success: false,
-            error: "Invalid email address"
-        })
-    });
-
-    renderWithProviders(<App />, { route: '/register' } );
-
-    await user.type(screen.getByPlaceholderText(/email/i), "TestUser1@example.com");
-    await user.type(screen.getByPlaceholderText(/username/i), "TestUser1");
-    await user.type(screen.getByPlaceholderText(/password/i), "TestUser1Password");
-    await user.clear(screen.getByPlaceholderText(/birthDay/i));
-    await user.type(screen.getByPlaceholderText(/birthDay/i), "2000-01-01");
-
-    await user.click(screen.getByRole('button', { name: /Register/i }));
-
-    const alert = await screen.findByRole('alert');
-    expect(alert).toHaveTextContent(/Failed to register! Please try again./);
 });
 
 test('Input the DOB which less than 6 years old', async () => 
@@ -88,22 +103,25 @@ test('Input the DOB which less than 6 years old', async () =>
 // Test Case for login page
 test('login successfully', async () => 
 {
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => 
-        ({
-            success: true,
-            message: "Login Successfully!",
-            data: 
-            {
-                username: "IamTester",
-                role: "User",
-                status: "Normal",
-                avatarUrl: "https://via.placeholder.com/150?text=I"
+    (global.fetch as jest.Mock).mockResolvedValueOnce(
+        mockResponse(
+        {
+            ok: true,
+            status: 200,
+            body: 
+            { 
+                success: true, 
+                message: "Login successfully!",
+                data: 
+                {
+                    username: "TestUser1",
+                    role: "User",
+                    status: "Normal",
+                    avatarUrl: "https://via.placeholder.com/150?text=T"
+                }  
             }
         })
-    });
+    );
 
     renderWithProviders(<App />, { route: '/login' });
 
@@ -117,17 +135,20 @@ test('login successfully', async () =>
 
 test('fail to login', async () => 
 {
-     (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        status: 400,
-        json: async () => 
-        ({
-            success: false,
-            error: "Invalid password"
+    (global.fetch as jest.Mock).mockResolvedValueOnce(
+        mockResponse(
+        {
+            ok: false,
+            status: 400,
+            body: 
+            { 
+                success: false,
+                error: "Invalid email or password!"
+            }
         })
-    });
+    );
 
-    renderWithProviders(<App />, { route: '/login' } );
+    renderWithProviders(<App />, { route: '/login' });
 
     await user.type(screen.getByPlaceholderText(/email/i), "IamTester@gmail.com");
     await user.type(screen.getByPlaceholderText(/password/i), "IamTester123");
@@ -136,6 +157,7 @@ test('fail to login', async () =>
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent(/Invalid email or password!/);
 });
+
 
 // The following test case for helpText in login page
 test('the email input null (In login page)', async () => 

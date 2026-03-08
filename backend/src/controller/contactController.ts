@@ -60,7 +60,6 @@ const CreateAuthorRecord = async (req: AuthRequest, res: Response) =>
 {
     const { author, phoneNumber, email } = req.body;
     const contactType = req.params.type as keyof typeof contactHandler;
-    let success = false;
 
     try 
     {
@@ -68,12 +67,12 @@ const CreateAuthorRecord = async (req: AuthRequest, res: Response) =>
 
         if(!createAuthor)
         {
-            return res.status(400).json({ success, error: `Failed to create ${contactType}` });
+            return res.status(400).json({ success: false, error: `Failed to create ${contactType}` });
         }
     } 
     catch (error) 
     {
-        return res.status(500).json({ success, error: "Internal Server Error" });
+        return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
 
@@ -81,7 +80,6 @@ const CreatePublisherRecord = async (req: AuthRequest, res: Response) =>
 {
     const { publisher, phoneNumber, email } = req.body;
     const contactType = req.params.type as keyof typeof contactHandler;
-    let success = false;
 
     try 
     {
@@ -89,12 +87,12 @@ const CreatePublisherRecord = async (req: AuthRequest, res: Response) =>
 
         if(!createPublisher)
         {
-            return res.status(400).json({ success, error: `Failed to create ${contactType}` });
+            return res.status(400).json({ success: false, error: `Failed to create ${contactType}` });
         }
     } 
     catch (error) 
     {
-        return res.status(500).json({ success, error: "Internal Server Error" });
+        return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
 
@@ -119,7 +117,6 @@ export const UpdateContactRecord = async (req: AuthRequest, res: Response) =>
 const UpdateAuthorRecord = async (req: AuthRequest, res: Response) => 
 {
     const { id, author, phoneNumber, email } = req.body;
-    let success = false;
 
     try 
     {
@@ -128,19 +125,18 @@ const UpdateAuthorRecord = async (req: AuthRequest, res: Response) =>
 
         if(!updateAuthor)
         {
-            return res.status(400).json({ success, error: `Failed to update Author Record` });
+            return res.status(400).json({ success: false, error: `Failed to update Author Record` });
         }
     } 
     catch (error) 
     {
-        return res.status(500).json({ success, error: "Internal Server Error" });
+        return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
 
 const UpdatePublisherRecord = async (req: AuthRequest, res: Response) => 
 {
     const { id, publisher, phoneNumber, email } = req.body;
-    let success = false;
 
     try 
     {
@@ -148,12 +144,12 @@ const UpdatePublisherRecord = async (req: AuthRequest, res: Response) =>
 
         if(!updatePublisher)
         {
-            return res.status(400).json({ success, error: `Failed to update Publisher Record` });
+            return res.status(400).json({ success: false, error: `Failed to update Publisher Record` });
         }
     } 
     catch (error) 
     {
-        return res.status(500).json({ success, error: "Internal Server Error" });
+        return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
 

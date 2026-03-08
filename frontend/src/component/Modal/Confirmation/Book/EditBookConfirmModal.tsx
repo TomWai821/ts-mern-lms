@@ -1,4 +1,4 @@
-import { FC, JSX, useContext, useEffect, useState } from "react"
+import { FC, JSX, useCallback, useContext, useEffect, useState } from "react"
 import { Avatar, Box, Button, Typography } from "@mui/material";
 
 // Template
@@ -43,7 +43,7 @@ const EditBookConfirmModal:FC<EditModalInterface> = (editModalData) =>
 
     const [differences, setDifferences] = useState<JSX.Element[]>([]);
 
-    const generateChangeTypography = (editData:BookDataInterfaceForEdit, compareData:BookDataInterfaceForEdit) => 
+    const generateChangeTypography = useCallback((editData:BookDataInterfaceForEdit, compareData:BookDataInterfaceForEdit) => 
     {
         let differences: JSX.Element[] = [];
         const ignoreList = ["imageUrl", "filename", "description"]
@@ -76,7 +76,7 @@ const EditBookConfirmModal:FC<EditModalInterface> = (editModalData) =>
         }
     
         setDifferences(differences);
-    };
+    },[CompareData.description, EditData.description, sameImage])
    
     const returnEditBookModal = () => 
     {
@@ -91,18 +91,20 @@ const EditBookConfirmModal:FC<EditModalInterface> = (editModalData) =>
         const publisherID = contact.Publisher.find((publisherData) => publisherData.publisher === EditData.publisher)?._id as string;
         const authorID = contact.Author.find((authorData) => authorData.author === EditData.author)?._id as string;
 
-        const response = editBook(EditData._id, CompareData.filename, EditData.image as File, EditData.bookname, genreID, langaugeID, publisherID, EditData.publishDate as string, authorID, EditData.description);
+        const response: Response = await editBook(EditData._id, CompareData.filename, EditData.image as File, EditData.bookname, genreID, langaugeID, publisherID, EditData.publishDate as string, authorID, EditData.description);
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: "Edit book record successfully!" });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Edit book record! Please try again later" });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: "Edit book record successfully!" });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Edit book record! Please try again later" });
+                    break;
             }
         }
     }
@@ -111,7 +113,7 @@ const EditBookConfirmModal:FC<EditModalInterface> = (editModalData) =>
     {
         generateChangeTypography(EditData, CompareData);
     },
-    [editData, compareData]);
+    [EditData, CompareData, generateChangeTypography]);
 
     return(
         <ModalTemplate title={"Edit Book Record Confirmation"} cancelButtonName={"No"} width={width} cancelButtonEvent={returnEditBookModal}>

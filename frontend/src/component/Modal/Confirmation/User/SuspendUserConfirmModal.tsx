@@ -38,18 +38,20 @@ const SuspendUserConfirmModal:FC<SuspendModalInterface> = (banData) =>
 
     const SuspendUser = async (_id:string, duration:number, description:string) => 
     {
-        const response = changeUserStatus("Suspend", _id, "Suspend", undefined, duration, description);
+        const response: Response = await changeUserStatus("Suspend", _id, "Suspend", undefined, duration, description);
          
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Suspend user successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to Suspend user! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Suspend user successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to Suspend user! Please try again later` });
+                    break;
             }
         }
     }

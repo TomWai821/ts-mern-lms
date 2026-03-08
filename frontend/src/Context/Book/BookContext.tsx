@@ -24,19 +24,6 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
     
     const authToken = GetData("authToken") as string;
 
-    const fetchAllRecord = useCallback(async () => 
-    {
-        fetchAllBook();
-        fetchNewPublishBook();
-        fetchMostPopularBook();
-
-        if(authToken)
-        {
-            fetchFavouriteRecord();
-            fetchSelfLoanRecord();
-        }
-    },[])
-
     const fetchAllBook = useCallback(async () => 
     {
         const resultForAllBook: GetResultInterface | undefined = await fetchBook("All");
@@ -51,7 +38,7 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         {
             setOnLoanBook(resultForLoanBook.foundLoanBook);
         }
-    },[])
+    },[authToken])
 
     const fetchBookWithFliterData = useCallback(async (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => 
     {
@@ -61,7 +48,7 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         {
             setAllBook(result.foundBook);
         }
-    },[fetchAllBook])
+    },[])
 
     const fetchLoanBookWithFliterData = useCallback(async (type:string, bookname?:string, username?:string, status?:string, finesPaid?:string) => 
     {
@@ -71,33 +58,31 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         {
             setOnLoanBook(result.foundLoanBook);
         }
-    },[fetchAllBook])
+    },[authToken])
 
     const createBook = useCallback(async (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 
     {
-        const result = await createBookRecord(authToken, image, bookname, genreID, languageID, publisherID, authorID, description, publishDate);
+        const result: Response = await createBookRecord(authToken, image, bookname, genreID, languageID, publisherID, authorID, description, publishDate);
 
         if(result)
         {
             fetchAllBook();
-            return true;
         }
-        return false;
+        return result;
 
-    },[fetchAllBook])
+    },[fetchAllBook, authToken])
 
     const editBook = useCallback(async (bookID:string, imageName:string, newFile:File, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => 
     {
-        const result = await updateBookRecord(authToken, bookID, imageName, newFile, bookname, genreID, languageID, publisherID, publishDate, authorID, description);
+        const result: Response = await updateBookRecord(authToken, bookID, imageName, newFile, bookname, genreID, languageID, publisherID, publishDate, authorID, description);
 
         if(result)
         {
             fetchAllBook();
-            return true;
         }
-        return false;
+        return result;
         
-    },[fetchAllBook])
+    },[fetchAllBook, authToken])
 
     const loanBook = useCallback(async(bookID:string, userID?:string) => 
     {
@@ -105,43 +90,57 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         const dueDate = CalculateDueDate(7);
         const result: Response = await createLoanBookRecord(authToken, bookID, loanDate, dueDate, userID);
 
-        fetchAllBook();
+        if(result)
+        {
+            fetchAllBook();
+        }
         return result;
 
-    },[fetchAllBook])
+    },[fetchAllBook, authToken])
 
     const returnBook = useCallback(async(loanRecordID:string, finesPaid?:string) =>
     {
-        const result = await returnBookAndChangeStatus(authToken, loanRecordID, finesPaid);
+        const result: Response = await returnBookAndChangeStatus(authToken, loanRecordID, finesPaid);
 
         if(result)
         {
             fetchAllBook();
-            return true;
         }
-        return false;
+        return result;
 
-    },[fetchAllBook])
+    },[fetchAllBook, authToken])
 
     const deleteBook = useCallback(async (bookID:string) => 
     {
-        const result = await deleteBookRecord("Book", authToken, bookID);
+        const result: Response = await deleteBookRecord("Book", authToken, bookID);
 
         if(result)
         {
             fetchAllBook();
-            return true;
         }
-        return false;
+        return result;
 
-    },[fetchAllBook])
+    },[fetchAllBook, authToken])
 
     const getExternalData = useCallback(async(bookname:string, author:string) => 
     {
         const result = await GetExternalData(authToken, bookname, author);
-
         return result;
-    },[])
+        
+    },[authToken])
+
+    const fetchAllRecord = useCallback(async () => 
+    {
+        fetchAllBook();
+        fetchNewPublishBook();
+        fetchMostPopularBook();
+
+        if(authToken)
+        {
+            fetchFavouriteRecord();
+            fetchSelfLoanRecord();
+        }
+    },[authToken, fetchAllBook, fetchNewPublishBook, fetchMostPopularBook, fetchFavouriteRecord, fetchSelfLoanRecord])
 
     useEffect(() => 
     {

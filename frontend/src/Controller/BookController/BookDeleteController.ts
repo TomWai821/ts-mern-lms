@@ -11,8 +11,6 @@ export const deleteBookRecord = async (type:string ,authToken:string, ID:string)
             "Favourite": `${localhost}/book/FavouriteBook/id=${ID}`
         }
 
-        console.log(url[type]);
-
         const response = await fetch(url[type],
             {
                 method: 'DELETE',
@@ -20,14 +18,11 @@ export const deleteBookRecord = async (type:string ,authToken:string, ID:string)
             }
         )
 
-        if(response.ok)
-        {
-            const result = await response.json();
-            return response.ok;
-        }
+        return response;
     }
     catch(error)
     {
         console.log(error);
+        throw error;
     }
 }

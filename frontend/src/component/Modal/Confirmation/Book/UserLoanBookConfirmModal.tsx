@@ -35,9 +35,7 @@ const UserLoanBookConfirmationModal:FC<UserLoanBookModalBodyInterface> = (LoanBo
 
     const ConfirmLoanBook = async () => 
     {
-        const response = await loanBook(_id, handleScanData().authToken);
-
-        console.log(response);
+        const response: Response  = await loanBook(_id, handleScanData().authToken);
 
         if (alertContext && alertContext.setAlertConfig) 
         {   

@@ -37,17 +37,19 @@ const RecordBookTableCell:FC<RecordTableCellInterface> = (returnBookTableCellDat
 
     const unfavourite = async () => 
     {
-        const response = unfavouriteBook(Information._id);
+        const response =  await unfavouriteBook(Information._id);
         
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: "Unfavourite successfully!" });
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Unfavourite! Please try again" });
+                case 200:
+                     alertContext.setAlertConfig({ AlertType: "success", Message: "Unfavourite successfully!" });
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Unfavourite! Please try again" });
+                    break;
             }
         }
     }

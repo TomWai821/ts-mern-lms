@@ -101,7 +101,7 @@ const EmptyDataValidation = (name:string, value:string) =>
 
     if(value === "")
     {
-        error = "Invalid ${name}";
+        error = `Invalid ${name}`;
         helperText = `${name} should not be empty!`;
     }
 

@@ -30,18 +30,20 @@ const DeleteContactConfirmModal:FC<DeleteModalInterface> = (deleteData) =>
 
     const DeleteDefinitionAction = async () => 
     {
-        const response = deleteContactData(type as string, data._id);
+        const response: Response = await deleteContactData(type as string, data._id);
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Delete ${type} record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to delete ${type} record! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Delete ${type} record successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to delete ${type} record! Please try again later` });
+                    break;
             }
         }
     }

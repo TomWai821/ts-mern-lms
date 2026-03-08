@@ -17,9 +17,9 @@ jobs:
           node-version: 18
       - run: npm ci --prefix backend
       - run: npm ci --prefix frontend
-      - run: npm run lint --prefix backend || true
+      - run: npm run lint --prefix backend || echo "Lint warnings are non-blocking"
       - run: npm run typecheck --prefix backend
-      - run: npm run lint --prefix frontend || true
+      - run: npm run lint --prefix frontend || echo "Lint warnings are non-blocking"
 
   test:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
       - run: npm run build --prefix backend
       - run: npm run build --prefix frontend
       - run: docker compose -f compose.yaml up --build -d
-      - run: |
+      - run: run: |
           for i in {1..10}; do
             curl -f http://localhost:5000/health/ && break
             echo "Waiting for backend..."

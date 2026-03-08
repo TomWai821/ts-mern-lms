@@ -28,28 +28,34 @@ const CreateContactConfirmModal:FC<CreateModalInterface> = (createModalData) =>
 
     const CreateContactData = async () => 
     {
-        let response;
+        let response: Response;
         switch(value)
         {
             case 0:
-                response = createContactData(type, Data.author as string, Data.phoneNumber, Data.email);
+                response = await createContactData(type, Data.author as string, Data.phoneNumber, Data.email);
                 break;
 
             case 1:
-                response = createContactData(type, Data.publisher as string, Data.phoneNumber, Data.email);
+                response = await createContactData(type, Data.publisher as string, Data.phoneNumber, Data.email);
                 break;
+
+            default:
+                console.log("Invalid value");
+                return;
         }
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Create ${type} record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to create ${type} record! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Create ${type} record successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to create ${type} record! Please try again later` });
+                    break;
             }
         }
     }

@@ -18,22 +18,12 @@ const fetchData = async (authToken:string, url: string, data: Record<string, any
             body: JSON.stringify(data)
         });
 
-        console.log(response);
-
-        if (response.ok) 
-        {
-            const result = await response.json();
-            return result;
-        } 
-        else 
-        {
-            const errorResult = await response.json();
-            throw new Error( await errorResult.text || 'Something went wrong');
-        }
+        return response;
     } 
     catch (error) 
     {
         console.log(error);
+        throw error;
     }
 };
 
@@ -69,7 +59,7 @@ const ModifyStatusController = async (type:string, authToken:string, userId: str
     const statusData = statusDataConfig[type as keyof typeof statusDataConfig];
         
     const URL = `${url}/Status/id=${userId}`;
-    return await fetchData(authToken, URL, statusData);
+    return await fetchData(authToken, URL, statusData) as Response;
 };
 
 export { ModifyUserDataController, ModifyProfileDataController, ModifySuspendListDataController, ModifyStatusController };

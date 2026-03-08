@@ -30,18 +30,20 @@ const ReturnBookConfirmModal:FC<ReturnBookInterface> = (returnBookModalData) =>
 
     const ReturnBook = async () => 
     {
-        const response = data.fineAmount as number > 0 ?  returnBook(data._id, finesPaid) : returnBook(Data._id);
+        const response = data.fineAmount as number > 0 ? await returnBook(data._id, finesPaid) : await returnBook(Data._id);
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: "Return Book successfully!" });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Return book! Please try again later" });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: "Return Book successfully!" });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Return book! Please try again later" });
+                    break;
             }
         }
     }

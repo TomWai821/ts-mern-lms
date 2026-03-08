@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { BookDataInterface, ContactInterface, DefinitionState, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
-import { UserDataInterface } from "./UserTableModel";
 import { BookTableDataInterface } from "./BookTableModel";
+import { ViewProfileModel } from "./InputFieldModel";
 
 export interface ChildProps
 {
@@ -41,6 +41,8 @@ export interface ModalTemplateProps extends ChildProps
 
 export interface AuthContextProps
 {
+    Credentials: ViewProfileModel;
+    fetchUser: () => Promise<void>;
     IsLoggedIn: () => boolean;
     GetData: (data:string)  => string | undefined | null;
     IsAdmin: () => boolean;
@@ -53,11 +55,11 @@ export interface UserContextProps
     userData: UserResultDataInterface[][];
     fetchAllUser: () => Promise<void>;
     fetchUser: (type:string, UserData: {username?: string, role?: string , status?: string, gender?: string} | undefined) => Promise<void>;
-    createUser: (registerPosition:string, username:string, email:string, password:string, role:string, gender:string, birthDay:string) => Promise<boolean>;
-    editUserData: (userId:string, username: string, email: string, gender: string, role: string) => Promise<boolean>;
-    editSuspendUserData: (userId:string, bannedListID: string, dueDate: Date, description: string) => Promise<boolean>;
-    changeUserStatus: (type:string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => Promise<boolean | void>;
-    actualDeleteUser: (userId:string) => Promise<boolean>;
+    createUser: (registerPosition:string, username:string, email:string, password:string, role:string, gender:string, birthDay:string) => Promise<Response>;
+    editUserData: (userId:string, username: string, email: string, gender: string, role: string) => Promise<Response>;
+    editSuspendUserData: (userId:string, bannedListID: string, dueDate: Date, description: string) => Promise<Response>;
+    changeUserStatus: (type:string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => Promise<Response>;
+    actualDeleteUser: (userId:string) => Promise<Response>;
 }
 
 export interface BookContextProps
@@ -67,11 +69,11 @@ export interface BookContextProps
     fetchAllBook: () => Promise<void>;
     fetchBookWithFliterData: (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => Promise<void>;
     fetchLoanBookWithFliterData: (type:string, bookname?:string, username?:string, status?:string, finesPaid?:string) => Promise<void>;
-    createBook: (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => Promise<boolean>;
-    editBook: (bookID:string, imageName:string, newFile:File, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => Promise<boolean>;
+    createBook: (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => Promise<Response>;
+    editBook: (bookID:string, imageName:string, newFile:File, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => Promise<Response>;
     loanBook: (bookID:string, userID?:string) => Promise<Response>;
-    returnBook: (loanRecordID:string, finesPaid?:string) => Promise<boolean>;
-    deleteBook: (bookID:string) => Promise<boolean>;
+    returnBook: (loanRecordID:string, finesPaid?:string) => Promise<Response>;
+    deleteBook: (bookID:string) => Promise<Response>;
     getExternalData: (bookname: string, author: string) => Promise<GetResultInterface | undefined>;
 }
 
@@ -88,11 +90,11 @@ export interface SelfBookRecordContextProps
     BookRecordForUser: LoanBookInterface[][];
     bookForUser: BookDataInterface[];
     fetchFavouriteRecord: () => Promise<void>;
-    fetchSelfLoanRecord: () => Promise<boolean>;
+    fetchSelfLoanRecord: () => Promise<void>;
     fetchSelfFavouriteBookWithFilterData: (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => Promise<void>;
     fetchSelfLoanBookWithFilterData: (type:string, bookname?:string, status?:string) => Promise<void>;
-    favouriteBook: (bookID:string) => Promise<boolean>;
-    unfavouriteBook: (favouriteBookID:string) => Promise<boolean>;
+    favouriteBook: (bookID:string) => Promise<Response>;
+    unfavouriteBook: (favouriteBookID:string) => Promise<Response>;
 }
 
 export interface DefinatonProps
@@ -100,9 +102,9 @@ export interface DefinatonProps
     definition: DefinitionState;
     fetchAllDefinition: () => Promise<void>;
     fetchDefinitionDataWithFilterData:(type:string, data:string) => Promise<void>;
-    createDefinition:(type:string, shortName:string, detailsName:string) => Promise<boolean>;
-    editDefinition:(type:string, id:string, shortName:string, detailsName:string) => Promise<boolean>;
-    deleteDefinition:(type:string, id:string) => Promise<boolean>;
+    createDefinition:(type:string, shortName:string, detailsName:string) => Promise<Response>;
+    editDefinition:(type:string, id:string, shortName:string, detailsName:string) => Promise<Response>;
+    deleteDefinition:(type:string, id:string) => Promise<Response>;
 }
 
 export interface ContactProps
@@ -110,9 +112,9 @@ export interface ContactProps
     contact: ContactState;
     fetchAllContactData: () => Promise<void>;
     fetchContactDataWithFilterData: (type:string, author:string, publisher:string) => Promise<void>;
-    createContactData:(type:string, contactName:string, phoneNumber:string, email:string) => Promise<boolean>;
-    editContactData:(type:string, id:string, contactName:string, phoneNumber:string, email:string) => Promise<boolean>;
-    deleteContactData:(type:string, id:string) => Promise<boolean>;
+    createContactData:(type:string, contactName:string, phoneNumber:string, email:string) => Promise<Response>;
+    editContactData:(type:string, id:string, contactName:string, phoneNumber:string, email:string) => Promise<Response>;
+    deleteContactData:(type:string, id:string) => Promise<Response>;
 }
 
 // For Tab Panel

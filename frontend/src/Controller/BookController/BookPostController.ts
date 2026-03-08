@@ -14,11 +14,7 @@ export const createBookRecord = async (authToken:string, image:File, bookname:st
         }
     );
 
-    if(response.ok)
-    {
-        const result = await response.json();
-        return response.ok;
-    }
+    return response;
 }
 
 export const createLoanBookRecord = async (authToken:string, bookID:string, loanDate:Date, dueDate:Date, userID?:string) => 
@@ -52,14 +48,8 @@ export const createFavouriteBookRecord = async (authToken:string, bookID:string)
             body: JSON.stringify({bookID})
         }
     );
-
-    console.log(response);
     
-    if(response.ok)
-    {
-        const result = await response.json();
-        return response.ok;
-    }
+    return response
 }
 
 const createFormData = (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 

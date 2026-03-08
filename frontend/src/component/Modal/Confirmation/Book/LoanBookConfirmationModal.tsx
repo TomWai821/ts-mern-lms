@@ -36,7 +36,7 @@ const LoanBookConfirmationModal:FC<LoanBookModalInterface> = (LoanBookData) =>
 
     const ConfirmLoanBook = async () =>     
     {
-        const response:Response = await loanBook(_id);
+        const response: Response = await loanBook(_id);
 
         if (alertContext && alertContext.setAlertConfig) 
         {

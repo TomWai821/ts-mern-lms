@@ -23,18 +23,20 @@ const ActionTableCellForUser:FC<UserActionTableCellInterface> = (actionTableCell
 
     const FavouriteHandler = async () => 
     {
-        let response = isFavourite ? unfavouriteBook(FavouriteID as string) : favouriteBook((Information as BookDataInterface)._id); 
+        let response = isFavourite ? await unfavouriteBook(FavouriteID as string) : await favouriteBook((Information as BookDataInterface)._id); 
         const favouriteText = isFavourite ? "Unfavourite" : "Favourite";
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `${favouriteText} successfully!` });
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to ${favouriteText}! Please try again` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `${favouriteText} successfully!` });
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to ${favouriteText}! Please try again` });
+                    break;
             }
         }
     }

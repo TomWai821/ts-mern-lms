@@ -44,7 +44,7 @@ describe("User API Test", () =>
                 gender: "Male", role: "User", status : "Normal", birthDay: "01/01/2000"})
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.error).toBe("Email already in use")
+        expect(res.body.error).toBe("Email already in use");
     });
 });
 
@@ -56,8 +56,8 @@ describe("User API Test", () =>
         const res = await request(app).post("/api/user/Login")
             .send({email:"tester@gmail.com", password: "TheTestUser"})
 
-        expect(res.statusCode).toBe(200),
-        expect(res.body.message).toBe("Login Successfully!")
+        expect(res.statusCode).toBe(200);
+        expect(res.body.message).toBe("Login Successfully!");
         authToken = res.body.data.authToken;
     });
 });
@@ -70,8 +70,8 @@ describe("User API Test", () =>
         const res = await request(app).post("/api/user/Login")
             .send({email:"testera@gmail.com", password: "TheTestUser"})
 
-        expect(res.statusCode).toBe(400),
-        expect(res.body.error).toBe("Invalid email address")
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toBe("Invalid email address");
     });
 });
 
@@ -83,8 +83,8 @@ describe("User API Test", () =>
         const res = await request(app).post("/api/user/Login")
             .send({email:"tester@gmail.com", password: "JustAPassword"})
 
-        expect(res.statusCode).toBe(400),
-        expect(res.body.error).toBe("Invalid password")
+        expect(res.statusCode).toBe(400);
+        expect(res.body.error).toBe("Invalid password");
     });
 });
 
@@ -96,8 +96,8 @@ describe("User API Test", () =>
         const res = await request(app).get("/api/user/UserData")
             .set("authToken", authToken)
 
-        expect(res.statusCode).toBe(200),
-        expect(res.body.foundUser).toMatchObject({username: "TheTestUser", gender: "Male", role: "User"})
+        expect(res.statusCode).toBe(200);
+        expect(res.body.foundUser).toMatchObject({username: "TheTestUser", gender: "Male", role: "User"});
     });
 });
 
@@ -109,7 +109,7 @@ describe("User API Test", () =>
         const res = await request(app).get("/api/user/UserData")
             .set("authToken", "a")
 
-        expect(res.statusCode).toBe(401)
+        expect(res.statusCode).toBe(401);
     });
 });
 
@@ -121,8 +121,8 @@ describe("Book API Test (with AuthToken)", () =>
         const res = await request(app).get("/api/book/LoanBook")
             .set("authToken", authToken)
 
-        expect(res.statusCode).toBe(200),
-        expect(res.body.foundLoanBook).toBeNull;
+        expect(res.statusCode).toBe(200);
+        expect(res.body.foundLoanBook).toEqual([]);
     });
 });
 
@@ -134,8 +134,8 @@ describe("Book API Test (with AuthToken)", () =>
         const res = await request(app).get("/api/book/FavouriteBook")
             .set("authToken", authToken)
 
-        expect(res.statusCode).toBe(200),
-        expect(res.body.foundFavouriteBook).toBeNull;
+        expect(res.statusCode).toBe(200);
+        expect(res.body.foundFavouriteBook).toEqual([]);
     });
 });
 

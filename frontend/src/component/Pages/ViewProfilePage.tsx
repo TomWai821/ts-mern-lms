@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Avatar, Box, Button, Card, CardContent, Typography } from '@mui/material'
 
 // Context
@@ -6,11 +5,6 @@ import { useModal } from '../../Context/ModalContext'
 
 // Models
 import { ViewProfileModel } from '../../Model/InputFieldModel'
-import { GetResultInterface } from '../../Model/ResultModel'
-import { UserDataInterface } from '../../Model/UserTableModel'
-
-// Controllers
-import { FetchUserData } from '../../Controller/UserController/UserGetController'
 
 // Data(CSS Syntax)
 import { displayAsColumn, PageItemToCenter, PageTitleSyntax, ViewProfileButton } from '../../Data/Style';
@@ -21,47 +15,9 @@ import { useAuthContext } from '../../Context/User/AuthContext'
 
 const ViewProfilePage = () => 
 {
-    const [Credentials, setCredentials] = useState<ViewProfileModel>({ email: "", gender: "", username: "", role: ""});
     const {handleOpen} = useModal();
-    const {GetData} = useAuthContext();
+    const {GetData, Credentials} = useAuthContext();
     const authToken = GetData("authToken");
-
-    const fetchUser = async () => 
-    {
-        if (authToken) 
-        {
-            try
-            {
-                const userData = await FetchUserData(undefined, authToken);
-
-                if (userData) 
-                {
-                    console.log(userData);
-                    updateCredentials(userData);
-                }
-            } 
-            catch (error) 
-            {
-                console.log('Error while fetching user', error);
-            }
-        }
-
-    };
-
-    const updateCredentials = (userData: GetResultInterface) =>
-    {
-        const foundUser = Array.isArray(userData.foundUser) ? userData.foundUser[0] : userData.foundUser as UserDataInterface;
-
-        setCredentials
-        ( 
-            {
-                username: foundUser.username|| "", 
-                gender: foundUser.gender || "",
-                role: foundUser.role || "",
-                email: foundUser.email || "",
-            }
-        );
-    }
 
     const editUserData = () => 
     {
@@ -72,11 +28,6 @@ const ViewProfilePage = () =>
     {
         handleOpen(<DisplayQRCodeModal username={Credentials.username} authToken={authToken as string}/>)
     }
-
-    useEffect(() => 
-    {
-        fetchUser();
-    }, []);
 
     return (
         <Box sx={PageItemToCenter}>
@@ -107,4 +58,3 @@ const ViewProfilePage = () =>
 };
 
 export default ViewProfilePage;
-

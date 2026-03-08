@@ -23,18 +23,21 @@ const DeleteBookModal:FC<BookDataInterfaceForDelete> = ({...bookData}) =>
 
     const DeleteBook = async () => 
     {
-        const response =  deleteBook(bookID);
+        const response: Response  = await deleteBook(bookID);
+        console.log(response.status);
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: "Delete book record successfully!" });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Delete book record! Please try again later" });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: "Delete book record successfully!" });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: "Failed to Delete book record! Please try again later" });
+                    break;
             }
         }
     }

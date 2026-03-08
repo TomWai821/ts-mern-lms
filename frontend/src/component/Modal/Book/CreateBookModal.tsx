@@ -53,7 +53,7 @@ const CreateBookModal: FC<CreateBookModalInterface> = ({...bookData}) =>
         {name: "publisher", label: "Publisher", type:"text", select: true, options:contact.Publisher, slotProps:{}, multiline: false, rows: 1},
         {name: "publishDate", label: "Publish Date", type:"Date", select: false, slotProps:{}, multiline: false, rows: 1},
         {name: "description", label: "Description", type: "text", select: false, slotProps:{}, multiline: true, rows: 8}
-    ],[definition])
+    ],[definition, contact.Author, contact.Publisher])
 
     const onSelectChange = (event: ChangeEvent<HTMLInputElement>) => 
     {

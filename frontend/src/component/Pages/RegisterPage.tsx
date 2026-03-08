@@ -59,7 +59,7 @@ const RegisterPage = () =>
         event.preventDefault();
         setIsSubmitted(true);
     
-        const response: Response  = await RegisterController( 
+        const response: Response = await RegisterController( 
             "RegisterPanel", Credentials.username, Credentials.email, Credentials.password, 
             "User", Credentials.gender, Credentials.birthDay
         );

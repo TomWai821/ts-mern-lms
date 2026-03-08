@@ -13,13 +13,7 @@ export const updateBookRecord = async (authToken:string, bookID:string, imageNam
         }
     );
 
-    console.log(response);
-
-    if(response.ok)
-    {
-        await response.json();
-        return response.ok;
-    }
+    return response;
 }
 
 export const returnBookAndChangeStatus = async (authToken:string, loanBookRecord:string, finesPaid?:string) => 
@@ -33,11 +27,7 @@ export const returnBookAndChangeStatus = async (authToken:string, loanBookRecord
         }
     );
     
-    if(response.ok)
-    {
-        const result = await response.json();
-        return response.ok;
-    }
+    return response;
 }
 
 const createFormData = (image:File, imageName:string, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => 

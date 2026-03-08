@@ -56,42 +56,39 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
 
     const createDefinition = useCallback(async (type:string, shortName:string, detailsName:string) => 
     {
-        const createDefinitionData = await CreateDefinitionData(type, authToken, shortName, detailsName);
+        const result: Response = await CreateDefinitionData(type, authToken, shortName, detailsName);
 
-        if(createDefinitionData)
+        if(result)
         {
             fetchAllDefinition();
-            return true;
         }
-        return false;
+        return result;
     }
-    ,[fetchAllDefinition])
+    ,[fetchAllDefinition, authToken])
 
     const editDefinition = useCallback( async (type:string, id:string, shortName:string, detailsName:string) => 
     {
-        const editDefinitionData = await EditDefinitionData(type, authToken, id, shortName, detailsName);
+        const result: Response = await EditDefinitionData(type, authToken, id, shortName, detailsName);
 
-        if(editDefinitionData)
+        if(result)
         {
             fetchAllDefinition();
-            return true;
         }
-        return false;
+        return result;
     }
-    ,[fetchAllDefinition])
+    ,[fetchAllDefinition, authToken])
 
     const deleteDefinition = useCallback(async (type:string, id:string) => 
     {
-        const deleteDefinitionData = await DeleteDefinitionData(type, authToken, id);
+        const result: Response = await DeleteDefinitionData(type, authToken, id);
 
-        if(deleteDefinitionData)
+        if(result)
         {
             fetchAllDefinition();
-            return true;
         }
-        return false;
+        return result;
     }
-    ,[fetchAllDefinition])
+    ,[fetchAllDefinition, authToken])
 
     useEffect(() => 
     {

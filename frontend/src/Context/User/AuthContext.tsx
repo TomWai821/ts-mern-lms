@@ -1,12 +1,49 @@
-import { createContext, FC, useContext } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
 import { ChildProps, AuthContextProps } from "../../Model/ContextAndProviderModel";
 import { GetUserCookie } from "../../Controller/CookieController";
+import { ViewProfileModel } from "../../Model/InputFieldModel";
+import { GetResultInterface } from "../../Model/ResultModel";
+import { UserDataInterface } from "../../Model/UserTableModel";
+import { FetchUserData } from "../../Controller/UserController/UserGetController";
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: FC<ChildProps> = ({ children }) =>
 {
+    const [Credentials, setCredentials] = useState<ViewProfileModel>({ email: "", gender: "", username: "", role: ""});
     const mainPage:string = process.env.REACT_APP_MAIN_PAGE as string;
+
+    const fetchUser = useCallback(async () => 
+    {
+        const authToken = GetData("authToken");
+
+        if (authToken) 
+        {
+            try
+            {
+                const userData = await FetchUserData(undefined, authToken);
+    
+                if (userData) 
+                {
+                    updateCredentials(userData);
+                }
+            } 
+            catch (error) 
+            {
+                console.log('Error while fetching user', error);
+            }
+        }
+    },[])
+    
+    const updateCredentials = (userData: GetResultInterface) =>
+    {
+        const foundUser = Array.isArray(userData.foundUser) 
+        ? userData.foundUser[0] ?? {} 
+        : (userData.foundUser as UserDataInterface) ?? {};
+
+    
+        setCredentials({ username: foundUser.username ?? "", gender: foundUser.gender ?? "", role: foundUser.role ?? "", email: foundUser.email ?? "" });
+    }
 
     const IsLoggedIn = () => 
     {
@@ -45,9 +82,17 @@ export const AuthProvider: FC<ChildProps> = ({ children }) =>
         sessionStorage.clear();
         window.location.href = mainPage;
     }
+
+    useEffect(() => 
+    {
+        if(IsLoggedIn())
+        {
+            fetchUser()
+        }
+    },[fetchUser])
     
     return(
-        <AuthContext.Provider value={{IsLoggedIn, GetData, IsAdmin, handleLogout}}>
+        <AuthContext.Provider value={{Credentials, fetchUser, IsLoggedIn, GetData, IsAdmin, handleLogout}}>
             {children}
         </AuthContext.Provider>
     )

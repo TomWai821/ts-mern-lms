@@ -40,29 +40,35 @@ const CreateDefinitionConfirmModal:FC<CreateModalInterface> = (definationData) =
 
     const createDefinitionData = async () => 
     {
-        let response;
+        let response: Response;
 
         switch(value)
         {
             case 0:
-                response = createDefinition(type, Data.shortName, Data.genre as string);
+                response = await createDefinition(type, Data.shortName, Data.genre as string);
                 break;
 
             case 1:
-                response = createDefinition(type, Data.shortName, Data.language as string);
+                response = await createDefinition(type, Data.shortName, Data.language as string);
                 break;
+
+            default:
+                console.log("Invalid value");
+                return;
         }
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Create ${type} record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to create ${type} record! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Create ${type} record successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to create ${type} record! Please try again later` });
+                    break;
             }
         }
     }

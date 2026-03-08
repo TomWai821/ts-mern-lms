@@ -62,8 +62,9 @@ const LoginPage = () =>
     const handleLogin = async (event: FormEvent) => 
     {
         event.preventDefault();
-        const response: Response = await LoginController(Credentials.email, Credentials.password, Credentials.stayLogin);
         setIsSubmitted(true);
+        
+        const response: Response = await LoginController(Credentials.email, Credentials.password, Credentials.stayLogin);
     
         if (alertContext && alertContext.setAlertConfig) 
         {

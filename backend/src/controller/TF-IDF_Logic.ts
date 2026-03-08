@@ -33,7 +33,7 @@ export const calculateTFIDF = (loanCorpus: string[], allBooksCorpus: BookCorpusT
 
   const userVector = vocab.map(term => termFrequency(term, userDoc) * inverseDocumentFrequency(term, docs));
 
-  const scores: ScoreType = allBooksCorpus.map((book, i) => 
+  const scores: ScoreType = allBooksCorpus.map((book) => 
   {
       const doc = book.metadata.split(/\s+/);
       const docVector = vocab.map(term => termFrequency(term, doc) * inverseDocumentFrequency(term, docs));

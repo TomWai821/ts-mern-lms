@@ -8,7 +8,7 @@ import { AlertProvider } from '../Context/AlertContext';
 export const renderWithProviders = (ui: React.ReactElement, { route = '/' } = {}) => 
 {
     return render(
-        <MemoryRouter initialEntries={[route]}>
+        <MemoryRouter future={{ v7_relativeSplatPath: true }} initialEntries={[route]}>
             <AuthProvider>
                 <AlertProvider>
                     <ModalProvider>

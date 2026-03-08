@@ -19,12 +19,6 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
 
     const authToken = GetData("authToken") as string;
 
-    const fetchSelfRecord = useCallback(async () => 
-    {
-        fetchFavouriteRecord();
-        fetchSelfLoanRecord();
-    },[])
-
     const fetchFavouriteRecord = useCallback(async() => 
     {
         const resultForFavouriteBook: GetResultInterface | undefined = await fetchFavouriteBook(authToken);
@@ -33,7 +27,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         {
             setFavouriteBook(resultForFavouriteBook.foundFavouriteBook);
         }
-    },[])
+    },[authToken])
 
     const fetchSelfLoanRecord = useCallback(async() =>
     {
@@ -42,10 +36,8 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         if (resultForSelfLoanBook && Array.isArray(resultForSelfLoanBook.foundLoanBook)) 
         {
             setSelfLoanBook(resultForSelfLoanBook.foundLoanBook);
-            return true;
         }
-        return false;
-    },[])
+    },[authToken])
 
     const fetchRecommendBookForUser = useCallback(async () => 
     {
@@ -55,7 +47,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         {
             setBookForUser(resultForUser.foundBook);
         }
-    }, [SelfLoanBook]);
+    }, [authToken]);
 
     const fetchSelfFavouriteBookWithFilterData = useCallback(async(bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => 
     {
@@ -65,7 +57,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         {
             setFavouriteBook(result.foundFavouriteBook);
         }
-    },[])
+    },[authToken])
 
     const fetchSelfLoanBookWithFilterData = useCallback(async(type:string, bookname?:string, status?:string) => 
     {
@@ -75,39 +67,42 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         {
             setSelfLoanBook(result.foundLoanBook);
         }
-    },[])
+    },[authToken])
+
+    const fetchSelfRecord = useCallback(async () => 
+    {
+        fetchFavouriteRecord();
+        fetchSelfLoanRecord();
+    },[fetchFavouriteRecord, fetchSelfLoanRecord])
 
     const favouriteBook = useCallback(async(bookID:string) => 
     {
-        const result = await createFavouriteBookRecord(authToken, bookID);
+        const result: Response = await createFavouriteBookRecord(authToken, bookID);
 
         if(result)
         {
             fetchSelfRecord();
-            return true;
         }
-        return false;
-    },[])
+        return result;
+    },[authToken, fetchSelfRecord])
 
     const unfavouriteBook = useCallback(async(FavouriteBookID:string) => 
     {
-        const result = await deleteBookRecord("Favourite", authToken, FavouriteBookID);
+        const result: Response = await deleteBookRecord("Favourite", authToken, FavouriteBookID);
 
         if(result)
         {
             fetchSelfRecord();
-            return true;
         }
-        return false;
-    },[])
+        return result;
+
+    },[authToken, fetchSelfRecord])
 
     useEffect(() => 
     {
-        if (SelfLoanBook.length > 0) 
-        {
-            fetchRecommendBookForUser();
-        }
-    }, [SelfLoanBook]);
+        fetchSelfRecord();
+        fetchRecommendBookForUser();
+    },[fetchSelfRecord, fetchRecommendBookForUser])
 
     return (
         <SelfBookRecordContext.Provider value={{ BookRecordForUser, bookForUser, fetchFavouriteRecord, fetchSelfLoanRecord, fetchSelfFavouriteBookWithFilterData, fetchSelfLoanBookWithFilterData, favouriteBook, unfavouriteBook }}>

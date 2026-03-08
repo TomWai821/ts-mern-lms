@@ -32,18 +32,20 @@ const UndoUserActivityModal:FC<DeleteModalInterface> = ({...userData}) =>
 
     const UndoUserAction = async () => 
     {
-        const response = changeUserStatus("UnSuspend", _id, "Normal", Data.bannedDetails?._id as string);
+        const response: Response  = await changeUserStatus("UnSuspend", _id, "Normal", Data.bannedDetails?._id as string);
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Unsuspend user successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to Unsuspend user! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Unsuspend user successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to Unsuspend user! Please try again later` });
+                    break;
             }
         }
     }

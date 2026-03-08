@@ -26,170 +26,121 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
     // For init
     const fetchAllUser = useCallback(async () => 
     {
-        try
+        const resultForAllUser: GetResultInterface | undefined = await FetchUserData("AllUser", authToken);
+        const resultForSuspendUser: GetResultInterface | undefined = await FetchUserData("SuspendUser", authToken);
+
+        if(resultForAllUser && Array.isArray(resultForAllUser.foundUser))
         {
-            const resultForAllUser: GetResultInterface | undefined = await FetchUserData("AllUser", authToken);
-            const resultForSuspendUser: GetResultInterface | undefined = await FetchUserData("SuspendUser", authToken);
-
-            if(resultForAllUser && Array.isArray(resultForAllUser.foundUser))
-            {
-                setAllUser(resultForAllUser.foundUser);
-            }
-
-            if(resultForSuspendUser && Array.isArray(resultForSuspendUser.foundUser))
-            {
-                setSuspendUser(resultForSuspendUser.foundUser);
-            }
-
+            setAllUser(resultForAllUser.foundUser);
         }
-        catch(error)
+
+        if(resultForSuspendUser && Array.isArray(resultForSuspendUser.foundUser))
         {
-            console.log(error);
+            setSuspendUser(resultForSuspendUser.foundUser);
         }
+
     },[authToken])
 
     // For search function
     const fetchUser = useCallback(async (type:string, UserData: {username?: string, role?: string , status?: string, gender?: string} | undefined) => 
     {
         const {username, role, status, gender} = UserData as FindUserInterface;
-        try
-        {
-            const result : GetResultInterface | undefined = await FetchUserData(type, authToken, username, role, status, gender);
 
-            if(result && Array.isArray(result.foundUser))
+        const result : GetResultInterface | undefined = await FetchUserData(type, authToken, username, role, status, gender);
+
+        if(result && Array.isArray(result.foundUser))
+        {
+            switch(type)
             {
-                switch(type)
-                {
-                    case "AllUser":
-                        setAllUser(result.foundUser);
-                        break;
+                case "AllUser":
+                    setAllUser(result.foundUser);
+                    break;
 
-                    case "SuspendUser":
-                        setSuspendUser(result.foundUser);
-                        break;
-                }
-                
+                case "SuspendUser":
+                    setSuspendUser(result.foundUser);
+                    break;
             }
-        }
-        catch(error)
-        {
-            console.log(error);
+            
         }
     },[authToken])
 
     const createUser = useCallback(async (registerPosition:string, username:string, email:string, password:string, role:string, gender:string, birthDay:string) => 
     {
-        const result = await RegisterController(registerPosition, username, email, password, role, gender, birthDay);
-        try
+        const result: Response = await RegisterController(registerPosition, username, email, password, role, gender, birthDay);
+
+        if(result)
         {
-            if(result)
-            {
-                fetchAllUser();
-                return true;
-            }
-            return false;
+            fetchAllUser();
         }
-        catch(error)
-        {
-            console.log(error);
-            return false;
-        }
+        
+        return result;
+
     },[fetchAllUser])
 
     const editUserData = useCallback(async (userId: string, username:string, email:string, gender:string, role:string) => 
     {
-        const result : GetResultInterface | undefined = await ModifyUserDataController(authToken, userId, username, email, gender, role);
+        const result: Response = await ModifyUserDataController(authToken, userId, username, email, gender, role);
 
-        try
+        if(result)
         {
-            if(result)
-            {
-                fetchAllUser();
-                return true;
-            }
-            return false;
+            fetchAllUser();
         }
-        catch(error)
-        {
-            console.log(error);
-            return false;
-        }
-    },[fetchAllUser])
+
+        return result;
+
+    },[fetchAllUser, authToken])
     
     const editSuspendUserData = useCallback(async (userId:string, bannedListID:string, dueDate:Date, description:string) => 
     {
-        const result : GetResultInterface | undefined = await ModifySuspendListDataController(authToken, userId, bannedListID, dueDate, description);
+        const result: Response = await ModifySuspendListDataController(authToken, userId, bannedListID, dueDate, description);
 
-        try
+        if(result)
         {
-            if(result)
-            {
-                fetchAllUser();
-                return true;
-            }
-            return false;
+            fetchAllUser();
         }
-        catch(error)
-        {
-            console.log(error);
-            return false;
-        }
-    },[fetchAllUser])
+        
+        return result;
 
-    const changeUserStatus = useCallback(async (type:string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => 
+    },[fetchAllUser, authToken])
+
+    const changeUserStatus = useCallback(async (type: string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => 
     {
         const startDate = GetCurrentDate("Date") as Date;
         const dueDate = CalculateDueDate(duration as number);
-        let result : GetResultInterface | undefined;
-        try
+        let result : Response;
+        
+        switch(type)
         {
-            switch(type)
-            {
-                case "UnSuspend":
-                    result = await ModifyStatusController(type, authToken, userId, status, ListID);
-                    break;
-                
-                default:
-                    if(type !== "Suspend")
-                    {
-                        return console.log(`Invalid type: ${type}`);
-                    }
-                    result = await ModifyStatusController(type, authToken, userId, status, undefined, startDate, dueDate, description);
-                    break;
-            }
+            case "UnSuspend":
+                result = await ModifyStatusController(type, authToken, userId, status, ListID);
+                break;
+
+            default:
+                result = await ModifyStatusController(type, authToken, userId, status, undefined, startDate, dueDate, description);
+                break;
+        }
     
-            if(result)
-            {
-                fetchAllUser();
-                return true;
-            }
-            return false;
-        }
-        catch(error)
+        if(result)
         {
-            console.log(error);
-            return false;
+            fetchAllUser();
         }
-    },[fetchAllUser]);
+        
+        return result;
+
+    },[fetchAllUser, authToken]);
 
     const actualDeleteUser = useCallback(async(userId:string) => 
     {
-        const result : GetResultInterface | undefined = await DeleteUserController(authToken, userId);
-        try
+        const result = await DeleteUserController(authToken, userId);
+
+        if(result)
         {
-            if(result)
-            {
-                fetchAllUser();
-                return true;
-            }
-            return false;
+            fetchAllUser();
         }
-        catch(error)
-        {
-            console.log(error);
-            return false;
-        }
-    },[fetchAllUser]);
+        
+        return result;
+
+    },[fetchAllUser, authToken]);
     
 
     useEffect(() => 

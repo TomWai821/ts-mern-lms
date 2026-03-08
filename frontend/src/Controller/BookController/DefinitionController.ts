@@ -53,15 +53,14 @@ export const CreateDefinitionData = async (type:string, authToken:string, shortN
             }
         );
 
-        if(response.ok)
-        {
-            const result = response.json();
-            return result;
-        }
+        return response;
     }
     catch(error)
     {
-        console.log(error);
+         return new Response(
+            JSON.stringify({ error: "Create Definition failed", details: String(error) }),
+            { status: 500, headers: { "content-type": "application/json" } }
+        );
     }
 }
 
@@ -79,15 +78,14 @@ export const EditDefinitionData = async (type:string, authToken:string, id:strin
             }
         );
 
-        if(response.ok)
-        {
-            const result = response.json();
-            return result;
-        }
+       return response;
     }
     catch(error)
     {
-        console.log(error);
+        return new Response(
+            JSON.stringify({ error: "Edit Definition failed", details: String(error) }),
+            { status: 500, headers: { "content-type": "application/json" } }
+        );
     }
 }
 
@@ -103,15 +101,14 @@ export const DeleteDefinitionData = async (type:string, authToken:string, id:str
             }
         );
 
-        if(response.ok)
-        {
-            const result = response.json();
-            return result;
-        }
+       return response;
     }
     catch(error)
     {
-        console.log(error);
+        return new Response(
+            JSON.stringify({ error: "Delete Definition failed", details: String(error) }),
+            { status: 500, headers: { "content-type": "application/json" } }
+        );
     }
 }
 

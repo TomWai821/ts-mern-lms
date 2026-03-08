@@ -71,7 +71,7 @@ export const CreateContact = async (authToken:string, type:string, contactName:s
 
     try
     {
-        const response = await fetch(`${localhost}/book/contact/type=${type}`,
+        const response: Response = await fetch(`${localhost}/book/contact/type=${type}`,
             {
                 method: 'POST',
                 headers: { 'content-type': contentType, 'authToken': authToken },
@@ -79,15 +79,14 @@ export const CreateContact = async (authToken:string, type:string, contactName:s
             }
         );
 
-        if(response.ok)
-        {
-            const result:GetResultInterface = await response.json();
-            return result;
-        }
+        return response;
     }
     catch(error)
     {
-        console.log(error);
+        return new Response(
+            JSON.stringify({ error: "Create Contact failed", details: String(error) }),
+            { status: 500, headers: { "content-type": "application/json" } }
+        );
     }
 }
 
@@ -97,7 +96,7 @@ export const EditContact = async (authToken:string, type:string, contactName:str
 
     try
     {
-        const response = await fetch(`${localhost}/book/contact/type=${type}`,
+        const response: Response = await fetch(`${localhost}/book/contact/type=${type}`,
             {
                 method: 'PUT',
                 headers: { 'content-type': contentType, 'authToken': authToken },
@@ -105,15 +104,14 @@ export const EditContact = async (authToken:string, type:string, contactName:str
             }
         );
 
-        if(response.ok)
-        {
-            const result:GetResultInterface = await response.json();
-            return result;
-        }
+       return response;
     }
     catch(error)
     {
-        console.log(error);
+        return new Response(
+            JSON.stringify({ error: "Edit Contact failed", details: String(error) }),
+            { status: 500, headers: { "content-type": "application/json" } }
+        );
     }
 }
 
@@ -121,7 +119,7 @@ export const DeleteContact= async (authToken:string, type:string, id:string) =>
 {
     try
     {
-        const response = await fetch(`${localhost}/book/contact/type=${type}`,
+        const response: Response = await fetch(`${localhost}/book/contact/type=${type}`,
             {
                 method: 'DELETE',
                 headers: { 'content-type': contentType, 'authToken': authToken },
@@ -129,17 +127,14 @@ export const DeleteContact= async (authToken:string, type:string, id:string) =>
             }
         );
 
-        console.log(response);
-
-        if(response.ok)
-        {
-            const result:GetResultInterface = await response.json();
-            return result;
-        }
+        return response;
     }
     catch(error)
     {
-        console.log(error);
+        return new Response(
+            JSON.stringify({ error: "Delete Contact failed", details: String(error) }),
+            { status: 500, headers: { "content-type": "application/json" } }
+        );
     }
 }
 

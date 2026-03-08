@@ -32,18 +32,20 @@ const DeleteUserConfirmModal:FC<DeleteModalInterface> = ({...userData}) =>
 
     const DeleteUserAction = async () => 
     {
-        const response = actualDeleteUser(_id);
+        const response: Response = await actualDeleteUser(_id);
         
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if (await response) 
+            switch(response.status)
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Delete User record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to delete User record! Please try again later` });
+                case 200:
+                    alertContext.setAlertConfig({ AlertType: "success", Message: `Delete User record successfully!` });
+                    setTimeout(() => { handleClose() }, 2000);
+                    break;
+
+                default:
+                    alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to delete User record! Please try again later` });
+                    break;
             }
         }
     }

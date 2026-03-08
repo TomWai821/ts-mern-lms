@@ -76,7 +76,7 @@ export const CreateLoanBookRecord = async (req: AuthRequest, res:Response) =>
             UserID = data.user?._id;
 
             const user = await FindUser({ _id: UserID }) as UserInterface;
-
+            
             if(user.status === "Suspend")
             {
                 return res.status(401).json({success: false, error: "This user is suspended!"});
@@ -86,7 +86,6 @@ export const CreateLoanBookRecord = async (req: AuthRequest, res:Response) =>
         {
             UserID = id;
         }
-
 
         const createLoanRecord = await CreateBookLoaned({userID:UserID, bookID, loanDate, dueDate})
 

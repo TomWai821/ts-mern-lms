@@ -1,15 +1,4 @@
-version: "3.9"
 services:
-  mongo:
-    image: mongo:6.0
-    ports:
-      - "27017:27017"
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   backend-test:
     build:
       context: ./backend
@@ -19,6 +8,9 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
 
   frontend-test:
     build:
@@ -26,3 +18,22 @@ services:
       target: test
     depends_on:
       - mongo
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes: 
+      - db-data:/data/db
+      - ./backend/MongoDBSchema:/docker-entrypoint-initdb.d
+
+volumes:
+  db-data:

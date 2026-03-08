@@ -103,7 +103,7 @@ const EditUserConfirmModal:FC<EditModalInterface> = (editModalData) =>
 
     const EditUserAction = async () => 
     {
-        let response;
+        let response: Response;
 
         if(differences.length > 0)
         {
@@ -112,27 +112,33 @@ const EditUserConfirmModal:FC<EditModalInterface> = (editModalData) =>
                 case 0:
                     const CompareData = compareData as UserResultDataInterface;
                     const EditData = editData as UserDataInterface;
-                    response = editUserData(CompareData._id, EditData.username, EditData.email, EditData.gender, EditData.role);
+                    response = await editUserData(CompareData._id, EditData.username, EditData.email, EditData.gender, EditData.role);
                     break;
 
                 case 1:
                     const CompareSuspendUserData = compareData as DetailsInterfaceForSuspend;
                     const EditSuspendUserData = editData as DetailsInterfaceForSuspend;
-                    response = editSuspendUserData(EditSuspendUserData.userID as string, CompareSuspendUserData._id, EditSuspendUserData.dueDate as Date, EditSuspendUserData.description);
+                    response = await editSuspendUserData(EditSuspendUserData.userID as string, CompareSuspendUserData._id, EditSuspendUserData.dueDate as Date, EditSuspendUserData.description);
                     break;
+
+                default:
+                    console.log("Invalid value");
+                    return;
             }
-        }
-        
-        if (alertContext && alertContext.setAlertConfig) 
-        {
-            if (await response) 
+
+            if (alertContext && alertContext.setAlertConfig) 
             {
-                alertContext.setAlertConfig({ AlertType: "success", Message: `Edit ${type} record successfully!` });
-                setTimeout(() => { handleClose() }, 2000);
-            } 
-            else 
-            {
-                alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to Edit ${type} record! Please try again later` });
+                switch(response.status)
+                {
+                    case 200:
+                        alertContext.setAlertConfig({ AlertType: "success", Message: `Edit ${type} record successfully!` });
+                        setTimeout(() => { handleClose() }, 2000);
+                        break;
+
+                    default:
+                        alertContext.setAlertConfig({ AlertType: "error", Message: `Failed to Edit ${type} record! Please try again later` });
+                        break;
+                }
             }
         }
     }

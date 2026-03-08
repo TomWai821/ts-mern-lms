@@ -14,11 +14,6 @@ export const RecommendBookProvider:FC<ChildProps> = ({children}) =>
     const [mostPopularBook, setMostPopularBook] = useState<LoanBookInterface[]>([]);
     const suggestBook = [bookForUser, newPublishBook, mostPopularBook];
 
-    const fetchRecommendBook = useCallback(async () =>
-    {
-        fetchNewPublishBook();
-        fetchMostPopularBook();
-    },[])
 
     const fetchNewPublishBook = useCallback(async () => 
     {
@@ -39,6 +34,12 @@ export const RecommendBookProvider:FC<ChildProps> = ({children}) =>
             setMostPopularBook(resultForMostPopularBook.foundLoanBook);
         }
     },[])
+
+    const fetchRecommendBook = useCallback(async () =>
+    {
+        fetchNewPublishBook();
+        fetchMostPopularBook();
+    },[fetchNewPublishBook, fetchMostPopularBook])
 
     useEffect(() =>
     {

@@ -63,7 +63,7 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
     useEffect(() => 
     {
         getBookDataFromExternal()
-    },[])
+    })
 
     return(
         <Box>

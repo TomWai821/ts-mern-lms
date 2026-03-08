@@ -51,42 +51,39 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
 
     const createContactData = useCallback(async (type:string, contactName:string, phoneNumber:string, email:string) => 
     {
-        const createContactData = await CreateContact(authToken, type, contactName, phoneNumber, email);
+        const result: Response = await CreateContact(authToken, type, contactName, phoneNumber, email);
 
-        if(createContactData)
+        if(result)
         {
             fetchAllContactData();
-            return true;
         }
-        return false;
+        return result;
     }
-    ,[fetchAllContactData])
+    ,[fetchAllContactData, authToken])
 
     const editContactData = useCallback( async (type:string, id:string, contactName:string, phoneNumber:string, email:string) => 
     {
-        const editContactData = await EditContact(authToken, type, contactName, phoneNumber, email, id);
+        const result: Response = await EditContact(authToken, type, contactName, phoneNumber, email, id);
 
-        if(editContactData)
+        if(result)
         {
             fetchAllContactData();
-            return true;
         }
-        return false;
+        return result;
     }
-    ,[fetchAllContactData])
+    ,[fetchAllContactData, authToken])
 
     const deleteContactData = useCallback(async (type:string, id:string) => 
     {
-        const deleteContactData = await DeleteContact(authToken, type, id);
+        const result: Response = await DeleteContact(authToken, type, id);
 
-        if(deleteContactData)
+        if(result)
         {
             fetchAllContactData();
-            return true;
         }
-        return false;
+        return result;
     }
-    ,[fetchAllContactData])
+    ,[fetchAllContactData, authToken])
 
     useEffect(() => 
     {

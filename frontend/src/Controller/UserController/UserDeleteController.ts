@@ -18,15 +18,12 @@ const DeleteUserController = async(authToken:string, userId:string) =>
             }
         )
 
-        if(response.ok)
-        {
-            const result = await response.json();
-            return result;
-        }
+        return response
     }
     catch(error)
     {
         console.log(error);
+        throw error;
     }
 }
 
