@@ -274,53 +274,53 @@ Notes:
 #### Frontend
    
 1. Register an account (In Register Page)
-   Expectation:
-       - Alert is shown with success colour (green)
-       - Alert message is 'Registration successful! Redirecting...'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Alert is shown with success colour (green)
+    - Alert message is 'Registration successful! Redirecting...'
+    Result:
+    - Same as expectation
 
 2. Input the already registered data (In Register Page)
-   Expectation:
-       - Alert is shown with error colour (red)
-       - Alert message is 'Failed to register! Please try again'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Alert is shown with error colour (red)
+    - Alert message is 'Failed to register! Please try again'
+    Result:
+    - Same as expectation
    
 3. Input DOB that is younger than 6 years old (In Register Page)
-   Expectation:
-       - HelperText is shown
-       - HelperText message is 'Only users aged 6 years and older can register'
-   Result:
-       - Same as expectation
+    Expectation:
+    - HelperText is shown
+    - HelperText message is 'Only users aged 6 years and older can register'
+    Result:
+    - Same as expectation
    
 5. Login account (In Login Page)
-   Expectation:
-       - Alert is shown with success colour (green)
-       - Alert message is 'Login successfully'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Alert is shown with success colour (green)
+    - Alert message is 'Login successfully'
+    Result:
+    - Same as expectation
    
 6. Input an invalid password (In the login page)
-   Expectation:
-       - Alert is shown with error colour (red)
-       - Alert message is 'Invalid email or password!'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Alert is shown with error colour (red)
+    - Alert message is 'Invalid email or password!'
+    Result:
+    - Same as expectation
 
 7. Let the email input field become empty (In the login page)
-   Expectation:
-       - HelperText is shown
-       - HelperText message is 'Please enter a valid email address'
-   Result:
-       - Same as expectation
+    Expectation:
+    - HelperText is shown
+    - HelperText message is 'Please enter a valid email address'
+    Result:
+    - Same as expectation
    
 8. Let the password input field become empty (In the login page)
-   Expectation:
-       - HelperText is shown
-       - HelperText message is 'password must be at least 6 characters long'
-   Result:
-       - Same as expectation
+    Expectation:
+    - HelperText is shown
+    - HelperText message is 'password must be at least 6 characters long'
+    Result:
+    - Same as expectation
 
 ***Remarks***
 - Frontend test case in './frontend/src/__test__/Login.test.tsx'
@@ -330,99 +330,99 @@ Notes:
 
 ***For User Data***
 1. Account Registeration
-   Expectation:
-       - Status Code 200
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    Result:
+    - Same as expectation
 
 2. Account Registeration (with already registeration data)
-   Expectation:
-       - Status Code 400
-       - error message should be 'Email already in use'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 400
+    - error message should be 'Email already in use'
+    Result:
+    - Same as expectation
 
 3. Account Login
-   Expectation:
-       - Status Code 200
-       - message should be 'Login Successfully!'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    - message should be 'Login Successfully!'
+    Result:
+    - Same as expectation
 
 4. Account Login (With Invalid email)
-   Expectation:
-       - Status Code 400
-       - message should be 'Invalid email address'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 400
+    - message should be 'Invalid email address'
+    Result:
+    - Same as expectation
 
 5. Account Login (With Invalid password)
-   Expectation:
-       - Status Code 400
-       - message should be 'Invalid password'
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 400
+    - message should be 'Invalid password'
+    Result:
+    - Same as expectation
 
 6. Get User Profile data
-   Expectation:
-       - Status Code 200
-       - It should return an object which include username, gender, role in data column
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    - It should return an object which include username, gender, role in data column
+    Result:
+    - Same as expectation
 
 7. Get User Profile data (With Invalid JWT Token)
-   Expectation:
-       - Status Code 401
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 401
+    Result:
+    - Same as expectation
 
 8. Get User Loan Book Record
-   Expectation:
-       - Status Code 200
-       - It should return [] (It is new account)
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    - It should return [] (It is new account)
+    Result:
+    - Same as expectation
 
 9. Get User Favourite Book Record
-   Expectation:
-       - Status Code 200
-       - It should return [] (It is new account)
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    - It should return [] (It is new account)
+    Result:
+    - Same as expectation
 
 ***For Book Data***
 1. Get the whole book data
-   Expectation:
-       - Status Code 200
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    Result:
+    - Same as expectation
 
 2. Get the whole book data with filter data (bookname=Harry)
-   Expectation:
-       - Status Code 200
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    Result:
+    - Same as expectation
 
 3. Get the whole book data with invalid filter data (bookname=zzz)
-   Expectation:
-       - Status Code 200
-       - It should return []
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    - It should return []
+    Result:
+    - Same as expectation
 
 4. Get recommend book data (Based on publish date)
-   Expectation:
-       - Status Code 200
-       - It should return 8 records
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    - It should return 8 records
+    Result:
+    - Same as expectation
 
 5. Get recommend book data (Based on publish date)
-   Expectation:
-       - Status Code 200
-       - It should has data in body(foundbook)
-   Result:
-       - Same as expectation
+    Expectation:
+    - Status Code 200
+    - It should has data in body(foundbook)
+    Result:
+    - Same as expectation
 
 ***Remarks***
 - Backend test case in './backend/tests/*.ts'
@@ -509,15 +509,15 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
 ## TF-IDF Logic Overview
 
 ***1. Calculate Term Frequence and Inverse Document Frequence***<br>
-<img src="doc/Image/Functions/TF-IDF_BasicFunction.png" style="width:60%;"/><br>
+<img src="doc/Image/Functions/TF-IDF_BasicFunction.png" style="width:80%;"/><br>
 
 ****Term Frequence (TF)****
 - It measures how often a word appears in a document relative to its length
-- Formula: <img src="doc/Image/Formula/TF-formula.png" style="width:60%;"/>
+- Formula: <img src="doc/Image/Formula/TF-formula.png" style="width:40%;"/>
 
 ****Inverse Document Frequence (IDF)****
 - It reduces the weight of common words by considering how many documents contain the term
-- Formula: <img src="doc/Image/Formula/IDF-formula.png" style="width:60%;"/>
+- Formula: <img src="doc/Image/Formula/IDF-formula.png" style="width:40%;"/>
 
 ****TF-IDF Vector****
 - Each document (user history or book metadata) is represented as a vector of TF‑IDF values across the vocabulary
@@ -527,11 +527,11 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
 - It produces a score between 0 and 1:
     - 1 → vectors point in the same direction (high similarity)
     - 0 → vectors are orthogonal (no similarity)
-- Formula:<img src="doc/Image/Formula/CosineSimilarity-formula.png" style="width:60%;"/>
+- Formula:<img src="doc/Image/Formula/CosineSimilarity-formula.png" style="width:40%;"/>
 
 
 ***2. Calculation Logic (TF-IDF + Genre Weight)***<br>
-<img src="doc/Image/Functions/TF-IDF_CalculateFunction.png" style="width:60%;"/><br>
+<img src="doc/Image/Functions/TF-IDF_CalculateFunction.png" style="width:80%;"/><br>
 
 ****Corpus Construction****
 - User loan history → loanCorpus
@@ -553,7 +553,7 @@ Genre Weighting
 
 
 ***3. TF-IDF Implementation***<br>
-<img src="doc/Image/Functions/TF-IDF_Implementation" style="width:60%;"/><br>
+<img src="doc/Image/Functions/TF-IDF_Implementation" style="width:80%;"/><br>
 
 ****Retrieve user history****
 - Fetch the latest 5 loan records (limited by collection size)
