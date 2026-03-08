@@ -106,7 +106,7 @@ export const CreateLoanBookRecord = async (req: AuthRequest, res:Response) =>
     }
     catch(error)
     {
-        console.log(error);
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({success, error: "Internal Server Error!" })
     }
 }
@@ -143,6 +143,7 @@ export const UpdateLoanBookRecord = async (req: AuthRequest, res:Response) =>
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({success, error: "Internal Server Error!" })
     }
 }

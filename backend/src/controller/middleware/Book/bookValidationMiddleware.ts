@@ -43,6 +43,7 @@ export const BookRecordIDValidation = async (req:AuthRequest, res:Response, next
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }

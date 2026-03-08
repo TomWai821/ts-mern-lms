@@ -7,11 +7,11 @@ type MulterFile = Express.Multer.File;
 
 const storage = multer.diskStorage(
     {
-        destination: (req:Request, file:MulterFile, callback:(error: Error | null, destination: string) => void) => 
+        destination: (req:Request, file:MulterFile, callback:(_error: Error | null, destination: string) => void) => 
         {
             callback(null, path.join(__dirname, 'upload'));
         },
-        filename: (req:Request, file:MulterFile, callback:(error: Error | null, filename: string) => void) => 
+        filename: (req:Request, file:MulterFile, callback:(_error: Error | null, filename: string) => void) => 
         {
             callback(null, `${Date.now()}-${file.originalname}`);
         }

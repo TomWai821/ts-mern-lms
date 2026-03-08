@@ -22,6 +22,7 @@ export const CreateFavouriteBookRecord = async (req:AuthRequest, res:Response) =
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({success, error: 'Internal Server Error!'})
     }
 }
@@ -35,6 +36,7 @@ export const GetFavouriteBookRecord = async (req:AuthRequest, res:Response) =>
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({success: false, error: 'Internal Server Error!'})
     }
 }
@@ -58,6 +60,7 @@ export const DeleteFavouriteBookRecord = async (req:AuthRequest, res:Response) =
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({success, error: 'Internal Server Error!'})
     }
 }

@@ -34,6 +34,7 @@ export const GetContactRecord = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success, error: "Internal Server Error" });
     }
 };
@@ -72,6 +73,7 @@ const CreateAuthorRecord = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
@@ -92,6 +94,7 @@ const CreatePublisherRecord = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
@@ -130,6 +133,7 @@ const UpdateAuthorRecord = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
@@ -149,6 +153,7 @@ const UpdatePublisherRecord = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 }
@@ -173,6 +178,7 @@ export const DeleteContactRecord = async (req: Request, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success, error: "Internal Server Error" });
     }
 };

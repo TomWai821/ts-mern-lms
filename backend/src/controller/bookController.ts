@@ -161,6 +161,7 @@ export const DeleteBookRecord = async(req:Request, res:Response) =>
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: 'Internal Server Error!' });
     }
 }
@@ -214,6 +215,7 @@ export const GetDataFromGoogleBook = async (req:Request, res:Response) =>
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }

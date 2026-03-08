@@ -19,6 +19,7 @@ export const FetchUserFromHeader = async (req: AuthRequest, res: Response, next:
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(401).send({ success: false, error: "Please authenticate using a valid token" });
     }
 };

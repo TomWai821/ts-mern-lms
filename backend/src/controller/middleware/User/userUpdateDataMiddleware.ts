@@ -80,6 +80,7 @@ export const CreateStatusList = async (statusForUserList:string, userId:string, 
         } 
         catch (error) 
         {
+            console.error(`Unhandled error: ${error}`);
             throw new Error("Failed to create list");
         }
     }

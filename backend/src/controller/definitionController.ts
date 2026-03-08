@@ -40,6 +40,7 @@ export const GetDefinition = async (req: Request, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success, error: "Internal Server Error" });
     }
 };
@@ -64,6 +65,7 @@ export const CreateDefinitionData = async (req: Request, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success, error: "Internal Server Error" });
     }
 };
@@ -98,6 +100,7 @@ export const EditDefinitionData = async (req: Request, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success, error: "Internal Server Error" });
     }
 };
@@ -122,6 +125,7 @@ export const DeleteDefinitionData = async (req: Request, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         return res.status(500).json({ success, error: "Internal Server Error" });
     }
 };

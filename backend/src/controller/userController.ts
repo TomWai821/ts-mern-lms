@@ -39,6 +39,7 @@ export const UserRegister = async(req: Request, res: Response) =>
     }
     catch (error) 
     { 
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: 'Internal Server Error!' });
     }
 }
@@ -63,6 +64,7 @@ export const UserLogin = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: 'Internal Server Error!' });
     }
 };
@@ -76,6 +78,7 @@ export const GetUserData = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success: false, error: "Internal Server Error!" });
     }
 };
@@ -91,6 +94,7 @@ export const GetSelfUserData = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success: false, error: "Internal Server Error!" });
     }
 };
@@ -115,6 +119,7 @@ export const ChangeUserData = async (req: AuthRequest, res: Response) =>
     } 
     catch (error) 
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: "Internal Server Error!" });
     }
 };
@@ -168,6 +173,7 @@ export const UpdateUserData = async (req:AuthRequest, res:Response) =>
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: "Internal Server Error!" });
     }
 }
@@ -214,7 +220,7 @@ export const ChangeStatus = async (req:AuthRequest, res:Response) =>
     }
     catch (error) 
     {
-        console.log(error);
+         console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: "Internal Server Error!" });
     }
 }
@@ -238,6 +244,7 @@ export const ModifySuspendListData = async (req: AuthRequest, res:Response) =>
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: "Internal Server Error!" });
     }
 }
@@ -261,6 +268,7 @@ export const DeleteUser = async (req: AuthRequest, res: Response) =>
     }
     catch(error)
     {
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: "Internal Server Error!" });
     }
 }
