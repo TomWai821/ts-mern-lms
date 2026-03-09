@@ -11,6 +11,7 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+      - ./backend/coverage:/app/coverage
 
   frontend-test:
     build:
