@@ -86,7 +86,7 @@ docker-compose -f compose.yaml up --build -d
 - Runs Jest tests automatically on push/PR
 - ESLint checks for code quality
 - Docker image build for reproducibility
-- Coverage reports uploaded as CI artefacts for reviewer visibility  
+- Backend coverage reports uploaded as CI artefacts for reviewer visibility
 
 
 ## Testing Strategy
@@ -1526,6 +1526,7 @@ Image 8.2 - Chip set
 ### CI/CD
 - Continuous Deployment (CD) not implemented due to the credit card requirement
 - Workflows limited to CI validation for demo purposes
+- Frontend coverage reporting not implemented (Scope limited to backend validation)
 
 ### Summary
 - These limitations reflect the demo-oriented nature of the project
