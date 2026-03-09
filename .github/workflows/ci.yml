@@ -21,23 +21,42 @@ jobs:
       - run: npm run typecheck --prefix backend
       - run: npm run lint --prefix frontend || echo "Lint warnings are non-blocking"
 
-  test:
+  frontend-test:
     runs-on: ubuntu-latest
-    needs: lint-typecheck
-    env:
-      MONGO_URI: mongodb://localhost:27017/test
     steps:
       - uses: actions/checkout@v3
-      - run: docker compose -f compose.test.yaml up --abort-on-container-exit
-      - run: docker compose -f compose.test.yaml down
-      - name: Debug coverage folder
-        run: ls -R backend/coverage || true
+      - name: Build frontend test container
+        run: docker compose -f compose.test.yaml build frontend-test
+      - name: Run frontend tests
+        run: docker compose -f compose.test.yaml run frontend-test
 
-
+  backend-test:
+    runs-on: ubuntu-latest
+    needs: frontend-test
+    services:
+      mongo:
+        image: mongo:6
+        ports: ["27017:27017"]
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build backend test container
+        run: docker compose -f compose.test.yaml build backend-test
+      - name: Run backend tests
+        run: docker compose -f compose.test.yaml run backend-test
+      - name: Upload backend coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-coverage
+          path: backend/coverage
 
   build:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [frontend-test, backend-test]
     steps:
       - uses: actions/checkout@v3
       - run: npm ci --prefix backend
