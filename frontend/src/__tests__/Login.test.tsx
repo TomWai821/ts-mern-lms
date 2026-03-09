@@ -78,7 +78,6 @@ test('fail to register (Use already registration data)', async () =>
     await user.type(screen.getByPlaceholderText(/birthDay/i), "2000-01-01");
 
     await user.click(screen.getByRole('button', { name: /Register/i }));
-    console.log((global.fetch as jest.Mock).mock.calls);
 
 
     const alert = await screen.findByRole('alert');
