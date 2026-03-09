@@ -16,7 +16,7 @@ A full-stack application that streamlines library operations built as a Informat
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
-- [CI/CD Pipeline](#ci-cd-pipeline)
+- [Continuous Integration](#continuous-integration)
 - [Features](#features)
 - [Testing Strategy](#testing-strategy)
 - [QR Code Handling (Frontend Only)](#qr-code-handling-frontend-only)
@@ -80,18 +80,11 @@ docker-compose -f compose.yaml up --build -d
 - **Other**: RESTful APIs with modular design, Docker for containerisation and environment consistency
 
 
-
-## CI/CD Pipeline
-
-### Continuous Integration (CI)
+## Continuous Integration
 - Implemented with GitHub Actions
 - Runs Jest tests automatically on push/PR
 - ESLint checks for code quality
 - Docker image build for reproducibility
-
-### Continuous Deployment (CD)
-- Deployment pipeline planned (Render integration pending)
-
 
 
 ## Testing Strategy
