@@ -1528,7 +1528,10 @@ Image 8.2 - Chip set
 - No unified error handling despite modular API design (Currently handle with console.error and return error message with http status 500/400)
 
 ### CI/CD
-- Deployment workflows were experimented with (Render/Fly.io), but Continuous Deployment (CD) was not implemented due to the credit card requirement and excluded from demo scope
+- Deployment workflows were experimented with (Render/Fly.io)
+- But Continuous Deployment (CD) was not implemented due to platform requirements and therefore excluded from demo scope:
+    - Railway’s $5 minimum subscription (unsuitable for free demo hosting)
+    - Render/Fly.io’s credit card binding 
 - Workflows limited to CI validation for demo purposes
 - Frontend coverage reporting not implemented (Scope limited to backend validation)
 
