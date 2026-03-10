@@ -10,18 +10,22 @@ jobs:
   deploy-backend:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - name: Deploy Backend to Fly.io
-#        run: curl -X POST "$Fly_DEPLOY_HOOK"
+      - name: (Blocked) Deploy Backend to Fly.io
+        run: echo "Backend deploy step blocked for demo explanation"
+#       run: curl -X POST "$Fly_DEPLOY_HOOK"
 #        env:
 #          Fly_DEPLOY_HOOK: ${{ secrets.Fly_DEPLOY_HOOK }
+
   
   deploy-frontend:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     needs: deploy-backend 
     steps:
-      - name: Trigger Vercel Deploy
-#        run: curl -X POST "$VERCEL_DEPLOY_HOOK"
+      - name: (Blocked) Trigger Vercel Deploy
+        run: echo "Frontend deploy step blocked for demo explanation"
+#       run: curl -X POST "$VERCEL_DEPLOY_HOOK"
 #        env:
 #          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
