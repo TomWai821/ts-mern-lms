@@ -195,9 +195,18 @@ THe following test case are using docker test compose (Jest)
     - Result
         - Same as expectation
 
+
 ****Remarks****
 - Frontend test case in './frontend/src/__test__/Login.test.tsx'
 - It will remove session storage and cookie storage data after completing each test case
+
+
+****Test Coverage****
+- Current Coverage: ~41.78%
+- Coverage report integrated into CI workflow (viewable in GitHub Actions tab, last CI run)
+- Focus on core process (Authentication, profile data, book data filtering)
+
+
 
 #### Backend
 
