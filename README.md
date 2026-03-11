@@ -1515,75 +1515,76 @@ Image 8.2 - Chip set
 
 
 
-## Improvements
-
-### Completed
-1. **Introduced dotenv for environment variable management (backend side)**
-    - Sensitive configuration (API keys, DB URI, JWT secret) now stored securely in `.env` instead of hardcoding
-
-2. **Redirected packages into separate frontend and backend directories**
-    - Independent `package.json` and `node_modules`, ensuring clean separation and avoiding mixed dependencies
-
-3. **Modularised backend routes for cleaner structure**
-    - Reduced redundant code in authentication and data verification, improving maintainability
-
-4. **Implemented server-side scheduled data updates (Interval+ setTimeout in Node.js)**
-    - Ensured consistent daily automation and reduced manual triggers (located in `./backend/src/detectRecord.ts`)
-
-
 ### Planned Improvements
+
 #### Frontend side
-1. **Apply custom hooks to centralize commonly used state**
-    - Reduce redundant state creation in view components (located in ./frontend/src/customhook.tsx)
-
-2. **Refactor Context API into two smaller custom hooks**
-    - One dedicated to managing data state, another for CRUD operations. This improves maintainability and reduces complexity in view components
-
-3. **Use index input instead of passing entire data into modal (for table cells)**
-    - Context hook will provide a getter function that accepts an index number, improving maintainability
-
-4. **Support multiple contact (Publisher/Author) inputs via JSON**
-    - Enhance efficiency by allowing bulk input rather than filling fields one by one
+1. **Apply custom hooks to centralise commonly used state**
+    - Reduce redundant state creation in view components (Ref: `./frontend/src/customhook.tsx`)
+    
+2. **Refactor Context API into two specialised hooks**
+    - One for data state and another for CRUD operations to improve maintainability and decouple view logic
+  
+3. **Optimised Modal Data Handling**
+    - Pass index numbers instead of entire data objects to modals; use a getter function via Context to retrieve data, improving performance and readability
+    
+4. **Bulk Input Support**
+    - Support multiple contact (Publisher/Author) inputs via JSON strings to enhance efficiency over manual field entry
 
 
 #### Backend Side
-1. **Server side RBAC (Role-Base Access Control)**
-    - Production will enforce role checks server‑side, so each API request validates the user’s role before returning or modifying data (RBAC is currently implemented on the frontend for the prototype due to time limitations)
+1. **Server-side RBAC (Role-Based Access Control)**
+    - Implement server-side role validation for all API requests to ensure data integrity (currently handled on the frontend for demo scope)
+  
+2. **Production-Grade Task Scheduling**
+    - Replace basic `setInterval` with **node-cron** or cloud-based schedulers for better reliability and error handling
+    
+3. **Standardized Response Wrapper**
+    - Implement a unified response structure (e.g., `errorCode`, `errorMessage`, `totalCount`) to improve API usability (Ref: `./backend/src/improvement/`)
+    
+4. **Generic CRUD Factory (OOP & Factory Pattern)**
+    - **Current Status: Prototype POC.** Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: `./backend/src/improvement/CRUDFactory.ts`)
 
-2. **Upgrade server-side scheduled data updates**
-    - Replace prototype-level Node.js Interval with a production-grade scheduler (e.g. node-cron or cloud-based job scheduler) to ensure reliability, scalability, and better error handling
-  
-3. **Improve the Response design**
-    - Include errorMessage and errorCode for better error handling, and return total record counts to improve usability (located in `./backend/src/improvement/ErrorResponse.ts` or `./backend/src/improvement/SuccessResponse.ts`)
-  
-4. **Built CRUD Query with OOP + Factory design pattern and Generic**
-    - Create a CRUD Factory with commonly used queries for each collection (located in `./backend/src/improvement/CRUDFactory.ts`)
+
+#### Infrastructure and Security
+1. **Hardware Integration**
+    - Add direct **HID (Human Interface Device)** support for seamless scanner gun synchronisation
+      
+2. **Secure QR Code via Redis & UUID**
+    - Map sessions to short-lived UUIDs in **Redis** with **TTL** to prevent `authToken` exposure and token reuse
+    
+3. **HttpOnly Server-side Cookies**
+    - Migrate `authToken` storage to **HttpOnly Cookies** to mitigate **XSS (Cross-Site Scripting)** risks by preventing client-side script access
 
 
 
 ## Product Limitation
 
 ### Architecture
-- A 3NF‑style schema was adopted early to accelerate prototyping given limited MongoDB experience (This design increases cross‑collection lookups, complicating server‑side RBAC and raising runtime cost)
-- Initially relied heavily on aggregation pipelines for cross‑collection queries (later recognised that most basic join functions are more efficiently handled with `populate`, improving readability and reducing query complexity)
+- **3NF-style Schema:** Adopted early to accelerate prototyping (Note: This increases cross‑collection lookups, complicating server‑side RBAC and raising runtime costs)
+- **Query Strategy:** Initially relied on aggregation pipelines; later recognised that many join functions are more efficiently handled with `.populate()` for better readability
 
 ### Frontend
-- Overall frontend structure lacks clear separation of concerns (Controllers and views in the component are coupled, making maintenance relatively difficult in production; appropriate for demo scope)
-- No production-grade performance optimisation (e.g., lazy loading, caching)
+- **Separation of Concerns:** Component views and controllers are currently coupled (Appropriate for demo scope; requires refactoring for production maintenance)
+- **Performance:** No production-grade optimisations (e.g., lazy loading, advanced caching)
 
 ### Backend
-- Integration test coverage constrained by project scope
-- Core flows validated (authentication), but full production scenarios not included
-- Error handling kept minimal for demo clarity (Currently handled with console.error and return error message with HTTP status code 500/400)
+- **Testing:** Integration test coverage is constrained by project scope (Core authentication flows are validated)
+- **Error Handling:** Minimalised for demo clarity (Using `console.error` and standard 400/500 HTTP status codes)
 
-### /CD pipeline
-- This repository does not provide production deployment (Deploy jobs are blocked and only serve to demonstrate /CD structure)
-- Coverage reporting is limited to backend validation
+### CI/CD Pipeline
+- **Deployment:** Production deployment jobs are blocked (The current setup serves only to demonstrate CI/CD structure and backend validation)
+
+### Hardware Dependencies
+- **Scanner Requirement:** Requires a physical scanner or camera for seamless QR input
+- **Manual Fallback:** In non-scanner environments, manual injection of the `authToken` is required to simulate the scanning trigger
+
+### Security
+- **Token Storage:** `authToken` is currently in Client-side storage to facilitate manual testing in non-scanner environments (Standard production requires HttpOnly Cookies)
+- **Vulnerability:** Susceptible to client-side script access (XSS risk), this trade-off is accepted specifically for the **Initial Prototype/Demo phase**
 
 ### Summary
-- These limitations reflect the demo-oriented nature of the project
-- Core flows are validated, while production-grade features (scaling, CD, unified error handling) are intentionally excluded to keep the scope focused
-- Design choices highlight prototyping efficiency and recruiter clarity, while remaining extendable to production environments
+- These limitations reflect the **demo-oriented nature** of the project.
+- Core flows are validated, while production-grade features (scaling, unified error handling) are intentionally deferred to focus on prototyping efficiency and recruiter clarity
 
 
 
