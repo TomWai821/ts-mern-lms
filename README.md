@@ -16,7 +16,7 @@ A full-stack application that streamlines library operations built as a Informat
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
-- [ and CD](#ci-and-cd)
+- [CI and CD](#ci-and-cd)
 - [Features](#features)
 - [Testing Strategy](#testing-strategy)
 - [QR Code Handling (Frontend Only)](#qr-code-handling-frontend-only)
@@ -32,20 +32,38 @@ A full-stack application that streamlines library operations built as a Informat
 - [License](#license)
 
 ## Introduction
-### Project Purpose 
-The Library Management System was developed to modernise library operations by addressing inefficiencies such as reliance on physical library cards and the lack of a recommendation system. Built with the MERN stack and TypeScript, the goal was to create a secure, scalable, and user-friendly platform that improves both librarian workflows and user experience
+
+### The Original Goal
+Developed as an Information Technology Project (ITP) to modernise traditional library operations. The initial focus was on functional implementation: CRUD operations, QR Code integration, and a TF-IDF recommendation engine using the MERN stack
+
+### The Engineering Evolution
+After graduation, I dedicated myself to deep-diving into Software Engineering best practices, specifically focusing on maintainability and scalability<br>
+Key enhancements include:
+- Architectural Overhaul: Migrated to a Layered Architecture (Route-Middleware-Controller-Data Access) to ensure code decoupling and maintainability
+- Logic Refactoring: Shifted core business logic (e.g., Recommendation Engine) from frontend-side processing to the Backend Service Layer to improve data reliability and system performance
+- DevOps Integration: Implemented Docker containerisation and GitHub Actions (CI) for automated linting and integration testing
 
 
 
 ### Features 
-Key features include QR code-based book loans, automated return tracking, a TF-IDF-powered recommendation engine for book discovery, and seamless third-party API integration (Google Books). Due to project time constraints, role‑based access control (RBAC) is currently implemented on the frontend only. Together, these features highlight the ability to combine modern web technologies with practical library needs, and improves UX for the prototype but is not a substitute for backend authorisation
+- Intelligent Recommendation: Developed a custom TF-IDF engine to provide data-driven book recommendations based on user history, enhancing personalized content discovery
+- External Data Enrichment: Integrated Google Books API on the client side to fetch and display extended metadata, providing a rich user experience without bloating the backend database
+- Automated Loan Tracking: Built an automated tracking system for loaned books and return statuses, ensuring real-time data consistency and operational visibility
+- QR-based Operations:  Streamlined book loaning via QR Code integration, implementing a multi-token exchange protocol to facilitate identity verification and transaction authorization between the borrower and the librarian
+- Security Architecture: Implemented JWT-based Authentication with Bcrypt hashing, utilizing Frontend Route Guards and Role-aware UI rendering for access control
+
 
 
 
 ### Technical Learns 
-This project allowed me to develop skills in designing and implementing scalable single-page applications, managing global state with React’s Context API and useState, and building modular RESTful APIs with Express.js, while also gaining practical experience with React Router for SPA navigation. I also developed awareness of testing and performance optimisation practices essential for scalable frontend development
+- System Architecture: Designed and implemented a Layered Architecture (Controller-Service-Data Access) in Express.js, achieving clear separation of concerns and high code maintainability
+- Type-Safe Development: Leveraged TypeScript across the full stack to enforce rigorous data structures, significantly reducing runtime errors and improving developer productivity
+- State Orchestration: Optimised frontend performance by managing global application state with React Context API and Custom Hooks, ensuring efficient data flow without unnecessary re-renders
+- Automated QA & DevOps: Gained hands-on experience in Containerization (Docker) and Automated CI (GitHub Actions), establishing a pipeline that enforces Linting and Integration Testing (using Supertest and Jest)
+- Security Logic: Implemented Stateless Authentication (JWT) and developed a multi-token verification workflow for handling secure book loan authorisations between different user roles
 
-Disclaimer: All contact information provided in this file is fictitious and used solely for demonstration purposes
+### Disclaimer
+All contact information provided in this file is fictitious and used solely for demonstration purposes
 
 
 
@@ -77,18 +95,20 @@ docker-compose -f compose.yaml up --build -d
 - **Data security:** JWT(JSON web token) for Authentication, Bcrypt for password hashing
 - **Environment Configuration:** dotenv for managing environment variables
 - **Algorithms:** TF‑IDF for recommendation engine
-- **CI/CD & Code quality:** GitHub Actions for CI/CD, Jest for testing, ESLint for linting
+- **CI/CD & Code quality:** GitHub Actions for CI/CD, Jest for ing, ESLint for linting
 - **Other**: RESTful APIs with modular design, Docker for containerisation and environment consistency
 
 
 ## CI and CD
 
 ### Continuous Integration (CI)
-- Implemented with GitHub Actions
-- Runs Jest tests automatically on push/PR
-- ESLint checks for code quality
-- Docker image build for reproducibility
-- Backend coverage reports uploaded as CI artefacts for reviewer visibility
+- Automated Pipeline: Orchestrated with GitHub Actions to trigger on every Push and Pull Request.
+- Quality Assurance:
+    - Frontend: Executes Unit Testing with Jest to ensure UI logic reliability
+    - Backend: Performs Integration Testing to validate full API request-response cycles and database interactions
+- Linting: Enforces code consistency via ESLint across the entire stack
+- Artefact Management: Automatically generates and uploads backend Test Coverage Reports as CI artefacts for reviewer visibility
+- Docker Integration: Automates Docker Image builds within the pipeline to ensure cross-environment reproducibility
 
 ### Continuous Deployment (CD)
 - Deployment workflows were experimented with (Vercel/Fly.io)
@@ -108,7 +128,7 @@ docker-compose -f compose.yaml up --build -d
 
 ### Overview
 - **Frontend:** Unit tests with Jest + React Testing Library (mock APIs, setup/teardown hooks)  
-- **Backend:** Unit tests with Jest + Supertest (in-memory MongoDB, setup/teardown hooks)  
+- **Backend:** Integration tests with Jest + Supertest (real DB operations tested in CI pipeline)
 - **Result:** CI pipeline runs tests automatically on push/PR, logs kept clean for recruiter/demo clarity
 
 #### 1. Docker test compose (Jest)
@@ -197,6 +217,7 @@ THe following test case are using docker test compose (Jest)
 
 
 ****Remarks****
+- This is unit test
 - Frontend test case in './frontend/src/__test__/Login.test.tsx'
 - It will remove session storage and cookie storage data after completing each test case
 
@@ -307,9 +328,10 @@ THe following test case are using docker test compose (Jest)
         - Same as expectation
 
 ***Remarks***
+- This is an integration test (Using real data in the MongoDB container)
 - Backend test case in './backend/tests/*.ts'
-- It will remove the create data after complete the whole test case
-- It will connect the mongoDB at start and unconnect it after the whole test case
+- It will remove the created data after completing the whole test case
+- It will connect to the MongoDB at the start and disconnect it after the whole test case
 
 ### Postman Smoke Test (Prefer docker environment)
 
