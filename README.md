@@ -1,5 +1,9 @@
 # MERN Library Management System
-![TypeScript](https://img.shields.io) ![MongoDB](https://img.shields.io) ![Express.js](https://img.shields.io) ![React](https://img.shields.io) ![Node.js](https://img.shields.io)
+![TypeScript](https://img.shields.io)
+![MongoDB](https://img.shields.io)
+![Express.js](https://img.shields.io)
+![React](https://img.shields.io)
+![Node.js](https://img.shields.io)
 A full-stack application that streamlines library operations, built as an Information Technology Project (ITP)
 
 ## Video for presentation and demonstration
