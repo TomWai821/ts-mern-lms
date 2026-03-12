@@ -718,6 +718,13 @@ Genre Weighting
 - Demo data location (if needed): 'doc\DemonstrationMaterial\DemonStrationData.txt'
 
 ## Architecture
+
+### System Architecture Overview
+***Architecture Diagram***
+<img src="doc/Image/Diagrams/ArchitectureDiagram.png" style="width:90%;"/><br>
+
+- This diagram illustrates the high-level system architecture, showcasing the end-to-end flow from CI/CD deployment to production runtime. It highlights the separation of concerns between the React frontend and Node.js backend, the integration of TF-IDF recommendation logic, and the use of Docker to ensure a consistent environment and data persistence.
+
 ### Frontend
 ***Sequence Diagram (Authentication)***
     
@@ -772,7 +779,7 @@ The application uses a Node.js middleware to bridge the React frontend with the 
 ### Backend
 
 ***Backend Process Flow Diagram and another function***<br>
-<img src="doc/Image/Diagrams/Systemarchitecture.png" style="width:90%;"/><br>
+<img src="doc/Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
 | Component                                    | Usage                                                                                               | Example Path (Backend - Book data)                                                                        |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -790,11 +797,11 @@ Remarks
 - Helper functions may return values for unit tests, but controllers must call res in runtime
 
 Other functions (grouped, not on main synchronous path)
-| Function        | Usage                                                            | Example Path                                                      |
-| ----------------| -----------------------------------------------------------------| ----------------------------------------------------------------- |
-| Scheduled Jobs  | Background tasks such as overdue detection and fine calculation  | backend/detectRecord.ts                                           |
-| Recommendation  | TF‑IDF and search/recommendation utilities                       | backend/src/controller/Utils.ts (calculateTFIDF)                  |
-| Deployment/Init | Container orchestration and DB initialisation / seed             | docker-compose.yml/compose.yaml; backend/MongoDBSchema/*;         |
+| Function              | Usage                                                            | Example Path                                                      |
+| --------------------- | -----------------------------------------------------------------| ----------------------------------------------------------------- |
+| Scheduled Jobs        | Background tasks such as overdue detection and fine calculation  | backend/detectRecord.ts                                           |
+| Boook Recommendation  | TF‑IDF and search/recommendation utilities                       | backend/src/controller/TF-IDF_Logic.ts                            |
+| Deployment/Init       | Container orchestration and DB initialisation / seed             | docker-compose.yml/compose.yaml; backend/MongoDBSchema/*;         |
 
 ### Database
 
