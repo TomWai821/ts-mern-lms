@@ -1526,9 +1526,10 @@ Image 8.2 - Chip set
       "foundFavouriteBook": [ {/* user favourite book data */}]
     }
 
-## Improvement
+## Improvements
 
 ### Completed
+
 1. **Introduced dotenv for environment variable management (backend side)**
     - Sensitive configuration (API keys, DB URI, JWT secret) now stored securely in .env instead of hardcoding
 
@@ -1543,6 +1544,9 @@ Image 8.2 - Chip set
 
 5. **I/O Concurrency Optimisation (Promise.all) in backend**
     - Refactored decoupled database lookups into concurrent operations to minimise API latency during multi-field validations
+  
+6. **Response-Driven API Service (frontend side)**
+    - Refactored legacy API wrappers to return full Response objects instead of boolean values (This enables granular UI state management and error handling based on HTTP Status Codes and backend-specific error messages)
 
 
 ### Planned Improvements
