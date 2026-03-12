@@ -1526,6 +1526,23 @@ Image 8.2 - Chip set
       "foundFavouriteBook": [ {/* user favourite book data */}]
     }
 
+## Improvement
+
+### Completed
+1. **Introduced dotenv for environment variable management (backend side)**
+    - Sensitive configuration (API keys, DB URI, JWT secret) now stored securely in .env instead of hardcoding
+
+2. **Redirected packages into separate frontend and backend directories**
+    - Independent package.json and node_modules, ensuring clean separation and avoiding mixed dependencies
+
+3. **Modularised backend routes for cleaner structure**
+    - Reduced redundant code in authentication and data verification, improving maintainability
+
+4. **Implemented server-side scheduled data updates (Interval+ setTimeout in Node.js)**
+    - Ensured consistent daily automation and reduced manual triggers (located in ./backend/src/detectRecord.ts)
+
+5. **I/O Concurrency Optimisation (Promise.all) in backend**
+    - Refactored decoupled database lookups into concurrent operations to minimise API latency during multi-field validations
 
 
 ### Planned Improvements
@@ -1551,11 +1568,14 @@ Image 8.2 - Chip set
 2. **Production-Grade Task Scheduling**
     - Replace basic `setInterval` with **node-cron** or cloud-based schedulers for better reliability and error handling
     
-3. **Standardized Response Wrapper**
+3. **Standardised Response Wrapper**
     - Implement a unified response structure (e.g., `errorCode`, `errorMessage`, `totalCount`) to improve API usability (Ref: `./backend/src/improvement/`)
     
 4. **Generic CRUD Factory (OOP & Factory Pattern)**
-    - **Current Status: Prototype POC.** Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: `./backend/src/improvement/CRUDFactory.ts`)
+    - Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: `./backend/src/improvement/CRUDFactory.ts`)
+
+5. **ACID Transactions (Multi-collection Consistency)**
+    - Transitioning complex Write/Delete operations from **Promise.all** to **MongoDB Transactions** to ensure strict atomicity across related collections (e.g., cascading deletes) in production replica-set environments
 
 
 #### Infrastructure and Security
