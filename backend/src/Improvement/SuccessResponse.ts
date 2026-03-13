@@ -7,7 +7,7 @@ const successCodeList: Record<successCode, string> =
     '0002': "No error, but there is no data to return"
 }
 
-export const successResponse = (successCode: successCode, message: string, data?: [any], totalRecord?: number) => 
+export const successResponse = <T>(successCode: successCode, message: string, data?: [T], totalRecord?: number) => 
 {
     if(successCode === '0000')
     {
