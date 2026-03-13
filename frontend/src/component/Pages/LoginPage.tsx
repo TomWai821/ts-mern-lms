@@ -66,7 +66,7 @@ const LoginPage = () =>
         event.preventDefault();
         setIsSubmitted(true);
         
-        const response: Response = await LoginController(Credentials.email, Credentials.password, Credentials.stayLogin);
+        const response: Response = await LoginController(Credentials.email, Credentials.password);
     
         const result: GetResultInterface = await response.json();
                 

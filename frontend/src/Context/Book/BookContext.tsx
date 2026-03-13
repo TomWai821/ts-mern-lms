@@ -7,7 +7,6 @@ import { createBookRecord, createLoanBookRecord } from "../../Controller/BookCon
 import { returnBookAndChangeStatus, updateBookRecord } from "../../Controller/BookController/BookPutController";
 import { deleteBookRecord } from "../../Controller/BookController/BookDeleteController";
 import { useAuthContext } from "../User/AuthContext";
-import { useSelfBookRecordContext } from "./SelfBookRecordContext";
 import { useRecommendBookContext } from "./RecommendBookContext";
 
 const BookContext = createContext<BookContextProps | undefined>(undefined);

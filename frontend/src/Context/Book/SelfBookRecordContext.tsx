@@ -100,13 +100,13 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
 
     const allRecordTask = useCallback(async () => 
     {
-        const task = [fetchFavouriteRecord(), fetchSelfLoanRecord()];
+        const task = [fetchFavouriteRecord(), fetchSelfLoanRecord(), fetchRecommendBookForUser()];
 
         if(authToken)
         {
             await Promise.allSettled(task);
         }
-    },[authToken, fetchFavouriteRecord, fetchSelfLoanRecord])
+    },[authToken, fetchFavouriteRecord, fetchSelfLoanRecord, fetchRecommendBookForUser])
 
     useEffect(() => 
     {

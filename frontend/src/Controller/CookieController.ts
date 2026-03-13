@@ -10,7 +10,7 @@ export const SetUserCookie = (authToken: string, username: string, role: string,
         }
     }
     const userInfo = { authToken, username, role, avatarUrl, status };
-    document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(userInfo))}; expires=${expires}; path=/; SameSite=Lax; Secur; httpOnly`;
+    document.cookie = `userInfo=${encodeURIComponent(JSON.stringify(userInfo))}; expires=${expires}; path=/; SameSite=Lax; Secure`;
 };
 
 export const GetUserCookie = (data: string): string | null => 

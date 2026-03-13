@@ -1,12 +1,9 @@
-import { ResultInterface } from "../../Model/ResultModel"
-import { handleSuccess } from "../OtherUsefulController";
-
 const localhost = process.env.REACT_APP_API_URL;
 
 const contentType:string = 'application/json';
 const url:string = `${localhost}/user`;
 
-const LoginController = async (email:String, password:String, stayLogin:boolean): Promise<any> => 
+const LoginController = async (email:String, password:String): Promise<any> => 
 {
     const user = {email, password};
 
