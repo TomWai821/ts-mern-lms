@@ -23,17 +23,17 @@ A full-stack application that streamlines library operations, built as an Inform
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
-- [CI and CD](#ci-and-cd)
+- [Architecture](#architecture)
 - [Features](#features)
+- [Improvements](#improvements)
+- [CI and CD](#ci-and-cd)
 - [Testing Strategy](#testing-strategy)
-- [QR Code Handling (Frontend Only)](#qr-code-handling-frontend-only)
 - [Automated Logic Overview](#automated-logic-overview)
 - [TF-IDF Logic Overview](#tf-idf-logic-overview)
-- [Installation](#installation)
-- [Architecture](#architecture)
 - [UI Layout](#ui-layout)
+- [QR Code Handling (Frontend Only)](#qr-code-handling-frontend-only)
+- [Installation](#installation)
 - [API endpoints](#api-endpoints)
-- [Improvements](#improvements)
 - [Product Limitation](#product-limitation)
 - [Contributing](#contributing)
 - [License](#license)
@@ -49,16 +49,6 @@ Key enhancements include:
 - Architectural Overhaul: Migrated to a Layered Architecture (Route-Middleware-Controller-Data Access) to ensure code decoupling and maintainability
 - Logic Refactoring: Shifted core business logic (e.g., Recommendation Engine) from frontend-side processing to the Backend Service Layer to improve data reliability and system performance
 - DevOps Integration: Implemented Docker containerisation and GitHub Actions (CI) for automated linting and integration testing
-
-
-
-### Features 
-- Intelligent Recommendation: Developed a custom TF-IDF engine to provide data-driven book recommendations based on user history, enhancing personalized content discovery
-- External Data Enrichment: Integrated Google Books API on the client side to fetch and display extended metadata, providing a rich user experience without bloating the backend database
-- Automated Loan Tracking: Built an automated tracking system for loaned books and return statuses, ensuring real-time data consistency and operational visibility
-- QR-based Operations:  Streamlined book loaning via QR Code integration, implementing a multi-token exchange protocol to facilitate identity verification and transaction authorization between the borrower and the librarian
-- Security Architecture: Implemented JWT-based Authentication with Bcrypt hashing, utilizing Frontend Route Guards and Role-aware UI rendering for access control
-
 
 
 ### Technical Learns 
@@ -105,6 +95,274 @@ docker-compose -f compose.yaml up --build -d
 - **Other**: RESTful APIs with modular design, Docker for containerisation and environment consistency
 
 
+
+## Architecture
+
+### System Architecture Overview
+***Architecture Diagram***
+<img src="doc/Image/Diagrams/ArchitectureDiagram.png" style="width:90%;"/><br>
+
+- This diagram illustrates the high-level system architecture, showcasing the end-to-end flow from CI/CD deployment to production runtime. It highlights the separation of concerns between the React frontend and Node.js backend, the integration of TF-IDF recommendation logic, and the use of Docker to ensure a consistent environment and data persistence.
+
+### Frontend
+***Sequence Diagram (Authentication)***
+    
+1. Registration<br>
+<img src="doc/Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
+This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services
+       
+2. Login<br>
+<img src="doc/Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
+This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration<br>
+    
+***Sequence Diagram (Project Features)***
+1. External Data from Google Book API
+<img src="doc/Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
+This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface<br>
+    
+2. QR Code Generation<br>
+<img src="doc/Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
+This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user<br>
+    
+    
+3. Book Recommendation<br>
+<img src="doc/Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:90%;"/><br>
+This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging<br>
+
+    
+***Sequence Diagram (CRUD operations)***
+1. Get data from backend side<br>
+<img src="doc/Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
+This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client<br>
+    
+    
+2. Data Creation<br>
+<img src="doc/Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
+This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process<br>
+    
+    
+3. Data Modification
+<img src="doc/Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
+This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback
+    
+    
+4. Data Deletion
+<img src="doc/Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:90%;"/><br>
+This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations<br>
+
+5. Get Data From Google Book (API Integration)
+<img src="doc/Image/Diagrams/GetDataFromGoogleBookAPI.png" style="width:90%;"/><br>
+The application uses a Node.js middleware to bridge the React frontend with the Google Books API. When a user searches for a book, the backend first validates the user's Auth Token for security. After fetching the raw data from the external API, the backend filters and refines the response into a clean payload, ensuring the frontend only receives the necessary information for UI rendering. This approach optimises performance and enhances data security<br>
+
+
+### Backend
+
+***Backend Process Flow Diagram and another function***<br>
+<img src="doc/Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
+Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
+| Component                                    | Usage                                                                                               | Example Path (Backend - Book data)                                                                        |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Request                                      | User initiates an API call from the frontend                                                        | frontend/src/Controller/* (e.g.frontend/src/Controller/bookController)                                    |
+| Router                                       | Mounts resource route modules and starts the Express app                                            | backend/src/index.ts                                                                                      |
+| Route                                        | Defines endpoints, attaches middleware, and calls controllers                                       | backend/src/routes/* (e.g., backend/src/routes/book.ts)                                                   |
+| Validator (request body checks)              | Validates request body using express-validator rules                                                | backend/src/validator/expressBodyValidator.ts (e.g. BookCreateRules for book creation validate)           |
+| Middleware (JWT / Role checks, DB existence) | Validates headers, URL parameters, request body, JWT and roles                                      | backend/src/controller/middleware/Book/bookValidationMiddleware.ts (e.g. check if book data exists in DB) |
+| Controller (includes business logic)         | Handles request/response in this repo controllers, it also contain most business logic and DB calls | backend/src/controller/bookController.ts                                                                  |
+| Database Interaction/ Model                  | Mongoose schemas and data access (or seed files)                                                    | backend/src/schema/book/book.ts                                                                           |
+| API Response                                 | Controller assembles and returns the response to the frontend                                       | backend/src/controller/bookController.ts                                                                  |
+
+Remarks
+- Controllers in this repo perform business logic (act like the service) and send the final HTTP response at the end of the handler using res.status(...).json(...)
+- Helper functions may return values for unit tests, but controllers must call res in runtime
+
+Other functions (grouped, not on main synchronous path)
+| Function              | Usage                                                            | Example Path                                                      |
+| --------------------- | -----------------------------------------------------------------| ----------------------------------------------------------------- |
+| Scheduled Jobs        | Background tasks such as overdue detection and fine calculation  | backend/detectRecord.ts                                           |
+| Boook Recommendation  | TF‑IDF and search/recommendation utilities                       | backend/src/controller/TF-IDF_Logic.ts                            |
+| Deployment/Init       | Container orchestration and DB initialisation / seed             | docker-compose.yml/compose.yaml; backend/MongoDBSchema/*;         |
+
+### Database
+
+***Entity-Relational Diagram(ERD)***<br>
+<img src="doc/Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
+This ERD explain the database schema for the Library Management System
+
+
+****Collections related to book data****<br>
+Book
+| Key Attribute | Type     | Enum                  | Required | Default   | Description                                                              |
+| ------------- | ---------| --------------------- | -------- | --------- | ------------------------------------------------------------------------ |
+| image         | Object   |                       |          |           | Stores book cover image details, including URL and filename              |
+| bookname	    | String   |                       | True     |           | The title of the book for identification                                 |
+| languageID    | ObjectID |                       | True     |           | References for the Language collection, indicating the book's language   |
+| genreID       | ObjectID |                       | True     |           | References the Genre collection, categorising the book                   |
+| authorID      | ObjectID |                       | True     |           | Links to the Author collection, storing authorship details               |
+| publisherID   | ObjectID |                       | True     |           | Assoates with the publisher collection for book publishing details     |
+| status        | String   | ['OnShelf', 'OnLoan'] | True     | 'OnShelf' | Defines the book’s availability, such as OnShelf and Loaned              |
+| description   | String   |                       |          | 'N/A'     | Provides a brief overview or synopsis of the book                        |
+| publishDate   | Date     |                       |          |  Date.now | The offial publication date of the book, indexed for search effiency |
+
+Genre
+| Key Attribute | Type   | Required  | Unique | Description                                                                   |
+| ------------- | ------ | --------- | ------ | ------------------------------------------------------------------------------|
+| genre         | String | True      | True   | The full name is used to represent the genre, ensuring correct classification |
+| shortName     | String | True      | True   | An abbreviated version of the genre name is used for display purposes         |
+
+Language
+| Key Attribute | Type   | Required  | Unique | Description                                                                   |
+| ------------- | ------ | --------- | ------ | ----------------------------------------------------------------------------- |
+| language      | String | True      | True   | The full name used to represent the language, ensures correct classification  |
+| shortName     | String | True      | True   | An abbreviated version of the language name is used for display purposes      |
+
+Author
+| Key Attribute | Type   | Required  | Unique | Default | Description                                                                              |
+| ------------- | ------ | --------- | ------ | ------- |----------------------------------------------------------------------------------------- |
+| author	    | String | True      | True   |         | The full name of the author, stored for identification purposes                          |
+| phoneNumber	| String |           |        | 'N/A'   | The contact number provided for communication with the author                            |
+| email         | String |           |        | 'N/A'   | The email address used for professional or system-related correspondence with the author |
+
+Publisher
+| Key Attribute |  Type  | Required | Unique | Default | Description                                                                                 |
+| ------------- | ------ | -------- | ------ | ------- | ------------------------------------------------------------------------------------------- |
+| publisher	    | String | True     | True   |         | The full name of the publisher, stored for identification purposes                          |
+| phoneNumber   | String |          |        | 'N/A'   | The contact number provided for communication with the publisher                            |
+| email         | String |          |        | 'N/A'   | The email address used for professional or system-related correspondence with the publisher |
+
+
+****Collections related to user data****<br>
+User
+| Key Attribute | Type    | Enum                  | Required | Unique | Default  | Description                                   |
+| ------------- | ------- | --------------------- | -------- | ------ | -------- | --------------------------------------------- |
+| Username      | String  |                       | True     | True   |          | The unique display name chosen by the user    |
+| Email         | String  |                       | True     | True   |          | Primary identifier for authentication         |
+| Password      | String  |                       | True     |        |          | Encrypted storage for login credentials       |
+| Gender        | String  |                       | True     |        |          | Captures gender identity for the user profile |
+| Role          | String  | ['User', 'Admin']     | True     |        | 'User'   | Defines permissions for admin and user        |
+| Status        | String  | ['Normal', 'Suspend'] | True     |        | 'Normal' | Describe the account status                   |
+| birthDay      | Date    |                       | True     |        |          | Stores the user’s date of birth               |
+| avatarurl     | String  |                       | True     |        |          | The URL for the avatar image                  |
+
+SuspendList
+| Key Attribute |	Type    | Enum                     | Required | Default            | Description                                                                                                |
+| ------------- | --------- | ------------------------ | -------- | ------------------ | -----------------------------------------------------------------------------------------------------------|
+| userID        | ObjectID  |                          |          |                    | Links to the user collection, ensuring proper tracking of suspended individuals                            |
+| description	| String	|                          |          | 'N/A'              | Stores details about the reason for the user's suspension, ensuring proper enforcement of library polies |
+| Status        | String    | ['Suspend', 'Unsuspend'] | True     | 'Suspend'          | Describe the account status, such as Normal, Suspend                                                       |
+| startDate	    | Date	    |                          |          |                    | The date when the user suspension begins                                                                   |
+| dueDate	    | Date	    |                          |          |                    | The scheduled date when the suspension will end, allowing access restoration                               |
+
+
+****Collections related to interaction between book and user****<br>
+BookLoaned
+| Key Attribute | Type     | Enum                                     | Required | default           | Description                                                                                          |
+| ------------- | -------- | ---------------------------------------- | -------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
+| userID        | ObjectID |                                          | True     |                   | References the User collection                                                                       |
+| bookID        | ObjectID |                                          | True     |                   | References the Book collection                                                                       |
+| loanDate      | Date     |                                          | True     |                   | The date when the user loaned the book                                                               |
+| dueDate       | Date     |                                          | True     |                   | The date on which the book should return                                                             |
+| returnDate    | Date	   |                                          |          | null              | The actual date when the book returns                                                                |
+| Status	    | String   | ['Returned', 'Loaned', 'Returned(Late)'] |          | 'Loaned'          | Defines the loan status, such as Loaned, Returned                                                    |
+| finesAmount   | Number   |                                          |          | 0                 | The monetary fine for overdue book returns                                                           |
+| finesPaid	    | String   | ['Not Fine Needed', 'Paid', 'Not Paid']  |          | 'Not Fine Needed' | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
+
+BookFavourite
+| Key Attribute | Type     | Required | Description                                                                  |
+| ------------- | -------- | -------- | ---------------------------------------------------------------------------- |
+| userID        | ObjectID | True     | References the User collection, identifying the user who favourited the book |
+| bookID        | ObjectID | True     | References the Book collection, identifying the book marked as favourite     |
+
+Remarks:
+1. Every collection includes an _id field of type ObjectId, which serves as the unique identifier
+
+
+
+## Features 
+- Intelligent Recommendation: Developed a custom TF-IDF engine to provide data-driven book recommendations based on user history, enhancing personalized content discovery
+- External Data Enrichment: Integrated Google Books API on the client side to fetch and display extended metadata, providing a rich user experience without bloating the backend database
+- Automated Loan Tracking: Built an automated tracking system for loaned books and return statuses, ensuring real-time data consistency and operational visibility
+- QR-based Operations:  Streamlined book loaning via QR Code integration, implementing a multi-token exchange protocol to facilitate identity verification and transaction authorization between the borrower and the librarian
+- Security Architecture: Implemented JWT-based Authentication with Bcrypt hashing, utilizing Frontend Route Guards and Role-aware UI rendering for access control
+
+
+
+## Improvements
+
+### Completed
+
+#### Frontend side
+1. **Response-Driven API Service (frontend side)**
+    - Refactored legacy API wrappers to return full HTTP Response objects, enabling granular error handling and dynamic UI state management based on status code
+  
+2. **I/O Concurrency & Fault Tolerance (Promise.allSettled)**
+    - Implemented concurrent API fetching using Promise.allSettled to parallelise independent data requests<br>
+      (This ensures UI resilience, allowing the dashboard to render partially even if individual microservices or endpoints fail)
+
+#### Backend side
+1. **Modularised backend routes for cleaner structure**
+    - Decoupled monolithic routes into modularised controllers, implementing Middleware for centralised authentication and validation to ensure DRY (Don't Repeat Yourself) principles
+
+2. **Automated Library Compliance & Fine Processing**
+    - Engineered a custom task scheduler to automate mission-critical daily operations (Expired Loans, Fines Calculation, Suspend Records) at UTC+8 midnight
+
+3. **Performance Optimisation (Promise.all)**
+    - Optimised multi-field database validations by refactoring sequential lookups into concurrent operations via Promise.all<br>
+      (This significantly reduced API response latency by processing independent I/O tasks in parallel)
+  
+#### Security
+1. **Modular Workspace & Dependency Isolation**
+    - Architected a Monorepo-style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules<br>
+      (It improved CI/CD pipeline efficiency and prevented dependency conflicts, ensuring a cleaner and more scalable development workflow)<br>
+
+2. **Secure Configuration Management (dotenv)**
+   - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code<br>
+     (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
+
+### Planned Improvements
+
+#### Frontend side
+1. **Apply custom hooks to centralise commonly used state**
+    - Reduce redundant state creation in view components (Ref: `./frontend/src/customhook.tsx`)
+    
+2. **Refactor Context API into two specialised hooks**
+    - One for data state and another for CRUD operations to improve maintainability and decouple view logic
+  
+3. **Optimised Modal Data Handling**
+    - Pass index numbers instead of entire data objects to modals; use a getter function via Context to retrieve data, improving performance and readability
+    
+4. **Bulk Input Support**
+    - Support multiple contact (Publisher/Author) inputs via JSON strings to enhance efficiency over manual field entry
+
+
+#### Backend Side
+1. **Server-side RBAC (Role-Based Access Control)**
+    - Implement server-side role validation for all API requests to ensure data integrity (currently handled on the frontend for demo scope)
+  
+2. **Production-Grade Task Scheduling**
+    - Replace basic `setInterval` with **node-cron** or cloud-based schedulers for better reliability and error handling
+    
+3. **Standardised Response Wrapper**
+    - Implement a unified response structure (e.g., `errorCode`, `errorMessage`, `totalCount`) to improve API usability (Ref: `./backend/src/improvement/`)
+    
+4. **Generic CRUD Factory (OOP & Factory Pattern)**
+    - Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: `./backend/src/improvement/CRUDFactory.ts`)
+
+5. **ACID Transactions (Multi-collection Consistency)**
+    - Transitioning complex Write/Delete operations from **Promise.all** to **MongoDB Transactions** to ensure strict atomicity across related collections (e.g., cascading deletes) in production replica-set environments
+
+
+#### Infrastructure and Security
+1. **Hardware Integration**
+    - Add direct **HID (Human Interface Device)** support for seamless scanner gun synchronisation
+      
+2. **Secure QR Code via Redis & UUID**
+    - Map sessions to short-lived UUIDs in **Redis** with **TTL** to prevent `authToken` exposure and token reuse
+    
+3. **HttpOnly Server-side Cookies**
+    - Migrate `authToken` storage to **HttpOnly Cookies** to mitigate **XSS (Cross-Site Scripting)** risks by preventing client-side script access
+
+
+
 ## CI and CD
 
 ### Continuous Integration (CI)
@@ -129,6 +387,8 @@ docker-compose -f compose.yaml up --build -d
     - Render/Fly.io’s credit card binding
 - Workflows are therefore limited to **CI validation for demo purposes**, ensuring lint/typecheck, test, and build stages are fully validated
 - CI/CD workflow definitions are located in `.github/workflows/` (The whole process could be viewed in the actions tab)
+
+
 
 ## Testing Strategy
 
@@ -479,28 +739,6 @@ Reminder
 Notes:
 - The API may return [] or null when no matching data exists, or seed data is not present
 
-## Features
-- **User Authentication:** Secure login system for librarians and users, leveraging JWT
-- **Library Data Management:** CRUD functionality for users, books, contacts, and book metadata
-- **QR Code Book Loans:** Scan QR codes to borrow books seamlessly
-- **Loan & Return Tracking:** Log borrowing transactions, returns, and fine management
-- **Book Recommendation System:** Uses TF-IDF and loan data analysis for personalized suggestions
-- **Third-Party API Integration:** Fetch book details (ratings, ISBN, etc.) via the Google Books API
-- **Auto Detect Data Duration:** Automatically identifies overdue borrowings with fine calculation and reinstates suspended users on their scheduled unsuspend date
-
-
-
-## QR Code Handling (Frontend Only)
-- The QR code is generated entirely on the frontend
-- Encoded format: JSON object
-  ```json
-  {
-    "username": "<string>",
-    "userID": "<string>"
-  }
-- No backend API endpoint is required for QR code generation
-- The QR code is used within the frontend modal for loan verification
-
 
 
 ## Automated Logic Overview
@@ -717,185 +955,6 @@ Genre Weighting
     - To re-run init scripts, remove the volume and restart
 - Demo data location (if needed): 'doc\DemonstrationMaterial\DemonStrationData.txt'
 
-## Architecture
-
-### System Architecture Overview
-***Architecture Diagram***
-<img src="doc/Image/Diagrams/ArchitectureDiagram.png" style="width:90%;"/><br>
-
-- This diagram illustrates the high-level system architecture, showcasing the end-to-end flow from CI/CD deployment to production runtime. It highlights the separation of concerns between the React frontend and Node.js backend, the integration of TF-IDF recommendation logic, and the use of Docker to ensure a consistent environment and data persistence.
-
-### Frontend
-***Sequence Diagram (Authentication)***
-    
-1. Registration<br>
-<img src="doc/Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services
-       
-2. Login<br>
-<img src="doc/Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration<br>
-    
-***Sequence Diagram (Project Features)***
-1. External Data from Google Book API
-<img src="doc/Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
-This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface<br>
-    
-2. QR Code Generation<br>
-<img src="doc/Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user<br>
-    
-    
-3. Book Recommendation<br>
-<img src="doc/Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:90%;"/><br>
-This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging<br>
-
-    
-***Sequence Diagram (CRUD operations)***
-1. Get data from backend side<br>
-<img src="doc/Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client<br>
-    
-    
-2. Data Creation<br>
-<img src="doc/Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process<br>
-    
-    
-3. Data Modification
-<img src="doc/Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback
-    
-    
-4. Data Deletion
-<img src="doc/Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations<br>
-
-5. Get Data From Google Book (API Integration)
-<img src="doc/Image/Diagrams/GetDataFromGoogleBookAPI.png" style="width:90%;"/><br>
-The application uses a Node.js middleware to bridge the React frontend with the Google Books API. When a user searches for a book, the backend first validates the user's Auth Token for security. After fetching the raw data from the external API, the backend filters and refines the response into a clean payload, ensuring the frontend only receives the necessary information for UI rendering. This approach optimises performance and enhances data security<br>
-
-
-### Backend
-
-***Backend Process Flow Diagram and another function***<br>
-<img src="doc/Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
-Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
-| Component                                    | Usage                                                                                               | Example Path (Backend - Book data)                                                                        |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Request                                      | User initiates an API call from the frontend                                                        | frontend/src/Controller/* (e.g.frontend/src/Controller/bookController)                                    |
-| Router                                       | Mounts resource route modules and starts the Express app                                            | backend/src/index.ts                                                                                      |
-| Route                                        | Defines endpoints, attaches middleware, and calls controllers                                       | backend/src/routes/* (e.g., backend/src/routes/book.ts)                                                   |
-| Validator (request body checks)              | Validates request body using express-validator rules                                                | backend/src/validator/expressBodyValidator.ts (e.g. BookCreateRules for book creation validate)           |
-| Middleware (JWT / Role checks, DB existence) | Validates headers, URL parameters, request body, JWT and roles                                      | backend/src/controller/middleware/Book/bookValidationMiddleware.ts (e.g. check if book data exists in DB) |
-| Controller (includes business logic)         | Handles request/response in this repo controllers, it also contain most business logic and DB calls | backend/src/controller/bookController.ts                                                                  |
-| Database Interaction/ Model                  | Mongoose schemas and data access (or seed files)                                                    | backend/src/schema/book/book.ts                                                                           |
-| API Response                                 | Controller assembles and returns the response to the frontend                                       | backend/src/controller/bookController.ts                                                                  |
-
-Remarks
-- Controllers in this repo perform business logic (act like the service) and send the final HTTP response at the end of the handler using res.status(...).json(...)
-- Helper functions may return values for unit tests, but controllers must call res in runtime
-
-Other functions (grouped, not on main synchronous path)
-| Function              | Usage                                                            | Example Path                                                      |
-| --------------------- | -----------------------------------------------------------------| ----------------------------------------------------------------- |
-| Scheduled Jobs        | Background tasks such as overdue detection and fine calculation  | backend/detectRecord.ts                                           |
-| Boook Recommendation  | TF‑IDF and search/recommendation utilities                       | backend/src/controller/TF-IDF_Logic.ts                            |
-| Deployment/Init       | Container orchestration and DB initialisation / seed             | docker-compose.yml/compose.yaml; backend/MongoDBSchema/*;         |
-
-### Database
-
-***Entity-Relational Diagram(ERD)***<br>
-<img src="doc/Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
-This ERD explain the database schema for the Library Management System
-
-
-****Collections related to book data****<br>
-Book
-| Key Attribute | Type     | Enum                  | Required | Default   | Description                                                              |
-| ------------- | ---------| --------------------- | -------- | --------- | ------------------------------------------------------------------------ |
-| image         | Object   |                       |          |           | Stores book cover image details, including URL and filename              |
-| bookname	    | String   |                       | True     |           | The title of the book for identification                                 |
-| languageID    | ObjectID |                       | True     |           | References for the Language collection, indicating the book's language   |
-| genreID       | ObjectID |                       | True     |           | References the Genre collection, categorising the book                   |
-| authorID      | ObjectID |                       | True     |           | Links to the Author collection, storing authorship details               |
-| publisherID   | ObjectID |                       | True     |           | Assoates with the publisher collection for book publishing details     |
-| status        | String   | ['OnShelf', 'OnLoan'] | True     | 'OnShelf' | Defines the book’s availability, such as OnShelf and Loaned              |
-| description   | String   |                       |          | 'N/A'     | Provides a brief overview or synopsis of the book                        |
-| publishDate   | Date     |                       |          |  Date.now | The offial publication date of the book, indexed for search effiency |
-
-Genre
-| Key Attribute | Type   | Required  | Unique | Description                                                                   |
-| ------------- | ------ | --------- | ------ | ------------------------------------------------------------------------------|
-| genre         | String | True      | True   | The full name is used to represent the genre, ensuring correct classification |
-| shortName     | String | True      | True   | An abbreviated version of the genre name is used for display purposes         |
-
-Language
-| Key Attribute | Type   | Required  | Unique | Description                                                                   |
-| ------------- | ------ | --------- | ------ | ----------------------------------------------------------------------------- |
-| language      | String | True      | True   | The full name used to represent the language, ensures correct classification  |
-| shortName     | String | True      | True   | An abbreviated version of the language name is used for display purposes      |
-
-Author
-| Key Attribute | Type   | Required  | Unique | Default | Description                                                                              |
-| ------------- | ------ | --------- | ------ | ------- |----------------------------------------------------------------------------------------- |
-| author	    | String | True      | True   |         | The full name of the author, stored for identification purposes                          |
-| phoneNumber	| String |           |        | 'N/A'   | The contact number provided for communication with the author                            |
-| email         | String |           |        | 'N/A'   | The email address used for professional or system-related correspondence with the author |
-
-Publisher
-| Key Attribute |  Type  | Required | Unique | Default | Description                                                                                 |
-| ------------- | ------ | -------- | ------ | ------- | ------------------------------------------------------------------------------------------- |
-| publisher	    | String | True     | True   |         | The full name of the publisher, stored for identification purposes                          |
-| phoneNumber   | String |          |        | 'N/A'   | The contact number provided for communication with the publisher                            |
-| email         | String |          |        | 'N/A'   | The email address used for professional or system-related correspondence with the publisher |
-
-
-****Collections related to user data****<br>
-User
-| Key Attribute | Type    | Enum                  | Required | Unique | Default  | Description                                   |
-| ------------- | ------- | --------------------- | -------- | ------ | -------- | --------------------------------------------- |
-| Username      | String  |                       | True     | True   |          | The unique display name chosen by the user    |
-| Email         | String  |                       | True     | True   |          | Primary identifier for authentication         |
-| Password      | String  |                       | True     |        |          | Encrypted storage for login credentials       |
-| Gender        | String  |                       | True     |        |          | Captures gender identity for the user profile |
-| Role          | String  | ['User', 'Admin']     | True     |        | 'User'   | Defines permissions for admin and user        |
-| Status        | String  | ['Normal', 'Suspend'] | True     |        | 'Normal' | Describe the account status                   |
-| birthDay      | Date    |                       | True     |        |          | Stores the user’s date of birth               |
-| avatarurl     | String  |                       | True     |        |          | The URL for the avatar image                  |
-
-SuspendList
-| Key Attribute |	Type    | Enum                     | Required | Default            | Description                                                                                                |
-| ------------- | --------- | ------------------------ | -------- | ------------------ | -----------------------------------------------------------------------------------------------------------|
-| userID        | ObjectID  |                          |          |                    | Links to the user collection, ensuring proper tracking of suspended individuals                            |
-| description	| String	|                          |          | 'N/A'              | Stores details about the reason for the user's suspension, ensuring proper enforcement of library polies |
-| Status        | String    | ['Suspend', 'Unsuspend'] | True     | 'Suspend'          | Describe the account status, such as Normal, Suspend                                                       |
-| startDate	    | Date	    |                          |          |                    | The date when the user suspension begins                                                                   |
-| dueDate	    | Date	    |                          |          |                    | The scheduled date when the suspension will end, allowing access restoration                               |
-
-
-****Collections related to interaction between book and user****<br>
-BookLoaned
-| Key Attribute | Type     | Enum                                     | Required | default           | Description                                                                                          |
-| ------------- | -------- | ---------------------------------------- | -------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
-| userID        | ObjectID |                                          | True     |                   | References the User collection                                                                       |
-| bookID        | ObjectID |                                          | True     |                   | References the Book collection                                                                       |
-| loanDate      | Date     |                                          | True     |                   | The date when the user loaned the book                                                               |
-| dueDate       | Date     |                                          | True     |                   | The date on which the book should return                                                             |
-| returnDate    | Date	   |                                          |          | null              | The actual date when the book returns                                                                |
-| Status	    | String   | ['Returned', 'Loaned', 'Returned(Late)'] |          | 'Loaned'          | Defines the loan status, such as Loaned, Returned                                                    |
-| finesAmount   | Number   |                                          |          | 0                 | The monetary fine for overdue book returns                                                           |
-| finesPaid	    | String   | ['Not Fine Needed', 'Paid', 'Not Paid']  |          | 'Not Fine Needed' | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
-
-BookFavourite
-| Key Attribute | Type     | Required | Description                                                                  |
-| ------------- | -------- | -------- | ---------------------------------------------------------------------------- |
-| userID        | ObjectID | True     | References the User collection, identifying the user who favourited the book |
-| bookID        | ObjectID | True     | References the Book collection, identifying the book marked as favourite     |
-
-Remarks:
-1. Every collection includes an _id field of type ObjectId, which serves as the unique identifier
-
 
 
 ## UI Layout
@@ -1021,6 +1080,20 @@ Image 8.2 - Chip set
 #### Description
 - The table cell (Image 8.1) stores book data and the actions allow the user/librarian to implement
 - The Chip set table (Image 8.2) could reduce the space to display data
+
+
+
+## QR Code Handling (Frontend Only)
+- The QR code is generated entirely on the frontend
+- Encoded format: JSON object
+  ```json
+  {
+    "username": "<string>",
+    "userID": "<string>"
+  }
+- No backend API endpoint is required for QR code generation
+- The QR code is used within the frontend modal for loan verification
+
 
 
 ## API Endpoints
@@ -1526,81 +1599,6 @@ Image 8.2 - Chip set
       "foundFavouriteBook": [ {/* user favourite book data */}]
     }
 
-## Improvements
-
-### Completed
-
-#### Frontend side
-1. **Response-Driven API Service (frontend side)**
-    - Refactored legacy API wrappers to return full HTTP Response objects, enabling granular error handling and dynamic UI state management based on status code
-  
-2. **I/O Concurrency & Fault Tolerance (Promise.allSettled)**
-    - Implemented concurrent API fetching using Promise.allSettled to parallelise independent data requests<br>
-      (This ensures UI resilience, allowing the dashboard to render partially even if individual microservices or endpoints fail)
-
-#### Backend side
-1. **Modularised backend routes for cleaner structure**
-    - Decoupled monolithic routes into modularised controllers, implementing Middleware for centralised authentication and validation to ensure DRY (Don't Repeat Yourself) principles
-
-2. **Automated Library Compliance & Fine Processing**
-    - Engineered a custom task scheduler to automate mission-critical daily operations (Expired Loans, Fines Calculation, Suspend Records) at UTC+8 midnight
-
-3. **Performance Optimisation (Promise.all)**
-    - Optimised multi-field database validations by refactoring sequential lookups into concurrent operations via Promise.all<br>
-      (This significantly reduced API response latency by processing independent I/O tasks in parallel)
-  
-#### Security
-1. **Modular Workspace & Dependency Isolation**
-    - Architected a Monorepo-style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules<br>
-      (It improved CI/CD pipeline efficiency and prevented dependency conflicts, ensuring a cleaner and more scalable development workflow)<br>
-
-2. **Secure Configuration Management (dotenv)**
-   - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code<br>
-     (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
-
-### Planned Improvements
-
-#### Frontend side
-1. **Apply custom hooks to centralise commonly used state**
-    - Reduce redundant state creation in view components (Ref: `./frontend/src/customhook.tsx`)
-    
-2. **Refactor Context API into two specialised hooks**
-    - One for data state and another for CRUD operations to improve maintainability and decouple view logic
-  
-3. **Optimised Modal Data Handling**
-    - Pass index numbers instead of entire data objects to modals; use a getter function via Context to retrieve data, improving performance and readability
-    
-4. **Bulk Input Support**
-    - Support multiple contact (Publisher/Author) inputs via JSON strings to enhance efficiency over manual field entry
-
-
-#### Backend Side
-1. **Server-side RBAC (Role-Based Access Control)**
-    - Implement server-side role validation for all API requests to ensure data integrity (currently handled on the frontend for demo scope)
-  
-2. **Production-Grade Task Scheduling**
-    - Replace basic `setInterval` with **node-cron** or cloud-based schedulers for better reliability and error handling
-    
-3. **Standardised Response Wrapper**
-    - Implement a unified response structure (e.g., `errorCode`, `errorMessage`, `totalCount`) to improve API usability (Ref: `./backend/src/improvement/`)
-    
-4. **Generic CRUD Factory (OOP & Factory Pattern)**
-    - Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: `./backend/src/improvement/CRUDFactory.ts`)
-
-5. **ACID Transactions (Multi-collection Consistency)**
-    - Transitioning complex Write/Delete operations from **Promise.all** to **MongoDB Transactions** to ensure strict atomicity across related collections (e.g., cascading deletes) in production replica-set environments
-
-
-#### Infrastructure and Security
-1. **Hardware Integration**
-    - Add direct **HID (Human Interface Device)** support for seamless scanner gun synchronisation
-      
-2. **Secure QR Code via Redis & UUID**
-    - Map sessions to short-lived UUIDs in **Redis** with **TTL** to prevent `authToken` exposure and token reuse
-    
-3. **HttpOnly Server-side Cookies**
-    - Migrate `authToken` storage to **HttpOnly Cookies** to mitigate **XSS (Cross-Site Scripting)** risks by preventing client-side script access
-
 
 
 ## Product Limitation
@@ -1640,6 +1638,8 @@ Image 8.2 - Chip set
 3. Commit your changes (`git commit -m "comment"`).
 4. Push the branch (`git push origin`).
 5. Open a Pull Request.
+
+
 
 ## License
 
