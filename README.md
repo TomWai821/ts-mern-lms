@@ -1535,7 +1535,8 @@ Image 8.2 - Chip set
     - Refactored legacy API wrappers to return full HTTP Response objects, enabling granular error handling and dynamic UI state management based on status code
   
 2. **I/O Concurrency & Fault Tolerance (Promise.allSettled)**
-    - Implemented concurrent API fetching using Promise.allSettled to parallelise independent data requests (This ensures UI resilience, allowing the dashboard to render partially even if individual microservices or endpoints fail)
+    - Implemented concurrent API fetching using Promise.allSettled to parallelise independent data requests<br>
+      (This ensures UI resilience, allowing the dashboard to render partially even if individual microservices or endpoints fail)
 
 #### Backend side
 1. **Modularised backend routes for cleaner structure**
@@ -1545,15 +1546,16 @@ Image 8.2 - Chip set
     - Engineered a custom task scheduler to automate mission-critical daily operations (Expired Loans, Fines Calculation, Suspend Records) at UTC+8 midnight
 
 3. **Performance Optimisation (Promise.all)**
-    - Optimised multi-field database validations by refactoring sequential lookups into concurrent operations via Promise.all (This significantly reduced API response latency by processing independent I/O tasks in parallel)
+    - Optimised multi-field database validations by refactoring sequential lookups into concurrent operations via Promise.all<br>
+      (This significantly reduced API response latency by processing independent I/O tasks in parallel)
   
 #### Security
 1. **Modular Workspace & Dependency Isolation**
-    - Architected a Monorepo-style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules
+    - Architected a Monorepo-style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules<br>
       (It improved CI/CD pipeline efficiency and prevented dependency conflicts, ensuring a cleaner and more scalable development workflow)<br>
 
 2. **Secure Configuration Management (dotenv)**
-   - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code
+   - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code<br>
      (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
 
 ### Planned Improvements
