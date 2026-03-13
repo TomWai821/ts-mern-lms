@@ -98,11 +98,13 @@ docker-compose -f compose.yaml up --build -d
 
 ## Architecture
 
+
 ### System Architecture Overview
 ***Architecture Diagram***
 <img src="doc/Image/Diagrams/ArchitectureDiagram.png" style="width:90%;"/><br>
 
 - This diagram illustrates the high-level system architecture, showcasing the end-to-end flow from CI/CD deployment to production runtime. It highlights the separation of concerns between the React frontend and Node.js backend, the integration of TF-IDF recommendation logic, and the use of Docker to ensure a consistent environment and data persistence.
+
 
 ### Frontend
 ***Sequence Diagram (Authentication)***
@@ -309,14 +311,22 @@ Remarks:
     - Optimised multi-field database validations by refactoring sequential lookups into concurrent operations via Promise.all<br>
       (This significantly reduced API response latency by processing independent I/O tasks in parallel)
   
-#### Security
-1. **Modular Workspace & Dependency Isolation**
+#### Infrastructure and Security
+1. **Multi-Environment Containerization (Docker)**
+    - Implemented Dockerization with dedicated configurations for different stages<br>
+      (docker-compose.yaml for production-ready consistency and docker-compose.test.yaml for automated testing workflows)<br>
+
+2. **Standardised Development Lifecycle**
+   - Ensures seamless parity across development, testing, and deployment, eliminating "it works on my machine" issues
+    
+4. **Modular Workspace & Dependency Isolation**
     - Architected a Monorepo-style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules<br>
       (It improved CI/CD pipeline efficiency and prevented dependency conflicts, ensuring a cleaner and more scalable development workflow)<br>
 
-2. **Secure Configuration Management (dotenv)**
+5. **Secure Configuration Management (dotenv)**
    - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code<br>
      (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
+
 
 ### Planned Improvements
 
@@ -352,13 +362,19 @@ Remarks:
 
 
 #### Infrastructure and Security
-1. **Hardware Integration**
+1. **Container Granularity**
+   - Migrating from a unified container to a fully decoupled micro-service architecture, separating Frontend (Nginx), Backend (Node.js), and Database (MongoDB) into isolated, dedicated containers
+
+2. **Scalability & Networking**
+   - Implementing a private Docker network for secure inter-service communication, allowing independent scaling of the API and Web layers to optimise resource allocation
+     
+3. **Hardware Integration**
     - Add direct **HID (Human Interface Device)** support for seamless scanner gun synchronisation
       
-2. **Secure QR Code via Redis & UUID**
+4. **Secure QR Code via Redis & UUID**
     - Map sessions to short-lived UUIDs in **Redis** with **TTL** to prevent `authToken` exposure and token reuse
     
-3. **HttpOnly Server-side Cookies**
+5. **HttpOnly Server-side Cookies**
     - Migrate `authToken` storage to **HttpOnly Cookies** to mitigate **XSS (Cross-Site Scripting)** risks by preventing client-side script access
 
 
