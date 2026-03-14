@@ -24,7 +24,7 @@ jobs:
           echo "Railway Response Code: $RESPONSE"
           
           if [ "$RESPONSE" -ne 200 ]; then
-            echo "Error: Railway redeploy failed with status $RESPONSE"
+            echo "Error: Railway redeploy failed with status $RESPONSE. Please check if URL or Service ID is correct."
             exit 1
           fi
 
