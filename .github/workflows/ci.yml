@@ -76,7 +76,7 @@ jobs:
         run: npm install -g @railway/cli@3.11.0 
         
       - name: Deploy Backend to Railway
-        run: railway redeploy --service ${{ secrets.RAILWAY_SERVICE_ID }} -y
+        run: railway redeploy --service ${{ secrets.RAILWAY_SERVICE_ID }} -y --token ${{ secrets.RAILWAY_TOKEN }}
     env:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
