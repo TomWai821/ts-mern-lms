@@ -15,17 +15,19 @@ jobs:
       - name: Trigger Railway Redeploy via GraphQL
         run: |
           RESPONSE=$(curl -s -X POST \
-            --url https://backboard.railway.app \
-            --header 'Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}' \
-            --header 'Content-Type: application/json' \
-            --data '{"query":"mutation { serviceInstanceRedeploy(serviceId: \"${{ secrets.RAILWAY_SERVICE_ID }}\") }"}' \
+            --url "https://backboard.railway.app" \
+            --header "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data "{\"query\":\"mutation { serviceInstanceRedeploy(serviceId: \\\"${{ secrets.RAILWAY_SERVICE_ID }}\\\") }\"}" \
             -o /dev/null -w "%{http_code}")
           
           echo "Railway Response Code: $RESPONSE"
           
           if [ "$RESPONSE" -ne 200 ]; then
-            echo "Error: Railway redeploy failed with status $RESPONSE. Please check if URL or Service ID is correct."
+            echo "Error: API returned $RESPONSE. Check your Token or Service ID."
             exit 1
+          else
+            echo "Deployment triggered successfully!"
           fi
 
   deploy-frontend:
