@@ -3,11 +3,12 @@ import cors from 'cors';
 import { routerHandler } from './routerList';
 
 const ORIGIN_URI = process.env.ORIGIN_URI as string;
+const avaliable_ORIGIN_URI = ORIGIN_URI.split(",");
 
 const app = express();
 
 app.use(cors({
-  origin: ORIGIN_URI,
+  origin: avaliable_ORIGIN_URI,
   methods: ["GET", "POST", "DELETE", "PUT"],
   allowedHeaders: ["content-type", "authToken"]
 }));
