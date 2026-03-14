@@ -320,7 +320,7 @@ Remarks:
    - Ensures seamless parity across development, testing, and deployment, eliminating "it works on my machine" issues
     
 4. **Modular Workspace & Dependency Isolation**
-    - Architected a Monorepo-style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules<br>
+    - Architected a -style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules<br>
       (It improved CI/CD pipeline efficiency and prevented dependency conflicts, ensuring a cleaner and more scalable development workflow)<br>
 
 #### CI/CD
@@ -330,7 +330,7 @@ Remarks:
 
 2. **Automated CI/CD Pipeline (GitHub Actions)**
    - Automatically triggers Jest suites and ESLint on every Push and Pull Request<br>
-     (It ensures only verified code reaches the main branch and maintains high code quality across the monorepo)
+     (Serves as a CI quality gate to prevent regression and enforce unified coding standards across the full-stack codebase)
 
 3. **Multi-Platform Automated Deployment**
    - Orchestrated atomic deployments to Vercel and Railway via Git-integrated triggers<br>
