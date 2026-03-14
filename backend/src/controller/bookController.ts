@@ -8,6 +8,9 @@ import { FindBookFavouriteAndDeleteMany } from '../schema/book/bookFavourite';
 
 import fs from "fs";
 
+const BACKEND_URL = process.env.BACKEND_URL as string;
+const PORT = process.env.PORT as string;
+
 export const GetBookRecord = async (req: AuthRequest, res: Response) => 
 {
     try 
@@ -47,7 +50,7 @@ export const CreateBookRecord = async (req:Request, res:Response) =>
     try
     {
         const imageName = req.file?.filename;
-        const imageUrl = imageName ? `http://localhost:5000/api/book/uploads/${imageName}`: null;
+        const imageUrl = imageName ? `http://${BACKEND_URL}:${PORT}/api/book/uploads/${imageName}`: null;
         const mongoDate = new Date(publishDate);
 
         // Add imageUrl to each book
@@ -81,7 +84,7 @@ export const EditBookRecord = async (req: Request, res: Response) =>
         const ImageUrl = bookData.image.url;
 
         const newImageName = ImageName === imageName ? ImageName : req.file?.filename ?? ImageName;
-        const imageUrl = ImageName === imageName ? ImageUrl : `http://localhost:5000/api/book/uploads/${newImageName}`;
+        const imageUrl = ImageName === imageName ? ImageUrl : `${BACKEND_URL}:${PORT}/api/book/uploads/${newImageName}`;
 
         if (ImageName !== imageName) 
         {
