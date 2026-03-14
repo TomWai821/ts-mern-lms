@@ -69,13 +69,13 @@ All contact information provided in this file is fictitious and used solely for 
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
-- Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI, GOOGLE_BOOKS_API_KEY, GOOGLE_BOOKS_BASE_URL, BACKEND_URL
+- Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI, GOOGLE_BOOKS_API_KEY, GOOGLE_BOOKS_BASE_URL, BACKEND_BASE_URL
 - Edit frontend/.env: set at minimum: REACT_APP_API_URL, REACT_APP_MAIN_PAGE
 
 **Notes about ports and hostnames** 
 - If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`). Docker Compose maps container ports to the host automatically
 - If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
-- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:5000`, `REACT_APP_API_URL=http://localhost:5000/api`, `REACT_APP_MAIN_PAGE=http://localhost:3000`, `BACKEND_URL=http://localhost:5000`
+- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:5000`, `REACT_APP_API_URL=http://localhost:5000/api`, `REACT_APP_MAIN_PAGE=http://localhost:3000`, `BACKEND_BASE_URL=http://localhost:5000`
 
 ### 2. Launch with Docker Compose
 ```bash
@@ -427,7 +427,7 @@ Remarks:
     - **Database (MongoDB Altas)**: Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
 
 - **Deployment Status and Records**
-    - **Images**
+    - **Images**<br>
     <img src="doc/Image/Deployment/Vercel_Deployment.png" style="width:90%;"/><br>
     Image 1 - Vercel Deployment Record<br>
     <img src="doc/Image/Deployment/Railway_Deployment.png" style="width:90%;"/><br>
@@ -435,7 +435,7 @@ Remarks:
 
 - **Changes**
     - **Production Environment Realignment**
-        - Migrated BACKEND_URL and BASE_URL from localhost to platform-specific production endpoints (Vercel/Railway)<br>
+        - Migrated BACKEND_BASE_URL and BASE_URL from localhost to platform-specific production endpoints (Vercel/Railway)<br>
            (It ensured seamless communication between the decoupled frontend and backend services in a live cloud environment)<br>
           
     - **Security & CORS Optimisation**: Enhanced the ORIGINAL_URI configuration to support Multiple Origins
@@ -962,6 +962,7 @@ Genre Weighting
        - ORIGIN_URI —> frontend URL, e.g. http://localhost:3000
        - GOOGLE_BOOKS_API_KEY  —> Google Books API key
        - GOOGLE_BOOKS_BASE_URL —> e.g. https://www.googleapis.com/books/v1/volumes
+       - BACKEND_BASE_URL -> the backend base url for image, e.g. http://localhost:5000
 
     
 3. **Import data into MongoDB (Local only):**
