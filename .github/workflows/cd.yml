@@ -18,7 +18,7 @@ jobs:
             --url "https://backboard.railway.app/graphql/v2" \
             --header "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             --header "Content-Type: application/json" \
-            --data "{\"query\":\"mutation { serviceInstanceRedeploy(serviceId: \\\"${{ secrets.RAILWAY_SERVICE_ID }}\\\", environmentId: \\\"${{ secrets.RAILWAY_ENVIRONMENT_ID }}\\\") }\"}" \
+            --data "{\"query\":\"mutation { deploymentTrigger(serviceId: \\\"${{ secrets.RAILWAY_SERVICE_ID }}\\\", environmentId: \\\"${{ secrets.RAILWAY_ENVIRONMENT_ID }}\\\") }\"}" \
             -o /dev/null -w "%{http_code}")
           
           echo "Railway Response Code: $RESPONSE"
@@ -37,13 +37,17 @@ jobs:
     steps:
       - name: Trigger Vercel Deploy
         run: |
-          RESPONSE_BODY=$(curl -s -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}")
+         RESPONSE=$(curl -s -X POST -w "%{http_code}" "${{ secrets.VERCEL_DEPLOY_HOOK }}" -o response.json)
+          HTTP_CODE=$RESPONSE
+          RESPONSE_BODY=$(cat response.json)
+
+          echo "Vercel HTTP Code: $HTTP_CODE"
           echo "Vercel Response: $RESPONSE_BODY"
-          
-          if [[ "$RESPONSE_BODY" == *"job"* ]]; then
-            echo "Vercel deployment successfully queued."
+
+          if [ "$HTTP_CODE" -eq 201 ] || [ "$HTTP_CODE" -eq 200 ]; then
+            echo "Vercel deployment triggered successfully!"
           else
-            echo "Unexpected response from Vercel"
+            echo "Error: Vercel API failed with constants $HTTP_CODE"
             exit 1
           fi
         env:
