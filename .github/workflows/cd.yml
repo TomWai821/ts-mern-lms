@@ -18,7 +18,7 @@ jobs:
             --url "https://backboard.railway.app/graphql/v2" \
             --header "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             --header "Content-Type: application/json" \
-            --data "{\"query\":\"mutation { serviceInstanceRedeploy(serviceId: \\\"${{ secrets.RAILWAY_SERVICE_ID }}\\\") }\"}" \
+            --data "{\"query\":\"mutation { serviceInstanceRedeploy(serviceId: \\\"${{ secrets.RAILWAY_SERVICE_ID }}\\\", environmentId: \\\"${{ secrets.RAILWAY_ENVIRONMENT_ID }}\\\") }\"}" \
             -o /dev/null -w "%{http_code}")
           
           echo "Railway Response Code: $RESPONSE"
