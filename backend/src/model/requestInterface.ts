@@ -49,6 +49,7 @@ export interface Book
     genre: string;
     author: string;
     publisher: string;
+    readonly corpus: string;
 }
 
 export interface externalDataInterface

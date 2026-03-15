@@ -77,35 +77,22 @@ export const BuildSuggestBookQueryAndGetData = async(req: AuthRequest, res: Resp
 
             if((getBookLoanedRecord as any[]).length > 0)
             {
-                const suggestionData = (getBookLoanedRecord as any[]).map((book) => (
-                {
-                    _id: book.bookDetails?._id,
-                    bookname: book.bookDetails?.bookname ?? 'Unknown Book Name',
-                    genre: book.genreDetails?.genre ?? 'Unknown Genre',
-                    author: book.authorDetails?.author ?? 'Unknown Author',
-                    publisher: book.publisherDetails?.publisher ?? 'Unknown Publisher',
-                }));
-            
-                const loanedBooksCorpus = (suggestionData as Book[]).map( book => `${book.bookname} ${book.genre} ${book.author} ${book.publisher}`);
+                const loanedBooksCorpus = (getBookLoanedRecord as any[]).map(formatBookMetadata);
 
-                const preferedGenre = [...new Set((suggestionData as Book[]).map(book => book.genre))];
+                const genreFrequencyMap = new Map<string, number>();
+                loanedBooksCorpus.forEach(book => { genreFrequencyMap.set(book.genre, (genreFrequencyMap.get(book.genre) || 0) + 1)});
             
                 const allBooks = await GetBook(undefined);
+                const allBooksCorpus = (allBooks as any[]).map(book => ({ id: book._id, metadata: formatBookMetadata(book).corpus }));
             
-                const allBooksCorpus = (allBooks as any[]).map(book => 
-                (
-                    { 
-                        id: book._id, 
-                        metadata: `${book.bookname} ${book.genreDetails.genre} ${book.authorDetails.author} ${book.publisherDetails.publisher}` 
-                    }
-                ));
-            
-                const TF_IDF_Scores = calculateTFIDF(loanedBooksCorpus, allBooksCorpus, preferedGenre);
-
-                const scoreMap = new Map(TF_IDF_Scores.map(s => [s.id.toString(), s.score]));
+                // Calculate the Score and apply jitter for logical randomise recommendation
+                const TF_IDF_Scores = calculateTFIDF(loanedBooksCorpus.map(books => books.corpus), allBooksCorpus, genreFrequencyMap, loanedBooksCorpus.length);
+                const scoresWithJitter = TF_IDF_Scores.map(item => ({ ...item, score: item.score + (Math.random() * 0.1) }));
                 
-                const topBookIds = TF_IDF_Scores.slice(0, 20).map((book: { id: any; }) => book.id);
-                const excludedNames = suggestionData.map(book => book.bookname);
+                const scoreMap = new Map(scoresWithJitter.map(s => [s.id.toString(), s.score]));
+                
+                const topBookIds = scoresWithJitter.slice(0, 20).map((book: { id: any; }) => book.id);
+                const excludedNames = loanedBooksCorpus.map(book => book.bookname);
 
                 foundBook = await GetBook({ _id: { $in: topBookIds }, bookname: { $nin: excludedNames } }, undefined);
 
@@ -173,3 +160,13 @@ const buildQuery = (type:string, queryParams: any) =>
     
     return query;
 };
+
+const formatBookMetadata = (book: any): Book => 
+({
+    _id: book._id || book.bookDetails?._id,
+    bookname: book.bookname || book.bookDetails?.bookname || 'Unknown',
+    genre: book.genre || book.genreDetails?.genre || 'Unknown',
+    author: book.author || book.authorDetails?.author || 'Unknown',
+    publisher: book.publisher || book.publisherDetails?.publisher || 'Unknown',
+    get corpus() { return `${this.bookname} ${this.genre} ${this.author} ${this.publisher}` }
+});
