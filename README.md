@@ -319,24 +319,24 @@ Remarks:
 2. **Standardised Development Lifecycle**
    - Ensures seamless parity across development, testing, and deployment, eliminating "it works on my machine" issues
     
-4. **Modular Workspace & Dependency Isolation**
+3. **Modular Workspace & Dependency Isolation**
     - Architected a -style structure by separating Frontend and Backend into independent directories with isolated package.json and node_modules<br>
       (It improved CI/CD pipeline efficiency and prevented dependency conflicts, ensuring a cleaner and more scalable development workflow)<br>
 
-#### CI/CD
-1. **Secure Configuration Management (dotenv)**
+4. **Secure Configuration Management (dotenv)**
    - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code<br>
      (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
 
-2. **Automated CI/CD Pipeline (GitHub Actions)**
+#### CI/CD
+1. **Automated CI/CD Pipeline (GitHub Actions)**
    - Automatically triggers Jest suites and ESLint on every Push and Pull Request<br>
      (Serves as a CI quality gate to prevent regression and enforce unified coding standards across the full-stack codebase)
 
-3. **Multi-Platform Automated Deployment**
-   - Orchestrated atomic deployments to Vercel and Railway via Git-integrated triggers<br>
-     (It enables zero-downtime updates and ensures the live site (Vercel) and API (Railway) stay synchronized with the latest codebase)
+2. **Resource & Cost Optimisation**
+   - Controlled deployment triggers to minimize redundant builds and optimize cloud credit consumption<br>
+    (Utilised Ignored Build Step and manual API triggers to manage resource usage efficiently across different cloud platforms)
      
-4. **Cloud Database & Secret Orchestration**
+3. **Cloud Database & Secret Orchestration**
    - Integrated MongoDB Atlas and managed sensitive credentials via Platform Environment Variables<br>
      (It decoupled the database layer from the application logic and secured production secrets like JWT and Database URIs outside the source code)
 
@@ -422,9 +422,13 @@ Remarks:
 
 ### Continuous Deployment (CD)
 - **Multi-Platform Deployment Strategy**
-    - **Frontend (Vercel)**: Implemented Git-integrated CD (Every push to the main branch triggers an automated build and atomic deployment via Vercel’s global edge network)
-    - **Backend (Railway)**: Configured Auto-Rollout based on Dockerised environments (The pipeline automatically pulls the latest code and redeploys the containerised service upon successful CI completion)
-    - **Database (MongoDB Altas)**: Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
+    - **Frontend (Vercel)**
+        - **Orchestrated Deployment**: Replaced default auto-update with Vercel Deploy Hooks triggered via GitHub Actions
+        - **Resource Optimisation**: Implemented Ignored Build Step to prevent redundant builds and ensure the frontend only updates after the backend service is confirmed ready
+    - **Backend (Railway)**
+        - **Fine-grained Control**: Triggered manually via Railway GraphQL API (environmentTriggersDeploy) to precisely manage deployment timing and optimize resource usage (Credit consumption)
+    - **Database (MongoDB Atlas)**:
+        - **DBaaS Integration**:Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
 
 - **Deployment Status and Records**
     - **Images**<br>
@@ -438,14 +442,14 @@ Remarks:
         - Migrated BACKEND_BASE_URL and BASE_URL from localhost to platform-specific production endpoints (Vercel/Railway)<br>
            (It ensured seamless communication between the decoupled frontend and backend services in a live cloud environment)<br>
           
-    - **Security & CORS Optimisation**: Enhanced the ORIGINAL_URI configuration to support Multiple Origins
+    - **Security & CORS Optimisation**
         - Enhanced the ORIGINAL_URI configuration to support Multiple Origins<br>
            (It allowed the backend to securely accept requests from both the Vercel production domain and local development environments simultaneously, improving workflow flexibility without compromising security)
 
 
 ### Remarks
-- CI/CD workflow definitions are located in `.github/workflows/` (The whole process could be viewed in the actions tab -> All workflows)
-- CD record could be viewed in the actions tab -> All Deployments
+- The entire CI/CD workflow is managed and automated via GitHub Actions workflows
+- CI/CD workflow definitions are located in `.github/workflows/` (The whole process could be viewed in the actions tab -> All workflows, CD workflow = CD pipeline)
 - Backend CD are utilising Railway’s $5 credit/30 days trial/subscription model for consistent backend uptime
 
 
