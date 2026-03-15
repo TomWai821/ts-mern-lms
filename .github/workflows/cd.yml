@@ -25,15 +25,12 @@ jobs:
             --data "$PAYLOAD" \
             -o response.json -w "%{http_code}")
 
-          if grep -q "errors" response.json; then
-            echo "Deployment failed with GraphQL errors!"
-            cat response.json
-            exit 1
-          elif grep -q "true" response.json; then
-            echo "Deployment successfully triggered!"
+          echo "Railway Response Code: $RESPONSE_CODE"
+           if [ "$RESPONSE_CODE" -eq 201 ] || [ "$RESPONSE_CODE" -eq 200 ]; then
+            echo "RailWay deployment triggered successfully!"
           else
-            echo "Trigger returned false. No changes detected or ID mismatch."
-            cat response.json
+            echo "Error: RailWay API failed with constants $RESPONSE_CODE"
+            exit 1
           fi
 
   deploy-frontend:
