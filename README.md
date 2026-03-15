@@ -100,7 +100,7 @@ docker-compose -f compose.yaml up --build -d
 
 
 ### System Architecture Overview
-***Architecture Diagram***
+***Architecture Diagram - Development***
 <img src="doc/Image/Diagrams/ArchitectureDiagram_Development.png" style="width:90%;"/><br>
 
 - In the development phase, the system is fully containerised to ensure "it works on my machine" consistency
@@ -109,7 +109,7 @@ docker-compose -f compose.yaml up --build -d
     - **Persistence**: Local MongoDB container with Docker Volumes for data retention
     - **Configuration**: Managed via local .env files
 
-
+***Architecture Diagram - CD (Continuous Deployment)***<br>
 <img src="doc/Image/Diagrams/ArchitectureDiagram_CD.png" style="width:90%;"/><br>
 
 - The production stack leverages managed PaaS/SaaS for high availability and performance
