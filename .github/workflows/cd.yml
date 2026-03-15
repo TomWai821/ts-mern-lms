@@ -14,11 +14,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Trigger Railway Redeploy via GraphQL
         run: |
+          QUERY="mutation { environmentTriggersDeploy(input: { projectId: \"${{ secrets.RAILWAY_PROJECT_ID }}\", environmentId: \"${{ secrets.RAILWAY_ENVIRONMENT_ID }}\", serviceId: \"${{ secrets.RAILWAY_SERVICE_ID }}\" }) }"
+          
+          PAYLOAD="{\"query\": \"$QUERY\"}"
+
           RESPONSE=$(curl -s -X POST \
             --url "https://backboard.railway.app/graphql/v2" \
             --header "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
             --header "Content-Type: application/json" \
-            --data "{\"query\":\"mutation { environmentTriggersDeploy(serviceId: \\\"${{ secrets.RAILWAY_SERVICE_ID }}\\\", environmentId: \\\"${{ secrets.RAILWAY_ENVIRONMENT_ID }}\\\", projectId: \\\"${{ secrets.RAILWAY_PROJECT_ID }}\\\) }\"}" \
+            --data "$PAYLOAD" \
             -o /dev/null -w "%{http_code}")
           
           echo "Railway Response Code: $RESPONSE"
