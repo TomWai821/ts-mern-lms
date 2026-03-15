@@ -1,15 +1,43 @@
 import { detectExpiredLoanRecord, modifyFinesAmount } from "./schema/book/bookLoaned";
 import { detectExpiredSuspendRecord } from "./schema/user/suspendList";
 
-const taskList: (() => void)[] =
+type Task = () => Promise<void>;
+
+const taskList: Task[] =
 [
     detectExpiredSuspendRecord,
     modifyFinesAmount,
     detectExpiredLoanRecord
 ]
 
-export const scheduleDailyMidnightTasks = () => 
+const executeAllTasks = async () => 
 {
+    try 
+    {
+        console.log(`[${new Date().toISOString()}] Executing scheduled tasks...`);
+
+        const results = await Promise.allSettled(taskList.map(task => task()));
+        
+
+        results.forEach((result, index) => 
+        {
+            if (result.status === 'rejected') 
+            {
+                console.error(`Task ${index} failed:`, result.reason);
+            }
+        });
+    } 
+    catch (error) 
+    {
+        console.error("Critical error during task execution:", error);
+    }
+};
+
+export const scheduleDailyMidnightTasks = async () => 
+{
+    // Event-driven Boot-up Sync: Avoid the task does not implement when the server sleep
+    await executeAllTasks();
+
     const now = new Date();
 
     const UTCYear = now.getUTCFullYear();
@@ -21,12 +49,11 @@ export const scheduleDailyMidnightTasks = () =>
 
     const delay = nextMidnight_UTC8.getTime() - now.getTime();
 
-    setTimeout(() => 
+    setTimeout( async () => 
     {
-        // Implement each task
-        taskList.forEach(task => task());
+        await executeAllTasks();
 
         // Run at fixed interval (every 24h)
-        setInterval(() => { taskList.forEach(task => task()) }, 24 * 60 * 60 * 1000);
+        setInterval(executeAllTasks, 24 * 60 * 60 * 1000);
     }, delay);
 };

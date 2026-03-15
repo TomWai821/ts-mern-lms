@@ -16,7 +16,7 @@ password: IamTester
 BookName: Beast Senpai Travelling Diary
 Genre: Magazine
 Language: Japanese
-Author: BeastSenpai
+Author: Beast Senpai
 Publisher: Beast Senpai Company
 Description: It record the beast senpai travelling experience, and it require $114514 to bought it
 
