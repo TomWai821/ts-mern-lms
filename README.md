@@ -111,6 +111,7 @@ docker-compose -f compose.yaml up --build -d
           
 2. **Backend Layered Architecture**
 The backend follows a Modular Layered Architecture to achieve Separation of Concerns (SoC) and ensure system scalability:
+
 | Layer            | Responsibility	                                                   | Key Practice                                 |
 | ---------------- | ----------------------------------------------------------------- | -------------------------------------------- |
 | Routing          | Resource-based dispatching (e.g., /books, /users)                 | Decoupled Modules using express.Router       |
