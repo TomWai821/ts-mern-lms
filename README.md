@@ -970,7 +970,7 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
     - To balance Discovery (finding new but semantically similar books) with Loyalty (prioritising the user's proven favourite categories)
 
 ***3. Data Normalisation And Corpus Construction***<br>
-<img src="doc/Image/Functions/TF-IDF_formatBookMetaData.png" style="width:80%;"/><br>
+<img src="doc/Image/Functions/TF-IDF_formatBookMetaData.png" style="width:50%;"/><br>
 
 - **Process**
     - Implementing a Metadata Normalisation layer (formatBookMetadata) to sanitise raw book objects<br>
@@ -985,7 +985,7 @@ This source code (located in backend/schema/user/suspendlist.ts, Line 99–137) 
       (Serve as the primary input for high-dimensional TF-IDF feature extraction)
 
 ***4. TF-IDF Implementation***<br>
-<img src="doc/Image/Functions/TF-IDF_Implementation.png" style="width:80%;"/><br>
+<img src="doc/Image/Functions/TF-IDF_Implementation.png" style="width:90%;"/><br>
 
 The core execution logic is designed to balance recommendation accuracy with system responsiveness:
 - **User Interest Modelling**
