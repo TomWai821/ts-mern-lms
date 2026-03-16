@@ -46,13 +46,13 @@ Developed as an Information Technology Project (ITP) to modernise traditional li
 ### The Engineering Evolution
 After graduation, I dedicated myself to deep-diving into Software Engineering best practices, specifically focusing on maintainability and scalability<br>
 Key enhancements include:
-- **Architectural Overhaul**: Migrated to a Layered Architecture (Route-Middleware-Controller-Data Access) to ensure code decoupling and maintainability
+- **Architectural Overhaul**: Migrated to a Layered Architecture (Router-Middleware-Controller-Model) to ensure code decoupling and maintainability
 - **Logic Refactoring**: Shifted core business logic (e.g., Recommendation Engine) from frontend-side processing to the Backend Service Layer to improve data reliability and system performance
 - **DevOps Integration**: Implemented Docker containerisation and GitHub Actions (CI) for automated linting and integration testing
 
 
 ### Technical Learns 
-- **System Architecture**: Designed and implemented a Layered Architecture (Controller-Service-Data Access) in Express.js, achieving clear separation of concerns and high code maintainability
+- **System Architecture**: Designed and implemented a Layered Architecture (Router-Middleware-Controller-Model) in Express.js, achieving clear separation of concerns and high code maintainability
 - **Type-Safe Development**: Leveraged TypeScript across the full stack to enforce rigorous data structures, significantly reducing runtime errors and improving developer productivity
 - **State Orchestration**: Optimised frontend performance by managing global application state with React Context API and Custom Hooks, ensuring efficient data flow without unnecessary re-renders
 - ***Automated QA & DevOps**: Gained hands-on experience in Containerization (Docker) and Automated CI (GitHub Actions), establishing a pipeline that enforces Linting and Integration Testing (using Supertest and Jest)
@@ -102,18 +102,36 @@ docker-compose -f compose.yaml up --build -d
 ### System Architecture Overview
 ***Architecture Diagram - Development***
 <img src="doc/Image/Diagrams/ArchitectureDiagram_Development.png" style="width:90%;"/><br>
-
+1. **Development & Deployment Environment**
 - In the development phase, the system is fully containerised to ensure "it works on my machine" consistency
     - **Infrastructure**: Orchestrated via Docker Compose
     - **Networking**: Services communicate within a Docker Virtual Network
     - **Persistence**: Local MongoDB container with Docker Volumes for data retention
     - **Configuration**: Managed via local .env files
+          
+2. **Backend Layered Architecture**
+- The backend follows a Modular Layered Architecture to achieve Separation of Concerns (SoC) and ensure system scalability:
+| Layer            | Responsibility	                                                   | Key Practice                                 |
+| ---------------- | ----------------------------------------------------------------- | -------------------------------------------- |
+| Routing          | Resource-based dispatching (e.g., /books, /users)                 | Decoupled Modules using express.Router       |
+| Middleware       | Handles Auth (JWT), Validation, and Integrity checks              | The Quality Gate for incoming data           |
+| Controller       | Orchestrates business logic and service interactions              | Hybrid Layer (Integrated Service Logic)      |
+| Service Logic    | Core Algorithms (TF-IDF) and Business Operations                  | Encapsulated Functions called by Controller  |
+| Model (DB)	   | Schema definitions and Persistent Storage logic	               | Data Integrity via Mongoose static methods   |
+
+<details>
+<summary><b>View Architectural Decision (Service Logic Integration)</b></summary>
+- To maintain high development velocity and facilitate rapid iteration during the initial MVP phase, the business logic is currently encapsulated within the Controller Layer as a Hybrid Pattern
+- However, as illustrated in the Request Lifecycle Diagram, the core logic (such as the TF-IDF Recommendation Engine and Data Validation) is designed with modularity in mind
+- These functions are logically separated and ready to be fully decoupled into a dedicated Service Layer to enhance Unit Testability and Separation of Concerns (SoC) as the system scales
+</details>
+
 
 ***Architecture Diagram - CD (Continuous Deployment)***<br>
 <img src="doc/Image/Diagrams/ArchitectureDiagram_CD.png" style="width:90%;"/><br>
 
 - The production stack leverages managed PaaS/SaaS for high availability and performance
-    - **Frontend**: Hosted on Vercel for optimized edge delivery
+    - **Frontend**: Hosted on Vercel for optimised edge delivery
     - **Backend**: Running on Railway with auto-scaling Node.js runtime
     - **Database**: MongoDB Atlas (DBaaS) for managed security and global scaling
     - **Security**: Secrets are injected via Platform UIs (Vercel/Railway), keeping credentials out of the source code
@@ -131,50 +149,69 @@ docker-compose -f compose.yaml up --build -d
     
 1. Registration<br>
 <img src="doc/Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation. It ensures secure account creation with robust error handling and clean separation of concerns across services
+- This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation<br>
+  (It ensures secure account creation with robust error handling and clean separation of concerns across services)<br>
        
 2. Login<br>
 <img src="doc/Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation. It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration<br>
+- This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation<br>
+  (It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration)<br>
     
 ***Sequence Diagram (Project Features)***
 1. External Data from Google Book API
 <img src="doc/Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
-This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API. When the user presses the book image, an event handler constructs and sends a request containing the book name and author name. Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface<br>
+- This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API
+- When the user presses the book image, an event handler constructs and sends a request containing the book name and author name
+- Upon receiving the response, the event handler processes the returned data and renders the book results to the user interface<br>
     
 2. QR Code Generation<br>
 <img src="doc/Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the QR Code generation flow initiated by a user interaction. When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage. It then parses the data and sends a request to the QR Code Generator service. Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user<br>
+- This sequence diagram illustrates the QR Code generation flow initiated by a user interaction
+- When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage
+- It then parses the data and sends a request to the QR Code Generator service<br>
+- Upon receiving the response, the event handler opens a modal and displays the generated QR code to the user<br>
     
     
 3. Book Recommendation<br>
 <img src="doc/Image/Diagrams/BookRecommendSystemWithTF-IDF.png" style="width:90%;"/><br>
-This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records. The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF. A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging<br>
+- This sequence diagram illustrates the data retrieval flow for book recommendations, initiated by a frontend GET request containing a user's top ten loan records
+- The backend middleware verifies the user's authentication token, then parses and analyzes the loan data using TF-IDF
+- A request is sent to fetch book data based on the analysis, and the top recommended books are selected, structured, and returned to the client with proper status messaging
 
     
 ***Sequence Diagram (CRUD operations)***
 1. Get data from backend side<br>
 <img src="doc/Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request. The process involves middleware-level parsing, backend token validation, and data querying from MongoDB. With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client<br>
+- This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request
+- The process involves middleware-level parsing, backend token validation, and data querying from MongoDB
+- With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client<br>
     
     
-2. Data Creation<br>
+2. Data Creation
 <img src="doc/Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation. It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response, ensuring reliability and clarity in the user confirmation process<br>
+- This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation
+- It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response<br>
+  (It ensure reliability and clarity in the user confirmation process)<br>
     
     
 3. Data Modification
 <img src="doc/Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend. With middleware safeguards, token verification, and modular backend orchestration, the system ensures accurate record updates and clear client feedback
+- This sequence diagram illustrates the confirmation flow via a frontend PUT request, showing how user-modified data is securely validated, parsed, and updated in the backend
+- The system ensures accurate record updates and clear client feedback with middleware safeguards, token verification, and modular backend orchestration
     
     
 4. Data Deletion
 <img src="doc/Image/Diagrams/DeleteDataSequenceDiagram.png" style="width:90%;"/><br>
-This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request. The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion. Through structured response handling and modular orchestration across services, it ensures secure and reliable user operations<br>
+- This sequence diagram captures the user confirmation flow initiated via a frontend DELETE request
+- The process includes middleware-level data parsing, backend token validation, and MongoDB record deletion<br>
+  (It ensures secure and reliable user operations yhrough structured response handling and modular orchestration across services)<br>
 
 5. Get Data From Google Book (API Integration)
 <img src="doc/Image/Diagrams/GetDataFromGoogleBookAPI.png" style="width:90%;"/><br>
-The application uses a Node.js middleware to bridge the React frontend with the Google Books API. When a user searches for a book, the backend first validates the user's Auth Token for security. After fetching the raw data from the external API, the backend filters and refines the response into a clean payload, ensuring the frontend only receives the necessary information for UI rendering. This approach optimises performance and enhances data security<br>
+- The application uses a Node.js middleware to bridge the React frontend with the Google Books API<br>
+  (When a user searches for a book, the backend first validates the user's Auth Token for security)<br>
+- After fetching the raw data from the external API, the backend filters and refines the response into a clean payload<br>
+  (This approach optimises performance, enhances data security and ensure the frontend only receives the necessary information for UI rendering)<br>
 
 
 ### Backend
@@ -182,27 +219,30 @@ The application uses a Node.js middleware to bridge the React frontend with the 
 ***Backend Process Flow Diagram and another function***<br>
 <img src="doc/Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
-| Component                                    | Usage                                                                                               | Example Path (Backend - Book data)                                                                        |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Request                                      | User initiates an API call from the frontend                                                        | frontend/src/Controller/* (e.g.frontend/src/Controller/bookController)                                    |
-| Router                                       | Mounts resource route modules and starts the Express app                                            | backend/src/index.ts                                                                                      |
-| Route                                        | Defines endpoints, attaches middleware, and calls controllers                                       | backend/src/routes/* (e.g., backend/src/routes/book.ts)                                                   |
-| Validator (request body checks)              | Validates request body using express-validator rules                                                | backend/src/validator/expressBodyValidator.ts (e.g. BookCreateRules for book creation validate)           |
-| Middleware (JWT / Role checks, DB existence) | Validates headers, URL parameters, request body, JWT and roles                                      | backend/src/controller/middleware/Book/bookValidationMiddleware.ts (e.g. check if book data exists in DB) |
-| Controller (includes business logic)         | Handles request/response in this repo controllers, it also contain most business logic and DB calls | backend/src/controller/bookController.ts                                                                  |
-| Database Interaction/ Model                  | Mongoose schemas and data access (or seed files)                                                    | backend/src/schema/book/book.ts                                                                           |
-| API Response                                 | Controller assembles and returns the response to the frontend                                       | backend/src/controller/bookController.ts                                                                  |
+| Component           | Usage                                                             | Example Path (Backend - Book data)                                  |
+| ------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Client / Request    | Initiates API calls via Fetch from the frontend	                  | frontend/src/Controller/bookController.ts                           |
+| Entry Point         | Initialises the Express server and mounts core middleware         | backend/src/index.ts                                                |
+| Router              | Orchestrates resource-based routing modules                       | backend/src/routes/book.ts                                          |
+| Validator           | Enforces Schema Validation (Request Body) before processing       | backend/src/validator/expressBodyValidator.ts                       |
+| Auth Middleware     | Handles Identity & Access Control (JWT)                           | backend/src/controller/middleware/authMiddleware.ts                 |
+| Business Middleware | Performs Integrity Checks (e.g. verifying DB record existence)    | backend/src/controller/middleware/Book/bookValidationMiddleware.ts  |
+| Controller          | Orchestrates request parsing, service logic, and DB interactions  | backend/src/controller/bookController.ts                            |
+| TF-IDF Engine	      | Core Algorithm Service for search and recommendations             | backend/src/controller/TF-IDF_Logic.ts                              |
+| Data Access (Model) | Defines Mongoose Schemas and manages Persistent Storage	          | backend/src/schema/book/book.ts                                     |
+| API Response	      | Standardises and returns the final JSON response to the client	  | backend/src/controller/bookController.ts                            |
 
 Remarks
 - Controllers in this repo perform business logic (act like the service) and send the final HTTP response at the end of the handler using res.status(...).json(...)
 - Helper functions may return values for unit tests, but controllers must call res in runtime
 
 Other functions (grouped, not on main synchronous path)
-| Function              | Usage                                                            | Example Path                                                      |
-| --------------------- | -----------------------------------------------------------------| ----------------------------------------------------------------- |
-| Scheduled Jobs        | Background tasks such as overdue detection and fine calculation  | backend/detectRecord.ts                                           |
-| Boook Recommendation  | TF‑IDF and search/recommendation utilities                       | backend/src/controller/TF-IDF_Logic.ts                            |
-| Deployment/Init       | Container orchestration and DB initialisation / seed             | docker-compose.yml/compose.yaml; backend/MongoDBSchema/*;         |
+| Function                   | Usage                                                                                                       | Example Path                                                 |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| CI Pipeline (Quality Gate) | Automated Linting and Unit/Integration Testing on every mon-documentation Push/PR                           | .github/workflows/ci.yml,  .github/workflows/cd.yml          |
+| Infrastructure/Init        | Container orchestration and automated DB Schema initialization / Seeding for environment parity             | docker-compose.yml/compose.yaml, backend/MongoDBSchema/*     |
+| Scheduled Jobs             | Background services for critical business logic (e.g., overdue detection and automated fine calculation)    | backend/detectRecord.ts                                      |
+
 
 ### Database
 
