@@ -935,16 +935,16 @@ To ensure consistent daily execution within a distributed cloud environment:
 A core utility function specifically designed for **Loan Book Record Detection**
 
 - **Description**
-- It normalises date comparisons in loan expiration tasks<br>
-  (This ensures the fine calculation only considers date changes, ignoring specific hour/minute offsets)<br>
+    - It normalises date comparisons in loan expiration tasks<br>
+      (This ensures the fine calculation only considers date changes, ignoring specific hour/minute offsets)<br>
 
 - **Business Logic**
-- **User-Friendly Billing**
-    - Borrowers are not penalised for the specific time of day they borrowed or returned a book<br>
-      (Expiration is triggered only when the calendar date advances (crossing midnight))<br>
-- **Consistency**
-    - Eliminates calculation discrepancies caused by the server's execution time<br>
-      (Ensure the tasks run at 01:00 AM or 11:00 PM yield the same result)<br>
+    - **User-Friendly Billing**
+        - Borrowers are not penalised for the specific time of day they borrowed or returned a book<br>
+          (Expiration is triggered only when the calendar date advances (crossing midnight))<br>
+    - **Consistency**
+        - Eliminates calculation discrepancies caused by the server's execution time<br>
+          (Ensure the tasks run at 01:00 AM or 11:00 PM yield the same result)<br>
 
 - **Example Scenario**
     - **Due Date**: `2025-12-24 18:30:00` → Normalised to `2025-12-24 00:00:00`
@@ -981,8 +981,10 @@ This function is responsible for the recurring calculation and scaling of overdu
       (This ensures that the fine increases precisely at the start of each new day (00:00:00), regardless of the original checkout time)<br>
     
 - **Fine Calculation Formula**
-    - **Rate**: $1.5 per day overdue
-    - **Capping**: A maximum threshold is enforced at $130 (using Math.min) to prevent excessive debt accumulation
+    - **Rate**
+        - $1.5 per day overdue
+    - **Capping**
+        - A maximum threshold is enforced at $130 (using Math.min) to prevent excessive debt accumulation
     
 - **Performance Optimisation**
     - The system performs a state check (bookLoaned.fineAmount !== finalAmount) before executing a database update<br>
@@ -1000,8 +1002,10 @@ This background task manages the automatic restoration of user accounts once the
     - Continuously monitors the SuspendList for records where the dueDate has passed ($lt: currentDate) and the status is still marked as "Suspend"
   
 - **Status Synchronisation**: Performs a dual-update process to ensure data consistency:
-    - **User Record**: Reverts the user's status from "Suspended" back to "Normal"
-    - **Suspension Log**: Marks the specific suspension entry as "Unsuspend" and timestamps the exact unSuspendDate
+    - **User Record**
+        - Reverts the user's status from "Suspended" back to "Normal"
+    - **Suspension Log**
+        - Marks the specific suspension entry as "Unsuspend" and timestamps the exact unSuspendDate
     
 - **Sequential Reliability**
     - Utilises a fail-safe check where the suspension log is only updated if the primary User Status modification is successful<br>
