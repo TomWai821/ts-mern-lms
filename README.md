@@ -512,20 +512,20 @@ Remarks:
 
 ### Continuous Deployment (CD)
 - **Multi-Platform Deployment Strategy**
-- **Frontend (Vercel)**
-    - **Orchestrated Deployment**
-        - Replaced default auto-update with Vercel Deploy Hooks triggered via GitHub Actions
-  
-    - **Resource Optimisation**
-        - Implemented Ignored Build Step to prevent redundant builds and ensure the frontend only updates after the backend service is confirmed ready
-    
-- **Backend (Railway)**
-    - **Fine-grained Control**
-        - Triggered manually via Railway GraphQL API (environmentTriggersDeploy) to precisely manage deployment timing and optimise resource usage (Credit consumption)
-    
-- **Database (MongoDB Atlas)**
-    - **DBaaS Integration**
-        - Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
+    - **Frontend (Vercel)**
+        - **Orchestrated Deployment**
+            - Replaced default auto-update with Vercel Deploy Hooks triggered via GitHub Actions
+      
+        - **Resource Optimisation**
+            - Implemented Ignored Build Step to prevent redundant builds and ensure the frontend only updates after the backend service is confirmed ready
+        
+    - **Backend (Railway)**
+        - **Fine-grained Control**
+            - Triggered manually via Railway GraphQL API (environmentTriggersDeploy) to precisely manage deployment timing and optimise resource usage (Credit consumption)
+        
+    - **Database (MongoDB Atlas)**
+        - **DBaaS Integration**
+            - Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
 
 - **Deployment Status and Records**
     - **Images**<br>
