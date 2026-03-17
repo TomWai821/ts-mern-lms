@@ -495,13 +495,20 @@ Remarks:
 
 ### Continuous Deployment (CD)
 - **Multi-Platform Deployment Strategy**
-    - **Frontend (Vercel)**
-        - **Orchestrated Deployment**: Replaced default auto-update with Vercel Deploy Hooks triggered via GitHub Actions
-        - **Resource Optimisation**: Implemented Ignored Build Step to prevent redundant builds and ensure the frontend only updates after the backend service is confirmed ready
-    - **Backend (Railway)**
-        - **Fine-grained Control**: Triggered manually via Railway GraphQL API (environmentTriggersDeploy) to precisely manage deployment timing and optimise resource usage (Credit consumption)
-    - **Database (MongoDB Atlas)**:
-        - **DBaaS Integration**:Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
+- **Frontend (Vercel)**
+    - **Orchestrated Deployment**
+    - Replaced default auto-update with Vercel Deploy Hooks triggered via GitHub Actions
+  
+    - **Resource Optimisation**
+    - Implemented Ignored Build Step to prevent redundant builds and ensure the frontend only updates after the backend service is confirmed ready
+    
+- **Backend (Railway)**
+    - **Fine-grained Control**
+    - Triggered manually via Railway GraphQL API (environmentTriggersDeploy) to precisely manage deployment timing and optimise resource usage (Credit consumption)
+    
+- **Database (MongoDB Atlas)**
+    - **DBaaS Integration**
+    - Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
 
 - **Deployment Status and Records**
     - **Images**<br>
@@ -512,12 +519,12 @@ Remarks:
 
 - **Changes**
     - **Production Environment Realignment**
-        - Migrated BACKEND_BASE_URL and BASE_URL from localhost to platform-specific production endpoints (Vercel/Railway)<br>
+    - Migrated BACKEND_BASE_URL and BASE_URL from localhost to platform-specific production endpoints (Vercel/Railway)<br>
            (It ensured seamless communication between the decoupled frontend and backend services in a live cloud environment)<br>
           
     - **Security & CORS Optimisation**
-        - Enhanced the ORIGINAL_URI configuration to support Multiple Origins<br>
-           (It allowed the backend to securely accept requests from both the Vercel production domain and local development environments simultaneously, improving workflow flexibility without compromising security)
+    - Enhanced the ORIGINAL_URI configuration to support Multiple Origins<br>
+      (It allowed the backend to securely accept requests from both the Vercel production domain and local development environments simultaneously, improving workflow flexibility without compromising security)
 
 
 ### Remarks
@@ -890,24 +897,26 @@ These automated backend functions run silently in the background and are difficu
 <img src="doc/Image/Functions/DetectTask.png" style="width:50%;"/><br>
 
 - **Decoupled Task Management**
-    - Implemented a Centralised Task Registry using a functional approach
-    - This Separation of Concerns ensures that adding new business rules (e.g., auto-notifications) requires zero modification to the core scheduling engine, enhancing system maintainability and extensibility
+- Implemented a Centralised Task Registry using a functional approach
+- This Separation of Concerns ensures that adding new business rules (e.g., auto-notifications) requires zero modification to the core scheduling engine, enhancing system maintainability and extensibility
 
 
 ### Task execution
 <img src="doc/Image/Functions/executeAllTask.png" style="width:70%;"/><br>
 To ensure high availability and data integrity, the system implements a Fault-Tolerant Execution Strategy:
 
-- **High-Throughput Execution**: All tasks are mapped and executed concurrently, maximising server throughput and ensuring the Boot-up Sync completes rapidly upon container wake-up
+- **High-Throughput Execution**
+- All tasks are mapped and executed concurrently, maximising server throughput and ensuring the Boot-up Sync completes rapidly upon container wake-up
 
-- **Fault Isolation**: Utilised Promise.allSettled to ensure that independent tasks (e.g. suspension checks) continue to execute without interruption, even if one specific task (e.g. fine calculation) fails
+- **Fault Isolation**
+- Utilised Promise.allSettled to ensure that independent tasks (e.g. suspension checks) continue to execute without interruption, even if one specific task (e.g. fine calculation) fails
 
 - **Runtime Safeguards & Observability**
     - **Granular Error Tracking**
-        - Each task's outcome is individually inspected (failures are captured with their specific index and reason to facilitate rapid debugging and auditability)
+    - Each task's outcome is individually inspected (failures are captured with their specific index and reason to facilitate rapid debugging and auditability)
   
     - **Panic Prevention**
-        - A global try-catch wrapper acts as a final safety net, preventing unexpected asynchronous exceptions from crashing the Node.js runtime and ensuring service continuity
+    - A global try-catch wrapper acts as a final safety net, preventing unexpected asynchronous exceptions from crashing the Node.js runtime and ensuring service continuity
 
 
 ### Scheduling Logic 
@@ -915,18 +924,21 @@ To ensure high availability and data integrity, the system implements a Fault-To
 To ensure consistent daily execution within a distributed cloud environment:
 - **Precision Scheduling Strategy**
     - **Initial Alignment**
-        - setTimeout calculates the exact delay until the next target time (e.g., Midnight UTC+8)<br>
-          (Ensure the first run aligns perfectly with business hours)<br>
+    - setTimeout calculates the exact delay until the next target time (e.g., Midnight UTC+8)<br>
+      (Ensure the first run aligns perfectly with business hours)<br>
           
     - **Drift Prevention**
-        - Unlike a standalone setInterval, this dual-timer design prevents cumulative "Time Drift" (Ensure predictable reset behaviour over long-term operation)<br>
+    - Unlike a standalone setInterval, this dual-timer design prevents cumulative "Time Drift" (Ensure predictable reset behaviour over long-term operation)<br>
         
     - **Timezone Integrity**
-        - Custom UTC+8 logic is implemented to overcome the lack of native timezone-specific scheduling in Node.js (Ensure synchronisation with Hong Kong business hours)
+    - Custom UTC+8 logic is implemented to overcome the lack of native timezone-specific scheduling in Node.js (Ensure synchronisation with Hong Kong business hours)
         
 - **Event-driven Boot-up Sync**
-    - **PaaS Resilience**: Specifically engineered to counter the "sleep cycles" of PaaS providers (e.g. Railway)
-    - **Immediate Reconciliation**: By triggering a synchronisation check upon server wake-up, the system ensures critical business logic is never missed and is processed immediately upon boot (Even if the server was "asleep" during the scheduled midnight slot)
+    - **PaaS Resilience**
+    - Specifically engineered to counter the "sleep cycles" of PaaS providers (e.g. Railway)
+      
+    - **Immediate Reconciliation**
+    - By triggering a synchronisation check upon server wake-up, the system ensures critical business logic is never missed and is processed immediately upon boot (Even if the server was "asleep" during the scheduled midnight slot)
 
 
 ### Tasks
@@ -941,11 +953,12 @@ A core utility function specifically designed for **Loan Book Record Detection**
 
 - **Business Logic**
     - **User-Friendly Billing**
-        - Borrowers are not penalised for the specific time of day they borrowed or returned a book<br>
-          (Expiration is triggered only when the calendar date advances (crossing midnight))<br>
+    - Borrowers are not penalised for the specific time of day they borrowed or returned a book<br>
+      (Expiration is triggered only when the calendar date advances (crossing midnight))<br>
+      
     - **Consistency**
-        - Eliminates calculation discrepancies caused by the server's execution time<br>
-          (Ensure the tasks run at 01:00 AM or 11:00 PM yield the same result)<br>
+    - Eliminates calculation discrepancies caused by the server's execution time<br>
+      (Ensure the tasks run at 01:00 AM or 11:00 PM yield the same result)<br>
 
 - **Example Scenario**
     - **Due Date**: `2025-12-24 18:30:00` → Normalised to `2025-12-24 00:00:00`
@@ -958,18 +971,18 @@ A core utility function specifically designed for **Loan Book Record Detection**
 This background task automatically scans and identifies overdue books, initialising the fine process for delinquent accounts:
 
 - **Efficient Fetching**
-    - Queries loan records with "Loaned" status, leveraging DB-level filters ($lt, $ne) to minimise memory overhead
+- Queries loan records with "Loaned" status, leveraging DB-level filters ($lt, $ne) to minimise memory overhead
     
 - **Date Normalisation**
-    - Utilizes setToMidnight() for normalized date comparisons<br>
-      (This ensures expiration is triggered strictly by calendar day changes (crossing midnight), ignoring specific hour/minute offsets)<br>
+- Utilizes setToMidnight() for normalized date comparisons<br>
+  (This ensures expiration is triggered strictly by calendar day changes (crossing midnight), ignoring specific hour/minute offsets)<br>
     
 - **Fine Initialisation**
     - Sets finesPaid status to "Not Paid"
     - Applies an initial flat fineAmount of $1.5
     
 - **Audit Logging**
-    - Generates console logs for each successful modification, facilitating system monitoring and troubleshooting
+- Generates console logs for each successful modification, facilitating system monitoring and troubleshooting
 
 
 ***3. Dynamic Fine Scaling & Adjustment*** (Ref: backend/src/schema/book/bookloaned.ts, Line 198–232)<br>
@@ -978,14 +991,14 @@ This background task automatically scans and identifies overdue books, initialis
 This function is responsible for the recurring calculation and scaling of overdue fines for all "Not Paid" loan records
 
 - **Precision Date Comparison**
-    - Leveraging setToMidnight(), the system calculates expireDays based strictly on calendar date differences<br>
-      (This ensures that the fine increases precisely at the start of each new day (00:00:00), regardless of the original checkout time)<br>
+- Leveraging setToMidnight(), the system calculates expireDays based strictly on calendar date differences<br>
+  (This ensures that the fine increases precisely at the start of each new day (00:00:00), regardless of the original checkout time)<br>
     
 - **Fine Calculation Formula**
     - **Rate**
-        - $1.5 per day overdue
+    - $1.5 per day overdue
     - **Capping**
-        - A maximum threshold is enforced at $130 (using Math.min) to prevent excessive debt accumulation
+    - A maximum threshold is enforced at $130 (using Math.min) to prevent excessive debt accumulation
     
 - **Performance Optimisation**
     - The system performs a state check (bookLoaned.fineAmount !== finalAmount) before executing a database update<br>
@@ -1000,21 +1013,21 @@ This function is responsible for the recurring calculation and scaling of overdu
 This background task manages the automatic restoration of user accounts once their suspension period concludes
 
 - **Expiration Monitoring**
-    - Continuously monitors the SuspendList for records where the dueDate has passed ($lt: currentDate) and the status is still marked as "Suspend"
+- Continuously monitors the SuspendList for records where the dueDate has passed ($lt: currentDate) and the status is still marked as "Suspend"
   
 - **Status Synchronisation**: Performs a dual-update process to ensure data consistency:
     - **User Record**
-        - Reverts the user's status from "Suspended" back to "Normal"
+    - Reverts the user's status from "Suspended" back to "Normal"
     - **Suspension Log**
-        - Marks the specific suspension entry as "Unsuspend" and timestamps the exact unSuspendDate
+    - Marks the specific suspension entry as "Unsuspend" and timestamps the exact unSuspendDate
     
 - **Sequential Reliability**
-    - Utilises a fail-safe check where the suspension log is only updated if the primary User Status modification is successful<br>
-      (Prevent "ghost" unsuspensions)<br>
+- Utilises a fail-safe check where the suspension log is only updated if the primary User Status modification is successful<br>
+  (Prevent "ghost" unsuspensions)<br>
   
 - **Audit Trail**
-    - Generates a success log for each restored user<br>
-      (Provide a clear record of automated administrative actions)<br>
+- Generates a success log for each restored user<br>
+  (Provide a clear record of automated administrative actions)<br>
 
 
 
