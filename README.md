@@ -888,7 +888,8 @@ These automated backend functions run silently in the background and are difficu
 ***1. Detect Record Functions***<br>
 ### TasksList
 <img src="doc/Image/Functions/DetectTask.png" style="width:50%;"/><br>
-**Decoupled Task Management**
+
+- **Decoupled Task Management**
     - Implemented a Centralised Task Registry using a functional approach
     - This Separation of Concerns ensures that adding new business rules (e.g., auto-notifications) requires zero modification to the core scheduling engine, enhancing system maintainability and extensibility
 
@@ -929,7 +930,7 @@ To ensure consistent daily execution within a distributed cloud environment:
 
 
 ### Tasks
-***1. Set Date Format to Midnight***
+***1. Set Date Format to Midnight***<br>
 <img src="doc/Image/Functions/setToMidnight.png" style="width:60%;"/><br>
 
 A core utility function specifically designed for **Loan Book Record Detection**
