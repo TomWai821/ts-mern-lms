@@ -52,11 +52,30 @@ Key enhancements include:
 
 
 ### Technical Learns 
-- **System Architecture**: Designed and implemented a Layered Architecture (Router-Middleware-Controller-Model) in Express.js, achieving clear separation of concerns and high code maintainability
-- **Type-Safe Development**: Leveraged TypeScript across the full stack to enforce rigorous data structures, significantly reducing runtime errors and improving developer productivity
-- **State Orchestration**: Optimised frontend performance by managing global application state with React Context API and Custom Hooks, ensuring efficient data flow without unnecessary re-renders
-- **Automated QA & DevOps**: Gained hands-on experience in Containerization (Docker) and Automated CI (GitHub Actions), establishing a pipeline that enforces Linting and Integration Testing (using Supertest and Jest)
-- **Security Logic**: Implemented Stateless Authentication (JWT) and developed a multi-token verification workflow for handling secure book loan authorisations between different user roles
+- System Architecture: **Layered Design (Router-Middleware-Controller-Model)**
+    - Designed a modular Express.js backend to achieve a clean Separation of Concerns
+    - Benefit: Facilitates high code maintainability and allows independent testing of business logic and data access layers
+  
+- Atomic Data Management: **Reliable Image Persistence (Multer & fs/promises)**
+    - Developed a custom upload workflow using memoryStorage to ensure Atomicity between DB records and physical files
+    - Action: Implemented a Rollback mechanism and used Regex sanitisation to prevent redundant filename timestamps during consecutive edits
+  
+- Type-Safe Development: **End-to-End TypeScript Integration**
+    - Leveraged TypeScript across the full stack to enforce rigorous data structures and interface contracts
+    - Result: Significantly reduced runtime TypeErrors and improved developer productivity through IDE intelligent code completion
+  
+- Security Logic: **Dual-Token Authorisation & Identity Management**
+    - Implemented stateless JWT authentication and a specialised Dual-Token verification workflow for high-risk transactions
+    - Usage: Enforces a "Four-Eyes Principle" for book loaning, requiring concurrent valid tokens from both the Borrower and the Authorised Personnel
+  
+- State Orchestration: **Performance-Oriented Frontend Architecture**
+    - Optimised React performance by centralising global state with Context API and encapsulated logic within Custom Hooks
+    - Benefit: Minimised unnecessary component re-renders and established a predictable, one-way data flow
+      
+- Automated QA & DevOps: **CI/CD Pipeline & Containerisation**
+    - Built a robust DevOps pipeline using Docker and GitHub Actions to automate the development lifecycle
+    - Standard: Enforces strict Linting and Integration Testing via Supertest/Jest before any code is deployed to the repository
+
 
 ### Disclaimer
 All contact information provided in this file is fictitious and used solely for demonstration purposes
@@ -212,18 +231,19 @@ docker-compose -f compose.yaml up --build -d
 ***Backend Process Flow Diagram and another function***<br>
 <img src="doc/Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
 Backend side using modular API design, therefore using backend process flow diagram is better than using a class diagram to explain the backend architecture
-| Component           | Usage                                                             | Example Path (Backend - Book data)                                  |
-| ------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Client / Request    | Initiates API calls via Fetch from the frontend	                  | frontend/src/Controller/bookController.ts                           |
-| Entry Point         | Initialises the Express server and mounts core middleware         | backend/src/index.ts                                                |
-| Router              | Orchestrates resource-based routing modules                       | backend/src/routes/book.ts                                          |
-| Validator           | Enforces Schema Validation (Request Body) before processing       | backend/src/validator/expressBodyValidator.ts                       |
-| Auth Middleware     | Handles Identity & Access Control (JWT)                           | backend/src/controller/middleware/authMiddleware.ts                 |
-| Business Middleware | Performs Integrity Checks (e.g. verifying DB record existence)    | backend/src/controller/middleware/Book/bookValidationMiddleware.ts  |
-| Controller          | Orchestrates request parsing, service logic, and DB interactions  | backend/src/controller/bookController.ts                            |
-| TF-IDF Engine	      | Core Algorithm Service for search and recommendations             | backend/src/controller/TF-IDF_Logic.ts                              |
-| Data Access (Model) | Defines Mongoose Schemas and manages Persistent Storage	          | backend/src/schema/book/book.ts                                     |
-| API Response	      | Standardises and returns the final JSON response to the client	  | backend/src/controller/bookController.ts                            |
+| Component           | Usage                                                                                                  | Example Path (Backend - Book data)                                                              |
+| ------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| Client / Request    | Initiates API calls via Fetch from the frontend	                                                       | frontend/src/Controller/bookController.ts                                                       |
+| Entry Point         | Initialises the Express server and mounts core middleware                                              | backend/src/index.ts                                                                            |
+| Router              | Orchestrates resource-based routing modules                                                            | backend/src/routes/book.ts                                                                      |
+| Validator           | Enforces Schema Validation (Request Body) before processing                                            | backend/src/validator/expressBodyValidator.ts                                                   |
+| Auth Middleware     | Handles Identity & Access Control (JWT)                                                                | backend/src/controller/middleware/authMiddleware.ts                                             |
+| Business Middleware | Performs Integrity Checks (e.g. verifying DB record existence)                                         | backend/src/controller/middleware/Book/bookValidationMiddleware.ts                              |
+| Controller          | Orchestrates request parsing, service logic, and DB interactions                                       | backend/src/controller/bookController.ts                                                        |
+| TF-IDF Engine	      | Core Algorithm Service for search and recommendations                                                  | backend/src/controller/TF-IDF_Logic.ts                                                          |
+| Image Handler       | Manages atomic file storage (memoryStorage), filename sanitization (Regex), and disk I/O (fs/promises) | backend/src/controller/middleware/HandleEditImage.ts, backend/src/controller/bookController.ts  |
+| Data Access (Model) | Defines Mongoose Schemas and manages Persistent Storage	                                               | backend/src/schema/book/book.ts                                                                 |
+| API Response	      | Standardises and returns the final JSON response to the client	                                       | backend/src/controller/bookController.ts                                                        |
 
 Remarks
 - Controllers in this repo perform business logic (act like the service) and send the final HTTP response at the end of the handler using res.status(...).json(...)
@@ -1491,7 +1511,7 @@ Image 8.2 - Chip set
       ```
 
 ### For Loan Books Data (Require authToken in header)
-1. Get Loan book record
+1. Get Loan Book record
    ```
    - Endpoint: `GET /api/book/LoanBook` (For all loan book record)
    - Endpoint: `GET /api/book/LoanBook?status=Returned` (For loan book record with status filtering)
@@ -1500,7 +1520,7 @@ Image 8.2 - Chip set
    - Endpoint: `GET /api/book/LoanBook?finesPaid=Paid` (For loan book record with finesPaid status filtering)
    ```
    
-2. Create Loan book record
+2. Create Loan Book record (Dual-Token Requirement)
    ```
    Endpoint: `POST /api/book/LoanBook`
 
@@ -1518,7 +1538,7 @@ Image 8.2 - Chip set
    3. It will change book status after loan record created
    ```
    
-3. Modify Loan book record
+3. Modify Loan Book record
    ```
    Endpoint: `PUT /api/book/LoanBook/id=:id`
 
@@ -1533,6 +1553,13 @@ Image 8.2 - Chip set
    3. id = MongoDB ObjectID in bookloaned collection
    ```
 
+4. DELETE Loan Book record
+   ```
+   Endpoint: `DELETE /api/book/LoanBook/id=:id`
+
+   Remarks:
+   1. id = MongoDB ObjectID in bookloaned collection
+   ```
    
 ### For Favourite Book (Require authToken in header)
 1. Get favourite book record
