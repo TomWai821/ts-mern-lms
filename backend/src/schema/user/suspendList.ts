@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { SuspendListInterface } from "../../model/userSchemaInterface";
-import { printError } from "../../controller/Utils";
+import { printError } from "../../Utils";
 import { FindUserByIDAndUpdate } from "./user";
 import { suspendListStatus } from "../../data/enums";
 
@@ -102,7 +102,7 @@ export const detectExpiredSuspendRecord = async () =>
     {
         const currentDate = new Date();
 
-        const expiresRecord = await GetSuspendList({dueDate: {$lt: currentDate}}) as SuspendListInterface[];
+        const expiresRecord = await GetSuspendList({dueDate: {$lt: currentDate}, status: 'Suspend'}) as SuspendListInterface[];
 
         if(expiresRecord.length > 0)
         {

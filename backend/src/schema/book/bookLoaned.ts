@@ -1,6 +1,6 @@
 import mongoose, { PipelineStage } from "mongoose";
 import { BookLoanedInterface } from "../../model/bookSchemaInterface";
-import { lookupAndUnwind, printError } from "../../controller/Utils";
+import { lookupAndUnwind, printError, setToMidnight } from "../../Utils";
 import { bookReturnStatus, finesPaidStatus } from "../../data/enums";
 
 const BookLoanedSchema = new mongoose.Schema<BookLoanedInterface>
@@ -165,38 +165,39 @@ export const detectExpiredLoanRecord = async () =>
 {
     try
     {
-        const currentDate = new Date();
-
-        const loanRecords = await GetBookLoaned({status: 'Loaned'}) as BookLoanedInterface[];
-
+        const today = setToMidnight(new Date());
+        const loanRecords = await GetBookLoaned({status: 'Loaned', dueDate: { $lt: today }, finesPaid: { $ne: 'Not Paid' }}) as BookLoanedInterface[];
+        
         const expiresLoanRecords = loanRecords.filter( bookLoaned => 
             {
-                const dueDate = new Date(bookLoaned.dueDate);
-                const effectiveDueDate = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate() + 1)
-                return effectiveDueDate < currentDate;
+                const dueDate = setToMidnight(new Date(bookLoaned.dueDate));
+                return today > dueDate && bookLoaned.finesPaid !== "Not Paid";
             }
         )
 
-        if(expiresLoanRecords.length > 0)
+        if (expiresLoanRecords.length === 0) 
         {
-            console.log(`Totally has ${expiresLoanRecords.length} loan book records were expired`);
+            console.log("No new expired records detected today");
+            return;
+        }
 
-            for(const bookLoaned of expiresLoanRecords)
+        console.log(`Processing ${expiresLoanRecords.length} newly expired records...`);
+
+        for(const expiredRecord of expiresLoanRecords)
+        {
+            const updateRecord = await FindBookLoanedByIDAndUpdate(expiredRecord._id as unknown as string, {finesPaid: 'Not Paid', fineAmount: 1.5});
+
+            if(!updateRecord)
             {
-                const modifyFinesPaidStatus = await FindBookLoanedByIDAndUpdate(bookLoaned._id as unknown as string, {finesPaid: 'Not Paid', finesAmount: 1.5});
-
-                if(!modifyFinesPaidStatus)
-                {
-                    console.log(`Failed to modify ${bookLoaned._id} loan record finesAmount and Paid status!`)
-                }
-
-                console.log(`Loan Record ${bookLoaned._id} fines Amount and paid status modify successfully!`);
+                console.log(`Record ${expiredRecord._id} update failed!`)
             }
+
+            console.log(`Record ${expiredRecord._id} initialised ($1.5)`);
         }
     }
     catch(error)
     {
-        console.error("Error detecting expired loan records:", error);
+        console.error("Error modifying fine amounts:", error);
     }
 }
 
@@ -204,34 +205,44 @@ export const modifyFinesAmount = async() =>
 {
     try
     {
-        const currentDate = new Date();
-
         const expiresLoanRecords = await GetBookLoaned({finesPaid: 'Not Paid'}) as BookLoanedInterface[];
 
-        if(expiresLoanRecords.length > 0)
+        console.log(`Totally has ${expiresLoanRecords.length} loan records does not paid the fines`);
+        if(expiresLoanRecords.length === 0) return;
+
+        for(const bookLoaned of expiresLoanRecords)
         {
-            console.log(`Totally has ${expiresLoanRecords.length} loan records does not paid the fines`);
+            /*
+                Date-only comparison(Ignore the hr/seconds, only compare the date)
+                e.g. dueDate = 24/12/2025 -> Union to 24/12/2025 00:00:00
+                       today = 25/12/2025 -> Union to 25/12/2025 00:00:00
+                       Result: 25 - 24 = 1 (the expireDay)
+            */
+            const dueDate = setToMidnight(new Date(bookLoaned.dueDate as Date));
+            const today = setToMidnight(new Date())
 
-            for(const bookLoaned of expiresLoanRecords)
+            // Calculate the timeDiff after transfer to date only
+            const diffTime = today.getTime() - dueDate.getTime();
+            const expireDays = Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+
+            // Calculate the final amount (based on the expiresDays)
+            const finalAmount = Math.min(expireDays * 1.5, 130);
+
+            if(bookLoaned.fineAmount !== finalAmount)
             {
-                const expireTime = new Date(bookLoaned.dueDate as Date).getTime();
-                const diffTime = currentDate.getTime() - expireTime;
-                const expireDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-                const finesAmount = 1.5 * expireDays < 130 ? 1.5 * expireDays : 130;
-                const modifyFinesAmount = await FindBookLoanedByIDAndUpdate(bookLoaned._id as unknown as string, {fineAmount: finesAmount});
-
-                if(!modifyFinesAmount)
+                const updateRecord = await FindBookLoanedByIDAndUpdate(bookLoaned._id as unknown as string, {fineAmount: finalAmount});
+                if(!updateRecord)
                 {
                     console.log(`Failed to modify ${bookLoaned._id} loan record finesAmount!`);
                     continue;
                 }
-
-                console.log(`Loan Record ${bookLoaned._id} fine Amount ($${1.5 * expireDays}) modify successfully!`);
             }
+            console.log(`Loan Record ${bookLoaned._id} fine Amount ($${finalAmount}) modify successfully!`);
         }
+        
     }
     catch(error)
     {
-        console.error("Error detecting expired suspensions:", error);
+        console.error("Error detecting expired loan records:", error);
     }
 }

@@ -136,26 +136,28 @@ export const DeleteBookRecord = async(req:Request, res:Response) =>
             return res.status(404).json({ success, error: "Book not found" });
         }
 
-        const [deleteLoanBookRecord, deleteFavouriteBookRecord, deleteBookRecord] = await Promise.all(
-            [FindBookLoanedAndDelete({bookID}), FindBookFavouriteAndDeleteMany({bookID}), FindBookByIDAndDelete(bookID as string)]
-        );
+        const results = await Promise.allSettled([
+            FindBookLoanedAndDelete({ bookID }),
+            FindBookFavouriteAndDeleteMany({ bookID }),
+            FindBookByIDAndDelete(bookID as string)
+        ]);
 
-        if(!deleteLoanBookRecord)
+        const [loanResult, favouriteResult, bookResult] = results;
+
+        if (bookResult.status === 'rejected') 
         {
-            return res.status(400).json({success, error: "Failed to Delete loaned book record"});
+            return res.status(500).json({ success: false,  error: "Database error during book deletion (Partial data may remain)" })
+        };
+
+        if (loanResult.status === 'rejected' || favouriteResult.status === 'rejected') 
+        {
+            console.warn(`Book ${bookID} deleted, but some related records failed to clean up`);
         }
 
-        if(!deleteFavouriteBookRecord)
+        if (bookResult.status === 'fulfilled') 
         {
-            return res.status(400).json({success, error: "Failed to Delete favourite book record"});
+            deleteImage(bookRecord.image.filename);
         }
-
-        if(!deleteBookRecord)
-        {
-            return res.status(400).json({success, error: "Failed to Delete book record"});
-        }
-
-        deleteImage(bookRecord.image.filename);
 
         success = true;
         res.json({success, message: "Book Record Delete Successfully!"});

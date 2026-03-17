@@ -1,6 +1,6 @@
 import mongoose, { PipelineStage } from "mongoose";
 import { BookFavouriteInterface } from "../../model/bookSchemaInterface";
-import { lookupAndUnwind, printError } from "../../controller/Utils";
+import { lookupAndUnwind, printError } from "../../Utils";
 
 const BookFavouriteSchema = new mongoose.Schema<BookFavouriteInterface>
 (   

@@ -17,3 +17,10 @@ export const lookupAndUnwind = (from:string, localField:string, foreignField:str
         { $unwind: { path: `$${asField}`, preserveNullAndEmptyArrays: true } }
     ]
 );
+
+export const setToMidnight = (date: Date) => 
+{
+    const today = new Date(date);
+    today.setHours(0, 0, 0, 0);
+    return today;
+};

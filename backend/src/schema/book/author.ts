@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { AuthorInterface } from '../../model/bookSchemaInterface';
-import { printError } from '../../controller/Utils';
+import { printError } from '../../Utils';
 
 const authorSchema = new mongoose.Schema<AuthorInterface>
 (
