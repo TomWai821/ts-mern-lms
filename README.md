@@ -620,6 +620,9 @@ Remarks:
     - **Backend (Railway)**
         - **Fine-grained Control**
             - Triggered manually via Railway GraphQL API (environmentTriggersDeploy) to precisely manage deployment timing and optimise resource usage (Credit consumption)
+         
+        - **Containerized Portability**
+            - Engineered a production-ready Dockerfile with environment-specific configurations, ensuring seamless migration between local development and cloud environments
         
     - **Database (MongoDB Atlas)**
         - **DBaaS Integration**
@@ -632,6 +635,25 @@ Remarks:
     <img src="doc/Image/Deployment/Railway_Deployment.png" style="width:90%;"/><br>
     Image 2 - Railway Deployment Record<br>
 
+
+    - **Deployment Secret Explanation**
+
+    | Secret Name            | Description / Purpose                                                  | How to Obtain                                    |
+    | ---------------------- | ---------------------------------------------------------------------- | ------------------------------------------------ |
+    | VERCEL_DEPLOY_HOOK     | Triggers automated deployment for the Frontend on Vercel               | Vercel Project Settings > Git > Deploy Hooks     |
+    | RAILWAY_TOKEN          | Grants GitHub Actions permission to access Railway API for deployment  | Railway User Settings > Tokens                   |
+    | RAILWAY_SERVICE_ID     | Identifies the specific Backend Service to be targeted for deployment  | Railway Service > Settings > Service ID          |
+    | RAILWAY_ENVIRONMENT_ID | Ensures the deployment is routed to the correct Environment            | Railway Environment > Settings > Environment ID  |
+    | RAILWAY_DEPLOY_HOOK    | Used to programmatically trigger Backend deployment cycles             | Railway Service > Settings > Deploy Hook         |
+
+
+    - **Security And Operational Excellence**
+        - **Zero-Credential Exposure**
+            - Ensure the source code does not have privacy data, fulfill the OWASP standard
+        - **Automated Lifecycle**
+            - Reduce the deployment mistake on manual trigger with GitHub Actions
+
+            
 - **Changes**
     - **Production Environment Realignment**
         - Migrated BACKEND_BASE_URL and BASE_URL from localhost to platform-specific production endpoints (Vercel/Railway)<br>
