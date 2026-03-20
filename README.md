@@ -512,17 +512,21 @@ Remarks:
      (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
 
 #### CI/CD
-1. **Automated CI/CD Pipeline (GitHub Actions)**
-   - Automatically triggers Jest suites and ESLint on every Push and Pull Request<br>
-     (Serves as a CI quality gate to prevent regression and enforce unified coding standards across the full-stack codebase)
-
-2. **Resource & Cost Optimisation**
-   - Controlled deployment triggers to minimise redundant builds and optimise cloud credit consumption<br>
-    (Utilised Ignored Build Step and manual API triggers to manage resource usage efficiently across different cloud platforms)
-     
-3. **Cloud Database & Secret Orchestration**
-   - Integrated MongoDB Atlas and managed sensitive credentials via Platform Environment Variables<br>
-     (It decoupled the database layer from the application logic and secured production secrets like JWT and Database URIs outside the source code)
+1. **Automated Quality Gates** (GitHub Actions)
+    - Automatically triggers Jest test suites and ESLint on every functional Push and Pull Request
+      (Implemented Path-based Filtering to bypass CI/CD triggers for non-documentation changes (e.g., Markdown files, Images), ensuring CI resources are focused only on code-related regressions)<br>
+  
+2. **Resource & Cost Optimisation** (FinOps)
+    - Implemented Ignored Build Steps and API-driven triggers to minimize redundant builds<br>
+      (Leveraged Railway’s GraphQL API (environmentTriggersDeploy) to precisely manage deployment windows, optimising cloud credit consumption and operational costs)
+  
+3. **Security & Secret Orchestration** (OWASP Compliance)
+    - Decoupled sensitive credentials (JWT Secrets, MongoDB URIs) from the source code using Platform Environment Variables and GitHub Action Secrets<br>
+      (Adheres to OWASP security standards by ensuring zero-credential exposure and secure injection of production secrets at runtime)
+  
+1. **Environment Parity & Containerssation** (Docker)
+    - Engineered a multi-stage Dockerfile to encapsulate the entire application environment<br>
+      (Guaranteed 100% consistency between local development and cloud production (Railway/Vercel), eliminating "it works on my machine" deployment risks)
 
 
 
