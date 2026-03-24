@@ -40,7 +40,7 @@ Explore how the system enhances your reading journey with intuitive discovery to
     - Set Status to OnShelf
     - Expand the filter (Down arrow), set Genre to Novel
     - Click Search
-        - **Observe*: Results are narrowed down to Available Novels only
+        - **Observe**: Results are narrowed down to Available Novels only
     - Click Reset Filter
         - **Observe**: The filter clears, restoring the full book list instantly
 
