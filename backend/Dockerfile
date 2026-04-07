@@ -1,5 +1,5 @@
 # For Test 
-FROM node:18-alpine AS test
+FROM node:22.20.0 AS test
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY . .
 CMD ["npm", "test"]
 
 # For Production
-FROM node:18-alpine
+FROM node:22.20.0
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --silent

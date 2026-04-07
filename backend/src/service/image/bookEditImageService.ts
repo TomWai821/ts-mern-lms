@@ -30,6 +30,7 @@ export const HandleEditImage = async (req: AuthRequest, res: Response, next: Fun
             const cleanFileName = rawName.replace(/^\d+-/, '');
 
             newImageName = `${Date.now()}-${cleanFileName}`;
+            
             switch (process.env.STORAGE_TYPE)
             {
                 case 's3':

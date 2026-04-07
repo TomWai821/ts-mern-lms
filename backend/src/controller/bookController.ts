@@ -28,14 +28,10 @@ export const GetImageController = (req: Request, res: Response) =>
 {
     const { imageName } = req.params;
 
-    console.log(imageName);
-
     if (!imageName) 
     {
         return res.status(400).send("No filename");
     }
-
-    console.log(imageName);
 
     const storage = getStorageStrategy();
     
