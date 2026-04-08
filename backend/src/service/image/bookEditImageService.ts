@@ -34,12 +34,15 @@ export const HandleEditImage = async (req: AuthRequest, res: Response, next: Fun
             switch (process.env.STORAGE_TYPE)
             {
                 case 's3':
-                    newImageUrl = `https://${BUCKET_NAME}.s3.${AWS_REGION}://${newImageName}`;
+                    newImageUrl = `https://${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${newImageName}`;
                     break;
 
                 case 'LOCAL':
                     newImageUrl = `${config.BACKEND_BASE_URL}/upload/${newImageName}`;
                     break;
+
+                default:
+                    newImageUrl = bookData.image.url;
             }
         }
 

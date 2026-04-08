@@ -16,7 +16,7 @@ export const ImageDataBuilder = async (file: Express.Multer.File, publishDate: s
         switch (config.STORAGE_TYPE)
         {
             case 'S3':
-                imageUrl = `https://${BUCKET_NAME}.s3.${AWS_REGION}://${imageName}`;
+                imageUrl = `https://${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${imageName}`;
                 break;
 
             case 'LOCAL':
