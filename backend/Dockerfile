@@ -22,4 +22,5 @@ COPY package*.json ./
 RUN npm ci --omit=dev --silent
 COPY --from=builder /app/dist ./dist
 ENV NODE_ENV=production
-CMD ["npm", "dist/entry/lambda.js"]
+ENV PORT=3000
+CMD ["node", "dist/entry/lambda.js"]
