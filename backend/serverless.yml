@@ -29,7 +29,7 @@ custom:
 
 functions:
   api:
-    handler: index.handler 
+    handler: dist/entry/lambda.handler
     events:
       - http:
           path: /

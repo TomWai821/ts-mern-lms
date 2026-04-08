@@ -12,7 +12,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "paths": 
+    {
+      "@/*": ["./src/*"]
+    },
   },
-  "include": ["src", "tests", "**/*.test.ts", "node", "storage/multerConfig.ts"]
+  "include": ["src", "tests", "**/*.test.ts", "node", "storage/multerConfig.ts"],
+  "exclude": ["node_modules"]
 }
