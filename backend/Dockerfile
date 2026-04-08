@@ -32,3 +32,4 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 CMD ["node", "dist/entry/lambda.js"]
+RUN ls -R dist
