@@ -21,7 +21,7 @@ FROM node:22.14-alpine3.20
 RUN apk update && apk upgrade --no-cache
 WORKDIR /app
 
-COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1-aarch64 /lambda-adapter /opt/extensions/lambda-adapter
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/lambda-adapter
 
 COPY package*.json ./
 RUN npm ci --omit=dev --silent
