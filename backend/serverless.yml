@@ -44,17 +44,10 @@ functions:
       name: appimage
     url:
       authorizerType: none
-      cors: 
-        allowedOrigins:
-          - '*'
-        allowedHeaders:
-          - content-type
-          - authtoken
-          - authorization
-        allowedMethods:
-          - '*'
+      cors: false 
     events:
       - httpApi: '*'
+
 
 
 resources:

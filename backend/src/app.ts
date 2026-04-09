@@ -18,10 +18,9 @@ app.use((req, res, next) =>
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, authToken, Authorization');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-    // 關鍵：如果請求是 OPTIONS (Preflight)，直接回傳 204，不要交給後面的 middleware
     if (req.method === 'OPTIONS') 
     {
-        return res.status(204).end();
+        return res.status(200).end();
     }
     next();
 });
