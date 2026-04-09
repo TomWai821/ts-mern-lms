@@ -26,7 +26,7 @@ const DeleteImageFromS3 = async (oldImageName: string) =>
     const deleteCommand = new DeleteObjectCommand(
         {
             Bucket: BUCKET_NAME,
-            Key: oldImageName,
+            Key: `upload/${oldImageName}`,
         }
     );
     await s3Client.send(deleteCommand);

@@ -56,7 +56,7 @@ const uploadImageToS3 = async (file: Express.Multer.File, imageName: string) =>
     const command = new PutObjectCommand(
         {
             Bucket: BUCKET_NAME as string,
-            Key: imageName,
+            Key: `upload/${imageName}`,
             Body: file.buffer,
             ContentType: file.mimetype
         }
