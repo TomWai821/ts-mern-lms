@@ -45,16 +45,19 @@ functions:
           path: '*'
           cors:
             allowedOrigins:
-              - https://vercel.app
+              - https://ts-mern-lms.vercel.app/
             allowedHeaders:
               - authToken
+              - Authorization
               - content-type
             allowedMethods:
               - GET
               - POST
               - PUT
               - DELETE
+              - OPTIONS
             allowCredentials: true
+            maxAge: 600
 
 
 resources:
