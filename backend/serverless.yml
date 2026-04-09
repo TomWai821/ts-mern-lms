@@ -14,6 +14,7 @@ provider:
         file: Dockerfile
 
   environment:
+    REMOVE_RUNTIME_STRIP: "false"
     AWS_S3_BUCKET_NAME: ${self:custom.bucketName}
     MONGO_URI: ${env:MONGO_URI}
     PORT: 5000
