@@ -2,7 +2,8 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "src/index.ts",
-  "scripts": {
+  "scripts":
+  {
     "dev": "nodemon --files src/entry/local.ts",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/index.js",
@@ -11,7 +12,8 @@
     "test": "jest --coverage --verbose",
     "deploy": "npm run build && sls deploy"
   },
-  "dependencies": {
+  "dependencies":
+  {
     "@aws-sdk/client-s3": "^3.1024.0",
     "@aws-sdk/lib-storage": "^3.1019.0",
     "bcrypt": "^6.0.0",
@@ -24,7 +26,8 @@
     "multer": "^2.0.2",
     "multer-s3": "^3.0.1"
   },
-  "devDependencies": {
+  "devDependencies":
+  {
     "@eslint/js": "^8.57.1",
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",

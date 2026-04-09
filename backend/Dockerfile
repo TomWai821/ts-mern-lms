@@ -15,7 +15,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
-RUN ls -R dist/entry/lambda.js
+RUN ls -R dist/server.js
 
 # For Production 
 FROM node:22.14-alpine3.20
@@ -30,7 +30,6 @@ RUN npm ci --omit=dev --silent
 COPY --from=builder /app/dist ./dist
 
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=5000
 
 CMD ["node", "dist/server.js"]
-RUN ls -R dist

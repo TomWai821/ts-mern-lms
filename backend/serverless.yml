@@ -2,14 +2,22 @@ service: book-management-system
 
 provider:
   name: aws
-  runtime: nodejs18.x
-  region: us-east-1 
+  region: ap-east-1
   stage: dev
   memorySize: 512
   timeout: 15
+
+  ecr:
+    images:
+      appimage:
+        path: ./backend
+        file: Dockerfile
+
   environment:
     AWS_S3_BUCKET_NAME: ${self:custom.bucketName}
-    MONGO_URI: ${env:MONGO_URI} 
+    MONGO_URI: ${env:MONGO_URI}
+    PORT: 5000
+    READINESS_CHECK_PORT: 5000
   
   iam:
     role:
@@ -29,16 +37,12 @@ custom:
 
 functions:
   api:
-    handler: dist/entry/lambda.handler
+    image:
+      name: appimage
     events:
-      - http:
-          path: /
-          method: ANY
-          cors: true
-      - http:
-          path: '{proxy+}'
-          method: ANY
-          cors: true
+      - httpApi:
+          path: '*'
+
 
 resources:
   Resources:
