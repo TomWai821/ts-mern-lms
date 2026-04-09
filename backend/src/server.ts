@@ -6,7 +6,7 @@ import app from './app'
 
 export const startServer = async () =>
 {
-    const PORT = config.PORT || 5000;
+    const PORT = config.PORT as number;
 
     try
     {  
