@@ -20,8 +20,14 @@ app.use((req, res, next) =>
 
     if (req.method === 'OPTIONS') 
     {
-        return res.status(200).end();
+        console.log(`[CORS] Handling OPTIONS request for ${req.path} -> Returning 204`);
+        return res.sendStatus(204);
     }
+    
+    res.on('finish', () => 
+    {
+        console.log(`[API] ${req.method} ${req.originalUrl} - Status: ${res.statusCode}`);
+    });
     next();
 });
 
