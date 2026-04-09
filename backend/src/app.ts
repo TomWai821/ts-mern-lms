@@ -16,34 +16,28 @@ app.use((req, res, next) =>
 });
 
 app.use(cors(
+{
+    origin: (origin, callback) => 
     {
-        origin: (origin, callback) => 
+        if (!origin) return callback(null, true);
+
+        const isVercel = origin.endsWith(".vercel.app");
+        const isWhitelisted = avaliable_ORIGIN_URI.includes(origin);
+        
+        if (isVercel || isWhitelisted || origin === "http://localhost:3000") 
         {
-            
-            if (!origin) 
-            {
-                return callback(null, true);
-            }
-
-            const isAllowed = 
-                avaliable_ORIGIN_URI.indexOf(origin) !== -1 ||
-                origin.endsWith(".vercel.app") || 
-                origin === "http://localhost:3000";
-
-            if (isAllowed) 
-            {
-                callback(null, true);
-            } 
-            else 
-            {
-                console.log(`CORS Blocked for: ${origin}`);
-                callback(new Error('Not allowed by CORS'));
-            }
-        },
-        methods: ["GET", "POST", "DELETE", "PUT"],
-        allowedHeaders: ["content-type", "authToken"],
-        credentials: true
-    }
+            callback(null, true);
+        } 
+        else 
+        {
+            console.log(`CORS Blocked for: ${origin}`);
+            callback(null, false); 
+        }
+    },
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    allowedHeaders: ["content-type", "authToken"],
+    credentials: true
+}
 ));
 
 app.use(express.json());
