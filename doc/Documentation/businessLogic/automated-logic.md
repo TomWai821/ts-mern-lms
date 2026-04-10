@@ -7,7 +7,7 @@ These automated backend functions run silently in the background and are difficu
 
 ***1. Detect Record Functions***<br>
 ### TasksList
-<img src="../Image/Functions/DetectTask.png" style="width:50%;"/><br>
+<img src="../../Image/Functions/DetectTask.png" style="width:50%;"/><br>
 
 - **Decoupled Task Management**
     - Implemented a Centralised Task Registry using a functional approach
@@ -15,7 +15,7 @@ These automated backend functions run silently in the background and are difficu
 
 
 ### Task execution
-<img src="../Image/Functions/executeAllTask.png" style="width:70%;"/><br>
+<img src="../../Image/Functions/executeAllTask.png" style="width:70%;"/><br>
 To ensure high availability and data integrity, the system implements a Fault-Tolerant Execution Strategy:
 
 - **High-Throughput Execution**
@@ -32,9 +32,10 @@ To ensure high availability and data integrity, the system implements a Fault-To
         - A global try-catch wrapper acts as a final safety net, preventing unexpected asynchronous exceptions from crashing the Node.js runtime and ensuring service continuity
 
 
-### Scheduling Logic 
-<img src="../Image/Functions/DetectRecordDaily.png" style="width:75%;"/><br>
+### Scheduling Logic - Local
+<img src="../../Image/Functions/scheduleDailyMidnightTasks.png" style="width:75%;"/><br>
 To ensure consistent daily execution within a distributed cloud environment:
+
 - **Precision Scheduling Strategy**
     - **Initial Alignment**
         - setTimeout calculates the exact delay until the next target time (e.g., Midnight UTC+8)<br>
@@ -53,10 +54,24 @@ To ensure consistent daily execution within a distributed cloud environment:
     - **Immediate Reconciliation**
         - By triggering a synchronisation check upon server wake-up, the system ensures critical business logic is never missed and is processed immediately upon boot (Even if the server was "asleep" during the scheduled midnight slot)
 
+### Scheduling Logic - AWS (EventBridge)
+<img src="../../Image/Functions/dailyCronHandler_AWS.png" style="width:75%;"/><br>
+To ensure consistent daily execution within a distributed cloud environment:
+
+- **Serverless Scheduling Strategy**
+    - **Precision via EventBridge**
+        - Leveraging AWS native EventBridge for exact-time invocation (no manual drift calculation needed)
+
+    - **Stateless Execution**
+        - Each task run is a fresh, isolated invocation (Ensure zero cumulative time drift over months of operation)
+
+    - **Timezone Consistency** 
+        - Scheduling managed at the AWS Infrastructure level using UTC-based cron cron(0 16 * * ? *) to target Hong Kong Midnight
+
 
 ### Tasks
 ***1. Set Date Format to Midnight***<br>
-<img src="../Image/Functions/setToMidnight.png" style="width:60%;"/><br>
+<img src="../../Image/Functions/setToMidnight.png" style="width:60%;"/><br>
 
 A core utility function specifically designed for **Loan Book Record Detection**
 
@@ -79,7 +94,7 @@ A core utility function specifically designed for **Loan Book Record Detection**
     - **Result**: The difference is exactly **1 day**, correctly triggering the first-day fine
 
 ***2. Detect Expired Loan Book Records*** (Ref: backend/src/schema/book/bookloaned.ts, Line 159–196)<br>
-<img src="../Image/Functions/DetectExpiredLoanRecord.png" style="width:90%;"/><br>
+<img src="../../Image/Functions/DetectExpiredLoanRecord.png" style="width:90%;"/><br>
 
 This background task automatically scans and identifies overdue books, initialising the fine process for delinquent accounts:
 
@@ -99,7 +114,7 @@ This background task automatically scans and identifies overdue books, initialis
 
 
 ***3. Dynamic Fine Scaling & Adjustment*** (Ref: backend/src/schema/book/bookloaned.ts, Line 198–232)<br>
-<img src="../Image/Functions/FinesAmountCalculation.png" style="width:90%;"/><br>
+<img src="../../Image/Functions/FinesAmountCalculation.png" style="width:90%;"/><br>
 
 A robust background service designed for recurring calculation and dynamic scaling of overdue fines for "Not Paid" loan records
 
@@ -130,7 +145,7 @@ A robust background service designed for recurring calculation and dynamic scali
 
 
 ***4. Automatically Unsuspend User*** (Ref: backend/schema/user/suspendlist.ts, Line 99–137) <br>
-<img src="../Image/Functions/SuspendRecordDetection.png" style="width:90%;"/><br>
+<img src="../../Image/Functions/SuspendRecordDetection.png" style="width:90%;"/><br>
 This background task manages the automatic restoration of user accounts once their suspension period concludes
 
 - **Expiration Monitoring**

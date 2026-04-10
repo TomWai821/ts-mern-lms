@@ -145,10 +145,10 @@ After graduation, I dedicated myself to deep-diving into Software Engineering be
     - Developed a custom workflow utilising memoryStorage to simulate atomicity<br>
       (Ensured that file system mutations (e.g. HandleDeleteImage) only execute after verifying primary database operations)
     - **Action**
-        - Coordinated Deletion & Logical Rollback
+        - **Coordinated Deletion & Logical Rollback**
             - Leveraged Promise.allSettled to manage multi-document cleanup (Loans, Favourites, Book records)<br>
               (Ensure the physical image is only purged if the core record is successfully removed)
-        - Redundancy Control
+        - **Redundancy Control**
             - Implemented Regex sanitisation and strict execution order to prevent "orphaned" files and redundant filename timestamps during consecutive edits
 
   
@@ -184,13 +184,13 @@ All contact information provided in this file is fictitious and used solely for 
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
-- Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI, GOOGLE_BOOKS_API_KEY, GOOGLE_BOOKS_BASE_URL, BACKEND_BASE_URL
+- Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI, GOOGLE_BOOKS_API_KEY, GOOGLE_BOOKS_BASE_URL, BACKEND_BASE_URL, STORAGE_TYPE
 - Edit frontend/.env: set at minimum: REACT_APP_API_URL, REACT_APP_MAIN_PAGE
 
 **Notes about ports and hostnames** 
 - If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`). Docker Compose maps container ports to the host automatically
 - If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
-- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:5000`, `REACT_APP_API_URL=http://localhost:5000/api`, `REACT_APP_MAIN_PAGE=http://localhost:3000`, `BACKEND_BASE_URL=http://localhost:5000`
+- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:5000`, `REACT_APP_API_URL=http://localhost:5000/api`, `REACT_APP_MAIN_PAGE=http://localhost:3000`, `BACKEND_BASE_URL=http://localhost:5000`, `STORAGE_TYPE=LOCAL`
 
 ### 2. Launch with Docker Compose
 ```bash
@@ -199,15 +199,49 @@ docker-compose -f compose.yaml up --build -d
 
 
 ## Technology Stack
-- **Frontend:** React, Material-UI for styling(Leveraging CSS3 Standard), integrated react-router-dom for SPA(Single Page Application) navigation
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB with Mongoose (With Nodemon for development)
-- **Image Data Handling:** Multer for file uploads
-- **Data security:** JWT(JSON web token) for Authentication, Bcrypt for password hashing
-- **Environment Configuration:** dotenv for managing environment variables
-- **Algorithms:** TF‑IDF for recommendation engine
-- **CI/CD & Code quality:** GitHub Actions for CI/CD, Jest for ing, ESLint for linting
-- **Other**: RESTful APIs with modular design, Docker for containerisation and environment consistency
+- **Frontend** 
+    - React
+    - Material-UI for styling (Leveraging CSS3 Standard)
+    - React-router-dom for SPA (Single Page Application) navigation
+
+- **Backend** 
+    - Node.js
+    - Express.js
+
+- **Database** 
+    - MongoDB with Mongoose (With Nodemon for development)
+
+- **Image Data Handling** 
+    - Multer for file uploads
+    - FS for local image handling
+    - aws-sdk/client-s3 for s3 bucket image handling
+
+- **Data security** 
+    - JWT(JSON web token) for Authentication
+    - Bcrypt for password hashing
+
+- **Environment Configuration** 
+    - dotenv for managing environment variables
+
+- **Algorithms** 
+    - TF‑IDF for book recommendation engine
+
+- **CI/CD & Code quality**
+    - GitHub Actions for CI/CD
+    - Jest for testing
+    - ESLint for linting
+
+- **Cloud Infrastructure (AWS)** 
+    - Amazon S3 (Bucket Scalable object storage) for persistent handling of user-uploaded images
+    - AWS Lambda (Serverless computing platform) for executing backend logic with auto-scaling capabilities
+    - Amazon ECR (Container registry) for storing and managing production-ready Docker images
+    - IAM (Identity and Access Management) for secure cross-service communication (Implementing the principle of least privilege (PoLP))
+    - Amazon API Gateway for handling RESTful API requests and enforcing CORS security policies
+    - EventBridge for cron job handling
+
+- **Other**
+    - RESTful APIs with modular design
+    - Docker for containerisation and environment consistency
 
 
 
@@ -225,43 +259,43 @@ docker-compose -f compose.yaml up --build -d
     - Streamlined book loaning via QR Code integration, implementing a multi-token exchange protocol to facilitate identity verification and transaction authorization between the borrower and the librarian
       
 - **Security Architecture**
-    - Implemented JWT-based Authentication with Bcrypt hashing, utilizing Frontend Route Guards and Role-aware UI rendering for access control
+    - Implemented JWT-based Authentication with Bcrypt hashing, utilising Frontend Route Guards and Role-aware UI rendering for access control
 
 
 
 ## Technical Documentation
 For a detailed look at the system's engineering standards and design patterns, please refer to:
-- [Architecture](./doc/technical/architecture.md)
+- [Architecture](./doc/Documentation/technical/architecture.md)
     - System diagrams, database schema, and design patterns
-- [UI Layout](./doc/technical/ui-design.md)
+- [UI Layout](./doc/Documentation/technical/ui-design.md)
     - Component architecture and Role-Based UI rendering
-- [API Endpoints](./doc/technical/api.md)
+- [API Endpoints](./doc/Documentation/technical/api.md)
     - Full RESTful API documentation and endpoint details
-- [Testing Strategy](./doc/technical/testing.md)
+- [Testing Strategy](./doc/Documentation/technical/testing.md)
     - Unit/Integration test strategy and coverage reports
-- [CI/CD Workflow](./doc/technical/ci-cd.md)
+- [CI/CD Workflow](./doc/Documentation/technical/ci-cd.md)
     - Automation pipeline for testing and deployment
 
 
 
 ## Core Business Logic Overview
 This document outlines the implementation of the system's background automation, focusing on task scheduling and asynchronous execution stability
-- [Automated Logic](./doc/businessLogic//automated-logic.md)
+- [Automated Logic](./doc/Documentation/businessLogic//automated-logic.md)
     - Managed background tasks using setTimeout, setInterval, and Promise.allSettled to ensure resilient, non-blocking process execution
-- [TF-IDF Logic](./doc/businessLogic/tf-idf-logic.md)
+- [TF-IDF Logic](./doc/Documentation/businessLogic/tf-idf-logic.md)
     - Implemented a custom text-mining algorithm to calculate term weights for an intelligent book recommendation system
-- [External Metadata Integration](./doc/businessLogic/external-metadata.md)
+- [External Metadata Integration](./doc/Documentation/businessLogic/external-metadata.md)
     - Integrated Google Books API to automate book data retrieval and synchronize high-quality catalog metadata
-- [QR Code Handling (Frontend Only)](./doc/businessLogic/qr-code-handling.md)
+- [QR Code Handling (Frontend Only)](./doc/Documentation/businessLogic/qr-code-handling.md)
     - Implemented entirely on the frontend using a JSON-encoded object (username, userID) to facilitate real-time loan verification via interactive modals, eliminating unnecessary backend API overhead
 
 
 
 ## Product Evolution And Roadmap
 This project focuses on high-standard engineering practices. Key highlights include:
-- [Improvements](./doc/product/improvements.md)
+- [Improvements](./doc/Documentation/product/improvements.md)
     - Implemented I/O Concurrency (Promise.allSettled), Multi-stage Dockerisation, and FinOps-driven CI/CD (GitHub Actions + Railway GraphQL) to optimise resource consumption
-- [Product Limitation](./doc/product/limitations.md)
+- [Product Limitation](./doc/Documentation/product/limitations.md)
     - Strategic Limitations: A transparent analysis of current architectural trade-offs (3NF vs Performance), security considerations (XSS/JWT), and the future engineering roadmap
 
 
@@ -301,6 +335,7 @@ This project focuses on high-standard engineering practices. Key highlights incl
        - GOOGLE_BOOKS_API_KEY  —> Google Books API key
        - GOOGLE_BOOKS_BASE_URL —> e.g. https://www.googleapis.com/books/v1/volumes
        - BACKEND_BASE_URL -> the backend base url for image, e.g. http://localhost:5000
+       - STORAGE_TYPE -> the location of the image storage (S3 or LOCAL) 
 
     
 3. **Import data into MongoDB (Local only):**

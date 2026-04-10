@@ -57,3 +57,17 @@ export const scheduleDailyMidnightTasks = async () =>
         setInterval(executeAllTasks, 24 * 60 * 60 * 1000);
     }, delay);
 };
+
+export const dailyCronHandler = async (event: any, context: any) => 
+{
+    try 
+    {
+        await executeAllTasks();
+        return { statusCode: 200, body: "AWS EventBridge Tasks completed" };
+    } 
+    catch (error) 
+    {
+        console.error("Critical error in Lambda cron:", error);
+        return { statusCode: 500, body: "Internal server error" };
+    }
+};

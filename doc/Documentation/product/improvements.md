@@ -3,7 +3,6 @@
 ### Completed
 
 #### Frontend Side
-
 1. **Performance Optimisation (Route-based Lazy Loading)**
     - Implemented React Lazy & Suspense for Page Component Lazy Loading, significantly reducing the initial bundle size and improving the First Contentful Paint (FCP)
 
@@ -18,6 +17,7 @@
 4. **I/O Concurrency & Fault Tolerance (Promise.allSettled)**
     - Implemented concurrent API fetching using Promise.allSettled to parallelise independent data requests<br>
       (This ensures UI resilience, allowing the dashboard to render partially even if individual microservices or endpoints fail)
+
 
 #### Backend Side
 1. **Modularised backend routes for cleaner structure**
@@ -35,6 +35,13 @@
    - Decoupled Type Validation, Data Integrity checks, and Query Sanitisation into discrete, reusable stages to enforce strict Domain Logic before reaching the controller layer<Br>
      (Ref: ./backend/src/middleware/Book/ContactValidation.ts, DefinitionValidation.ts)
 
+5. **Hybrid Image Storage Engine**
+    - Engineered a dual-strategy storage layer that dynamically switches between Local FS and Amazon S3 via environment toggles
+    - This decouples business logic from infrastructure<br>
+      (Ensure a zero-dependency local setup while optimising for the Stateless architecture of AWS Lambda)<br>
+      (Ref: ./backend/src/service/image/*.ts)
+
+
 #### Infrastructure and Security
 1. **Multi-Environment Containerization (Docker)**
     - Implemented Dockerization with dedicated configurations for different stages<br>
@@ -50,6 +57,12 @@
 4. **Secure Configuration Management (dotenv)**
    - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code<br>
      (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
+
+5. **Scalable Cloud Migration (PaaS to AWS)** 
+    - Orchestrated a strategic migration from PaaS (Railway) to a Serverless (AWS Lambda) and Containerized (ECR) environment<br>
+      (This transition enhances operational control and enables auto-scaling capabilities to handle production-scale traffic efficiently)
+
+
 
 #### CI/CD
 1. **Automated Quality Gates** (GitHub Actions)
@@ -125,14 +138,10 @@
     - Migrate `authToken` storage to **HttpOnly Cookies** to mitigate **XSS (Cross-Site Scripting)** risks by preventing client-side script access
 
 #### CI/CD
-1. **Enterprise Cloud Migration (AWS/Azure)**
-    - Transitioning from PaaS (Railway/Vercel) to IaaS/FaaS (e.g., AWS EC2/Lambda or Azure App Service)<br>
-      (It provides granular control over server resources and networking configurations for production-scale traffic)
-
-2. **Comprehensive Test Coverage (Jest)**
+1. **Comprehensive Test Coverage (Jest)**
     - Expanding the testing suite to include Edge Case Validation and Boundary Testing across all API endpoints<br>
       (It aims to achieve 80%+ code coverage, ensuring high system resilience against unexpected user inputs and invalid payloads)
 
-3. **Automated System Testing (E2E)**
+2. **Automated System Testing (E2E)**
     - Implementing End-to-End (E2E) / System Testing to simulate real-world user journeys from Frontend to Database<br>
       (It provides a higher dimension of verification beyond isolated units, ensuring the entire integrated stack functions correctly as a single system)

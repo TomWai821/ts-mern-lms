@@ -12,9 +12,6 @@
 - **Testing:** Integration test coverage is constrained by project scope (Core authentication flows are validated)
 - **Error Handling:** Minimalised for demo clarity (Using `console.error` and standard 400/500 HTTP status codes)
 
-### CI/CD Pipeline
-- **Deployment:** Production deployment jobs are blocked (The current setup serves only to demonstrate CI/CD structure and backend validation)
-
 ### Hardware Dependencies
 - **Scanner Requirement:** Requires a physical scanner or camera for seamless QR input
 - **Manual Fallback:** In non-scanner environments, manual injection of the `authToken` is required to simulate the scanning trigger

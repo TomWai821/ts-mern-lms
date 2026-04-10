@@ -1,7 +1,7 @@
 ## TF-IDF Logic
 
 ****1. Calculate Term Frequency and Inverse Document Frequency****<br>
-<img src="../Image/Functions/TF-IDF_BasicFunction.png" style="width:60%;"/><br>
+<img src="../../Image/Functions/TF-IDF_BasicFunction.png" style="width:60%;"/><br>
 
 **Term Frequency (TF) - Build User Interest Profile**
 - **Usage**
@@ -9,7 +9,7 @@
     - It identifies which keywords (e.g., "Mystery", "Python", "Space") are most significant based on their recurrence in the user's past loans
 
 - **Formula**<br>
-  <img src="../Image/Formula/TF-formula.png" style="width:30%;"/><br>
+  <img src="../../Image/Formula/TF-formula.png" style="width:30%;"/><br>
 
 ****Inverse Document Frequency (IDF) - Feature Engineering****    
 - **Usage**
@@ -17,7 +17,7 @@
        (This ensures the system focuses on specific traits rather than common metadata)
     
 - **Formula**<br>
-  <img src="../Image/Formula/IDF-formula.png" style="width:30%;"/><br>
+  <img src="../../Image/Formula/IDF-formula.png" style="width:30%;"/><br>
 
 ****Vector Space Representation - Feature Encoding****
 - **Usage**
@@ -33,11 +33,11 @@
     - By calculating the angle between vectors, the engine identifies relevant recommendations (scores near 1.0) even if titles do not share exact word matches
 
 - **Formula**<br>
-  <img src="../Image/Formula/CosineSimilarity-formula.png" style="width:30%;"/><br>
+  <img src="../../Image/Formula/CosineSimilarity-formula.png" style="width:30%;"/><br>
 
 
 ***2. Calculation Logic (TF-IDF + Genre Weight)***<br>
-<img src="../Image/Functions/TF-IDF_CalculateFunction.png" style="width:95%;"/><br>
+<img src="../../Image/Functions/TF-IDF_CalculateFunction.png" style="width:95%;"/><br>
 
 ****Data Vectorisation (Corpus Construction)****
 - **Process**
@@ -72,7 +72,7 @@
     - To balance Discovery (finding new but semantically similar books) with Loyalty (prioritising the user's proven favourite categories)
 
 ***3. Data Normalisation And Corpus Construction***<br>
-<img src="../Image/Functions/TF-IDF_formatBookMetaData.png" style="width:60%;"/><br>
+<img src="../../Image/Functions/TF-IDF_formatBookMetaData.png" style="width:60%;"/><br>
 
 - **Process**
     - Implementing a Metadata Normalisation layer (formatBookMetadata) to sanitise raw book objects<br>
@@ -87,7 +87,7 @@
       (Serve as the primary input for high-dimensional TF-IDF feature extraction)
 
 ***4. TF-IDF Implementation***<br>
-<img src="../Image/Functions/TF-IDF_Implementation.png" style="width:90%;"/><br>
+<img src="../../Image/Functions/TF-IDF_Implementation.png" style="width:90%;"/><br>
 
 The core execution logic is designed to balance recommendation accuracy with system responsiveness:
 - **User Interest Modelling**

@@ -1,6 +1,6 @@
 // another file functions
 import { connectToMongoDB } from './init/connectToMongo';
-import { scheduleDailyMidnightTasks } from './utils/detectRecord';
+import { dailyCronHandler, scheduleDailyMidnightTasks } from './utils/detectRecord';
 import { config } from './config/config';
 import app from './app'
 
@@ -16,6 +16,22 @@ export const startServer = async () =>
         { 
             console.log(`Server listen to http://localhost:${PORT}`);
         });
+
+        switch (config.STORAGE_TYPE)
+        {
+            case 'LOCAL':
+                console.log('Storge environment is local, launch local detector...');
+                scheduleDailyMidnightTasks();
+                break;
+
+            case 'S3':
+                console.log('Storage environment is S3, AWS EventBridge handle the cron job...');
+                break;
+
+            default:
+                console.warn('No valid STORAGE_TYPE specified. Scheduled tasks will not run.');
+                break;
+        }
     }
     catch(error)
     {
@@ -25,8 +41,3 @@ export const startServer = async () =>
 }
 
 startServer();
-
-if(config.STORAGE_TYPE === 'LOCAL')
-{
-    scheduleDailyMidnightTasks();
-}

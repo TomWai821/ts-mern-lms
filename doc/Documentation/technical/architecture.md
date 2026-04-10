@@ -2,7 +2,7 @@
 
 ### System Architecture Overview
 ***Architecture Diagram - Development***
-<img src="../Image/Diagrams/ArchitectureDiagram_Development.png" style="width:90%;"/><br>
+<img src="../../../Image/Diagrams/ArchitectureDiagram_Development.png" style="width:90%;"/><br>
 
 1. **Development & Deployment Infrastructure**
 - **Environment Parity**
@@ -40,44 +40,48 @@
 
 
 ***Architecture Diagram - CD (Continuous Deployment)***<br>
-<img src="../Image/Diagrams/ArchitectureDiagram_CD.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/ArchitectureDiagram_CD.png" style="width:90%;"/><br>
 
-- The production stack leverages managed PaaS/SaaS for high availability and performance
-    - **Frontend**: Hosted on Vercel for optimised edge delivery
-    - **Backend**: Running on Railway with auto-scaling Node.js runtime
-    - **Database**: MongoDB Atlas (DBaaS) for managed security and global scaling
-    - **Security**: Secrets are injected via Platform UIs (Vercel/Railway), keeping credentials out of the source code
+- The production stack leverages managed Cloud/SaaS solutions for high availability and performance:
+  - **Frontend**: Hosted on Vercel for optimised edge delivery and seamless React integration
+  - **Backend**: Deployed on AWS Lambda via Amazon ECR (Docker Container Image), providing a scalable, serverless execution environment
+  - **API Management**: Managed by Amazon API Gateway to handle REST API requests and CORS validation
+  - **Storage**: Amazon S3 is utilised for persistent image storage and retrieval
+  - **Database**: MongoDB Atlas (DBaaS) for managed security and global scaling
+  - **Security**: Credentials are securely injected via Platform Secrets (Vercel/GitHub/AWS), ensuring zero-credential exposure in the source code
 
 ### Core Concept for the whole Architecture
 - Regardless of the environment (Local or Production), the core application logic remains consistent and follows a unified quality standard:
-    - **Modular Backend**: Follows the Route-Middleware-Controller pattern with Mongoose for data access
-    - **CI/CD Pipeline**: GitHub Actions serves as the central orchestrator:
-        - **Automation**: Triggers **Deploy Hooks (HTTP POST)** to **Vercel** to initiate automated frontend builds and deployments
-        - **Data Sync**: Interacts with the **Backend (Railway)** via **GraphQL Mutations** to automate data synchronisation or administrative tasks
-        - **Quality Gate**: Ensures code reliability through automated testing and linting before any deployment
+  - **Modular Backend**: Follows the Route-Middleware-Controller pattern with Mongoose for data access
+  
+  - **CI/CD Pipeline**: GitHub Actions serves as the central orchestrator:
+    - **Frontend Deployment**: Triggers Deploy Hooks to Vercel to initiate automated builds
+    - **Backend Deployment**: Automates the Docker Build & Push process to Amazon ECR and triggers Lambda function updates via AWS CLI
+    - **Stateless Architecture**: Ensures the backend remains stateless by offloading file management to Amazon S3 and data to MongoDB Atlas
+    - **Quality Gate**: Ensures code reliability through automated testing and linting before any deployment
 
 ### Frontend
 ***Sequence Diagram (Authentication)***
     
 1. Registration<br>
-<img src="../Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/RegisterSequenceDiagram.png" style="width:90%;"/><br>
 - This sequence diagram illustrates the modular backend registration flow — from frontend validation and request dispatch, to database interaction and token generation<br>
   (It ensures secure account creation with robust error handling and clean separation of concerns across services)<br>
        
 2. Login<br>
-<img src="../Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
 - This sequence diagram illustrates the login flow across frontend and backend layers — from validation and request dispatch to database verification and token generation<br>
   (It ensures secure authentication with proper error handling and modular separation across components such as middleware, endpoint logic, and MongoDB integration)<br>
     
 ***Sequence Diagram (Project Features)***
 1. External Data from Google Book API
-<img src="../Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
 - This sequence diagram illustrates the book data retrieval flow initiated by a frontend GET request to the Google Books API
 - When the user presses the book image, an event handler constructs and sends a request containing the book name and the author name
 - The event handler processes the returned data and renders the book results to the user interface (When receiving the response)
     
 2. QR Code Generation<br>
-<img src="../Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
 - This sequence diagram illustrates the QR Code generation flow initiated by a user interaction
 - When the user clicks the "Display QR Code" button, the event handler retrieves the authentication token and username from local or cookie storage
 - Then it parses the data and sends a request to the QR Code Generator service
@@ -86,21 +90,21 @@
     
 ***Sequence Diagram (CRUD operations)***
 1. Get data from the backend side<br>
-<img src="../Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/GetDataSequenceDiagram.png" style="width:90%;"/><br>
 - This sequence diagram illustrates the data retrieval flow initiated via a frontend GET request
 - The process involves middleware-level parsing, backend token validation, and data querying from MongoDB
 - With modular orchestration across services and structured response handling, it ensures secure and reliable delivery of data to the client<br>
     
     
 2. Data Creation
-<img src="../Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/CreateDataSequenceDiagram.png" style="width:90%;"/><br>
 - This sequence diagram illustrates the user confirmation flow, beginning with a frontend POST request and progressing through middleware parsing, backend validation, and MongoDB record creation
 - It demonstrates secure data handling with token verification, modular backend orchestration, and structured client response<br>
   (It ensures reliability and clarity in the user confirmation process)<br>
     
     
 3. Data Modification
-<img src="../Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/UpdateDataSequenceDiagram.png" style="width:90%;"/><br>
 - This sequence diagram illustrates the confirmation flow via a frontend PUT request<Br>
   (Showing how user-modified data is securely validated, parsed, and updated in the backend)<br>
 - The system ensures accurate record updates and clear client feedback with middleware safeguards, token verification, and modular backend orchestration
@@ -113,7 +117,7 @@
   (It ensures secure and reliable user operations through structured response handling and modular orchestration across services)<br>
 
 5. Get Data From Google Books (API Integration)
-<img src="../Image/Diagrams/GetDataFromGoogleBookAPI.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/GetDataFromGoogleBookAPI.png" style="width:90%;"/><br>
 - The application uses a Node.js middleware to bridge the React frontend with the Google Books API<br>
   (When a user searches for a book, the backend first validates the user's Auth Token for security)<br>
 - After fetching the raw data from the external API, the backend filters and refines the response into a clean payload<br>
@@ -123,7 +127,7 @@
 ### Backend
 
 ***Backend Process Flow Diagram and another function***<br>
-<img src="../Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
+<img src="../../Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
 Backend side using modular API design, therefore, using the backend process flow diagram is better than using a class diagram to explain the backend architecture
 | Component               | Usage                                                                                                  | Example Path (Backend - Book data)                                                              |
 | ----------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
@@ -155,7 +159,7 @@ Other functions (grouped, not on the main synchronous path)
 ### Database
 
 ***Entity-Relational Diagram(ERD)***<br>
-<img src="../Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
+<img src="../../Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 This ERD explain the database schema for the Library Management System
 
 
