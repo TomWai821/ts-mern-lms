@@ -124,53 +124,91 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
 Developed as an Information Technology Project (ITP) to modernise traditional library operations. The initial focus was on functional implementation: CRUD operations, QR Code integration, and a TF-IDF recommendation engine using the MERN stack
 
 ### The Engineering Evolution
-After graduation, I dedicated myself to deep-diving into Software Engineering best practices, specifically focusing on maintainability and scalability, key enhancements include:
-- **Architectural Overhaul**
-    - Migrated to a Layered Architecture (Router-Middleware-Controller-Service-Model) to ensure code decoupling and maintainability
-      
-- **Logic Refactoring**
-    - Shifted core business logic (e.g., Recommendation Engine) from frontend-side processing to the Backend Service Layer to improve data reliability and system performance
-      
-- **DevOps Integration**
-    - Implemented Docker containerisation and GitHub Actions (CI) for automated linting and integration testing
+After graduation, I refactored the entire system to align with industry-standard engineering principles, focusing on Decoupling, Resilience, and Cloud-Native scalability:
+
+- Architectural Overhaul: **Layered Decoupling**
+    - Transitioned from a monolithic script to a Layered Architecture (Router-Middleware-Controller-Service-Model)
+    
+    - **Impact**
+        - Isolated business logic from transport and persistence layers<br>
+        (Enable independent scaling of services and reducing regression risks during feature iterations)
+
+- Logic Refactoring: **Backend-Driven Computation**
+    - Offloaded heavy business logic (such as the TF-IDF Recommendation Engine, from the client-side to the Backend Service Layer)
+
+    - **Benefit**
+        - **Resource Decoupling**
+            - Prevented client-side browser freesing during high-intensity vector computations, ensuring a responsive interface regardless of the library's data volume
+
+        - **Centralised Computation** 
+            - Guaranteed a single source of truth for recommendation logic
+              (Ensure consistent results across all user sessions and facilitating future algorithmic updates without client-side redeployment)
+
+
+- DevOps Integration: **Environment Parity & CD Readiness**
+    - Orchestrated a Dockerized environment integrated with GitHub Actions to enforce a rigorous CI pipeline (Linting, Integration Testing)
+
+    - **Implementation**
+        - Specifically engineered the Dockerfile to be compatible with AWS Lambda Web Adapter (e.g., configuring port mapping and extension layers)
+
+    - **Impact**
+        - Achieved high-fidelity environment parity between local development and AWS Serverless runtime
+        - Effectively eliminating "it works on my machine" issues during the migration from PaaS to AWS
+
 
 
 ### Technical Learns 
 - System Architecture - **Layered Design (Router-Middleware-Controller-Service-Model)**
     - Designed a modular Express.js backend to achieve a clean Separation of Concerns
+
     - **Benefit**
         - Facilitates high code maintainability and allows independent testing of business logic and data access layers
   
 - Data Integrity & Consistency Management - **Reliable Image Persistence (Multer & fs/promises)**
     - Developed a custom workflow utilising memoryStorage to simulate atomicity<br>
       (Ensured that file system mutations (e.g. HandleDeleteImage) only execute after verifying primary database operations)
+
     - **Action**
         - **Coordinated Deletion & Logical Rollback**
             - Leveraged Promise.allSettled to manage multi-document cleanup (Loans, Favourites, Book records)<br>
               (Ensure the physical image is only purged if the core record is successfully removed)
+
         - **Redundancy Control**
             - Implemented Regex sanitisation and strict execution order to prevent "orphaned" files and redundant filename timestamps during consecutive edits
 
   
 - Type-Safe Development - **End-to-End TypeScript Integration**
     - Leveraged TypeScript across the full stack to enforce rigorous data structures and interface contracts
+
     - **Result**
         - Significantly reduced runtime TypeErrors and improved developer productivity through IDE intelligent code completion
   
 - Security Logic - **Multi-Party Authorisation (MPA) Framework**
     - Engineered a synchronised JWT handshake protocol to enforce Multi-Factor Authorisation for high-risk loaning operations
+
     - **Impact**
-        - Ensures critical state transitions are only executed when cryptographically verified by both the Borrower and Librarian simultaneously, effectively mitigating unauthorised access and insider threats
+        - Ensures critical state transitions are only executed when cryptographically verified by both the Borrower and Librarian simultaneously
+        - Effectively mitigating unauthorised access and insider threats
   
 - State Orchestration - **Performance-Oriented Frontend Architecture**
     - Optimised React performance by centralising global state with Context API and encapsulated logic within Custom Hooks
+
     - **Benefit**
         - Minimised unnecessary component re-renders and established a predictable, one-way data flow
       
-- Automated QA & DevOps - **CI/CD Pipeline & Containerisation**
-    - Built a robust DevOps pipeline using Docker and GitHub Actions to automate the development lifecycle
-    - **Standard**
-        - Enforces strict Linting and Integration Testing via Supertest/Jest before any code is deployed to the repository
+- Cloud-Native DevOps & Infrastructure - **Scaling from PaaS to Serverless**
+    - Orchestrated a strategic migration from PaaS (Railway) to an AWS-based Serverless environment using Docker (ECR) and AWS Lambda
+
+    - **Infrastructure Automation**
+        - Integrated Amazon EventBridge Scheduler to bypass Lambda’s stateless freezing, enabling precise daily business logic execution (Fines/Loans) without manual intervention
+
+    - **CI/CD Reliability**
+        - Engineered a GitHub Actions pipeline that enforces strict linting, Jest/Supertest integration testing 
+        - Automated ECR image builds to guarantee 100% environment parity between Local and Cloud
+        
+    - **Benefit**
+        - Achieved zero-downtime deployments 
+        - Established a "Write Once, Run Anywhere" hybrid architecture that seamlessly handles both persistent API traffic and scheduled background tasks
 
 
 ### Disclaimer

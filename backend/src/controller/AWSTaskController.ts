@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { executeAllTasks } from '@/utils/detectRecord';
+import { executeAllTasks } from '../utils/detectRecord';
 
 export const AWSTaskDetect = async (req: Request, res: Response) => 
 {
