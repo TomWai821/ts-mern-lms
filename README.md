@@ -72,6 +72,7 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
     - Navigate to Management > Book Management.
     - Select any OnLoan book and click View Loan Book History
         - **Observe**: Automatically redirects to the Loan History tab, displaying the book's full history, including Loaned Date, Return Date, Borrower, and Record Status
+    - Click the action button (Next to the search button) and select reset filter
 
 3. Administrative Loan (Requires 2 Browsers)
     - (Librarian Browser): Navigate to Management > Book Management
