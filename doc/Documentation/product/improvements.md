@@ -112,10 +112,10 @@
     - Replace basic `setInterval` + `setTimeout` with **node-cron** or cloud-based schedulers for better reliability and error handling
     
 3. **Standardised Response Wrapper**
-    - Implement a unified response structure (e.g. `errorCode`, `errorMessage`, `totalCount`) to improve API usability (Ref: [Improvement.ts](../../../backend/src/improvement))
+    - Implement a unified response structure (e.g. `errorCode`, `errorMessage`, `totalCount`) to improve API usability (Ref: [Improvement Directory](../../../backend/src/Improvement))
     
 4. **Generic CRUD Factory (OOP & Factory Pattern)**
-    - Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: [CRUDFactory.ts](../../../backend/src/improvement/CRUDFactory.ts))
+    - Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: [CRUDFactory.ts](../../../backend/src/Improvement/CRUDFactory.ts))
 
 5. **ACID Transactions (Multi-collection Consistency)**
     - Transitioning complex Write/Delete operations from **Promise.all** to **MongoDB Transactions** to ensure strict atomicity across related collections (e.g. cascading deletes) in production replica-set environments

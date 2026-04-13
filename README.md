@@ -350,7 +350,8 @@ This project focuses on high-standard engineering practices. Key highlights incl
     cd TS_MERN_LMS
 
 2. **Set up environment variable:**
-    `.example` templates are included at `./frontend/.env.example` and `./backend/.env.example`. Copy the appropriate file, fill required values, then remove the `.example` suffix to run.
+    - `.example` templates are included [Frontend .env example](./frontend/.env.example) and [Backend .env example](./backend/.env.example)
+    - Copy the appropriate file, fill required values, then remove the `.example` suffix to run.
     ### Frontend
     1. Copy template:
        ```bash
@@ -399,13 +400,21 @@ This project focuses on high-standard engineering practices. Key highlights incl
 
     **Remarks**
     - The `./backend/MongoDBSchema` folder is mounted to `/docker-entrypoint-initdb.d` in the MongoDB container
-    - These initialization scripts run **only when the `db-data` volume is created for the first time**; if the `db-data` volume already contains data, the scripts will be skipped
+
+    - These initialisation scripts run **only when the `db-data` volume is created for the first time**<br>
+      (If the `db-data` volume already contains data, the scripts will be skipped)
+
     - To re-run initialization and restore the demo data, remove the volume and restart the stack:
       1. `docker compose -f compose.yaml down -v`  # WARNING: permanently deletes all persisted DB data
       2. `docker compose -f compose.yaml up --build`
-    - The backend requires this demo data for proper functionality; if you run MongoDB locally instead of via Docker, import the JSON files in `./backend/MongoDBSchema` (e.g., via MongoDB Compass)
+
+    - The backend requires this demo data for proper functionality
+      (If you run MongoDB locally instead of via Docker, import the Schema [JSON files](./backend/MongoDBSchema) (e.g. via MongoDB Compass))
+
     - Changing `JWT_SECRET` will invalidate existing JWTs and require users to re-login
+
     - `STORAGE_TYPE` will affect the logic on image handling and it is require in the .env
+
     - Modify build `target` and backend `NODE_ENV` to development before build the docker compose
 
 
