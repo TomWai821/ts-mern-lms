@@ -11,10 +11,9 @@ on:
       
 jobs:
   deploy-backend:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: push-to-aws
     runs-on: ubuntu-latest
     steps:
-      # 1. Configure AWS credentials 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -22,12 +21,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 2. Update Lambda function code with new image
       - name: Update Lambda function code
         run: |
+          IMAGE="${{ needs.push-to-aws.outputs.registry }}/ts_mern_lms-backend@${{ needs.push-to-aws.outputs.digest }}"
+          echo "Updating Lambda with $IMAGE"
           aws lambda update-function-code \
             --function-name ${{ secrets.AWS_LAMBDA_FUNCTION_NAME }} \
-            --image-uri ${{ needs.push-to-aws.outputs.registry }}/ts_mern_lms-backend@${{ needs.push-to-aws.outputs.digest }}
+            --image-uri "$IMAGE" \
+            --region ${{ secrets.AWS_REGION }}
+
 
   deploy-frontend:
     runs-on: ubuntu-latest

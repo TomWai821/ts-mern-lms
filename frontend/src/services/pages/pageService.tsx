@@ -17,7 +17,7 @@ const getTitle = (pageList: pageList, tabValue: number, IsAdmin: () => boolean) 
     return TitleList[pageList][tabValue];
 }
 
-export const usePageData = (pageList: pageList, IsAdmin?: () => boolean) =>
+export const usePageService = (pageList: pageList, IsAdmin?: () => boolean) =>
 {
     const [tabValue, setTabValue] = useState(0);
     const [paginationValue, setPaginationValue] = useState(10);

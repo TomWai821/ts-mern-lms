@@ -17,7 +17,7 @@ import { useAuthContext } from "../../../Context/User/AuthContext";
 import { UserDataInterface } from "../../../Model/UserTableModel";
 
 // Custom Hook in services (Page Data and Filter)
-import { usePageData } from "../../../services/pages/pageService";
+import { usePageService } from "../../../services/pages/pageService";
 import { useUserFilter } from "../../../services/filters/userFilter";
 
 const UserPage = () =>
@@ -25,7 +25,7 @@ const UserPage = () =>
     const { IsAdmin } = useAuthContext();
     const { userData } = useUserContext();
 
-    const { title, tabValue, paginationValue, changeValue } = usePageData("User", IsAdmin);
+    const { title, tabValue, paginationValue, changeValue } = usePageService("User", IsAdmin);
     const { searchUserData, setSearchUserData, onChange, SearchUser, resetFilter } = useUserFilter(tabValue);
 
     useEffect(() => 

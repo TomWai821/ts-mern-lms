@@ -17,14 +17,14 @@ import { ChangePage } from "../../../Controller/OtherController";
 import { useAuthContext } from "../../../Context/User/AuthContext";
 
 // Custom Hook in services
-import { usePageData } from "../../../services/pages/pageService";
+import { usePageService } from "../../../services/pages/pageService";
 import { useContactFilter } from "../../../services/filters/contactFilter";
 
 const ContactPage = () =>
 {
     const { IsAdmin } = useAuthContext();
     const { contact } = useContactContext();
-    const { title, tabValue, paginationValue, changeValue } = usePageData("Contact", IsAdmin);
+    const { title, tabValue, paginationValue, changeValue } = usePageService("Contact", IsAdmin);
     const { searchContact, onChange, SearchContact, resetFilter, countLength } = useContactFilter(tabValue);
 
     useEffect(() => 

@@ -71,6 +71,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ needs.build.result == 'success' }}
+    outputs:
+      registry: ${{ steps.login-ecr.outputs.registry }}
+      digest: ${{ steps.image-digest.outputs.digest }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -104,7 +107,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           set -e
-          REGISTRY=${{ steps.login-ecr.outputs.registry }}
           DIGEST=""
           for i in 1 2 3 4 5; do
             DIGEST=$(aws ecr describe-images \
@@ -123,16 +125,4 @@ jobs:
             echo "Failed to obtain image digest" >&2
             exit 1
           fi
-          echo "registry=$REGISTRY" >> $GITHUB_OUTPUT
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
-
-      - name: Update Lambda with image digest
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: |
-          IMAGE_WITH_DIGEST=${{ steps.login-ecr.outputs.registry }}/ts_mern_lms-backend@${{ steps.image-digest.outputs.digest }}
-          echo "Updating Lambda with $IMAGE_WITH_DIGEST"
-          aws lambda update-function-code \
-            --function-name ${{ secrets.AWS_LAMBDA_FUNCTION_NAME }} \
-            --image-uri "$IMAGE_WITH_DIGEST" \
-            --region ${{ secrets.AWS_REGION }}

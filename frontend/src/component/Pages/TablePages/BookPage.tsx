@@ -16,7 +16,7 @@ import { BookTabLabel, PaginationOption } from "../../../Data/TableData";
 import { useAuthContext } from "../../../Context/User/AuthContext";
 
 // Custom Hook in services (Page Data and Filter)
-import { usePageData } from "../../../services/pages/pageService";
+import { usePageService } from "../../../services/pages/pageService";
 import { useBookFilter } from "../../../services/filters/bookFilter";
 
 const BookPage = () =>
@@ -24,7 +24,7 @@ const BookPage = () =>
     const { bookData } = useBookContext();
     const { IsAdmin } = useAuthContext();
 
-    const { title, tabValue, paginationValue, changeValue } = usePageData("Book", IsAdmin);
+    const { title, tabValue, paginationValue, changeValue } = usePageService("Book", IsAdmin);
     const { searchBook, setSearchBook, onChange, SearchBook, resetFilter } = useBookFilter(tabValue);
 
     useEffect(() => 
