@@ -68,71 +68,71 @@ jobs:
 
   # Create digest after build test and push to AWS ECR, then trigger CD pipeline on success
   push-to-aws:
-  runs-on: ubuntu-latest
-  needs: build
-  if: ${{ needs.build.result == 'success' }}
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ needs.build.result == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ts_mern_lms-backend
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker build -t $IMAGE_URI ./backend
-        docker push $IMAGE_URI
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ts_mern_lms-backend
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker build -t $IMAGE_URI ./backend
+          docker push $IMAGE_URI
 
-    - name: Get image digest
-      id: image-digest
-      env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-        ECR_REPOSITORY: ts_mern_lms-backend
-        IMAGE_TAG: ${{ github.sha }}
-      run: |
-        set -e
-        REGISTRY=${{ steps.login-ecr.outputs.registry }}
-        DIGEST=""
-        for i in 1 2 3 4 5; do
-          DIGEST=$(aws ecr describe-images \
-            --repository-name "$ECR_REPOSITORY" \
-            --image-ids imageTag="$IMAGE_TAG" \
-            --region "$AWS_REGION" \
-            --query 'imageDetails[0].imageDigest' --output text 2>/dev/null || true)
-          if [ -n "$DIGEST" ] && [ "$DIGEST" != "None" ]; then
-            echo "Found digest: $DIGEST"
-            break
+      - name: Get image digest
+        id: image-digest
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REPOSITORY: ts_mern_lms-backend
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -e
+          REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          DIGEST=""
+          for i in 1 2 3 4 5; do
+            DIGEST=$(aws ecr describe-images \
+              --repository-name "$ECR_REPOSITORY" \
+              --image-ids imageTag="$IMAGE_TAG" \
+              --region "$AWS_REGION" \
+              --query 'imageDetails[0].imageDigest' --output text 2>/dev/null || true)
+            if [ -n "$DIGEST" ] && [ "$DIGEST" != "None" ]; then
+              echo "Found digest: $DIGEST"
+              break
+            fi
+            echo "Digest not found yet, retrying ($i)..."
+            sleep 3
+          done
+          if [ -z "$DIGEST" ] || [ "$DIGEST" = "None" ]; then
+            echo "Failed to obtain image digest" >&2
+            exit 1
           fi
-          echo "Digest not found yet, retrying ($i)..."
-          sleep 3
-        done
-        if [ -z "$DIGEST" ] || [ "$DIGEST" = "None" ]; then
-          echo "Failed to obtain image digest" >&2
-          exit 1
-        fi
-        echo "registry=$REGISTRY" >> $GITHUB_OUTPUT
-        echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+          echo "registry=$REGISTRY" >> $GITHUB_OUTPUT
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
 
-    - name: Update Lambda with image digest
-      env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-      run: |
-        IMAGE_WITH_DIGEST=${{ steps.login-ecr.outputs.registry }}/ts_mern_lms-backend@${{ steps.image-digest.outputs.digest }}
-        echo "Updating Lambda with $IMAGE_WITH_DIGEST"
-        aws lambda update-function-code \
-          --function-name my-backend-function \
-          --image-uri "$IMAGE_WITH_DIGEST" \
-          --region ${{ secrets.AWS_REGION }}
+      - name: Update Lambda with image digest
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          IMAGE_WITH_DIGEST=${{ steps.login-ecr.outputs.registry }}/ts_mern_lms-backend@${{ steps.image-digest.outputs.digest }}
+          echo "Updating Lambda with $IMAGE_WITH_DIGEST"
+          aws lambda update-function-code \
+            --function-name my-backend-function \
+            --image-uri "$IMAGE_WITH_DIGEST" \
+            --region ${{ secrets.AWS_REGION }}
