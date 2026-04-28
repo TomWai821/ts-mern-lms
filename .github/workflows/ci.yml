@@ -96,6 +96,13 @@ jobs:
           docker build -t $IMAGE_URI ./backend
           docker push $IMAGE_URI
 
+      - name: Debug AWS identity and registry
+        run: |
+          echo "Registry: ${{ steps.login-ecr.outputs.registry }}"
+          aws sts get-caller-identity --output json
+          aws lambda list-functions --region ${{ secrets.AWS_REGION }} --output json
+
+
       - name: Get image digest
         id: image-digest
         env:
