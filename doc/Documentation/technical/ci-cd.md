@@ -1,45 +1,43 @@
 ## CI/CD
 
 ### Continuous Integration (CI)
-- **Automated Pipeline**
-    - Orchestrated with GitHub Actions to trigger on every Push and Pull Request
+- Implemented GitHub Actions workflows triggered on every Push/PR to enforce CI/CD
 
 - **Quality Assurance**
-    - **Frontend**: Executes Unit Testing with Jest to ensure UI logic reliability
-    - **Backend**: Performs Integration Testing to validate full API request-response cycles and database interactions
+    - **Frontend**: Unit tests with Jest to validate UI logic
+    - **Backend**: Integration tests to verify API request‑response cycles and DB interactions
 
 - **Linting**
-    - Enforces code consistency via ESLint across the entire stack
+    - Enforced code consistency across the stack with ESLint
 
 - **Artefact Management**
-    - Automatically generates and uploads backend Test Coverage Reports as CI artefacts for reviewer visibility
+    - Generated backend coverage reports as CI artefacts for reviewer visibility
+    - Built backend Docker images and pushed to Amazon ECR
+    - Captured image digest as CI output, ensuring deployments reference immutable artefacts instead of latest tags
 
 - **Docker Integration**
-    - Automates Docker Image builds within the pipeline to ensure cross-environment reproducibility
+    - Automated multi‑stage Docker builds to guarantee reproducibility across environments
+
 
 
 ### Continuous Deployment (CD)
 - **Multi-Platform Deployment Strategy**
     - **Frontend (Vercel)**
-        - **Orchestrated Deployment**
-            - Replaced default auto-update with Vercel Deploy Hooks triggered via GitHub Actions
-      
-        - **Resource Optimisation**
-            - Implemented Ignored Build Step to prevent redundant builds and ensure the frontend only updates after the backend service is confirmed ready
+        - Integrated Deploy Hooks via GitHub Actions to replace default auto‑update
+        - Optimised builds with Ignored Build Step so frontend updates only after backend readiness<br>
         
     - **Backend (AWS ECR + S3 Bucket + Lambda)**
-        - **Automated Deployment Orchestration**
-            - Integrated with GitHub Actions to automate the build-and-push process to Amazon ECR. The pipeline triggers an immediate code update to AWS Lambda
-              (Ensure the production environment is always synchronised with the latest main branch)
-    - **Containerised Portability & Scalability**
-        - Engineered a production-ready Dockerfile to encapsulate the Node.js environment
-          (Ensure consistent runtime behavior across local development and AWS Serverless infrastructure)
-    - **Serverless Resource Optimisation**
-        - Leveraged AWS Lambda's event-driven architecture to eliminate idle server costs, moving away from fixed subscription models to a more cost-effective Pay-as-you-go strategy
+        - Automated deployment pipeline updates Lambda functions using CI‑generated image digests<br>
+          (Guaranteeing synchronised production with tested artefacts)
+        - Engineered production‑ready Dockerfile for consistent runtime across local and AWS Serverless environments
+        - Leveraged Lambda’s event‑driven architecture to eliminate idle server costs<br>
+          (Adopting a cost‑effective pay‑as‑you‑go model)
         
     - **Database (MongoDB Atlas)**
         - **DBaaS Integration**
-            - Integrated a cloud-managed Database-as-a-Service (DBaaS) layer (Connection strings are securely injected via Railway's environment variables to ensure data persistence across container redeployments)
+            - Direct Lambda integration with MongoDB Atlas for structured data (books, loans, users)
+            - Amazon S3 used for book image storage and static assets<br>
+              (Delivered securely via presigned URLs)
 
 - **Deployment Status and Records**
     - **Images**<br>
@@ -55,13 +53,13 @@
 
     - **Deployment Secret Explanation**
 
-    | Secret Name              | Description / Purpose                                                                     | How to Obtain                                                  |
-    | ------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-    | VERCEL_DEPLOY_HOOK       | Triggers automated deployment for the Frontend on Vercel                                  | Vercel Project Settings > Git > Deploy Hooks                   |    
-    | AWS_ACCESS_KEY_ID        | Unique identifier for the IAM user to authorize GitHub Actions to access AWS resources    | IAM > Users > [Your-User] > Security credentials > Access keys |
-    | AWS_SECRET_ACCESS_KEY    | Confidential private key used in conjunction with the Access Key ID for authentication    | Displayed in the AWS Console navigation bar (top-right corner) |
-    | AWS_REGION               | The physical location of the AWS data center where resources are hosted (e.g. ap-east-1)  | Display at the navigation bar (Right-hand side)                |
-    | AWS_LAMBDA_FUNCTION_NAME | The specific name of the target Lambda function to be updated during the CD process       | Lambda > Functions > [Your-Function-Name]                      |
+    | Secret Name              | Description / Purpose                                     | How to Obtain                                                  |
+    | ------------------------ | --------------------------------------------------------- | -------------------------------------------------------------- |
+    | VERCEL_DEPLOY_HOOK       | Triggers automated deployment for the Frontend on Vercel  | Vercel Project Settings → Git → Deploy Hooks                   |    
+    | AWS_ACCESS_KEY_ID        | IAM user identifier for GitHub Actions                    | AWS Console → IAM → Users → Security creds                     |
+    | AWS_SECRET_ACCESS_KEY    | Private key paired with Access Key ID                     | AWS Console → IAM → Users → Create Access Key (shown once)     |
+    | AWS_REGION               | Target region for AWS resources (e.g. ap-east-1)          | AWS Console → Region selector (top bar)                        |
+    | AWS_LAMBDA_FUNCTION_NAME | Target Lambda function for CD updates                     | AWS Console → Lambda → Functions                               |
 
 
     - **Security And Operational Excellence**
@@ -73,12 +71,16 @@
             
 - **Changes**
     - **Production Environment Realignment**
-        - Migrated BACKEND_BASE_URL and BASE_URL from localhost to platform-specific production endpoints (Vercel/AWS)<br>
-          (It ensured seamless communication between the decoupled frontend and backend services in a live cloud environment)<br>
+        - Migrated BACKEND_BASE_URL and BASE_URL from localhost to production endpoints (Vercel / AWS API Gateway)<br>
+          (Ensured seamless communication between decoupled frontend and backend services in a live cloud environment)
           
     - **Security & CORS Optimisation**
-        - Enhanced the ORIGINAL_URI configuration to support Multiple Origins<br>
-          (It allowed the backend to securely accept requests from both the Vercel production domain and local development environments simultaneously, improving workflow flexibility without compromising security)
+        - Enhanced ORIGINAL_URI configuration to support multiple origins<br>
+          (Allowed backend to securely accept requests from both Vercel production domain and local development environments, improving workflow flexibility without compromising security)
+
+    - Immutable Artefact Deployment
+        - CI pipeline builds and pushes Docker images to AWS ECR, capturing image digest as output<br>
+          (Ensures CD stage updates Lambda using tested artefacts instead of latest tags, guaranteeing reproducibility and reducing regression risk)
 
 
 ### Remarks
@@ -86,6 +88,7 @@
     - The entire CI/CD workflow is managed and automated via GitHub Actions workflows
     - CI/CD workflow definitions are located in `.github/workflows/`<br>
       (The whole process could be viewed in the actions tab -> All workflows, CD workflow = CD pipeline)
+
 - **For CD (AWS Deployment)**
     - **Production Environment Realignment**
         - Migrated backend hosting from Railway to AWS Lambda (Container Image via ECR)
