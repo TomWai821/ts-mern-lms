@@ -10,6 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Ensure triggering CI run included successful push-to-aws
+        env:
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Checking triggering run id=$RUN_ID for push-to-aws job"
+          JOBS_JSON=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/runs/${RUN_ID}/jobs")
+          # find job named exactly "push-to-aws"
+          PUSH_CONCLUSION=$(echo "$JOBS_JSON" | jq -r '.jobs[] | select(.name=="push-to-aws") | .conclusion' || true)
+          if [ -z "$PUSH_CONCLUSION" ]; then
+            echo "No push-to-aws job found in triggering run (run id=$RUN_ID). Exiting to avoid unintended deploy."
+            exit 0
+          fi
+          if [ "$PUSH_CONCLUSION" != "success" ]; then
+            echo "push-to-aws job did not succeed (status: $PUSH_CONCLUSION). Exiting."
+            exit 0
+          fi
+          echo "push-to-aws job present and successful."
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -23,9 +43,9 @@ jobs:
           ECR_REPOSITORY: ts_mern_lms-backend
           IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
         run: |
-          set -e
+          set -euo pipefail
           DIGEST=""
-          for i in 1 2 3 4 5; do
+          for i in 1 2 3 4 5 6; do
             DIGEST=$(aws ecr describe-images \
               --repository-name "$ECR_REPOSITORY" \
               --image-ids imageTag="$IMAGE_TAG" \
@@ -36,7 +56,7 @@ jobs:
               break
             fi
             echo "Digest not found yet, retrying ($i)..."
-            sleep 5
+            sleep $((i < 4 ? 3 : 6))
           done
           if [ -z "$DIGEST" ] || [ "$DIGEST" = "None" ]; then
             echo "ERROR: Failed to obtain image digest for tag $IMAGE_TAG" >&2
@@ -44,22 +64,61 @@ jobs:
           fi
           echo "IMAGE_DIGEST=$DIGEST" >> $GITHUB_ENV
 
-      - name: Update Lambda with image digest
+      - name: Update Lambda with image digest and wait
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          IMAGE_DIGEST: ${{ env.IMAGE_DIGEST }}
+          ECR_REPOSITORY: ts_mern_lms-backend
+          LAMBDA_NAME: ${{ secrets.AWS_LAMBDA_FUNCTION_NAME }}
         run: |
+          set -euo pipefail
+          # construct registry if not provided
           if [ -n "${{ secrets.ECR_REGISTRY }}" ]; then
             REGISTRY="${{ secrets.ECR_REGISTRY }}"
           else
             ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
             REGISTRY="$ACCOUNT_ID.dkr.ecr.${AWS_REGION}.amazonaws.com"
           fi
-          IMAGE="$REGISTRY/ts_mern_lms-backend@${IMAGE_DIGEST}"
-          echo "Updating Lambda with $IMAGE"
-          aws lambda update-function-code \
-            --function-name ${{ secrets.AWS_LAMBDA_FUNCTION_NAME }} \
+          IMAGE="$REGISTRY/${ECR_REPOSITORY}@${IMAGE_DIGEST}"
+          echo "Updating Lambda with image: $IMAGE"
+
+          RESPONSE_JSON=$(aws lambda update-function-code \
+            --function-name "$LAMBDA_NAME" \
             --image-uri "$IMAGE" \
-            --region $AWS_REGION
+            --region "$AWS_REGION" \
+            --output json)
+
+          echo "$RESPONSE_JSON" > lambda_response.json
+          jq -r '{FunctionName, FunctionArn, CodeSha256, RevisionId, LastUpdateStatus, LastUpdateStatusReason, LastUpdateStatusReasonCode}' lambda_response.json || true
+
+          # poll for completion
+          echo "Polling Lambda LastUpdateStatus..."
+          MAX_RETRIES=20
+          SLEEP_SECONDS=6
+          for i in $(seq 1 $MAX_RETRIES); do
+            STATUS_JSON=$(aws lambda get-function-configuration --function-name "$LAMBDA_NAME" --region "$AWS_REGION" --output json)
+            STATUS=$(echo "$STATUS_JSON" | jq -r '.LastUpdateStatus // "Unknown"')
+            REASON=$(echo "$STATUS_JSON" | jq -r '.LastUpdateStatusReason // ""')
+            echo "Attempt $i: LastUpdateStatus=$STATUS"
+            if [ "$STATUS" = "Successful" ]; then
+              echo "Lambda update succeeded."
+              echo "$STATUS_JSON" > lambda_final_status.json
+              jq -r '{FunctionName, FunctionArn, CodeSha256, RevisionId, LastUpdateStatus, LastUpdateStatusReason}' lambda_final_status.json || true
+              exit 0
+            fi
+            if [ "$STATUS" = "Failed" ]; then
+              echo "Lambda update failed: $REASON" >&2
+              echo "$STATUS_JSON" > lambda_final_status.json
+              jq -r '.' lambda_final_status.json || true
+              exit 1
+            fi
+            sleep $SLEEP_SECONDS
+          done
+
+          echo "Timed out waiting for Lambda update to complete" >&2
+          echo "Last known status:"
+          jq -r '.' lambda_final_status.json || true
+          exit 1
 
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -70,13 +129,10 @@ jobs:
         env:
           VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
-          # POST and capture HTTP code separately from body
           HTTP_CODE=$(curl -s -o response.json -w "%{http_code}" -X POST "${VERCEL_DEPLOY_HOOK}")
           RESPONSE_BODY=$(cat response.json || true)
-
           echo "Vercel HTTP Code: $HTTP_CODE"
           echo "Vercel Response: $RESPONSE_BODY"
-
           if [ "$HTTP_CODE" -eq 201 ] || [ "$HTTP_CODE" -eq 200 ]; then
             echo "Vercel deployment triggered successfully!"
           else
