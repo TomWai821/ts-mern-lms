@@ -21,7 +21,7 @@ This Information Technology Project (ITP) is a library management system enginee
 
 
 - For a structured walkthrough, please refer to: `./doc/DemonstrationMaterial/*` (Includes sample data and test scenarios)
-- First load may take 10-15s due to free tier hosting (Railway)
+- Initial request may experience a 3–5s delay due to AWS Lambda cold start (dormant environment)
 
 ### Feature Showcase: Real-time Discovery & Management
 #### For User
