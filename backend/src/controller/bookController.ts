@@ -1,15 +1,12 @@
 import { Request, Response } from 'express'
-import { CreateBook, FindBookByID, FindBookByIDAndDelete, FindBookByIDAndUpdate } from '../schema/book/book';
+import { CreateBook, FindBookByIDAndDelete, FindBookByIDAndUpdate } from '../schema/book/book';
 import { AuthRequest, EditImageInterface } from '../model/requestInterface';
-import { BookInterface } from '../model/bookSchemaInterface';
-import { FindBookLoanedAndDelete } from '../schema/book/bookLoaned';
-import { FindBookFavouriteAndDeleteMany } from '../schema/book/bookFavourite';
 
 import { externalBookService } from '../service/book/externalBookService';
 import { ImageDataBuilder, UploadImage } from '../service/image/bookCreateImageService';
 import { HandleDeleteImage } from '../service/image/bookDeleteImageService';
 import { getStorageStrategy } from '../storage/StorageFactory';
-import { BookDeletionService } from '@/service/book/bookDeleteDataService';
+import { BookDeletionService } from '../service/book/bookDeleteDataService';
 
 export const GetBookRecord = async (req: AuthRequest, res: Response) => 
 {

@@ -19,7 +19,7 @@ import { useAuthContext } from "../../../Context/User/AuthContext";
 import { useSelfBookRecordContext } from "../../../Context/Book/SelfBookRecordContext";
 
 // Custom Hook in services (Page Data and Filter)
-import { usePageService } from "../../../services/pages/pageService";
+import { getTablePageTitle, usePageService } from "../../../services/pages/pageService";
 import { useSelfRecordFilter } from "../../../services/filters/selfRecordFIlter";
 
 const SelfRecordPage = () => 
@@ -27,8 +27,11 @@ const SelfRecordPage = () =>
     const { IsLoggedIn } = useAuthContext();
     const { BookRecordForUser} = useSelfBookRecordContext();
 
-    const { title, tabValue, paginationValue, changeValue } = usePageService("SelfRecord");
+    const { tabValue, paginationValue, changeValue } = usePageService();
+    
     const { searchData, onChange, searchSelfRecord, resetFilter } = useSelfRecordFilter(tabValue);
+
+    const { title } = getTablePageTitle("SelfRecord", tabValue);
 
     useEffect(() => 
     {
