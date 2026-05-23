@@ -29,7 +29,6 @@ export const externalBookService = async (bookname: string, author: string) =>
         const url = `${baseUrl}?q=${query}&key=${apiKey}`;
 
         const response = await fetch(url);
-        console.log(url);
 
         if (!response.ok) 
         {

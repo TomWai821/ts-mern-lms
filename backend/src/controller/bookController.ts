@@ -9,6 +9,7 @@ import { externalBookService } from '../service/book/externalBookService';
 import { ImageDataBuilder, UploadImage } from '../service/image/bookCreateImageService';
 import { HandleDeleteImage } from '../service/image/bookDeleteImageService';
 import { getStorageStrategy } from '../storage/StorageFactory';
+import { BookDeletionService } from '@/service/book/bookDeleteDataService';
 
 export const GetBookRecord = async (req: AuthRequest, res: Response) => 
 {
@@ -115,52 +116,31 @@ export const EditBookRecord = async (req: AuthRequest, res: Response) =>
     }
 };
 
-export const DeleteBookRecord = async(req:Request, res:Response) => 
+export const DeleteBookRecord = async (req: Request, res: Response) => 
 {
     const bookID = req.params.id;
-    let success = false;
 
-    try
+    try 
     {
-        const bookRecord = await FindBookByID(bookID as string) as BookInterface;
-
-        if (!bookRecord) 
+        // 1. Call the encapsulated service (Handle the entire deletion process)
+        const { success, error, status } = await BookDeletionService(bookID as string);
+        
+        // 2. Send the response (Based on the service result)
+        if (!success) 
         {
-            return res.status(404).json({ success, error: "Book not found" });
+            return res.status(status).json({ success: false, error });
         }
 
-        const results = await Promise.allSettled([
-            FindBookLoanedAndDelete({ bookID }),
-            FindBookFavouriteAndDeleteMany({ bookID }),
-            FindBookByIDAndDelete(bookID as string)
-        ]);
+        return res.json({ success: true, message: "Book Record Delete Successfully!" });
 
-        const [loanResult, favouriteResult, bookResult] = results;
-
-        if (bookResult.status === 'rejected') 
-        {
-            return res.status(500).json({ success: false,  error: "Database error during book deletion (Partial data may remain)" })
-        };
-
-        if (loanResult.status === 'rejected' || favouriteResult.status === 'rejected') 
-        {
-            console.warn(`Book ${bookID} deleted, but some related records failed to clean up`);
-        }
-
-        if (bookResult.status === 'fulfilled') 
-        {
-            await HandleDeleteImage(bookRecord.image.filename);
-        }
-
-        success = true;
-        res.json({success, message: "Book Record Delete Successfully!"});
-    }
-    catch(error)
+    } 
+    catch (error) 
     {
-        console.error(`Unhandled error: ${error}`);
-        res.status(500).json({ success, error: 'Internal Server Error!' });
+        console.error(`Unhandled controller error: ${error}`);
+        return res.status(500).json({ success: false, error: 'Internal Server Error!' });
     }
 }
+
 
 export const GetDataFromGoogleBook = async (req:Request, res:Response) => 
 {
