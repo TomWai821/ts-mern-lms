@@ -21,15 +21,17 @@ import ChipBody from "../../Templates/ChipBodyTemplate";
 import CustomTabPanel from "../../UIFragment/CustomTabPanel";
 
 // Custom Hook in services (Page Data and Filter)
-import { usePageService } from "../../../services/pages/pageService";
+import { getTablePageTitle, usePageService } from "../../../services/pages/pageService";
 import { useDefinitionFilter } from "../../../services/filters/definitionFilter";
 
 const DefinitionPage  = () => 
 {
     const { IsAdmin } = useAuthContext();
     const { definition } = useDefinitionContext();
-    const { title, tabValue, ChangeTabValue } = usePageService("Definition", IsAdmin);
+    const { tabValue, ChangeTabValue } = usePageService();
     const { searchData, onChange, SearchDefinition, resetFilter } = useDefinitionFilter(tabValue);
+
+    const { title } = getTablePageTitle("Definition", tabValue, IsAdmin);
     const definitionType = tabValue === 0 ? "Genre" : "Language";
 
     useEffect(() => 
