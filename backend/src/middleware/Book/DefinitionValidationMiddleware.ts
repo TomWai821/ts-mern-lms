@@ -7,7 +7,10 @@ export const DefinitionTypeValidation = async (req: Request, res: Response, next
 
     const isValid = DefinitionConfig[definitionType as DefinitionType];
 
-    if (!isValid) return res.status(404).json({  success: false,  error: "Invalid definition type: " + definitionType });
+    if (!isValid) 
+    {
+        return res.status(404).json({  success: false,  error: "Invalid definition type: " + definitionType });
+    }
 
     next();
 };

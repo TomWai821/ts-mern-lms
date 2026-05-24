@@ -13,7 +13,10 @@ export const BookNameValidation = async (req:Request, res:Response, next: NextFu
     {
         const findBookname = await FindBook({ bookname: bookname });
 
-        if(findBookname) return res.status(400).json({success: false, error: "Book with this name are already exist!"});
+        if(findBookname) 
+        {
+            return res.status(400).json({success: false, error: "Book with this name are already exist!"});
+        }
 
         next();
     }
@@ -32,7 +35,10 @@ export const BookRecordIDValidation = async (req:AuthRequest, res:Response, next
     {
         const findRecordWithID = await FindBookByID(bookID as string);
 
-        if(!findRecordWithID) return res.status(404).json({success: false, error: "Could not found this book record!"});
+        if(!findRecordWithID) 
+        {
+            return res.status(404).json({success: false, error: "Could not found this book record!"});
+        }
 
         next();
     }
@@ -51,9 +57,15 @@ export const BookGenreIDAndLanguageIDValidation = async (req:Request, res:Respon
     {
         const [findLanguage, findGenre] = await Promise.all([FindLanguageByID(languageID), FindGenreByID(genreID)]);
 
-        if(!findLanguage) return res.status(404).json({success: false, error: `Could not found Language ID: ${languageID}!`});
+        if(!findLanguage) 
+        {
+            return res.status(404).json({success: false, error: `Could not found Language ID: ${languageID}!`});
+        }
 
-        if(!findGenre) return res.status(404).json({success: false, error: `Could not found Genre ID: ${genreID}!`});
+        if(!findGenre) 
+        {
+            return res.status(404).json({success: false, error: `Could not found Genre ID: ${genreID}!`});
+        }
 
         next();
     }
@@ -72,7 +84,10 @@ export const FoundBookLoanRecord = async (req:AuthRequest, res:Response, next: N
     {
         const foundLoanRecord = await FindBookLoaned({_id: loanBookID});
 
-        if(!foundLoanRecord) return res.status(404).json({success: false, error: `Could not found Loan Record!`});
+        if(!foundLoanRecord) 
+        {
+            return res.status(404).json({success: false, error: `Could not found Loan Record!`});
+        }
 
         req.foundLoanedRecord = foundLoanRecord;
         

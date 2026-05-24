@@ -10,6 +10,7 @@ import { FindSuspendListByID } from "../../schema/user/suspendList";
 export const UserRegisterDataValidation = async (req: Request, res: Response, next: NextFunction) => 
 {
     const {email, username} = req.body;
+    
     const user = await FindUser({ $or: [{ email:email }, { username:username }] });
 
     if(user)

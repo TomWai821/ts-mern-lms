@@ -1,6 +1,6 @@
 import express from 'express';
 import { ValidateAuthTokenAsAdmin } from '../../data/middlewareGroup';
-import { DefinitionDataValidation, DefinitionTypeValidation } from '../../middleware/Book/DefinitonValidationMiddleware';
+import { DefinitionDataValidation, DefinitionTypeValidation } from '../../middleware/Book/DefinitionValidationMiddleware';
 import { GetDefinitionRecord, CreateDefinitionRecord, UpdateDefinitionRecord, DeleteDefinitionRecord } from '../../controller/definitionController';
 
 const router = express.Router();

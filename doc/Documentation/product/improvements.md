@@ -10,14 +10,15 @@
     - Refactored Table Page components by extracting business logic into Custom Hooks<br>
       (This successfully decoupled View rendering from Service/Controller logic, enhancing testability and code reusability)<br>
       (Ref: ./frontend/src/services/*.tsx)
-
 3. **Response-Driven API Service (frontend side)**
-    - Refactored legacy API wrappers to return full HTTP Response objects, enabling granular error handling and dynamic UI state management based on status code
-  
-4. **I/O Concurrency & Fault Tolerance (Promise.allSettled)**
-    - Implemented concurrent API fetching using Promise.allSettled to parallelise independent data requests<br>
-      (This ensures UI resilience, allowing the dashboard to render partially even if individual microservices or endpoints fail)
+    - Refactored legacy API wrappers to return full HTTP Response objects
+      (Enable granular error handling and dynamic UI state management based on status code)
 
+4. **Frontend I/O Concurrency & UI Resilience (Promise.allSettled)**
+    - Parallelised independent API requests for multiple entity types (e.g. Authors and Publishers) using Promise.allSettled within memoised useCallback hooks
+    - Enhances UI resilience by ensuring the dashboard renders successfully (Even if individual endpoints or downstream dependencies fail)<br>
+      (Ref: [ContactContext.tsx](../../../frontend/src/Context/Book/ContactContext.tsx) - fetchAllContactData, [DefinitionContext.tsx](../../../frontend/src/Context/Book/DefinitionContext.tsx) - fetchAllDefinition)
+  
 
 #### Backend Side
 1. **Modularised backend routes for cleaner structure**
@@ -33,7 +34,7 @@
 4. **Pipeline Filtering**
    - Engineered a multi-stage Middleware Pipeline for granular request filtering
    - Decoupled Type Validation, Data Integrity checks, and Query Sanitisation into discrete, reusable stages to enforce strict Domain Logic before reaching the controller layer<Br>
-     (Ref: ./backend/src/middleware/Book/ContactValidation.ts, DefinitionValidation.ts)
+     (Ref: [ContactValidationMiddleware.ts](../../../backend/src/middleware/Book/ContactValidationMiddleware.ts), [DefinitionValidationMiddleware.ts](../../../backend/src/middleware/Book/DefinitionValidationMiddleware.ts))
 
 5. **Hybrid Image Storage Engine**
     - Engineered a dual-strategy storage layer that dynamically switches between Local FS and Amazon S3 via environment toggles
@@ -41,6 +42,21 @@
       (Ensure a zero-dependency local setup while optimising for the Stateless architecture of AWS Lambda)<br>
       (Ref: [image service Directory](../../../backend/src/service/image/))
 
+6. **Asynchronous Background Cleanup & Fault Tolerance (Promise.allSettled)**
+    - Implemented parallel background I/O operations using Promise.allSettled to clean up independent related records simultaneously
+    - Allowing the main deletion flow to succeed and log warnings even if non-critical side-effects (e.g. clearing loan history or storage images) encounter issues
+      (This decoupled design ensures system resilience)<br>
+      (Ref: [bookDeleteDataService.ts](../../../backend/src/service/Book/bookDeleteDataService.ts) - ExecuteBackgroundCleanup)
+      
+
+7. **Concurrent Validation & Dynamic Pipeline**
+    - Utilised Promise.all for multi-document pre-flight validation (Genre/Language ID)<br>
+      (Slashing API latency by bypassing waterfall dependency blocking)<br>
+      (Ref: [bookValidationMiddleware.ts](../../../backend/src/middleware/Book/bookValidationMiddleware.ts) - BookGenreIDAndLanguageIDValidation)
+
+    - Orchestrated a dynamic Promise.all input pipeline for user profile updates<br>
+      (Leverage label index alignment to optimise conditional database queries)<br>
+      (Ref: [userUpdateDataService.ts](../../../backend/src/service/User/userUpdateDataService.ts) - BuildUserUpdateDataService)
 
 #### Infrastructure and Security
 1. **Multi-Environment Containerization (Docker)**

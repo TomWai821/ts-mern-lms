@@ -19,12 +19,14 @@ export const BuildUserUpdateDataService = async (req: AuthRequest, res:Response,
     {
         checkPromise.push(FindUser({username}));
         labels.push("username");
+        updateData.username = username;
     }
 
     if(email && email !== foundUser.email)
     {
         checkPromise.push(FindUser({email}));
         labels.push("email");
+        updateData.email = email;
     }
 
     const result = await Promise.all(checkPromise);
@@ -33,14 +35,19 @@ export const BuildUserUpdateDataService = async (req: AuthRequest, res:Response,
     {
         if(result[i])
         {
-            const field = result[i];
-            return res.status(400).json({ success: false, error: `${field == 0 ? 'Username' : 'Email'} already in use` });
+            return res.status(400).json({ success: false, error: `${labels[i]} already in use` });
         }
     }
 
-    if (gender && gender !== foundUser.gender)  updateData.gender = gender;
+    if (gender && gender !== foundUser.gender)  
+    {
+        updateData.gender = gender;
+    }
 
-    if (role && role !== foundUser.role)  updateData.role = role;
+    if (role && role !== foundUser.role) 
+    {
+        updateData.role = role;
+    }
 
     if (Object.keys(updateData).length === 0) 
     {
@@ -60,7 +67,10 @@ export const CreateStatusListService = async (statusForUserList: string,  userId
             case "Suspend":
                 const existingSuspend = await FindSuspendList({ userId: userId });
                 
-                if (existingSuspend) return existingSuspend;
+                if (existingSuspend) 
+                {
+                    return existingSuspend;
+                }
 
                 const newSuspendList = await CreateSuspendList({  userID: userId,  description: description, startDate: startDate, dueDate: dueDate });
                 

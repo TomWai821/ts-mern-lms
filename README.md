@@ -171,8 +171,7 @@ After graduation, I refactored the entire system to align with industry-standard
 
     - **Action**
         - **Coordinated Deletion & Logical Rollback**
-            - Leveraged Promise.allSettled to manage multi-document cleanup (Loans, Favourites, Book records)<br>
-              (Ensure the physical image is only purged if the core record is successfully removed)
+            - Engineered a core-first deletion service via decoupled Service Layers, isolating master records from non-blocking background cleanups
 
         - **Redundancy Control**
             - Implemented Regex sanitisation and strict execution order to prevent "orphaned" files and redundant filename timestamps during consecutive edits
