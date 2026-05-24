@@ -446,7 +446,7 @@ This project focuses on high-standard engineering practices. Key highlights incl
 - MongoDB default DB: test
     - If DB init scripts are used in Docker, they run only when the volume is created for the first time
     - To re-run init scripts, remove the volume and restart
-- [Demo Data](doc\DemonstrationMaterial\DemonStrationData.txt) (if needed)
+- [Demo Data](doc/DemonstrationMaterial/DemonStrationData.txt) (if needed)
 
 
 

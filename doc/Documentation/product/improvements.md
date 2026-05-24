@@ -46,7 +46,7 @@
     - Implemented parallel background I/O operations using Promise.allSettled to clean up independent related records simultaneously
     - Allowing the main deletion flow to succeed and log warnings even if non-critical side-effects (e.g. clearing loan history or storage images) encounter issues
       (This decoupled design ensures system resilience)<br>
-      (Ref: [bookDeleteDataService.ts](../../../backend/src/service/Book/bookDeleteDataService.ts) - ExecuteBackgroundCleanup)
+      (Ref: [bookDeleteDataService.ts](../../../backend/src/service/book/bookDeleteDataService.ts) - ExecuteBackgroundCleanup)
       
 
 7. **Concurrent Validation & Dynamic Pipeline**
@@ -56,7 +56,7 @@
 
     - Orchestrated a dynamic Promise.all input pipeline for user profile updates<br>
       (Leverage label index alignment to optimise conditional database queries)<br>
-      (Ref: [userUpdateDataService.ts](../../../backend/src/service/User/userUpdateDataService.ts) - BuildUserUpdateDataService)
+      (Ref: [userUpdateDataService.ts](../../../backend/src/service/user/userUpdateDataService.ts) - BuildUserUpdateDataService)
 
 #### Infrastructure and Security
 1. **Multi-Environment Containerization (Docker)**
