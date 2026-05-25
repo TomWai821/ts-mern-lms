@@ -38,7 +38,7 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
 }
 
 /**
- * Non‑blocking background cleanup for book deletion.
+ * Non‑blocking background cleanup for book deletion
  *
  * Design intent:
  * - Run shadow DB cleanup and asset (image) deletion as fire‑and‑forget tasks 
@@ -49,10 +49,15 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
  * 
  * - Emit structured logs (warnings/errors) to aid post‑mortem analysis and future metrics
  *
- * Note: 
- * - This function intentionally returns void to the caller
  * 
- * - Consider adding a retry queue or metrics emission for eventual consistency if needed
+ * Note: 
+ * - This function intentionally returns void to the caller, as it's designed for non‑blocking execution
+ * 
+ *
+ * @param bookID - Identifier of the deleted book
+ * @param filename - Associated image filename to remove from storage
+ * @returns void
+ * 
  */
 const ExecuteBackgroundCleanup = (bookID: string, filename: string): void => 
 {
