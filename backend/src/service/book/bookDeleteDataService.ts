@@ -29,14 +29,31 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
         return { success: false, status: 500, error: "Failed to delete book master record" };
     }
 
-    // 3. Execute background cleanup for related records and image deletion (Non-blocking)
-    ExecuteBackgroundCleanup(bookID, bookRecord.image.filename);
+    // 3. Fire-and-forget background cleanup: do not await to avoid blocking primary delete
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    void ExecuteBackgroundCleanup(bookID, bookRecord.image.filename);
 
     // 4. Return success response (If main deletion succeeded)
     return { success: true, status: 200 };
 }
 
-
+/**
+ * Non‑blocking background cleanup for book deletion.
+ *
+ * Design intent:
+ * - Run shadow DB cleanup and asset (image) deletion as fire‑and‑forget tasks 
+ *   so the primary book record deletion is never blocked by side‑effect failures.
+ * 
+ * - Use Promise.allSettled for parallel DB cleanup and catch image deletion errors
+ *   to contain side‑effect failures and guarantee primary record persistence.
+ * 
+ * - Emit structured logs (warnings/errors) to aid post‑mortem analysis and future metrics
+ *
+ * Note: 
+ * - This function intentionally returns void to the caller
+ * 
+ * - Consider adding a retry queue or metrics emission for eventual consistency if needed
+ */
 const ExecuteBackgroundCleanup = (bookID: string, filename: string): void => 
 {
     // 1. Delete related records in parallel (Loaned and Favourite)
