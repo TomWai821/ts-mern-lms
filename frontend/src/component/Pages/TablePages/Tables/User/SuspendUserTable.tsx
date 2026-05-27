@@ -45,14 +45,14 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
                     <ContentTableCell TableName={TableName} value={value} Information={data}> {data.username} </ContentTableCell>
                     <ContentTableCell TableName={TableName} value={value} Information={data}> {data.role} </ContentTableCell>
                     
-                    <ContentTableCell TableName={TableName} value={value} Information={data} textColor={setDataTextColor(data.bannedDetails?.status as string, "Unsuspend", "green", "red")}>
-                        {data.bannedDetails?.status} 
+                    <ContentTableCell TableName={TableName} value={value} Information={data} textColor={setDataTextColor(data.suspendedDetails?.status as string, "Unsuspend", "green", "red")}>
+                        {data.suspendedDetails?.status} 
                     </ContentTableCell>
 
-                    <ContentTableCell TableName={TableName} value={value} Information={data}> {TransferDateToString(data.bannedDetails?.startDate as Date)} </ContentTableCell>
+                    <ContentTableCell TableName={TableName} value={value} Information={data}> {TransferDateToString(data.suspendedDetails?.startDate as Date)} </ContentTableCell>
                     
                     <ContentTableCell TableName={TableName} value={value} Information={data}> 
-                        {!data.bannedDetails?.dueDate || new Date(data.bannedDetails?.dueDate).getTime() <= 0 ? "Forever" : CalculateDuration(data.bannedDetails?.startDate as Date, data.bannedDetails?.dueDate as Date)}
+                        {CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)}
                     </ContentTableCell>
                     
                     {IsAdmin() && (<ActionTableCell value={value} TableName={TableName} Information={data}/>)}

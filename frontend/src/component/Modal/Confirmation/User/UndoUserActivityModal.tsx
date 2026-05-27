@@ -32,7 +32,7 @@ const UndoUserActivityModal:FC<DeleteModalInterface> = ({...userData}) =>
 
     const UndoUserAction = async () => 
     {
-        const response: Response  = await changeUserStatus("UnSuspend", _id, "Normal", Data.bannedDetails?._id as string);
+        const response: Response  = await changeUserStatus("UnSuspend", _id, "Normal", Data.suspendedDetails?._id as string);
 
          const result: GetResultInterface = await response.json();
                 
@@ -60,7 +60,7 @@ const UndoUserActivityModal:FC<DeleteModalInterface> = ({...userData}) =>
                 <Typography>Email: {Data.email}</Typography>
                 <Typography>Role: {Data.role}</Typography>
                 <Typography>Gender: {Data.gender}</Typography>
-                <Typography>Description: {Data.bannedDetails?.description}</Typography>
+                <Typography>Description: {Data.suspendedDetails?.description}</Typography>
             </Box>
             
             <ModalConfirmButton clickEvent={UndoUserAction} name={"Yes"} buttonType={""}/>

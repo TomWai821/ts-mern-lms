@@ -58,11 +58,6 @@ export const TransferDateToString = (date: Date | undefined):string =>
 
 export const CalculateDuration = (startDate:Date, dueDate: Date | string) => 
 {
-    if(dueDate === "N/A")
-    {
-        return "Forever";
-    }
-
     const start = new Date(startDate);
     const end = new Date(dueDate);
 

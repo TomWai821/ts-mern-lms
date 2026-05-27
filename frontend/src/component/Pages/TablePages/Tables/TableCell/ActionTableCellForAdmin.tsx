@@ -87,8 +87,8 @@ const ActionTableCellForAdmin: FC<ActionTableCellInterface> = ({...tableCellData
         const ModalTypeMap: Record<string, JSX.Element> = 
         {
             "Suspend" : <SuspendUserModal {...Information as UserResultDataInterface}/>,
-            "EditSuspendData": <EditSuspendUserModal value={value} editData={userData.bannedDetails as DetailsInterfaceForSuspend} 
-                compareData={userData.bannedDetails as DetailsInterfaceForSuspend}/>,
+            "EditSuspendData": <EditSuspendUserModal value={value} editData={userData.suspendedDetails as DetailsInterfaceForSuspend} 
+                compareData={userData.suspendedDetails as DetailsInterfaceForSuspend}/>,
             "UndoAction": <UndoUserActivityModal _id={userData._id} data={userData} />,
             "ReturnBook": <ReturnBookConfirmModal data={Information as LoanBookInterface} modalOpenPosition={"AdminTableCell"}/>,
             "SubmitFines": <SubmitFinesConfirmModal modalOpenPosition={""} data={Information as LoanBookInterface}/>,
@@ -183,9 +183,9 @@ const ActionTableCellForAdmin: FC<ActionTableCellInterface> = ({...tableCellData
             1: 
             [
                 { title: "Edit", syntax: { "&:hover": { backgroundColor: 'lightGray' } }, clickEvent: () => openAnotherModal("EditSuspendData"), icon: <EditIcon />, 
-                    disable: StatusDetection(userData.bannedDetails?.status as string, "Unsuspend") },
+                    disable: StatusDetection(userData.suspendedDetails?.status as string, "Unsuspend") },
                 { title: "Unsuspend User", syntax: ImportantActionButtonSyntax, clickEvent: () => openAnotherModal("UndoAction"), icon: <LockOpenIcon />, 
-                    disable: StatusDetection(userData.bannedDetails?.status as string, "Unsuspend") }
+                    disable: StatusDetection(userData.suspendedDetails?.status as string, "Unsuspend") }
             ]
         },
         Book: 

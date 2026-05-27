@@ -22,8 +22,8 @@ export const CreateSuspendList = async (data: Record<string, any>) =>
 {
     try 
     {
-        const banList = await SuspendList.create(data);
-        return banList;
+        const suspendList = await SuspendList.create(data);
+        return suspendList;
     } 
     catch (error) 
     {

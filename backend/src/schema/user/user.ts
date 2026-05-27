@@ -113,11 +113,11 @@ const GetUsersWithSuspendnedDetails = async (data: any) =>
                 from: 'suspendlists',
                 localField: '_id',
                 foreignField: 'userID',
-                as: 'bannedDetails'
+                as: 'suspendedDetails'
             }
         },
-        { $unwind: '$bannedDetails' },
-        { $project: { 'bannedDetails.password': 0 } }
+        { $unwind: '$suspendedDetails' },
+        { $project: { 'suspendedDetails.password': 0 } }
     );
 
     return await User.aggregate(pipeline);

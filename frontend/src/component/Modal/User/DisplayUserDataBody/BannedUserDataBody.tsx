@@ -26,27 +26,26 @@ const BannedUserDataBody:FC<DisplayDataModalBody> = (BannedUserData) =>
                         <Fragment>
                                 <Typography>Gender: {Data.gender}</Typography>
                                 <Typography>
-                                    Status: <Box component={"span"} color={setDataTextColor(Data.bannedDetails?.status as string, "Unsuspend", "green", "red")}> {Data.bannedDetails?.status} </Box> 
-                                    {Data.bannedDetails?.status === "Unsuspend" && `(Unsuspend At: ${TransferDateToString(Data.bannedDetails?.unSuspendDate as Date)})` }
+                                    Status: <Box component={"span"} color={setDataTextColor(Data.suspendedDetails?.status as string, "Unsuspend", "green", "red")}> {Data.suspendedDetails?.status} </Box> 
+                                    {Data.suspendedDetails?.status === "Unsuspend" && `(Unsuspend At: ${TransferDateToString(Data.suspendedDetails?.unSuspendDate as Date)})` }
                                 </Typography>
                         </Fragment>
                     )
                 }
-                <Typography>Date: { !Data.bannedDetails?.dueDate || new Date(Data.bannedDetails?.dueDate).getTime() <= 0 ? "N/A" 
-                    : `${TransferDateToString(Data.bannedDetails?.startDate as Date)} - ${TransferDateToString(Data.bannedDetails?.dueDate as Date)}` }
+                <Typography>Date: { !Data.suspendedDetails?.dueDate || new Date(Data.suspendedDetails?.dueDate).getTime() <= 0 ? "N/A" 
+                    : `${TransferDateToString(Data.suspendedDetails?.startDate as Date)} - ${TransferDateToString(Data.suspendedDetails?.dueDate as Date)}` }
                 </Typography>
 
-                <Typography>Duration: { !Data.bannedDetails?.dueDate || new Date(Data.bannedDetails?.dueDate).getTime() <= 0 ? "Forever" 
-                    : CalculateDuration(Data.bannedDetails?.startDate as Date, Data.bannedDetails?.dueDate as Date) }
+                <Typography>Duration: { CalculateDuration(Data.suspendedDetails?.startDate as Date, Data.suspendedDetails?.dueDate as Date) }
                 { 
-                    IsAdmin() && Data.bannedDetails?.status === "Suspend" && Data.bannedDetails?.dueDate && new Date(Data.bannedDetails?.dueDate).getTime() > 0 && 
+                    IsAdmin() && Data.suspendedDetails?.status === "Suspend" && Data.suspendedDetails?.dueDate && new Date(Data.suspendedDetails?.dueDate).getTime() > 0 && 
                     (
-                        <Fragment> ({CountDuration(Data.bannedDetails?.dueDate as Date)} Days Left) </Fragment>
+                        <Fragment> ({CountDuration(Data.suspendedDetails?.dueDate as Date)} Days Left) </Fragment>
                     )
                 }
                 </Typography>
 
-                <ExpandableTypography title={"Description"}> {Data.bannedDetails?.description}</ExpandableTypography>
+                <ExpandableTypography title={"Description"}> {Data.suspendedDetails?.description}</ExpandableTypography>
             </Box>
         </Box>
     );

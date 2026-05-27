@@ -180,7 +180,7 @@ export const UpdateUserData = async (req:AuthRequest, res:Response) =>
 
 export const ChangeStatus = async (req:AuthRequest, res:Response) => 
 {
-    const { statusForUserList, description, startDate, dueDate, banListID } = req.body;
+    const { statusForUserList, description, startDate, dueDate, suspendListID } = req.body;
     const foundUser = req.foundUser as UserInterface;
     const userId = foundUser._id as ObjectId;
     let success = false;
@@ -207,7 +207,7 @@ export const ChangeStatus = async (req:AuthRequest, res:Response) =>
         if(statusForUserList === "Normal")
         {
             const unSuspendDate = new Date();
-            const changeSuspendListStatus = await FindSuspendListByIDAndUpdate(banListID, {status: "Unsuspend", unSuspendDate: unSuspendDate});
+            const changeSuspendListStatus = await FindSuspendListByIDAndUpdate(suspendListID, {status: "Unsuspend", unSuspendDate: unSuspendDate});
 
             if(!changeSuspendListStatus)
             {
@@ -227,12 +227,12 @@ export const ChangeStatus = async (req:AuthRequest, res:Response) =>
 
 export const ModifySuspendListData = async (req: AuthRequest, res:Response) => 
 {
-    const { banListID, dueDate, description } = req.body;
+    const { suspendListID, dueDate, description } = req.body;
     let success = false;
 
     try
     {
-        const modifySuspendList = await FindSuspendListByIDAndUpdate(banListID as unknown as string, {dueDate, description});
+        const modifySuspendList = await FindSuspendListByIDAndUpdate(suspendListID as unknown as string, {dueDate, description});
 
         if(!modifySuspendList) 
         {

@@ -89,11 +89,11 @@ export const CompareUserStatus = async (req: AuthRequest, res: Response, next:Ne
 // SuspendList ID validation before doing some action
 export const SuspendListValidation = async (req: AuthRequest, res: Response, next:NextFunction) => 
 {
-    const { banListID } = req.body;
+    const { suspendListID } = req.body;
 
-    if(banListID)
+    if(suspendListID)
     {
-        const foundSuspendList = await FindSuspendListByID(banListID);
+        const foundSuspendList = await FindSuspendListByID(suspendListID);
 
         if(!foundSuspendList)
         {

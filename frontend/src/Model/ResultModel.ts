@@ -46,7 +46,7 @@ export interface UserResultDataInterface extends UserDataInterface
 {
     _id:string;
     avatarUrl?:string;
-    bannedDetails?: DetailsInterfaceForSuspend;
+    suspendedDetails?: DetailsInterfaceForSuspend;
 }
 
 export interface BookDataInterface

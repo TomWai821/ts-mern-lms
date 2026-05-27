@@ -126,14 +126,14 @@
 
       Request Body Example:
       {
-         "banListID":""
+         "suspendListID":""
          "dueDate":"8-7-2025T04:06:50.006+00:00"
          "description":"Does not return books and paid fines many time"
       }
 
       Remarks:
       1. id = the MongoDB ObjectID in user collection, it use to ensure the account was exist
-      2. banListID = the MongoDB ObjectID in suspendList
+      2. suspendListID = the MongoDB ObjectID in suspendList
       ```
 
 

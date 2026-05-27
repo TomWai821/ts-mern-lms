@@ -70,13 +70,12 @@ const EditSuspendUserInputField =
     {name: "description", label: "Description", type:"String", select:false, slotProps: {}, options: [], rows: 5, disable: false},
 ]
 
-// For banList
+// For suspendList
 const dateOption = 
 [
     {label:'30 days', value: 30}, 
     {label:'60 days', value: 60}, 
-    {label:'365 days', value: 365}, 
-    {label:'Forever', value: Infinity}
+    {label:'365 days', value: 365}
 ];
 
 const SearchLoanBookInputField = 

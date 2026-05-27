@@ -41,9 +41,9 @@ const ModifyUserDataController = async (authToken:string, userId: string, userna
     return await fetchData(authToken, URL, data);
 };
 
-const ModifySuspendListDataController = async(authToken:string, userId:string, banListID:string, dueDate:Date, description:string) => 
+const ModifySuspendListDataController = async(authToken:string, userId:string, suspendListID:string, dueDate:Date, description:string) => 
 {
-    const data =  { banListID, dueDate, description };
+    const data =  { suspendListID, dueDate, description };
     const URL = `${url}/SuspendListData/id=${userId}`;
     return await fetchData(authToken, URL, data);
 }
@@ -52,8 +52,8 @@ const ModifyStatusController = async (type:string, authToken:string, userId: str
 {
     const statusDataConfig =
     {
-        Suspend: { banListID: ListID, statusForUserList, startDate, dueDate, description },
-        UnSuspend: { statusForUserList, banListID: ListID }
+        Suspend: { suspendListID: ListID, statusForUserList, startDate, dueDate, description },
+        UnSuspend: { statusForUserList, suspendListID: ListID }
     };
 
     const statusData = statusDataConfig[type as keyof typeof statusDataConfig];
