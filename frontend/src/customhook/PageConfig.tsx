@@ -10,45 +10,36 @@ export const usePageConfigData = (data: any) =>
 
     const setPageConfigData = (name: ConfigDataType, newValue: number): void => 
     {
-        switch(name)
+        const configDataSetter: Record<ConfigDataType, () => void> = 
         {
-            case 'tabValue':
-                setTabValue(newValue);
-                break;
-
-            case 'page':
-                setPage(prev => 
-                {
-                    const updated = [...prev];
-                    updated[tabValue] = newValue;
-                    return updated
-                });
-                break;
-
-            case 'paginationValue':
-                setPaginationValue(prev => 
-                {
-                    const updated = [...prev];
-                    updated[tabValue] = newValue;
-                    return updated
-                })
-                break;
+            'tabValue': () => setTabValue(newValue),
+            'page': () => setPage(prev => 
+            {
+                const updated = [...prev];
+                updated[tabValue] = newValue;
+                return updated
+            }),
+            'paginationValue': () => setPaginationValue(prev => 
+            {
+                const updated = [...prev];
+                updated[tabValue] = newValue;
+                return updated
+            })
         }
+        
+        return configDataSetter[name]();
     }
 
     const getPageConfigData = (name: ConfigDataType): number => 
     {
-        switch(name)
+        const configData: Record<ConfigDataType, number> = 
         {
-            case 'tabValue':
-                return tabValue;
-
-            case 'page':
-                return page[tabValue];
-
-            case 'paginationValue':
-                return paginationValue[tabValue];
+            'tabValue': tabValue,
+            'page': page[tabValue],
+            'paginationValue': paginationValue[tabValue]
         }
+
+        return configData[name];
     }
 
     const getPageCountAndData = (): {total:number, countPage: number, paginatedData: any[]} => 
