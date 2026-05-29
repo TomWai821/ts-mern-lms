@@ -40,7 +40,7 @@ const SuspendedUserDataBody:FC<DisplayDataModalBody> = (SuspendedUserData) =>
                 { 
                     IsAdmin() && Data.suspendedDetails?.status === "Suspend" && Data.suspendedDetails?.dueDate && new Date(Data.suspendedDetails?.dueDate).getTime() > 0 && 
                     (
-                        <Fragment> ({CountDuration(Data.suspendedDetails?.dueDate as Date)} Days Left) </Fragment>
+                        <Fragment> ({CountDuration(Data.suspendedDetails?.dueDate as Date)} Left) </Fragment>
                     )
                 }
                 </Typography>

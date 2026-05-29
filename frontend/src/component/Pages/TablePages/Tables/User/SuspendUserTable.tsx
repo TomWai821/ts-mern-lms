@@ -13,7 +13,7 @@ import { UserDataTableInterface } from "../../../../../Model/UserTableModel";
 import { ItemToCenter } from "../../../../../Data/Style";
 import { SuspendUserTableHeader } from "../../../../../Data/TableData";
 
-import { CalculateDuration, TransferDateToString } from "../../../../../Controller/OtherController";
+import { CalculateDuration, CountDuration, TransferDateToString } from "../../../../../Controller/OtherController";
 import { useAuthContext } from "../../../../../Context/User/AuthContext";
 import { setDataTextColor } from "../../../../../Controller/SetTextController";
 import { UserResultDataInterface } from "../../../../../Model/ResultModel";
@@ -52,7 +52,11 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
                     <ContentTableCell TableName={TableName} value={value} Information={data}> {TransferDateToString(data.suspendedDetails?.startDate as Date)} </ContentTableCell>
                     
                     <ContentTableCell TableName={TableName} value={value} Information={data}> 
-                        {CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)}
+                        {
+                            `${CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)}
+                            (${CountDuration(data.suspendedDetails?.dueDate as Date)} Left)
+                            `
+                        }
                     </ContentTableCell>
                     
                     {IsAdmin() && (<ActionTableCell value={value} TableName={TableName} Information={data}/>)}
