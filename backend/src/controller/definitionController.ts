@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { DefinitionConfig, DefinitionType } from "../config/definitionConfig";
+import { validateDefinition } from "../middleware/Definition/DefinitionHelper";
 
 export const GetDefinitionRecord = async (req: Request, res: Response) => 
 {
@@ -53,17 +54,11 @@ export const CreateDefinitionRecord = async (req: Request, res: Response) =>
 
     try 
     {
-        if (await config.find({ [nameKey]: name })) 
-        {
-            return res.status(400).json({ success: false, error: `${definitionType} "${name}" already exists!` });
-        }
+        await validateDefinition(config, definitionType, {name, shortName});
 
-        if (shortName && await config.find({ shortName })) 
-        {
-            return res.status(400).json({ success: false, error: `Short Name "${shortName}" is already taken!` });
-        }
+        const finalData: any = { [nameKey]: name, shortName };
 
-        const record = await config.create({ [nameKey]: name, shortName });
+        const record = await config.create(finalData);
         
         if (!record) 
         {
@@ -95,17 +90,12 @@ export const UpdateDefinitionRecord = async (req: Request, res: Response) =>
 
     try 
     {
-        if (name && await config.find({ [nameKey]: name, _id: { $ne: id } })) 
-        {
-            return res.status(400).json({ success: false, error: `${definitionType} name already exists!` });
-        }
+        const optionData = { id, name, shortName };
+        await validateDefinition(config, definitionType, optionData);
 
-        if (shortName && await config.find({ shortName, _id: { $ne: id } })) 
-        {
-            return res.status(400).json({ success: false, error: `Short Name is already taken!` });
-        }
+        const finalData: any = { [nameKey]: name, shortName };
 
-        const record = await config.update(id, { [nameKey]: name, shortName });
+        const record = await config.update(id, finalData);
         
         if (!record) 
         {
@@ -121,7 +111,8 @@ export const UpdateDefinitionRecord = async (req: Request, res: Response) =>
     }
 }
 
-export const DeleteDefinitionRecord = async (req: Request, res: Response) => {
+export const DeleteDefinitionRecord = async (req: Request, res: Response) => 
+{
     const { id } = req.body;
     const definitionType = req.params.type as DefinitionType;
     const config = DefinitionConfig[definitionType];

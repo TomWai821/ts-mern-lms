@@ -96,7 +96,7 @@ export const FindUserWithData = async (tableName:string, data: Record<string, an
     }
 }
 
-// Local variable(For get banned user data)
+// Local variable(For get suspend user data)
 const GetUsersWithSuspendnedDetails = async (data: any) => 
 {
     let pipeline:PipelineStage[] = [];

@@ -1,69 +1,24 @@
-import { NextFunction, Response } from "express";
-import { AuthRequest } from "../../model/requestInterface";
 import { GetBook } from "../../schema/book/book";
 import { ObjectId } from "mongodb";
 import { GetBookFavourite } from "../../schema/book/bookFavourite";
 
-export const GetBookDataService = async (req: AuthRequest, res: Response, next: NextFunction) => 
+export const GetBookDataService = async (queryParams: Record<string, any>) => 
 {
-    const queryParams = req.query;
-
-    try 
-    {
-        const hasParams = Object.keys(queryParams).length > 0;
-
-        const foundBook = hasParams ? await fetchBookData(queryParams) : await GetBook();
-
-        if (!foundBook) 
-        {
-            return res.status(404).json({ success: false, message: "Could not find any books." });
-        }
-
-        req.foundBook = foundBook;
-        next();
-    } 
-    catch (error) 
-    {
-        console.error("GetBookDataService Error:", error);
-        return res.status(500).json({ success: false, error: "Internal Server Error" });
-    }
+    const hasParams = Object.keys(queryParams).length > 0;
+    return hasParams ? await fetchBookData(queryParams) : await GetBook();
 };
 
-export const GetFavouriteBookDataService = async (req: AuthRequest, res: Response, next: NextFunction) => 
+
+export const GetFavouriteBookDataService = async (userID: string, queryParams: Record<string, any>) => 
 {
-    const userID = req.user?._id;
-    const queryParams = req.query;
-    let query:any;
-    
-    try 
-    {
-        const hasBodyParameter = Object.keys(queryParams).length > 0;
+    const hasParams = Object.keys(queryParams).length > 0;
 
-        if(hasBodyParameter)
-        {
-            query = buildQuery("Favourite", queryParams);
-        }
+    const query = hasParams 
+        ? { ...buildQuery("Favourite", queryParams), userID: new ObjectId(userID) }
+        : { userID: new ObjectId(userID) };
 
-        let userObjectId = new ObjectId(userID as unknown as ObjectId);
-
-        const completeQuery = hasBodyParameter ? {...query, userID: userObjectId} : {userID: userObjectId};
-        
-        let foundFavouriteBook = await GetBookFavourite(completeQuery);
-
-        if(!foundFavouriteBook)
-        {
-            return res.status(404).json({sucess: false, error: 'Could not found favourite book record!'})
-        }
-
-        req.foundFavouriteBook = foundFavouriteBook;
-        next();
-    } 
-    catch (error) 
-    {
-        console.error("GetFavouriteBookDataService Error:", error);
-        return res.status(500).json({ success: false, error: "Internal Server Error" });
-    }
-}
+    return await GetBookFavourite(query);
+};
 
 
 const fetchBookData = async (queryParams: any) => 

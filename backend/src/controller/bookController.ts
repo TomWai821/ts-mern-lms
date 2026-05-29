@@ -1,19 +1,19 @@
 import { Request, Response } from 'express'
-import { CreateBook, FindBookByIDAndDelete, FindBookByIDAndUpdate } from '../schema/book/book';
+import { FindBookByIDAndUpdate } from '../schema/book/book';
 import { AuthRequest, EditImageInterface } from '../model/requestInterface';
 
 import { externalBookService } from '../service/book/externalBookService';
-import { ImageDataBuilder, UploadImage } from '../service/image/bookCreateImageService';
+import { UploadImage } from '../service/image/bookCreateImageService';
 import { HandleDeleteImage } from '../service/image/bookDeleteImageService';
 import { getStorageStrategy } from '../storage/StorageFactory';
 import { BookDeletionService } from '../service/book/bookDeleteDataService';
+import { CreateBookRecordService } from '../service/book/bookCreateDataService';
 
-export const GetBookRecord = async (req: AuthRequest, res: Response) => 
+export const GetBookRecord = (req: AuthRequest, res: Response) => 
 {
     try 
     {
-        const foundBook = req.foundBook;
-        return res.json({ success: true, foundBook: foundBook });
+        return res.json({ success: true, foundBook: req.foundBook });
     } 
     catch (error) 
     {
@@ -21,6 +21,7 @@ export const GetBookRecord = async (req: AuthRequest, res: Response) =>
         res.status(500).json({ success: false, error: "Internal Server Error!" });
     }
 };
+
 
 export const GetImageController = (req: Request, res: Response) =>
 {
@@ -36,45 +37,25 @@ export const GetImageController = (req: Request, res: Response) =>
     return storage.handleResponse(imageName as string, res);
 };
 
-export const CreateBookRecord = async (req:Request, res:Response) => 
+export const CreateBookRecord = async (req: Request, res: Response) => 
 {
-    const { bookname, languageID, genreID, authorID, publisherID, description, publishDate } = req.body;
-    let success = false;
-    let createdBookId;
-
-    try
+    try 
     {
-       const imageData = await ImageDataBuilder(req.file as Express.Multer.File, publishDate);
+        const { bookname, languageID, genreID, authorID, publisherID, description, publishDate } = req.body;
 
-        // Add imageUrl to each book
-        const createBook = await CreateBook({ image: {url:imageData.image.url, filename:imageData.image.filename}, bookname, languageID, genreID, authorID, publisherID, description, publishDate:imageData.publishDate });
+        const bookData = { bookname, languageID, genreID, authorID, publisherID, description, publishDate };
 
-        if(!createBook)
-        {
-            return res.status(400).json({success, error: "Failed to create book record"});
-        }
+        const result = await CreateBookRecordService(bookData, req.file as Express.Multer.File);
 
-        createdBookId = createBook._id;
-
-        if(req.file && imageData.image.filename)
-        {
-            await UploadImage(req.file as Express.Multer.File, imageData.image.filename);
-        }
-
-        success = true;
-        res.json({success, message: "Book Record Create Successfully!"});
-    }
-    catch(error)
+        res.json({ success: result.success, message: "Book Record Created Successfully!", bookId: result.bookId });
+    } 
+    catch (error) 
     {
-        if(createdBookId)
-        {
-            await FindBookByIDAndDelete(createdBookId as unknown as string);
-            console.log(`Failed to upload Image!`);
-        }
-        console.log(error);
-        res.status(500).json({ success, error: 'Internal Server Error!' });
+        console.error("CreateBookRecord Error:", error);
+        res.status(500).json({ success: false, error: "Internal Server Error!" });
     }
-}
+};
+
 
 export const EditBookRecord = async (req: AuthRequest, res: Response) => 
 {
@@ -85,8 +66,9 @@ export const EditBookRecord = async (req: AuthRequest, res: Response) =>
 
     try 
     {
-        const updateBookRecord = await FindBookByIDAndUpdate(bookID as string, {$set: {image: { url: newImageUrl, filename: newImageName }, bookname, languageID, 
-            genreID, authorID, publisherID, description, publishDate:new Date(publishDate) }});
+        const updateData: Record<string, any> = { bookname, languageID, genreID, authorID, publisherID, description, publishDate: new Date(publishDate) };
+
+        const updateBookRecord = await FindBookByIDAndUpdate(bookID as string, {$set: {image: { url: newImageUrl, filename: newImageName }, ...updateData }});
 
         if (!updateBookRecord) 
         {

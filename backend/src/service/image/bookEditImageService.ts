@@ -38,7 +38,7 @@ export const HandleEditImage = async (req: AuthRequest, res: Response, next: Fun
                     break;
 
                 case 'LOCAL':
-                    newImageUrl = `${config.BACKEND_BASE_URL}/upload/${newImageName}`;
+                    newImageUrl = `${config.BACKEND_BASE_URL}/api/book/uploads/${newImageName}`;
                     break;
 
                 default:

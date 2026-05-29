@@ -47,7 +47,7 @@ export const GetBookLoaned = async (data?:Record<string, any>, limit?:number, so
     }
 };
 
-// Local variable(For get banned user data)
+// Local variable(For get suspend user data)
 const GetBooksWithOtherDetails = async (data?:Record<string, any>) => 
 {
     let pipeline:PipelineStage[] = [];

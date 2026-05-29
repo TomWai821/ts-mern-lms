@@ -20,7 +20,7 @@ export const ImageDataBuilder = async (file: Express.Multer.File, publishDate: s
                 break;
 
             case 'LOCAL':
-                imageUrl = `${config.BACKEND_BASE_URL}/upload/${imageName}`;
+                imageUrl = `${config.BACKEND_BASE_URL}/api/book/uploads/${imageName}`;
                 break;
         }
     }
@@ -47,7 +47,11 @@ export const UploadImage = async (file: Express.Multer.File, imageName: string) 
 
 const uploadImageLocally = async (file: Express.Multer.File, imageName: string) =>
 {
-    const uploadPath = path.join(__dirname, '../upload', imageName);
+    // Change to absolute path (Ensure it works regardless of where the script is run from)
+    const uploadDir = path.resolve(process.cwd(), "src/upload");
+    const uploadPath = path.join(uploadDir, imageName);
+
+    await fs.mkdir(uploadDir, { recursive: true }); // Ensure upload directory exists
     await fs.writeFile(uploadPath, file.buffer);
 }
 

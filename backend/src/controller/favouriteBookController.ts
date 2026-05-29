@@ -27,19 +27,20 @@ export const CreateFavouriteBookRecord = async (req:AuthRequest, res:Response) =
     }
 }
 
-export const GetFavouriteBookRecord = async (req:AuthRequest, res:Response) => 
-{   
-    try
+// controllers/favouriteBookController.ts
+export const GetFavouriteBookRecord = (req: AuthRequest, res: Response) => 
+{
+    try 
     {
-        const foundFavouriteBook = req.foundFavouriteBook;
-        res.json({success: true, foundFavouriteBook: foundFavouriteBook});
-    }
-    catch(error)
+        res.json({ success: true, foundFavouriteBook: req.foundFavouriteBook ?? [] });
+    } 
+    catch (error) 
     {
-        console.error(`Unhandled error: ${error}`);
-        return res.status(500).json({success: false, error: 'Internal Server Error!'})
+        console.error("Error in GetFavouriteBookRecord:", error);
+        res.status(500).json({ success: false, error: "Internal Server Error" });
     }
-}
+};
+
 
 export const DeleteFavouriteBookRecord = async (req:AuthRequest, res:Response) => 
 {

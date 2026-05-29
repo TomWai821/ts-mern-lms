@@ -1,6 +1,6 @@
 import express from 'express';
 import { ValidateAuthTokenAsAdmin } from '../../data/middlewareGroup';
-import { ContactDataValidation, ContactQueryValidation, ContactTypeValidation } from '../../middleware/Book/ContactValidationMiddleware';
+import { ContactDataValidation, ContactQueryValidation, ContactTypeValidation } from '../../middleware/Contact/ContactValidationMiddleware';
 import { CreateContactRecord, DeleteContactRecord, GetContactRecord, UpdateContactRecord } from '../../controller/contactController';
 
 const router = express.Router();

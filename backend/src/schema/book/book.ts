@@ -49,7 +49,7 @@ export const GetBook = async (data?:Record<string, any>, sortRequirement?:Record
 };
 
 
-// Local variable(For get banned user data)
+// Local variable(For get suspend user data)
 const GetBooksWithOtherDetails = async (data?:Record<string, any>, sortRequirement?:Record<string, any>, limit?:number) => 
 {
     let pipeline:PipelineStage[] = [];
