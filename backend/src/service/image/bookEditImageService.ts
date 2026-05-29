@@ -33,7 +33,7 @@ export const HandleEditImage = async (req: AuthRequest, res: Response, next: Fun
             
             switch (process.env.STORAGE_TYPE)
             {
-                case 's3':
+                case 'S3':
                     console.log(`new image name: ${newImageName}`);
                     newImageUrl = `https://${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/upload/${newImageName}`;
                     break;
@@ -43,11 +43,11 @@ export const HandleEditImage = async (req: AuthRequest, res: Response, next: Fun
                     break;
 
                 default:
+                    console.log(`Unknown storage type: ${process.env.STORAGE_TYPE}`);
                     newImageUrl = bookData.image.url;
             }
         }
 
-        console.log(`new Image URL: ${newImageUrl}`);
         req.editImageData = {isImageChanged, newImageName, newImageUrl, oldImageName};
         next();
     }

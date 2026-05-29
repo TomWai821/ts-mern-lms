@@ -28,8 +28,7 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
     {
         return { success: false, status: 500, error: "Failed to delete book master record" };
     }
-    
-    console.log("BookDeletionService executing for:", bookID);
+
     // 3. Fire-and-forget background cleanup: do not await to avoid blocking primary delete
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     void ExecuteBackgroundCleanup(bookID, bookRecord.image.filename);
