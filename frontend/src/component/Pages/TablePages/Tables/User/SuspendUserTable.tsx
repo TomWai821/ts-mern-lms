@@ -49,20 +49,32 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
                         {data.suspendedDetails?.status} 
                     </ContentTableCell>
 
-                    <ContentTableCell TableName={TableName} value={value} Information={data}> {TransferDateToString(data.suspendedDetails?.startDate as Date)} </ContentTableCell>
-                    
                     <ContentTableCell TableName={TableName} value={value} Information={data}> 
-                        {CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)}
+                        {TransferDateToString(data.suspendedDetails?.startDate as Date)} 
+                    </ContentTableCell>
+                                            
 
-                        {
-                            IsAdmin() && data.status === "Suspend" && data.suspendedDetails?.dueDate && 
-                            (
-                                ` (${CountDuration(data.suspendedDetails?.dueDate as Date)} Left)`
-                            )
-                        }
+                    <ContentTableCell TableName={TableName} value={value} Information={data}>
+                        {CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)} 
                     </ContentTableCell>
                     
-                    {IsAdmin() && (<ActionTableCell value={value} TableName={TableName} Information={data}/>)}
+                    {IsAdmin() &&
+                        (
+                            <>
+                                <ContentTableCell TableName={TableName} value={value} Information={data}> 
+                                    {
+                                        data.status === "Suspend" && data.suspendedDetails?.dueDate 
+                                        ? 
+                                        `${CountDuration(data.suspendedDetails?.dueDate as Date)}`
+                                        : 
+                                        "-"
+                                    }
+                                </ContentTableCell>
+
+                                <ActionTableCell value={value} TableName={TableName} Information={data}/>
+                            </>
+                        )
+                    }
                 </TableRow>
             )
         })

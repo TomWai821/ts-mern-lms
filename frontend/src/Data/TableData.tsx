@@ -29,6 +29,7 @@ const SuspendUserTableHeader =
     {label:"Status", isAdmin: false},
     {label:"StartDate", isAdmin: false},
     {label:"Duration", isAdmin: false},
+    {label:"Time Left", isAdmin: true},
     {label:"Actions", isAdmin: true}
 ]
 
