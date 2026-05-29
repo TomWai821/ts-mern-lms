@@ -101,6 +101,7 @@ export const DeleteBookRecord = async (req: Request, res: Response) =>
 
     try 
     {
+        console.log("DeleteBookRecord called with bookID:", bookID);
         // 1. Call the encapsulated service (Handle the entire deletion process)
         const { success, error, status } = await BookDeletionService(bookID as string);
         
