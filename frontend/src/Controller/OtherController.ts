@@ -85,7 +85,7 @@ export const CountDuration = (dueDate: Date | string) =>
         return "Unsuspend Soon (Less than 1 Day)";
     }
 
-    return days.toLocaleString('en-US') + " Days Left";
+    return days.toLocaleString('en-US') + " Days";
 }
 
 export const countLateReturn = (dueDate: Date | string, returnDate?: Date | string): number => 
