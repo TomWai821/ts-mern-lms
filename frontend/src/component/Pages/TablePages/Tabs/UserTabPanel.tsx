@@ -5,7 +5,7 @@ import CustomTabPanel from "../../../UIFragment/CustomTabPanel"
 
 // Another Component
 import AllUserTable from "../Tables/User/AllUserTable"
-import BannedUserTable from "../Tables/User/SuspendUserTable"
+import SuspendedUserTable from "../Tables/User/SuspendUserTable"
 
 // Model
 import { UserDataTableInterface } from "../../../../Model/UserTableModel"
@@ -17,7 +17,7 @@ const UserTabPanel:FC<UserDataTableInterface> = (userTableData) =>
     const UserRecordTables = 
     [
         <AllUserTable userData={userData} value={value} paginationValue={paginationValue} changeValue={changeValue} setSearchUserData={setSearchUserData} searchUserData={searchUserData}/>, 
-        <BannedUserTable userData={userData} value={value} paginationValue={paginationValue}/>
+        <SuspendedUserTable userData={userData} value={value} paginationValue={paginationValue}/>
     ];
 
     return(

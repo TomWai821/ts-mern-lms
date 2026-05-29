@@ -8,9 +8,9 @@ import { useAuthContext } from "../../../../Context/User/AuthContext";
 import ExpandableTypography from "../../../UIFragment/ExpandableTypography";
 import { setDataTextColor } from "../../../../Controller/SetTextController";
 
-const BannedUserDataBody:FC<DisplayDataModalBody> = (BannedUserData) => 
+const SuspendedUserDataBody:FC<DisplayDataModalBody> = (SuspendedUserData) => 
 {
-    const {data} = BannedUserData;
+    const {data} = SuspendedUserData;
     const {IsAdmin} = useAuthContext();
     const Data = data as UserResultDataInterface;
 
@@ -51,4 +51,4 @@ const BannedUserDataBody:FC<DisplayDataModalBody> = (BannedUserData) =>
     );
 }
 
-export default BannedUserDataBody
+export default SuspendedUserDataBody

@@ -90,9 +90,9 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
 
     },[fetchAllUser, authToken])
     
-    const editSuspendUserData = useCallback(async (userId:string, bannedListID:string, dueDate:Date, description:string) => 
+    const editSuspendUserData = useCallback(async (userId:string, suspendedListID:string, dueDate:Date, description:string) => 
     {
-        const result: Response = await ModifySuspendListDataController(authToken, userId, bannedListID, dueDate, description);
+        const result: Response = await ModifySuspendListDataController(authToken, userId, suspendedListID, dueDate, description);
 
         if(result)
         {

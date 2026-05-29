@@ -30,11 +30,11 @@ const EditSuspendUserModal:FC<EditModalInterface> = (editModalData) =>
     const {handleOpen} = useModal();    
     const { _id, userID, description, startDate, dueDate, status } = editData as DetailsInterfaceForSuspend;
 
-    const bannedIDToString = _id.toString() as string;
+    const suspendedIDToString = _id.toString() as string;
     const startDateToString = TransferDateToISOString(startDate as Date) as string;
     const dueDateToString = TransferDateToISOString(dueDate as Date) as string;
     const descriptionToString = description.toString() as string;
-    const [banData, setSuspendData] = useState<DetailsInterfaceForSuspend>({_id: bannedIDToString, userID:userID, startDate: startDateToString, dueDate: dueDateToString, description: descriptionToString, status: status });
+    const [banData, setSuspendData] = useState<DetailsInterfaceForSuspend>({_id: suspendedIDToString, userID:userID, startDate: startDateToString, dueDate: dueDateToString, description: descriptionToString, status: status });
     
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [errors, setErrors] = useState({description: ""});

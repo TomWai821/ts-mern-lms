@@ -62,9 +62,9 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
     )
 }
 
-const SuspendUserTable:FC<UserDataTableInterface> = (DataForBannedUserTable) => 
+const SuspendUserTable:FC<UserDataTableInterface> = (DataForSuspendedUserTable) => 
 {
-    const {value, userData, paginationValue} = DataForBannedUserTable;
+    const {value, userData, paginationValue} = DataForSuspendedUserTable;
     const { IsAdmin } = useAuthContext();
 
     const { paginatedData, getCountPage, handlePageChange, page } = usePaginationService<UserResultDataInterface>(userData[value], paginationValue);
