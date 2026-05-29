@@ -67,9 +67,7 @@ describe("Book API Test (Get Recommend Book which most loaned)", () =>
     {
         const res = await request(app).get("/api/recommend/type=mostPopular")
 
-        console.log(console.log(res.body.foundLoanBook));
         expect(res.statusCode).toBe(200);
-        console.log(res.body.foundLoanBook);
         expect(res.body.foundLoanBook)
     });
 });
