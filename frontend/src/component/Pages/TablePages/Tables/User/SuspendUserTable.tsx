@@ -52,10 +52,13 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
                     <ContentTableCell TableName={TableName} value={value} Information={data}> {TransferDateToString(data.suspendedDetails?.startDate as Date)} </ContentTableCell>
                     
                     <ContentTableCell TableName={TableName} value={value} Information={data}> 
+                        {CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)}
+
                         {
-                            `${CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)}
-                            (${CountDuration(data.suspendedDetails?.dueDate as Date)} Left)
-                            `
+                            IsAdmin() && data.status === "Suspend" && data.suspendedDetails?.dueDate && 
+                            (
+                                ` (${CountDuration(data.suspendedDetails?.dueDate as Date)})`
+                            )
                         }
                     </ContentTableCell>
                     
