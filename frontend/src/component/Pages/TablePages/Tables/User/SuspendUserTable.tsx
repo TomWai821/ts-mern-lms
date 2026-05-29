@@ -57,7 +57,7 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
                         {
                             IsAdmin() && data.status === "Suspend" && data.suspendedDetails?.dueDate && 
                             (
-                                ` (${CountDuration(data.suspendedDetails?.dueDate as Date)})`
+                                ` (${CountDuration(data.suspendedDetails?.dueDate as Date)} Left)`
                             )
                         }
                     </ContentTableCell>
