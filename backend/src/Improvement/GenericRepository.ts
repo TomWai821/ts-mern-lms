@@ -1,6 +1,6 @@
 import { Model, ObjectId } from "mongoose"; 
 
-export class CRUDService<T> 
+export class GenericRepository<T> 
 { 
     private model: Model<T>; 
 

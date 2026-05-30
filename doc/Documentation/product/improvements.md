@@ -128,13 +128,19 @@
     - Replace basic `setInterval` + `setTimeout` with **node-cron** or cloud-based schedulers for better reliability and error handling
     
 3. **Standardised Response Wrapper**
-    - Implement a unified response structure (e.g. `errorCode`, `errorMessage`, `totalCount`) to improve API usability (Ref: [Improvement Directory](../../../backend/src/Improvement))
+    - Implement a unified response structure (e.g. `errorCode`, `errorMessage`, `totalCount`) to improve API usability<br>
+      (Ref: [SuccessResponse.ts](../../../backend/src/Improvement/SuccessResponse.ts), [ErrorResponse.ts](../../../backend/src/Improvement/ErrorResponse.ts))
     
-4. **Generic CRUD Factory (OOP & Factory Pattern)**
-    - Implemented a Generic CRUD Factory to encapsulate redundant DB operations across collections (Ref: [CRUDFactory.ts](../../../backend/src/Improvement/CRUDFactory.ts))
+4. **Generic Repository + Factory Pattern (TypeScript OOP Architecture)**
+    - Developed a Generic Repository to eliminate repetitive CRUD source code across collections (Ref: [GenericRepository.ts](../../../backend/src/Improvement/GenericRepository.ts))<br>
+      (It Improve maintainability and consistency)
+
+    - Integrated a Repository Factory for centralised management and type-safe instantiation (Ref: [RepositoryFactory.ts](../../../backend/src/Improvement/RepositoryFactory.ts))<br>
+      (It reduce input errors and simplifying future extension)
 
 5. **ACID Transactions (Multi-collection Consistency)**
-    - Transitioning complex Write/Delete operations from **Promise.all** to **MongoDB Transactions** to ensure strict atomicity across related collections (e.g. cascading deletes) in production replica-set environments
+    - Transitioning complex Write/Delete operations from **Promise.all** to **MongoDB Transactions**<br>
+      (Ensure strict atomicity across related collections (e.g. cascading deletes) in production replica-set environments)
 
 
 #### Infrastructure and Security
