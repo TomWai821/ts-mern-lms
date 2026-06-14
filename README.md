@@ -61,7 +61,7 @@ Explore how the system enhances your reading journey with intuitive discovery to
 </details>
 
 
-<defails>
+<details>
 <summary>3. Rich Metadata Modal (Main Page)</summary>
 
 - Click on "Harry Potter and the Half-Blood Prince" on the home page
@@ -75,7 +75,7 @@ Explore how the system enhances your reading journey with intuitive discovery to
         - Real-time metadata fetched via Google Books API, including ISBN, Average Rating, Rating Count, List Price, and Retail Price
 
 - Click Exit or click outside the modal to close
-</defails>
+</details>
   
 - Remarks:
     - Do not logout, keep this browser open for the Administrative Loan demo later
