@@ -28,18 +28,22 @@ This Information Technology Project (ITP) is a library management system enginee
 
 Explore how the system enhances your reading journey with intuitive discovery tools
 
-1. **Book Favourite (Personal Collection)**
-    - Navigate to Management > Book Management
+<details>
+<summary>3. Book Favourite (Personal Collection)</summary>
 
-    - Select any book and click the Favourite Book button
+- Navigate to Management > Book Management
 
-    - Click the sidebar icon and navigate to Records
+- Select any book and click the Favourite Book button
 
-    - Select the Favourite Book Record tab
-        - **Observe**: The favourited book is listed with full details, including Cover Image, Title, Genre, Language, and Author
+- Click the sidebar icon and navigate to Records
+
+- Select the Favourite Book Record tab
+    - **Observe**: The favourited book is listed with full details, including Cover Image, Title, Genre, Language, and Author
+</details>
 
 <details>
-<summary>Advanced Book Filtering</summary>
+<summary>2. Advanced Book Filtering</summary>
+
 - Navigate to View > Books
 
 - Set Status to OnShelf
@@ -47,28 +51,29 @@ Explore how the system enhances your reading journey with intuitive discovery to
 - Expand the filter (Down arrow), set Genre to Novel
 
 - Click Search
-    - **Observe**: Results are narrowed down to Available Novels only
+    - **Observe**
+        - Results are narrowed down to Available Novels only
 
 - Click Reset Filter
-    - **Observe**: The filter clears, restoring the full book list instantly
+    - **Observe**
+        - The filter clears, restoring the full book list instantly
 </details>
 
 <defails>
-<summary>Rich Metadata Modal (Main Page)</summary>
+<summary>3. Rich Metadata Modal (Main Page)</summary>
 
-<p>Click on "Harry Potter and the Half-Blood Prince" on the home page</p>
+- Click on "Harry Potter and the Half-Blood Prince" on the home page
 
-<p>
-    Click the Expand button near the description<br>
-    **Observe**: The full book synopsis is revealed
-</p>
+- Click the Expand button near the description
+    - **Observe**
+        - The full book synopsis is revealed
 
-<p>
-    Switch to the Google Books tab<br>
-    **Observe**: Real-time metadata fetched via Google Books API, including ISBN, Average Rating, Rating Count, List Price, and Retail Price
-</p>
+- Switch to the Google Books tab
+    - **Observe**
+        - Real-time metadata fetched via Google Books API, including ISBN, Average Rating, Rating Count, List Price, and Retail Price
 
-<p>Click Exit or click outside the modal to close</p>
+
+- Click Exit or click outside the modal to close
 </defails>
   
 - Remarks:
