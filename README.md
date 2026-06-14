@@ -38,7 +38,8 @@ Explore how the system enhances your reading journey with intuitive discovery to
 - Click the sidebar icon and navigate to Records
 
 - Select the Favourite Book Record tab
-    - **Observe**: The favourited book is listed with full details, including Cover Image, Title, Genre, Language, and Author
+    - **Observe**
+        - The favourited book is listed with full details, including Cover Image, Title, Genre, Language, and Author
 </details>
 
 
