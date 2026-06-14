@@ -28,28 +28,38 @@ This Information Technology Project (ITP) is a library management system enginee
 
 Explore how the system enhances your reading journey with intuitive discovery tools
 
-1. Book Favourite (Personal Collection)
+1. **Book Favourite (Personal Collection)**
     - Navigate to Management > Book Management
+
     - Select any book and click the Favourite Book button
+
     - Click the sidebar icon and navigate to Records
+
     - Select the Favourite Book Record tab
         - **Observe**: The favourited book is listed with full details, including Cover Image, Title, Genre, Language, and Author
 
-2. Advanced Book Filtering
+2. **Advanced Book Filtering**
     - Navigate to View > Books
+
     - Set Status to OnShelf
+
     - Expand the filter (Down arrow), set Genre to Novel
+
     - Click Search
         - **Observe**: Results are narrowed down to Available Novels only
+
     - Click Reset Filter
         - **Observe**: The filter clears, restoring the full book list instantly
 
-3. Rich Metadata Modal (Main Page)
+3. **Rich Metadata Modal (Main Page)**
     - Click on "Harry Potter and the Half-Blood Prince" on the home page
+
     - Click the Expand button near the description
         - **Observe**: The full book synopsis is revealed
+
     - Switch to the Google Books tab
         - **Observe**: Real-time metadata fetched via Google Books API, including ISBN, Average Rating, Rating Count, List Price, and Retail Price
+
     - Click Exit or click outside the modal to close
   
 - Remarks:
@@ -61,7 +71,7 @@ Explore how the system enhances your reading journey with intuitive discovery to
 
 Demonstrating administrative transparency and data-driven intelligence (Login as Librarian required)
 
-1. TF-IDF Recommendation Engine (Real-time Personalisation)
+1. **TF-IDF Recommendation Engine (Real-time Personalisation)**
     - Navigate to Management > Book Management
 
     - Select an OnShelf book (Best with Non-Novel/Academic Textbook) and click Loan Book
@@ -71,7 +81,8 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
     - Return to the Library (Home) page
         - **Observe**: The "Recommended for You" section updates instantly, prioritising new books based on the TF-IDF Engine's analysis of your latest loan
 
-2. Asset Lifecycle Tracking (Book History)
+
+2. **Asset Lifecycle Tracking (Book History)**
     - Navigate to Management > Book Management
 
     - Select any OnLoan book and click View Loan Book History
@@ -79,7 +90,8 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
 
     - Click the action button (Next to the search button) and select reset filter
 
-3. Administrative Loan (Requires 2 Browsers)
+
+3. **Administrative Loan (Requires 2 Browsers)**
     - (Librarian Browser): Navigate to Management > Book Management
 
     - (Librarian Browser): Select an OnShelf book and click Loan Book
@@ -92,7 +104,8 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
     - (User Browser): Navigate to Records > Loan Book Record
         - **Observe**: The newly loaned book appears at the bottom of the list, confirming the record has been successfully appended in real-time
 
-4. Administrative Book Return
+
+4. **Administrative Book Return**
     - (Librarian Browser): Navigate to Management > Book Management
 
     - (Librarian Browser): Select **the book used in the previous step** and click View Loan Book History
