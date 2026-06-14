@@ -40,21 +40,17 @@ Explore how the system enhances your reading journey with intuitive discovery to
 
 <details>
 <summary>Advanced Book Filtering</summary>
+- Navigate to View > Books
 
-<p>Navigate to View > Books</p>
+- Set Status to OnShelf
 
-<p>Set Status to OnShelf</p>
+- Expand the filter (Down arrow), set Genre to Novel
 
-<p>Expand the filter (Down arrow), set Genre to Novel</p>
+- Click Search
+    - **Observe**: Results are narrowed down to Available Novels only
 
-<p>
-Click Search<br>
-**Observe**: Results are narrowed down to Available Novels only
-</p>
-
-<p>Click Reset Filter
-**Observe**: The filter clears, restoring the full book list instantly
-</p>
+- Click Reset Filter
+    - **Observe**: The filter clears, restoring the full book list instantly
 </details>
 
 <defails>
