@@ -29,7 +29,7 @@ This Information Technology Project (ITP) is a library management system enginee
 Explore how the system enhances your reading journey with intuitive discovery tools
 
 <details>
-<summary>3. Book Favourite (Personal Collection)</summary>
+<summary>1. Book Favourite (Personal Collection)</summary>
 
 - Navigate to Management > Book Management
 
@@ -40,6 +40,7 @@ Explore how the system enhances your reading journey with intuitive discovery to
 - Select the Favourite Book Record tab
     - **Observe**: The favourited book is listed with full details, including Cover Image, Title, Genre, Language, and Author
 </details>
+
 
 <details>
 <summary>2. Advanced Book Filtering</summary>
@@ -59,6 +60,7 @@ Explore how the system enhances your reading journey with intuitive discovery to
         - The filter clears, restoring the full book list instantly
 </details>
 
+
 <defails>
 <summary>3. Rich Metadata Modal (Main Page)</summary>
 
@@ -72,7 +74,6 @@ Explore how the system enhances your reading journey with intuitive discovery to
     - **Observe**
         - Real-time metadata fetched via Google Books API, including ISBN, Average Rating, Rating Count, List Price, and Retail Price
 
-
 - Click Exit or click outside the modal to close
 </defails>
   
@@ -85,55 +86,72 @@ Explore how the system enhances your reading journey with intuitive discovery to
 
 Demonstrating administrative transparency and data-driven intelligence (Login as Librarian required)
 
-1. **TF-IDF Recommendation Engine (Real-time Personalisation)**
-    - Navigate to Management > Book Management
+<details>
+<summary>1. TF-IDF Recommendation Engine (Real-time Personalisation)</summary>
 
-    - Select an OnShelf book (Best with Non-Novel/Academic Textbook) and click Loan Book
+- Navigate to Management > Book Management
 
-    - Choose Self Loan and confirm
+- Select an OnShelf book (Best with Non-Novel/Academic Textbook) and click Loan Book
 
-    - Return to the Library (Home) page
-        - **Observe**: The "Recommended for You" section updates instantly, prioritising new books based on the TF-IDF Engine's analysis of your latest loan
+- Choose Self Loan and confirm
 
-
-2. **Asset Lifecycle Tracking (Book History)**
-    - Navigate to Management > Book Management
-
-    - Select any OnLoan book and click View Loan Book History
-        - **Observe**: Automatically redirects to the Loan History tab, displaying the book's full history, including Loaned Date, Return Date, Borrower, and Record Status
-
-    - Click the action button (Next to the search button) and select reset filter
+- Return to the Library (Home) page
+    - **Observe**
+        - The "Recommended for You" section updates instantly, prioritising new books based on the TF-IDF Engine's analysis of your latest loan
+</details>
 
 
-3. **Administrative Loan (Requires 2 Browsers)**
-    - (Librarian Browser): Navigate to Management > Book Management
+<details>
+<summary>2. Asset Lifecycle Tracking (Book History)</summary>
 
-    - (Librarian Browser): Select an OnShelf book and click Loan Book
+- Navigate to Management > Book Management
 
-    - (Librarian Browser): Choose User Loaned, then input/scan the QR Code data (From [Demo Material](doc/DemonstrationMaterial/DemonStrationData.txt)) and confirm
-        - **Observe**: The book status instantly changes to OnLoan
+- Select any OnLoan book and click View Loan Book History
+    - **Observe**
+        - Automatically redirects to the Loan History tab, displaying the book's full history<br>
+          (Include Loaned Date, Return Date, Borrower, and Record Status)
 
-    - (User Browser): Switch to the User's browser window
-
-    - (User Browser): Navigate to Records > Loan Book Record
-        - **Observe**: The newly loaned book appears at the bottom of the list, confirming the record has been successfully appended in real-time
+- Click the action button (Next to the search button) and select reset filter
+</details>
 
 
-4. **Administrative Book Return**
-    - (Librarian Browser): Navigate to Management > Book Management
+<details>
+<summary>3. Administrative Loan (Requires 2 Browsers)</summary>
 
-    - (Librarian Browser): Select **the book used in the previous step** and click View Loan Book History
+- (Librarian Browser): Navigate to Management > Book Management
 
-    - (Librarian Browser): Select the latest loan record (bottom of the list) and click Return Book
+- (Librarian Browser): Select an OnShelf book and click Loan Book
+
+- (Librarian Browser): Choose User Loaned, then input/scan the QR Code data (From [Demo Material](doc/DemonstrationMaterial/DemonStrationData.txt)) and confirm
+    - **Observe**
+        - The book status instantly changes to OnLoan
+
+- (User Browser): Switch to the User's browser window
+
+- (User Browser): Navigate to Records > Loan Book Record
+    - **Observe**
+        - The newly loaned book appears at the bottom of the list, confirming the record has been successfully appended in real-time
+</details>
+
+<details>
+<summary>4. Administrative Book Return</summary>
+
+- (Librarian Browser): Navigate to Management > Book Management
+
+- (Librarian Browser): Select **the book used in the previous step** and click View Loan Book History
+
+- (Librarian Browser): Select the latest loan record (bottom of the list) and click Return Book
     
-    - (Librarian Browser): Confirm the return
-        - **Observe**: The status instantly reverts to OnShelf (Book Data Tab) and updates to Return (Loan Record Tab)
+- (Librarian Browser): Confirm the return
+    - **Observe**
+        - The status instantly reverts to OnShelf (Book Data Tab) and updates to Return (Loan Record Tab)
 
-    - (User Browser): Switch to the User's browser window
+- (User Browser): Switch to the User's browser window
 
-    - (User Browser): Navigate to Records > Loan Book Record
-        - **Observe**: The loan record status for the specific book has been instantly updated to "Return", confirming seamless end-to-end synchronisation
-    
+- (User Browser): Navigate to Records > Loan Book Record
+    - **Observe**
+        - The loan record status for the specific book has been instantly updated to "Return", confirming seamless end-to-end synchronisation
+</details>
 
 ## Video for presentation and demonstration
 ### SpeedRun version
