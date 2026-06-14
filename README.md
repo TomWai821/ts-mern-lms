@@ -63,34 +63,48 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
 
 1. TF-IDF Recommendation Engine (Real-time Personalisation)
     - Navigate to Management > Book Management
+
     - Select an OnShelf book (Best with Non-Novel/Academic Textbook) and click Loan Book
+
     - Choose Self Loan and confirm
+
     - Return to the Library (Home) page
         - **Observe**: The "Recommended for You" section updates instantly, prioritising new books based on the TF-IDF Engine's analysis of your latest loan
 
 2. Asset Lifecycle Tracking (Book History)
-    - Navigate to Management > Book Management.
+    - Navigate to Management > Book Management
+
     - Select any OnLoan book and click View Loan Book History
         - **Observe**: Automatically redirects to the Loan History tab, displaying the book's full history, including Loaned Date, Return Date, Borrower, and Record Status
+
     - Click the action button (Next to the search button) and select reset filter
 
 3. Administrative Loan (Requires 2 Browsers)
     - (Librarian Browser): Navigate to Management > Book Management
+
     - (Librarian Browser): Select an OnShelf book and click Loan Book
+
     - (Librarian Browser): Choose User Loaned, then input/scan the QR Code data (From [Demo Material](doc/DemonstrationMaterial/DemonStrationData.txt)) and confirm
         - **Observe**: The book status instantly changes to OnLoan
+
     - (User Browser): Switch to the User's browser window
+
     - (User Browser): Navigate to Records > Loan Book Record
         - **Observe**: The newly loaned book appears at the bottom of the list, confirming the record has been successfully appended in real-time
 
 4. Administrative Book Return
     - (Librarian Browser): Navigate to Management > Book Management
+
     - (Librarian Browser): Select **the book used in the previous step** and click View Loan Book History
+
     - (Librarian Browser): Select the latest loan record (bottom of the list) and click Return Book
+    
     - (Librarian Browser): Confirm the return
         - **Observe**: The status instantly reverts to OnShelf (Book Data Tab) and updates to Return (Loan Record Tab)
+
     - (User Browser): Switch to the User's browser window
-    - (User Browser): Navigate to Records > Loan Book Record.
+
+    - (User Browser): Navigate to Records > Loan Book Record
         - **Observe**: The loan record status for the specific book has been instantly updated to "Return", confirming seamless end-to-end synchronisation
     
 
@@ -134,6 +148,7 @@ After graduation, I refactored the entire system to align with industry-standard
         - Isolated business logic from transport and persistence layers<br>
           (Enable independent scaling of services and reducing regression risks during feature iterations)
 
+
 - Logic Refactoring: **Backend-Driven Computation**
     - Offloaded heavy business logic (such as the TF-IDF Recommendation Engine, from the client-side to the Backend Service Layer)
 
@@ -144,6 +159,7 @@ After graduation, I refactored the entire system to align with industry-standard
         - **Centralised Computation** 
             - Guaranteed a single source of truth for recommendation logic
               (Ensure consistent results across all user sessions and facilitating future algorithmic updates without client-side redeployment)
+
 
 
 - DevOps Integration: **Environment Parity & CD Readiness**
@@ -165,6 +181,7 @@ After graduation, I refactored the entire system to align with industry-standard
     - **Benefit**
         - Facilitates high code maintainability and allows independent testing of business logic and data access layers
   
+
 - Data Integrity & Consistency Management - **Reliable Image Persistence (Multer & fs/promises)**
     - Developed a custom workflow utilising memoryStorage to simulate atomicity<br>
       (Ensured that file system mutations (e.g. HandleDeleteImage) only execute after verifying primary database operations)
@@ -184,6 +201,7 @@ After graduation, I refactored the entire system to align with industry-standard
         - Significantly reduced runtime TypeErrors
         - Improved developer productivity through IDE intelligent code completion
   
+
 - Security Logic - **Dual‑Token Authorisation for High‑Risk Loan Operations**
     - The loan workflow enforces dual‑token authorisation
       (A loan request proceeds only when both the borrower and librarian JWTs are present and validated)
@@ -195,12 +213,14 @@ After graduation, I refactored the entire system to align with industry-standard
         - Significantly raising the cost of the attack
           (Even if a single credential is compromised, an attacker still needs the other party’s authorisation to complete a loan)
   
+
 - State Orchestration - **Performance-Oriented Frontend Architecture**
     - Optimised React performance by centralising global state with Context API and encapsulated logic within Custom Hooks
 
     - **Benefit**
         - Minimised unnecessary component re-renders and established a predictable, one-way data flow
-      
+
+
 - Cloud-Native DevOps & Infrastructure - **Scaling from PaaS to Serverless**
     - Orchestrated a strategic migration from PaaS (Railway) to an AWS-based Serverless environment using Docker (ECR) and AWS Lambda
 
