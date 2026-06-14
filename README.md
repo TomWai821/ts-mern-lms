@@ -410,8 +410,8 @@ This project focuses on high-standard engineering practices. Key highlights incl
       (If the `db-data` volume already contains data, the scripts will be skipped)
 
     - To re-run initialization and restore the demo data, remove the volume and restart the stack:
-      1. `docker compose -f compose.yaml down -v`  # WARNING: permanently deletes all persisted DB data
-      2. `docker compose -f compose.yaml up --build`
+      - `docker compose -f compose.yaml down -v`  # WARNING: permanently deletes all persisted DB data
+      - `docker compose -f compose.yaml up --build`
 
     - The backend requires this demo data for proper functionality
       (If you run MongoDB locally instead of via Docker, import the Schema [JSON files](./backend/MongoDBSchema) (e.g. via MongoDB Compass))
@@ -420,7 +420,13 @@ This project focuses on high-standard engineering practices. Key highlights incl
 
     - `STORAGE_TYPE` will affect the logic on image handling and it is require in the .env
 
-    - Modify build `target` and backend `NODE_ENV` to development before build the docker compose
+    - Please ensure Docker Config is:
+        - [compose.yaml](compose.yaml)
+            - backend -> environment -> NODE_ENV: development
+            - frontend -> environment -> NODE_ENV: development
+
+        - [Backend Dockerfile](./backend/Dockerfile)
+            - ENV NODE_ENV=development (Line 41)
 
 
     ### Using local environment
