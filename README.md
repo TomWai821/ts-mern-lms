@@ -38,29 +38,42 @@ Explore how the system enhances your reading journey with intuitive discovery to
     - Select the Favourite Book Record tab
         - **Observe**: The favourited book is listed with full details, including Cover Image, Title, Genre, Language, and Author
 
-2. **Advanced Book Filtering**
-    - Navigate to View > Books
+<details>
+<summary>Advanced Book Filtering</summary>
 
-    - Set Status to OnShelf
+<p>Navigate to View > Books</p>
 
-    - Expand the filter (Down arrow), set Genre to Novel
+<p>Set Status to OnShelf</p>
 
-    - Click Search
-        - **Observe**: Results are narrowed down to Available Novels only
+<p>Expand the filter (Down arrow), set Genre to Novel</p>
 
-    - Click Reset Filter
-        - **Observe**: The filter clears, restoring the full book list instantly
+<p>
+Click Search<br>
+**Observe**: Results are narrowed down to Available Novels only
+</p>
 
-3. **Rich Metadata Modal (Main Page)**
-    - Click on "Harry Potter and the Half-Blood Prince" on the home page
+<p>Click Reset Filter
+**Observe**: The filter clears, restoring the full book list instantly
+</p>
+</details>
 
-    - Click the Expand button near the description
-        - **Observe**: The full book synopsis is revealed
+<defails>
+<summary>Rich Metadata Modal (Main Page)</summary>
 
-    - Switch to the Google Books tab
-        - **Observe**: Real-time metadata fetched via Google Books API, including ISBN, Average Rating, Rating Count, List Price, and Retail Price
+<p>Click on "Harry Potter and the Half-Blood Prince" on the home page</p>
 
-    - Click Exit or click outside the modal to close
+<p>
+    Click the Expand button near the description<br>
+    **Observe**: The full book synopsis is revealed
+</p>
+
+<p>
+    Switch to the Google Books tab<br>
+    **Observe**: Real-time metadata fetched via Google Books API, including ISBN, Average Rating, Rating Count, List Price, and Retail Price
+</p>
+
+<p>Click Exit or click outside the modal to close</p>
+</defails>
   
 - Remarks:
     - Do not logout, keep this browser open for the Administrative Loan demo later
