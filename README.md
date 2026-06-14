@@ -79,8 +79,11 @@ Explore how the system enhances your reading journey with intuitive discovery to
   
 - Remarks:
     - Do not logout, keep this browser open for the Administrative Loan demo later
+    
     - The metadata fetching logic includes error handling for HTTP 429 (Too Many Requests)<br>
-      (In the event of a quota exhaustion, the UI gracefully falls back to displaying local database metadata to ensure an uninterrupted User Experience)<br>
+    
+    - In the event of quota exhaustion, the UI will display **all data as Null** and will not display the barcode
+      (Ensure transparency while allowing the demo to proceed with local records)
  
 #### For Admin (Librarian)
 
