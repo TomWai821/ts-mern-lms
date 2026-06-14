@@ -83,7 +83,7 @@ Explore how the system enhances your reading journey with intuitive discovery to
     
     - The metadata fetching logic includes error handling for HTTP 429 (Too Many Requests)<br>
     
-    - In the event of quota exhaustion, the UI will display **all data as Null** and will not display the barcode
+    - In the event of quota exhaustion, the UI will display **all data as Null** and will not display the barcode<br>
       (Ensure transparency while allowing the demo to proceed with local records)
  
 #### For Admin (Librarian)
