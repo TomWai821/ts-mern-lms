@@ -157,12 +157,9 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
         - The loan record status for the specific book has been instantly updated to "Return", confirming seamless end-to-end synchronisation
 </details>
 
-## Video for presentation and demonstration
+## Video for demonstration
 ### SpeedRun version
 - **[Features Speedrun Video](https://youtu.be/GU08EtdHS4I) (12 min):** A quick showcase of the system's core features for fast-paced viewing
-
-### Detailed version
-- **[Presentation Video](https://youtu.be/QuyYn-r9Nr4) (12 min):** An overview of the project concept, goals, and the inspiration behind it 
     
 - **Demonstration Video (Total: 33 min):** A walkthrough of the project's features and live functionalities for each role<br>
     - [For Non-Librarian (Guest User and Authenticate User)](https://youtu.be/CtT22CMBoSo) - 15 min<br>
