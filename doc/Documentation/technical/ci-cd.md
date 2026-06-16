@@ -7,6 +7,7 @@ Image 1 - CI/CD process overview<br>
 
 - **Remarks**
     - CD pipeline is triggered only after CI jobs (lint, test, build, push) all succeed
+    - Documentation-only changes (README, doc/**) are excluded and will not trigger the CI/CD process
 
 ### Continuous Integration (CI)
 - Implemented GitHub Actions workflows triggered on every Push/PR to enforce CI/CD
