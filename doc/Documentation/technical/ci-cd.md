@@ -82,7 +82,7 @@ Image 1 - CI/CD process overview<br>
     <img src="../../Image/Deployment/AWS_Deployment(Lambda).png" style="width:90%;"/><br>
     Image 4 - AWS Deployment Record(Lambda)<br>
 
-    <img src="../../Image/CICD/CD_deploy_frontend.png.png" style="width:90%;"/><br>
+    <img src="../../Image/CICD/CD_deploy_frontend.png" style="width:90%;"/><br>
     Image 5 - Frontend Deployment (Vercel)<br>
 
     <img src="../../Image/Deployment/Vercel_Deployment.png" style="width:90%;"/><br>
