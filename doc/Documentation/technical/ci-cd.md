@@ -1,5 +1,13 @@
 ## CI/CD
 
+![CI Badge](https://img.shields.io/badge/CI-passing-brightgreen)
+
+<img src="../../Image/CICD/CI_CD_Last_Implementation.png" style="width:90%;"/><br>
+Image 1 - CI/CD process overview<br>
+
+- **Remarks**
+    - CD pipeline is triggered only after CI jobs (lint, test, build, push) all succeed
+
 ### Continuous Integration (CI)
 - Implemented GitHub Actions workflows triggered on every Push/PR to enforce CI/CD
 
@@ -17,6 +25,26 @@
 
 - **Docker Integration**
     - Automated multi‑stage Docker builds to guarantee reproducibility across environments
+
+- **CI/CD Status and Records**
+    - **Images**<br>
+    <img src="../../Image/CICD/CI_overview.png" style="width:90%;"/><br>
+    Image 1 - CI overview<br>
+
+    <img src="../../Image/CICD/CI_lint_typecheck.png" style="width:90%;"/><br>
+    Image 2 - Lint Type check<br>
+
+    <img src="../../Image/CICD/CI_frontend_test.png" style="width:90%;"/><br>
+    Image 3 - frontend test (Unit Test)<br>
+
+    <img src="../../Image/CICD/CI_backend_test.png" style="width:90%;"/><br>
+    Image 4 - backend test (Integration Test with virtual MongoDB)<br>
+
+    <img src="../../Image/CICD/CI_build_test.png" style="width:90%;"/><br>
+    Image 5 - build test (Frontend and backend with virtual MongoDB)<br>
+
+    <img src="../../Image/CICD/CI_push_to_aws.png" style="width:90%;"/><br>
+    Image 6 - Push to container to AWS (ECR)<br>
 
 
 
@@ -41,14 +69,23 @@
 
 - **Deployment Status and Records**
     - **Images**<br>
-    <img src="../../Image/Deployment/Vercel_Deployment.png" style="width:90%;"/><br>
-    Image 1 - Vercel Deployment Record<br>
+    <img src="../../Image/CICD/CD_overview.png" style="width:90%;"/><br>
+    Image 1 - CD overview<br>
+
+    <img src="../../Image/CICD/CD_deploy_backend.png" style="width:90%;"/><br>
+    Image 2 - Backend Deployment (AWS)<br>
 
     <img src="../../Image/Deployment/AWS_Deployment(ECR).png" style="width:90%;"/><br>
-    Image 2 - AWS Deployment Record(ECR)<br>
+    Image 3 - AWS Deployment Record(ECR)<br>
     
     <img src="../../Image/Deployment/AWS_Deployment(Lambda).png" style="width:90%;"/><br>
-    Image 3 - AWS Deployment Record(Lambda)<br>
+    Image 4 - AWS Deployment Record(Lambda)<br>
+
+    <img src="../../Image/CICD/CD_deploy_frontend.png.png" style="width:90%;"/><br>
+    Image 5 - Frontend Deployment (Vercel)<br>
+
+    <img src="../../Image/Deployment/Vercel_Deployment.png" style="width:90%;"/><br>
+    Image 6 - Vercel Deployment Record<br>
 
 
     - **Deployment Secret Explanation**
@@ -78,7 +115,7 @@
         - Enhanced ORIGINAL_URI configuration to support multiple origins<br>
           (Allowed backend to securely accept requests from both Vercel production domain and local development environments, improving workflow flexibility without compromising security)
 
-    - Immutable Artefact Deployment
+    - **Immutable Artefact Deployment**
         - CI pipeline builds and pushes Docker images to AWS ECR, capturing image digest as output<br>
           (Ensures CD stage updates Lambda using tested artefacts instead of latest tags, guaranteeing reproducibility and reducing regression risk)
 
