@@ -2,12 +2,12 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useContactContext } from "../../Context/Book/ContactContext";
 
 const defaultValue = {author: "", publisher: ""};
+const title = ["Author", "Publisher"];
 
 export const useContactFilter = (tabValue: number) =>
 {
     const { fetchContactDataWithFilterData } = useContactContext();
     const [searchContact, setSearchContact] = useState(defaultValue);
-    const title = ["Author", "Publisher"];
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {

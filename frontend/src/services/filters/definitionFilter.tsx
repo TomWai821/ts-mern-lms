@@ -3,12 +3,12 @@ import { useDefinitionContext } from "../../Context/Book/DefinitionContext";
 
 
 const defaultValue = {genre:"", language: ""};
+const title = ["Genre", "Language"];
 
 export const useDefinitionFilter = (tabValue: number) =>
 {
     const { fetchDefinitionDataWithFilterData } = useDefinitionContext();
     const [searchData, setSearchData] = useState({genre:"", language: ""});
-    const title = ["Genre", "Language"];
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
