@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { BookDataInterface, ContactInterface, DefinitionState, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
+import { BookDataInterface, ContactInterface, DefinitionInterface, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
 import { BookTableDataInterface } from "./BookTableModel";
 import { ViewProfileModel } from "./InputFieldModel";
 
@@ -99,7 +99,7 @@ export interface SelfBookRecordContextProps
 
 export interface DefinatonProps
 {
-    definition: DefinitionState;
+    definition: DefinitionInterface[][];
     fetchAllDefinition: () => Promise<void>;
     fetchDefinitionDataWithFilterData:(type:string, data:string) => Promise<void>;
     createDefinition:(type:string, shortName:string, detailsName:string) => Promise<Response>;
@@ -109,7 +109,7 @@ export interface DefinatonProps
 
 export interface ContactProps
 {
-    contact: ContactState;
+    contact: ContactInterface[][];
     fetchAllContactData: () => Promise<void>;
     fetchContactDataWithFilterData: (type:string, filtData:string) => Promise<void>;
     createContactData:(type:string, contactName:string, phoneNumber:string, email:string) => Promise<Response>;
@@ -138,10 +138,4 @@ export interface SuggestionData
     topGenres: string[];
     topAuthors: string[];
     topPublishers: string[];
-}
-
-export interface ContactState
-{
-    Author: ContactInterface[];
-    Publisher: ContactInterface[];
 }

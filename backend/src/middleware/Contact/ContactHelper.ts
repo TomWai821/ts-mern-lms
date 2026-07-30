@@ -14,20 +14,20 @@ export const validateContact = async (config: any, type: string, options: Contac
     {
         const duplicate = await config.find({ [nameKey]: options.name, ...(options.id ? { _id: { $ne: options.id } } : {}) });
 
-        if (duplicate) 
+        if (Array.isArray(duplicate) ? duplicate.length > 0 : !!duplicate) 
         {
             throw new Error(`${type} "${options.name}" already exists!`);
         }
     }
 
     // validate email
-    if (options.email) 
+    if (options.email && options.email.trim() !== "N/A")
     {
         const duplicateEmail = await config.find({email: options.email, ...(options.id ? { _id: { $ne: options.id } } : {}) });
 
-        if (duplicateEmail) 
+        if (Array.isArray(duplicateEmail) ? duplicateEmail.length > 0 : !!duplicateEmail) 
         {
-            throw new Error(`${type} email "${options.email}" is already taken!`);
+            throw new Error(`${type} email "${options.email}" is already exists!`);
         }
     }
 };

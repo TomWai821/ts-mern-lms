@@ -1,4 +1,4 @@
-import { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
 
 import { BookContextProps, ChildProps } from "../../Model/ContextAndProviderModel";
 
@@ -12,15 +12,46 @@ import { deleteBookRecord } from "../../Controller/BookController/BookDeleteCont
 import { useAuthContext } from "../User/AuthContext";
 import { useRecommendBookContext } from "./RecommendBookContext";
 
+interface BookState 
+{
+    AllBook: BookDataInterface[];
+    OnLoanBook: LoanBookInterface[];
+}
+
+type BookAction =
+    | { type: "SET_ALL_BOOK"; payload: BookDataInterface[] }
+    | { type: "SET_ON_LOAN_BOOK"; payload: LoanBookInterface[] };
+
+const initialState: BookState = 
+{
+    AllBook: [],
+    OnLoanBook: [],
+};
+
+const bookReducer = (state: BookState, action: BookAction): BookState => 
+{
+    switch (action.type) 
+    {
+        case "SET_ALL_BOOK":
+            return { ...state, AllBook: action.payload };
+
+        case "SET_ON_LOAN_BOOK":
+            return { ...state, OnLoanBook: action.payload };
+
+        default:
+            return state;
+    }
+};
+
 const BookContext = createContext<BookContextProps | undefined>(undefined);
 
 export const BookProvider:FC<ChildProps> = ({children}) => 
 {
     const { GetData } = useAuthContext();
     const { fetchNewPublishBook, fetchMostPopularBook } = useRecommendBookContext();
-    
-    const [AllBook, setAllBook] = useState<BookDataInterface[]>([]);
-    const [OnLoanBook, setOnLoanBook] = useState<LoanBookInterface[]>([]);
+
+    const [state, dispatch] = useReducer(bookReducer, initialState);
+    const { AllBook, OnLoanBook } = state;
     const bookData = [AllBook, OnLoanBook];
     
     const authToken = GetData("authToken") as string;
@@ -32,12 +63,12 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         
         if(resultForAllBook && Array.isArray(resultForAllBook.foundBook))
         {
-            setAllBook(resultForAllBook.foundBook);
+            dispatch({ type: "SET_ALL_BOOK", payload: resultForAllBook.foundBook });
         }
 
         if(resultForLoanBook && Array.isArray(resultForLoanBook.foundLoanBook))
         {
-            setOnLoanBook(resultForLoanBook.foundLoanBook);
+            dispatch({ type: "SET_ON_LOAN_BOOK", payload: resultForLoanBook.foundLoanBook });
         }
     },[authToken])
 
@@ -47,7 +78,7 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         
         if(result && Array.isArray(result.foundBook))
         {
-            setAllBook(result.foundBook);
+            dispatch({ type: "SET_ALL_BOOK", payload: result.foundBook });
         }
     },[])
 
@@ -57,7 +88,7 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
 
         if(result && Array.isArray(result.foundLoanBook))
         {
-            setOnLoanBook(result.foundLoanBook);
+            dispatch({ type: "SET_ON_LOAN_BOOK", payload: result.foundLoanBook });
         }
     },[authToken])
 

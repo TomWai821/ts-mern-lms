@@ -12,22 +12,25 @@ export const validateDefinition = async (config: any, type: string, options: Def
     // validate name
     if (options.name) 
     {
+        console.log(nameKey);
+        console.log(options.name);
+        console.log(options.id);
         const duplicate = await config.find({ [nameKey]: options.name, ...(options.id ? { _id: { $ne: options.id } } : {}) });
 
-        if (duplicate) 
+        if (Array.isArray(duplicate) ? duplicate.length > 0 : !!duplicate) 
         {
             throw new Error(`${type} "${options.name}" already exists!`);
         }
     }
 
     // validate shortname
-    if (options.shortName) 
+    if (options.shortName && options.shortName.trim() !== "N/A") 
     {
-        const duplicateShortname = await config.find({ shortname: options.shortName, ...(options.id ? { _id: { $ne: options.id } } : {}) });
+        const duplicateShortname = await config.find({ shortName: options.shortName, ...(options.id ? { _id: { $ne: options.id } } : {}) });
 
-        if (duplicateShortname) 
+        if (Array.isArray(duplicateShortname) ? duplicateShortname.length > 0 : !!duplicateShortname) 
         {
-            throw new Error(`Shortname "${options.shortName}" is already taken!`);
+            throw new Error(`${type} "${options.name}" is already taken!`);
         }
     }
 };

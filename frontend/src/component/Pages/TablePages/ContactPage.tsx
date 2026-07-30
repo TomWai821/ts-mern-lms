@@ -26,7 +26,7 @@ const ContactPage = () =>
     const { contact } = useContactContext();
 
     const { tabValue, paginationValue, changeValue } = usePageService();
-    const { searchContact, onChange, SearchContact, resetFilter, countLength } = useContactFilter(tabValue);
+    const { searchContact, onChange, SearchContact, resetFilter } = useContactFilter(tabValue);
 
     const { title } = getTablePageTitle("Contact", tabValue, IsAdmin);
 
@@ -40,7 +40,7 @@ const ContactPage = () =>
     
     return( 
         <Box sx={{ ...PageItemToCenter, flexDirection: 'column', padding: '0 50px'}}>
-            <TableTitle title={title} dataLength={countLength() as number}/>
+            <TableTitle title={title} dataLength={contact[tabValue].length}/>
 
             <ContactFilter value={tabValue} onChange={onChange} searchData={searchContact} Search={SearchContact} resetFilter={resetFilter}/>
 

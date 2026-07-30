@@ -1,22 +1,50 @@
-import { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
 import { ChildProps, DefinatonProps } from "../../Model/ContextAndProviderModel";
 
-import { DefinitionInterface, DefinitionState, GetResultInterface } from "../../Model/ResultModel";
+import { DefinitionInterface, GetResultInterface } from "../../Model/ResultModel";
 import { CreateDefinitionData, DeleteDefinitionData, EditDefinitionData, GetDefinition } from "../../Controller/BookController/DefinitionController";
 
 import { useAuthContext } from "../User/AuthContext";
+
+interface DefinitionState
+{
+    Genre: DefinitionInterface[];
+    Language: DefinitionInterface[];
+}
+
+type DefinitionAction =
+    | { type: "SET_GENRE"; payload: DefinitionInterface[] }
+    | { type: "SET_LANGUAGE"; payload: DefinitionInterface[] };
+
+const initialState: DefinitionState =
+{
+    Genre:[],
+    Language:[]
+}
+
+const definitionReducer = (state: DefinitionState, action: DefinitionAction): DefinitionState =>
+{
+    switch (action.type)
+    {
+        case "SET_GENRE":
+            return { ...state, Genre: action.payload };
+
+        case "SET_LANGUAGE":
+            return { ...state, Language: action.payload };
+
+        default:
+            return state;
+    }
+}
 
 const DefinitionContext = createContext<DefinatonProps | undefined>(undefined);
 
 export const DefinitionProvider:FC<ChildProps> = ({children}) => 
 {
     const {GetData} = useAuthContext();
-    const [definition, setDefinition] = useState<DefinitionState>(
-        {
-            Genre:[],
-            Language:[]
-        }
-    );
+    const [state, dispatch] = useReducer(definitionReducer, initialState);
+    const definition = [state.Genre, state.Language];
+    
     const authToken = GetData("authToken") as string;
 
     const fetchAllDefinition = useCallback(async () => 
@@ -30,7 +58,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
 
             if(Array.isArray(GenreData.foundDefinition as DefinitionInterface[]))
             {
-                setDefinition((prev) => ({...prev, Genre:GenreData.foundDefinition as DefinitionInterface[]}));
+                dispatch({ type: "SET_GENRE", payload: GenreData.foundDefinition as DefinitionInterface[] });
             }
         }
         
@@ -41,7 +69,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
 
             if(Array.isArray(LanguageData.foundDefinition as DefinitionInterface[]))
             {
-                setDefinition((prev) => ({...prev, Language:LanguageData.foundDefinition as DefinitionInterface[]}));
+                dispatch({ type: "SET_LANGUAGE", payload: LanguageData.foundDefinition as DefinitionInterface[] });
             }
         }    
     }
@@ -60,11 +88,11 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
                 switch(type)
                 {
                     case "Genre":
-                        setDefinition((prev) => ({...prev, Genre:DefinitionData.foundDefinition as DefinitionInterface[]}));
+                        dispatch({ type: "SET_GENRE", payload: DefinitionData.foundDefinition as DefinitionInterface[] });
                         break;
         
                     case "Language":
-                        setDefinition((prev) => ({...prev, Language:DefinitionData.foundDefinition as DefinitionInterface[]}));
+                        dispatch({ type: "SET_LANGUAGE", payload: DefinitionData.foundDefinition as DefinitionInterface[] });
                         break;
                 }
             }

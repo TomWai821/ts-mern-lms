@@ -25,10 +25,11 @@ export const useBookFilter = (tabValue:number) =>
         switch(tabValue)
         {
             case 0:
-                const genreID = definition.Genre.find((genre) => genre.genre === searchBook.genre)?._id as string;;
-                const languageID = definition.Language.find((language) => language.language === searchBook.language)?._id as string;
-                const authorID = contact.Author.find((author) => author.author === searchBook.author)?._id as string;
-                const publisherID = contact.Publisher.find((publisher) => publisher.publisher === searchBook.publisher)?._id as string;
+                const genreID = definition[0].find((genre) => genre.genre === searchBook.genre)?._id as string;;
+                const languageID = definition[1].find((language) => language.language === searchBook.language)?._id as string;
+                
+                const authorID = contact[0].find((author) => author.author === searchBook.author)?._id as string;
+                const publisherID = contact[1].find((publisher) => publisher.publisher === searchBook.publisher)?._id as string;
                 fetchBookWithFliterData(searchBook.bookname, searchBook.status, genreID, languageID, authorID, publisherID);
                 break;
 

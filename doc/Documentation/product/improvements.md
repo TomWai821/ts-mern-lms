@@ -18,6 +18,12 @@
     - Parallelised independent API requests for multiple entity types (e.g. Authors and Publishers) using Promise.allSettled within memoised useCallback hooks
     - Enhances UI resilience by ensuring the dashboard renders successfully (Even if individual endpoints or downstream dependencies fail)<br>
       (Ref: [ContactContext.tsx](../../../frontend/src/Context/Book/ContactContext.tsx) - fetchAllContactData, [DefinitionContext.tsx](../../../frontend/src/Context/Book/DefinitionContext.tsx) - fetchAllDefinition)
+
+5. **Context State Management (useReducer over useState)**
+    - Refactored Context Providers to adopt useReducer instead of multiple useState hooks
+    - Centralised state transition logic into a pure reducer function<br>
+      (This improved predictability, scalability, and testability of state management, while reducing boilerplate and enhancing maintainability)<br>
+      (Ref: [BookContext.tsx](../../../frontend/src/Context/Book/BookContext.tsx), [UserContext.tsx](../../../frontend/src/Context/User/UserContext.tsx))
   
 
 #### Backend Side

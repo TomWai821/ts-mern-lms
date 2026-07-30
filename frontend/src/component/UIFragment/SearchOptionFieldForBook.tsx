@@ -14,14 +14,14 @@ const SearchOptionFieldForBook:FC<BookOptionFieldModal> = ({...optionData}) =>
 
     const definitionFields = 
     [
-        { title: "Genre", name: "genre", value: searchData.genre, dataType: definition.Genre, keyProperty: "genre", descriptionProperty: "shortName" },
-        { title: "Language", name: "language", value: searchData.language, dataType: definition.Language, keyProperty: "language", descriptionProperty: "shortName" },
+        { title: "Genre", name: "genre", value: searchData.genre, dataType: definition[0], keyProperty: "genre", descriptionProperty: "shortName" },
+        { title: "Language", name: "language", value: searchData.language, dataType: definition[1], keyProperty: "language", descriptionProperty: "shortName" },
     ];
     
     const contactFields = 
     [
-        { title: "Author", name: "author", value: searchData.author, dataType: contact.Author, keyProperty: "author" },
-        { title: "Publisher", name: "publisher", value: searchData.publisher, dataType: contact.Publisher, keyProperty: "publisher" },
+        { title: "Author", name: "author", value: searchData.author, dataType: contact[0], keyProperty: "author" },
+        { title: "Publisher", name: "publisher", value: searchData.publisher, dataType: contact[1], keyProperty: "publisher" },
     ];
     
     if (!optionVisiable) 

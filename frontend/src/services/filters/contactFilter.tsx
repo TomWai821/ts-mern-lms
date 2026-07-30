@@ -6,15 +6,8 @@ const defaultValue = {author: "", publisher: ""};
 export const useContactFilter = (tabValue: number) =>
 {
     const { fetchContactDataWithFilterData } = useContactContext();
-    const { contact } = useContactContext();
-
     const [searchContact, setSearchContact] = useState(defaultValue);
-
-    const countLength = ()=> 
-    {
-        const dataLength = [contact.Author.length, contact.Publisher.length];
-        return dataLength[tabValue];
-    }
+    const title = ["Author", "Publisher"];
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -24,7 +17,6 @@ export const useContactFilter = (tabValue: number) =>
 
     const SearchContact = () => 
     {
-        const title = ["Author", "Publisher"];
         switch(tabValue)
         {
             case 0:
@@ -35,12 +27,10 @@ export const useContactFilter = (tabValue: number) =>
                 fetchContactDataWithFilterData(title[tabValue], searchContact.publisher);
                 break;
         }
-        
     }
 
     const resetFilter = useCallback(() => 
     {
-        const title = ["Author", "Publisher"];
         fetchContactDataWithFilterData(title[tabValue], "");
         setSearchContact(defaultValue);
     }, [tabValue, fetchContactDataWithFilterData])
@@ -50,5 +40,5 @@ export const useContactFilter = (tabValue: number) =>
         resetFilter()
     },[tabValue, resetFilter])
 
-    return { searchContact, setSearchContact, onChange, SearchContact, resetFilter, countLength };
+    return { searchContact, setSearchContact, onChange, SearchContact, resetFilter };
 }

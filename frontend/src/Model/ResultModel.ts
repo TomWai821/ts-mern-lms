@@ -118,12 +118,6 @@ export interface DefinitionInterface
     genre?:string;
 }
 
-export interface DefinitionState
-{
-    Genre: DefinitionInterface[];
-    Language: DefinitionInterface[];
-}
-
 export interface ContactInterface
 {
     _id:string;

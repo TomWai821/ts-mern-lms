@@ -5,8 +5,8 @@ import { printError } from '../../utils/Utils';
 const languageSchema = new mongoose.Schema<LanguageInterface>
 (
     {
-        language: { type: String, required:true, unique: true },
-        shortName: { type: String, require: true, unique: true }
+        language: { type: String, required: true, unique: true },
+        shortName: { type: String, default: "N/A" }
     }
 )
 

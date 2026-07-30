@@ -45,7 +45,7 @@ const DefinitionPage  = () =>
     return(
         <Box sx={{ ...PageItemToCenter, flexDirection: 'column', padding: '0 50px'}}>
 
-            <TableTitle title={title} dataLength={definition[definitionType].length}/>
+            <TableTitle title={title} dataLength={definition[tabValue].length}/>
 
             <DefinitionFilter searchData={searchData} value={tabValue} onChange={onChange} Search={SearchDefinition} resetFilter={resetFilter}/>
 
@@ -59,11 +59,11 @@ const DefinitionPage  = () =>
             </Tabs>
             
             <CustomTabPanel index={tabValue} value={0}>
-                <ChipBody value={tabValue} definitionType={definitionType} data={definition.Genre}/>
+                <ChipBody value={tabValue} definitionType={definitionType} data={definition[0]}/>
             </CustomTabPanel>
 
             <CustomTabPanel index={tabValue} value={1}>
-                <ChipBody value={tabValue} definitionType={definitionType} data={definition.Language}/>
+                <ChipBody value={tabValue} definitionType={definitionType} data={definition[1]}/>
             </CustomTabPanel>
         </Box>
     );

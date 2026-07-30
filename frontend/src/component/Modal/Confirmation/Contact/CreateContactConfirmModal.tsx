@@ -44,7 +44,7 @@ const CreateContactConfirmModal:FC<CreateModalInterface> = (createModalData) =>
                 return;
         }
 
-         const result: GetResultInterface = await response.json();
+        const result: GetResultInterface = await response.json();
                 
         if (alertContext && alertContext.setAlertConfig) 
         {

@@ -1,18 +1,51 @@
-import { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
 
 import { CreateContact, DeleteContact, EditContact, GetContact } from "../../Controller/BookController/ContactController";
 
-import { ChildProps, ContactProps, ContactState } from "../../Model/ContextAndProviderModel";
+import { ChildProps, ContactProps } from "../../Model/ContextAndProviderModel";
 import { ContactInterface, GetResultInterface } from "../../Model/ResultModel";
 
 import { useAuthContext } from "../User/AuthContext";
+
+interface ContactState
+{
+    Author: ContactInterface[];
+    Publisher: ContactInterface[];
+}
+
+type ContactAction =
+    | { type: "SET_AUTHOR"; payload: ContactInterface[] }
+    | { type: "SET_PUBLISHER"; payload: ContactInterface[] };
+
+const initialState: ContactState = 
+{
+    Author: [],
+    Publisher: [],
+};
+
+const contactReducer = (state: ContactState, action: ContactAction): ContactState => 
+{
+    switch (action.type) 
+    {
+        case "SET_AUTHOR":
+            return { ...state, Author: action.payload };
+
+        case "SET_PUBLISHER":
+            return { ...state, Publisher: action.payload };
+
+        default:
+            return state;
+    }
+};
 
 const ContactContext = createContext<ContactProps | undefined>(undefined);
 
 export const ContactProvider:FC<ChildProps> = ({children}) => 
 {
+    const [state, dispatch] = useReducer(contactReducer, initialState);
+    const contact = [state.Author, state.Publisher];
+
     const {GetData} = useAuthContext();
-    const [contact, setContact] = useState<ContactState>({ Author:[], Publisher:[]});
     const authToken = GetData("authToken") as string;
 
     const fetchAllContactData = useCallback(async () => 
@@ -26,7 +59,7 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
 
             if(Array.isArray(AuthorData.foundContact as ContactInterface[]))
             {
-                setContact((prev) => ({...prev, Author:AuthorData.foundContact as ContactInterface[]}));
+                dispatch({ type: "SET_AUTHOR", payload: AuthorData.foundContact as ContactInterface[] });
             }
         }
         
@@ -37,7 +70,7 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
 
             if(Array.isArray(PublisherData.foundContact as ContactInterface[]))
             {
-                setContact((prev) => ({...prev, Publisher:PublisherData.foundContact as ContactInterface[]}));
+                dispatch({ type: "SET_PUBLISHER", payload: PublisherData.foundContact as ContactInterface[] });
             }
         }
     }
@@ -56,11 +89,11 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
                 switch(type)
                 {
                     case "Author":
-                        setContact((prev) => ({...prev, Author:ContactData.foundContact as ContactInterface[]}));
+                        dispatch({ type: "SET_AUTHOR", payload: ContactData.foundContact as ContactInterface[] });
                         break;
 
                     case "Publisher":
-                        setContact((prev) => ({...prev, Publisher:ContactData.foundContact as ContactInterface[]}));
+                        dispatch({ type: "SET_PUBLISHER", payload: ContactData.foundContact as ContactInterface[] });
                         break;
                 }
             }

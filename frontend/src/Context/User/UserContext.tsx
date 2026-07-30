@@ -1,4 +1,4 @@
-import { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
 
 // Another Useful Function
 import { FetchUserData } from "../../Controller/UserController/UserGetController";
@@ -13,15 +13,46 @@ import { ChildProps, UserContextProps } from "../../Model/ContextAndProviderMode
 import { DeleteUserController } from "../../Controller/UserController/UserDeleteController";
 import { useAuthContext } from "./AuthContext";
 
+
+interface UserRecordState 
+{
+    AllUser: UserResultDataInterface[];
+    SuspendUser: UserResultDataInterface[];
+}
+
+type UserRecordAction =
+    | { type: "SET_ALL_USER"; payload: UserResultDataInterface[] }
+    | { type: "SET_SUSPEND_USER"; payload: UserResultDataInterface[] };
+
+const initialState: UserRecordState = 
+{
+    AllUser: [],
+    SuspendUser: [],
+};
+
+const userRecordReducer = (state: UserRecordState, action: UserRecordAction): UserRecordState => 
+{
+    switch (action.type) 
+    {
+        case "SET_ALL_USER":
+            return { ...state, AllUser: action.payload };
+
+        case "SET_SUSPEND_USER":
+            return { ...state, SuspendUser: action.payload };
+
+        default:
+            return state;
+    }
+};
+
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider: FC<ChildProps> = ({ children }) =>
 {
     const { GetData } = useAuthContext();
-    const [AllUser, setAllUser] = useState<UserResultDataInterface[]>([]);
-    const [SuspendUser, setSuspendUser] = useState<UserResultDataInterface[]>([]);
+    const [state, dispatch] = useReducer(userRecordReducer, initialState);
     const authToken = GetData("authToken") as string;
-    const userData = [AllUser, SuspendUser];
+    const userData = [state.AllUser, state.SuspendUser];
 
     // For init
     const fetchAllUser = useCallback(async () => 
@@ -31,12 +62,12 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
 
         if(resultForAllUser && Array.isArray(resultForAllUser.foundUser))
         {
-            setAllUser(resultForAllUser.foundUser);
+            dispatch({ type: "SET_ALL_USER", payload: resultForAllUser.foundUser });
         }
 
         if(resultForSuspendUser && Array.isArray(resultForSuspendUser.foundUser))
         {
-            setSuspendUser(resultForSuspendUser.foundUser);
+            dispatch({ type: "SET_SUSPEND_USER", payload: resultForSuspendUser.foundUser });
         }
 
     },[authToken])
@@ -53,11 +84,11 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
             switch(type)
             {
                 case "AllUser":
-                    setAllUser(result.foundUser);
+                    dispatch({ type: "SET_ALL_USER", payload: result.foundUser });
                     break;
 
                 case "SuspendUser":
-                    setSuspendUser(result.foundUser);
+                    dispatch({ type: "SET_SUSPEND_USER", payload: result.foundUser });
                     break;
             }
             

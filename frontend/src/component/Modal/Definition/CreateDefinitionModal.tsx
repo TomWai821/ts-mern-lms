@@ -43,8 +43,8 @@ const CreateDefinitionModal:FC<CreateModalInterface> = (createModalData) =>
             case 0:
                 if(definition.genre === "")
                 {
-                    setHelperText((prev) => ({...prev, genre : "Genre should not be null!"}));
-                    setErrors((prev) =>  ({...prev, genre : "Genre should not be null!"}));
+                    setHelperText((prev) => ({...prev, genre: "Genre should not be null!"}));
+                    setErrors((prev) =>  ({...prev, genre: "Genre should not be null!"}));
                     return;
                 }
                 break;
@@ -52,12 +52,13 @@ const CreateDefinitionModal:FC<CreateModalInterface> = (createModalData) =>
             case 1:
                 if(definition.language === "")
                 {
-                    setHelperText((prev) => ({...prev, language : "Language should not be null!"}));
-                    setErrors((prev) =>  ({...prev, language : "Language should not be null!"}));
+                    setHelperText((prev) => ({...prev, language: "Language should not be null!"}));
+                    setErrors((prev) =>  ({...prev, language: "Language should not be null!"}));
                     return;
                 }
                 break;
         }
+
         handleOpen(<CreateDefinitionConfirmModal value={value} data={definition}/>);
     }
     

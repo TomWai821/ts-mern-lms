@@ -46,7 +46,7 @@ const PublisherTable:FC<ContactTableInterface> = (DataForAllUserTable) =>
 {
     const { value, contactData, paginationValue } = DataForAllUserTable;
 
-    const { paginatedData, getCountPage, handlePageChange, page } = usePaginationService<ContactInterface>(contactData.Publisher as ContactInterface[], paginationValue);
+    const { paginatedData, getCountPage, handlePageChange, page } = usePaginationService<ContactInterface>(contactData[value] as ContactInterface[], paginationValue);
     const paginationPageVariable = {paginationValue, page};
     const TableName = "Contact";
     

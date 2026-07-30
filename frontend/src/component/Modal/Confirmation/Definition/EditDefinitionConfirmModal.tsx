@@ -42,11 +42,11 @@ const EditDefinitionConfirmModal:FC<EditModalInterface>  = (data) =>
         switch(type)
         {
             case "Genre":
-                response = await editDefinition(type, EditData._id, EditData.shortName, EditData.genre as string);
+                response = await editDefinition(type, compareData._id, EditData.shortName, EditData.genre as string);
                 break;
 
             case "Language":
-                response = await editDefinition(type, EditData._id, EditData.shortName, EditData.language as string);
+                response = await editDefinition(type, compareData._id, EditData.shortName, EditData.language as string);
                 break;
         }
 

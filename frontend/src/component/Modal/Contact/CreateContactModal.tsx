@@ -49,6 +49,7 @@ const CreateContextModal:FC<CreateModalInterface> = (createModalData) =>
                 }
                 break;
         }
+        
         handleOpen(<CreateContactConfirmModal value={value} data={contact}/>);
     }
     

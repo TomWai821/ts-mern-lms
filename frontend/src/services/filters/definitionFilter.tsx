@@ -8,6 +8,7 @@ export const useDefinitionFilter = (tabValue: number) =>
 {
     const { fetchDefinitionDataWithFilterData } = useDefinitionContext();
     const [searchData, setSearchData] = useState({genre:"", language: ""});
+    const title = ["Genre", "Language"];
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -20,28 +21,18 @@ export const useDefinitionFilter = (tabValue: number) =>
         switch(tabValue)
         {
             case 0:
-                fetchDefinitionDataWithFilterData("Genre", searchData.genre);
+                fetchDefinitionDataWithFilterData(title[tabValue], searchData.genre);
                 break;
             
             case 1:
-                fetchDefinitionDataWithFilterData("Language", searchData.language);
+                fetchDefinitionDataWithFilterData(title[tabValue], searchData.language);
                 break;
         }
     }
 
     const resetFilter = useCallback(() => 
     {
-        switch(tabValue)
-        {
-            case 0:
-                fetchDefinitionDataWithFilterData("Genre", "");
-                break;
-            
-            case 1:
-                fetchDefinitionDataWithFilterData("Language", "");
-                break;
-        }
-
+        fetchDefinitionDataWithFilterData(title[tabValue], "");
         setSearchData(defaultValue);
     },[tabValue, fetchDefinitionDataWithFilterData])
 

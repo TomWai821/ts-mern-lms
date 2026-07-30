@@ -34,13 +34,16 @@ const EditDefinitionModal:FC<EditModalInterface> = (editModalData) =>
     const [errors, setErrors] = useState({_id: "", genre: "", language: "", shortName: ""});
     const [helperTexts, setHelperText] = useState({_id: "", genre: "", language: "", shortName: ""});
 
+    const sanitizeField = (field: string) => field.trim() === "" ? "N/A" : field;
+
     const setModalData = () => 
     {
         type inputFieldType = {name:string, label:string, type: string};
+
         const modalData:{title:string, inputfield: inputFieldType[]}[] = 
         [
-            {title:"Edit Genre Definition Record", inputfield:EditGenreInputField},
-            {title:"Edit Language Definition Record", inputfield:EditLanguageInputField}
+            {title: "Edit Genre Definition Record", inputfield: EditGenreInputField},
+            {title: "Edit Language Definition Record", inputfield: EditLanguageInputField}
         ]
 
         return modalData[value as number];
@@ -54,7 +57,9 @@ const EditDefinitionModal:FC<EditModalInterface> = (editModalData) =>
 
     const openConfirmModal = () => 
     {
+        let sanitizedDefinition = {};
         setIsSubmitted(true);
+
         switch(value)
         {
             case 0:
@@ -63,6 +68,12 @@ const EditDefinitionModal:FC<EditModalInterface> = (editModalData) =>
                     setHelperText((prev) => ({...prev, genre : "Genre should not be null!"}));
                     setErrors((prev) =>  ({...prev, genre : "Genre should not be null!"}));
                     return;
+                }
+
+                sanitizedDefinition =
+                {
+                    genre: definitionData.genre,
+                    shortName: sanitizeField(definitionData.shortName)
                 }
                 break;
 
@@ -73,9 +84,16 @@ const EditDefinitionModal:FC<EditModalInterface> = (editModalData) =>
                     setErrors((prev) =>  ({...prev, language : "Language should not be null!"}));
                     return;
                 }
+
+                sanitizedDefinition =
+                {
+                    language: definitionData.language,
+                    shortName: sanitizeField(definitionData.shortName)
+                }
                 break;
         }
-        handleOpen(<EditDefinitionConfirmModal value={value} editData={definitionData} compareData={compareData}/>)
+        
+        handleOpen(<EditDefinitionConfirmModal value={value} editData={sanitizedDefinition} compareData={compareData}/>)
     }
     
     return(

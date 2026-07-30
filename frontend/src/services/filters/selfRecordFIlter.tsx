@@ -22,10 +22,11 @@ export const useSelfRecordFilter = (tabValue:number) =>
                 break;
 
             case 1:
-                const genreID = definition.Genre.find((genre) => genre.genre === searchData.genre)?._id as string;
-                const languageID = definition.Language.find((language) => language.language === searchData.language)?._id as string;
-                const authorID = contact.Author.find((author) => author.author === searchData.author)?._id as string;
-                const publisherID = contact.Publisher.find((publisher) => publisher.publisher === searchData.publisher)?._id as string;
+                const genreID = definition[0].find((genre) => genre.genre === searchData.genre)?._id as string;
+                const languageID = definition[1].find((language) => language.language === searchData.language)?._id as string;
+                
+                const authorID = contact[0].find((author) => author.author === searchData.author)?._id as string;
+                const publisherID = contact[1].find((publisher) => publisher.publisher === searchData.publisher)?._id as string;
                 fetchSelfFavouriteBookWithFilterData(searchData.bookname, searchData.status, genreID, languageID, authorID, publisherID);
                 break;
         }

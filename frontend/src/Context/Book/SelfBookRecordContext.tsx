@@ -1,4 +1,4 @@
-import { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
 
 import { ChildProps, SelfBookRecordContextProps } from "../../Model/ContextAndProviderModel";
 import { BookDataInterface, GetResultInterface, LoanBookInterface } from "../../Model/ResultModel";
@@ -10,15 +10,51 @@ import { deleteBookRecord } from "../../Controller/BookController/BookDeleteCont
 
 import { useAuthContext } from "../User/AuthContext";
 
+interface SelfBookRecordState 
+{
+    SelfLoanBook: LoanBookInterface[];
+    FavouriteBook: LoanBookInterface[];
+    bookForUser: BookDataInterface[];
+}
+
+type SelfBookRecordAction =
+    | { type: "SET_FAVOURITE_BOOK"; payload: LoanBookInterface[] }
+    | { type: "SET_SELF_LOAN_BOOK"; payload: LoanBookInterface[] }
+    | { type: "SET_BOOK_FOR_USER"; payload: BookDataInterface[] };
+
+const initialState: SelfBookRecordState = 
+{
+    SelfLoanBook: [],
+    FavouriteBook: [],
+    bookForUser: [],
+};
+
+const selfBookRecordReducer = (state: SelfBookRecordState, action: SelfBookRecordAction): SelfBookRecordState => 
+{
+    switch (action.type) 
+    {
+        case "SET_FAVOURITE_BOOK":
+            return { ...state, FavouriteBook: action.payload };
+
+        case "SET_SELF_LOAN_BOOK":
+            return { ...state, SelfLoanBook: action.payload };
+
+        case "SET_BOOK_FOR_USER":
+            return { ...state, bookForUser: action.payload };
+
+        default:
+            return state;
+    }
+};
+
 const SelfBookRecordContext = createContext<SelfBookRecordContextProps | undefined>(undefined);
 
 export const SelfBookRecordProvider:FC<ChildProps> = ({children}) => 
 {
     const {GetData} = useAuthContext();
 
-    const [SelfLoanBook, setSelfLoanBook] = useState<LoanBookInterface[]>([]);
-    const [FavouriteBook, setFavouriteBook] = useState<LoanBookInterface[]>([]);
-    const [bookForUser, setBookForUser] = useState<BookDataInterface[]>([]);
+    const [state, dispatch] = useReducer(selfBookRecordReducer, initialState);
+    const { SelfLoanBook, FavouriteBook, bookForUser } = state;
     const BookRecordForUser = [SelfLoanBook, FavouriteBook];
 
     const authToken = GetData("authToken") as string;
@@ -29,7 +65,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
     
         if (resultForFavouriteBook && Array.isArray(resultForFavouriteBook.foundFavouriteBook)) 
         {
-            setFavouriteBook(resultForFavouriteBook.foundFavouriteBook);
+            dispatch({ type: "SET_FAVOURITE_BOOK", payload: resultForFavouriteBook.foundFavouriteBook });
         }
     },[authToken])
 
@@ -39,7 +75,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
     
         if (resultForSelfLoanBook && Array.isArray(resultForSelfLoanBook.foundLoanBook)) 
         {
-            setSelfLoanBook(resultForSelfLoanBook.foundLoanBook);
+            dispatch({ type: "SET_SELF_LOAN_BOOK", payload: resultForSelfLoanBook.foundLoanBook });
         }
     },[authToken])
 
@@ -49,7 +85,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
 
         if (resultForUser && Array.isArray(resultForUser.foundBook)) 
         {
-            setBookForUser(resultForUser.foundBook);
+            dispatch({ type: "SET_BOOK_FOR_USER", payload: resultForUser.foundBook });
         }
     }, [authToken]);
 
@@ -59,7 +95,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
 
         if(result && Array.isArray(result.foundFavouriteBook))
         {
-            setFavouriteBook(result.foundFavouriteBook);
+            dispatch({ type: "SET_FAVOURITE_BOOK", payload: result.foundFavouriteBook });
         }
     },[authToken])
 
@@ -69,14 +105,16 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         
         if(result && Array.isArray(result.foundLoanBook))
         {
-            setSelfLoanBook(result.foundLoanBook);
+            dispatch({ type: "SET_SELF_LOAN_BOOK", payload: result.foundLoanBook });
         }
+
     },[authToken])
 
     const fetchSelfRecord = useCallback(async () => 
     {
         fetchFavouriteRecord();
         fetchSelfLoanRecord();
+
     },[fetchFavouriteRecord, fetchSelfLoanRecord])
 
     const favouriteBook = useCallback(async(bookID:string) => 
@@ -87,7 +125,9 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         {
             fetchSelfRecord();
         }
+
         return result;
+
     },[authToken, fetchSelfRecord])
 
     const unfavouriteBook = useCallback(async(FavouriteBookID:string) => 
@@ -98,13 +138,17 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
         {
             fetchSelfRecord();
         }
+
         return result;
 
     },[authToken, fetchSelfRecord])
 
     const allRecordTask = useCallback(async () => 
     {
-        if(!authToken) return;
+        if(!authToken)
+        {
+            return;
+        }
 
         const task = [fetchFavouriteRecord(), fetchSelfLoanRecord(), fetchRecommendBookForUser()];
         await Promise.allSettled(task);
