@@ -20,7 +20,7 @@ import { ModalBodySyntax, ModalSubTitleSyntax } from "../../../../Data/Style";
 import { GetResultInterface, UserResultDataInterface } from "../../../../Model/ResultModel";
 import { AlertContext } from "../../../../Context/AlertContext";
 
-const UndoUserActivityModal:FC<DeleteModalInterface> = ({...userData}) => 
+const UnsuspendUserActivityModal:FC<DeleteModalInterface> = ({...userData}) => 
 {
 
     const { _id, data } = userData;
@@ -30,11 +30,11 @@ const UndoUserActivityModal:FC<DeleteModalInterface> = ({...userData}) =>
     const { handleClose } = useModal();
     const alertContext = useContext(AlertContext);
 
-    const UndoUserAction = async () => 
+    const UnsuspendUserAction = async () => 
     {
         const response: Response  = await changeUserStatus("UnSuspend", _id, "Normal", Data.suspendedDetails?._id as string);
 
-         const result: GetResultInterface = await response.json();
+        const result: GetResultInterface = await response.json();
                 
         if (alertContext && alertContext.setAlertConfig) 
         {
@@ -63,9 +63,9 @@ const UndoUserActivityModal:FC<DeleteModalInterface> = ({...userData}) =>
                 <Typography>Description: {Data.suspendedDetails?.description}</Typography>
             </Box>
             
-            <ModalConfirmButton clickEvent={UndoUserAction} name={"Yes"} buttonType={""}/>
+            <ModalConfirmButton clickEvent={UnsuspendUserAction} name={"Yes"} buttonType={""}/>
         </ModalTemplate>
     );
 }
 
-export default UndoUserActivityModal;
+export default UnsuspendUserActivityModal;

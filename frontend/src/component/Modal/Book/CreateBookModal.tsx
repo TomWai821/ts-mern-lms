@@ -47,13 +47,13 @@ const CreateBookModal: FC<CreateBookModalInterface> = ({...bookData}) =>
     const CreateBookInputField = useMemo(() => 
     [
         {name: "bookname", label: "Book Name", type:"text", select: false, slotProps: {}, multiline: false, rows: 1 },
-        {name: "language", label: "Language", type:"text", select: true, options:definition.Language, slotProps: {}, multiline: false, rows: 1},
-        {name: "genre", label: "Genre", type:"text", select: true, options:definition.Genre, slotProps:{}, multiline: false, rows: 1},
-        {name: "author", label: "Author", type:"text", select: true, options:contact.Author, slotProps:{}, multiline: false, rows: 1},
-        {name: "publisher", label: "Publisher", type:"text", select: true, options:contact.Publisher, slotProps:{}, multiline: false, rows: 1},
+        {name: "genre", label: "Genre", type:"text", select: true, options:definition[0], slotProps:{}, multiline: false, rows: 1},
+        {name: "language", label: "Language", type:"text", select: true, options:definition[1], slotProps: {}, multiline: false, rows: 1},
+        {name: "author", label: "Author", type:"text", select: true, options:contact[0], slotProps:{}, multiline: false, rows: 1},
+        {name: "publisher", label: "Publisher", type:"text", select: true, options:contact[1], slotProps:{}, multiline: false, rows: 1},
         {name: "publishDate", label: "Publish Date", type:"Date", select: false, slotProps:{}, multiline: false, rows: 1},
         {name: "description", label: "Description", type: "text", select: false, slotProps:{}, multiline: true, rows: 8}
-    ],[definition, contact.Author, contact.Publisher])
+    ],[definition, contact])
 
     const onSelectChange = (event: ChangeEvent<HTMLInputElement>) => 
     {

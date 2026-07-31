@@ -24,7 +24,7 @@ const ActionTableCellForUser:FC<UserActionTableCellInterface> = (actionTableCell
     const FavouriteHandler = async () => 
     {
         let response = isFavourite ? await unfavouriteBook(FavouriteID as string) : await favouriteBook((Information as BookDataInterface)._id); 
-         const result: GetResultInterface = await response.json();
+        const result: GetResultInterface = await response.json();
 
         if (alertContext && alertContext.setAlertConfig) 
         {
