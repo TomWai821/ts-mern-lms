@@ -1,5 +1,5 @@
 
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment } from "react";
 import { Box, Button, IconButton, Menu, MenuItem, TextField, Typography } from "@mui/material";
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -20,34 +20,31 @@ import { UserDataInterface } from "../../../../Model/UserTableModel";
 import { ItemToCenter } from "../../../../Data/Style";
 import { useAuthContext } from "../../../../Context/User/AuthContext";
 import { StatusFilterOption } from "../../../../Data/TableData";
+import { useFilterActions } from "../../../../services/filters/filterActions";
 
-const UserFilter:FC<FilterInterface> = (filterData) => 
+const useUserFilter = (resetFilter: (() => void) | undefined) =>
 {
-    const {value, onChange, searchData, Search, resetFilter} = filterData;
-    const {IsAdmin} = useAuthContext();
-    const {handleOpen} = useModal();
-
-    const userData = searchData as UserDataInterface;
-
-    const [optionVisiable, setOptionVisiable] = useState(false);
-    const [actionMenu, openActionMenu] = useState<HTMLElement | null>(null);
+    const { handleOpen } = useModal();
 
     const ActionMenu = 
     [
         {label: 'Reset Filter', clickEvent: resetFilter},
         {label: 'Create User', clickEvent: () => handleOpen(<CreateUserModal />)}
     ]
+
+    return {ActionMenu};
+}
+
+const UserFilter:FC<FilterInterface> = (filterData) => 
+{
+    const {value, onChange, searchData, Search, resetFilter} = filterData;
+    const {IsAdmin} = useAuthContext();
+
+    const { ActionMenu } = useUserFilter(resetFilter);
+    const { optionVisiable, toggleCardVisibility, actionMenu, handleActionMenu } = useFilterActions();
+
+    const userData = searchData as UserDataInterface;
     
-    const toggleCardVisibility = () => 
-    {
-        setOptionVisiable((prev) => !prev);
-    };
-
-    const handleActionMenu = (event: React.MouseEvent<HTMLElement>) => 
-    {
-        openActionMenu(actionMenu ? null : event?.currentTarget);
-    };
-
     return(
         <Box sx={{ padding: '25px 15%' }}>
             <Box sx={{...ItemToCenter, paddingBottom: '25px', alignItems: 'center'}}>
@@ -75,7 +72,7 @@ const UserFilter:FC<FilterInterface> = (filterData) =>
                 {
                     IsAdmin() && 
                     <IconButton onClick={toggleCardVisibility}>
-                    {optionVisiable ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}
+                        {optionVisiable ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}
                     </IconButton>
                 }
 

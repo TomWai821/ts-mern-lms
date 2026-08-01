@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import { FC } from "react"
 import { Box, TextField, Button, Menu, Typography, MenuItem } from "@mui/material";
 import { ContactFilterInterface } from "../../../../Model/TablePagesAndModalModel"
 
@@ -6,13 +6,12 @@ import { ItemToCenter } from "../../../../Data/Style";
 
 import CreateContextModal from "../../../Modal/Contact/CreateContactModal";
 import { useModal } from "../../../../Context/ModalContext";
+import { ContactSearchInterface } from "../../../../Model/BookTableModel";
+import { useFilterActions } from "../../../../services/filters/filterActions";
 
-const ContactFilter:FC<ContactFilterInterface> = (filterData) => 
+const useContactFilter = (value: number, searchData: ContactSearchInterface, resetFilter: (() => void) | undefined) => 
 {
-    const {value, searchData, onChange, Search, resetFilter} = filterData;
     const { handleOpen } = useModal();
-
-    const [actionMenu, openActionMenu] = useState<HTMLElement | null>(null);
 
     const dataForTextField = 
     [
@@ -26,11 +25,17 @@ const ContactFilter:FC<ContactFilterInterface> = (filterData) =>
         {label: `Create ${value === 0 ? "Author" : "Publisher"}`, clickEvent: () => handleOpen(<CreateContextModal value={value}/>)}
     ]
 
-    const handleActionMenu = (event: React.MouseEvent<HTMLElement>) => 
-    {
-        openActionMenu(actionMenu ? null : event?.currentTarget);
-    };
+    return {dataForTextField, ActionMenu};
+}
 
+
+const ContactFilter:FC<ContactFilterInterface> = (filterData) => 
+{
+    const { value, searchData, onChange, Search, resetFilter } = filterData;
+
+    const { dataForTextField, ActionMenu } = useContactFilter(value, searchData, resetFilter);
+    const { actionMenu, handleActionMenu } = useFilterActions();
+    
     return(
         <Box sx={{ padding: '25px 15%' }}>
             <Box sx={{ ...ItemToCenter, paddingBottom: '25px', alignItems: 'center' }}>

@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment } from "react";
 import { Box, Button, IconButton, Menu, MenuItem, TextField, Typography } from "@mui/material";
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -20,29 +20,30 @@ import { BookTableDataInterface } from "../../../../Model/BookTableModel";
 import { ItemToCenter } from "../../../../Data/Style";
 import { AllBookStatusOption, LoanBookStatusOption } from "../../../../Data/TableData";
 import { useAuthContext } from "../../../../Context/User/AuthContext";
+import { useFilterActions } from "../../../../services/filters/filterActions";
 
-const BookFilter: FC<FilterInterface> = (filterData) => {
+const useBookFilter = (resetFilter: (() => void) | undefined, IsAdmin: () => boolean, IsLoggedIn: () => boolean) =>
+{
+    const { handleOpen } = useModal();
+
+    const ActionMenu =
+    [
+        { label: 'Reset Filter', clickEvent: resetFilter },
+        { label: 'Create book', clickEvent: () => handleOpen(<CreateBookModal />) }
+    ]
+
+    return { ActionMenu, IsAdmin, IsLoggedIn };
+}
+
+
+const BookFilter: FC<FilterInterface> = (filterData) => 
+{
     const { value, searchData, onChange, Search, resetFilter } = filterData;
     const bookData = searchData as unknown as BookTableDataInterface;
 
-    const [optionVisiable, setOptionVisiable] = useState(false);
-    const [actionMenu, openActionMenu] = useState<HTMLElement | null>(null);
-    const { handleOpen } = useModal();
     const { IsAdmin, IsLoggedIn } = useAuthContext();
-
-    const ActionMenu =
-        [
-            { label: 'Reset Filter', clickEvent: resetFilter },
-            { label: 'Create book', clickEvent: () => handleOpen(<CreateBookModal />) }
-        ]
-
-    const toggleCardVisibility = () => {
-        setOptionVisiable((prev) => !prev);
-    };
-
-    const handleActionMenu = (event: React.MouseEvent<HTMLElement>) => {
-        openActionMenu(actionMenu ? null : event?.currentTarget);
-    };
+    const { ActionMenu } = useBookFilter(resetFilter, IsAdmin, IsLoggedIn);
+    const { optionVisiable, toggleCardVisibility, actionMenu, handleActionMenu } = useFilterActions();
 
     return (
         <Box sx={{ padding: '25px 15%' }}>

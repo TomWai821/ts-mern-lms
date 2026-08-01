@@ -25,7 +25,7 @@ const BookTabPanel:FC<BookRecordTableInterface> = (TabData) =>
             {
                 BookRecordTable.map((table, index) => 
                 (
-                    <CustomTabPanel index={index} value={value}>
+                    <CustomTabPanel key={index} index={index} value={value}>
                         {table}
                     </CustomTabPanel>
                 ))

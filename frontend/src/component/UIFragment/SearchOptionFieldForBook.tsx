@@ -1,14 +1,18 @@
-import { ChangeEvent, FC, Fragment } from "react"
-import { Box, Card, MenuItem, TextField, Typography } from "@mui/material"
+import { FC, Fragment } from "react"
+import { Box, Card, Typography } from "@mui/material"
 
 import { BookOptionFieldModal } from "../../Model/InputFieldModel";
 import { useDefinitionContext } from "../../Context/Book/DefinitionContext";
 import { useContactContext } from "../../Context/Book/ContactContext";
-import { ContactInterface, DefinitionInterface } from "../../Model/ResultModel";
+import { BookTableDataInterface } from "../../Model/BookTableModel";
 
-const SearchOptionFieldForBook:FC<BookOptionFieldModal> = ({...optionData}) =>
+import DefinitionFieldSection from "./SearchOptionsSection/DefinitionFieldSection";
+import ContactFieldSection from "./SearchOptionsSection/ContactFieldSection";
+import SearchFieldSection from "./SearchOptionsSection/SearchFieldSection";
+
+
+const useSearchOptions = (searchData: BookTableDataInterface) => 
 {
-    const {optionVisiable, onChange, SearchField, searchData} = optionData;
     const {definition} = useDefinitionContext();
     const {contact} = useContactContext();
 
@@ -24,84 +28,38 @@ const SearchOptionFieldForBook:FC<BookOptionFieldModal> = ({...optionData}) =>
         { title: "Publisher", name: "publisher", value: searchData.publisher, dataType: contact[1], keyProperty: "publisher" },
     ];
     
+    return { definitionFields, contactFields };
+}
+
+
+const SearchOptionFieldForBook:FC<BookOptionFieldModal> = ({...optionData}) =>
+{
+    const { optionVisiable, onChange, SearchField, searchData } = optionData;
+    const { definitionFields, contactFields } = useSearchOptions(searchData as unknown as BookTableDataInterface);
+
     if (!optionVisiable) 
     {
         return null;
     }
-
+   
     return(
         <Fragment>
             {optionVisiable && (
                 <Card sx={{padding: '15px' }}>
                     <Typography>Options</Typography>
                     <Box sx={{ padding: '15px 20px', display: 'grid', justifyContent: 'center', alignItems: 'center', gap: '15px 50px', gridTemplateColumns: '10% 30% 10% 30%' }}>
-                        {  SearchField ? 
-                        SearchField.map((field, index) => 
-                            (
-                                <Fragment key={index}>
-                                    <Typography>{field.label}</Typography>
-                                    <TextField name={field.name} value={(searchData as any)[field.name]} type={field.type} size="small" select={field.select} slotProps={field.slotProps}
-                                        onChange={ (event) => { onChange(event as ChangeEvent<HTMLInputElement>)} }
-                                    >
-                                        {
-                                            field.select && field.options?.map((option, index) => 
-                                            (
-                                                <MenuItem key={index} value={option} sx={{height: '40px'}}>{option}</MenuItem>
-                                            ))
-                                        }
-                                    </TextField>
-                                </Fragment>
-                            )) 
-                        :
-                        <Fragment>
-                            {
-                                definitionFields.map((field, index) => 
-                                (
-                                    <Fragment key={index}>
-                                        <Typography>{field.title}</Typography>
-                                        <TextField name={field.name} value={field.value} size="small" select
-                                            onChange={(event) => 
-                                            {
-                                                const selectedIndex = field.dataType.findIndex( (item) => item[field.keyProperty as keyof DefinitionInterface ] === event.target.value);
-                                                onChange(event as ChangeEvent<HTMLInputElement>, selectedIndex);
-                                            }}
-                                        >
-                                            {field.dataType.map((item, index) => 
-                                            (
-                                                <MenuItem key={index} value={item[field.keyProperty as keyof DefinitionInterface]}>
-                                                    {`${item[field.keyProperty as keyof DefinitionInterface]} (${item[field.descriptionProperty as keyof DefinitionInterface]})`}
-                                                </MenuItem>
-                                            ))}
-                                            <MenuItem value="All" sx={{ height: "40px" }}>All</MenuItem>
-                                        </TextField>
-                                    </Fragment>
-                                ))
-                            }
+                        {  
+                            SearchField ? SearchFieldSection(SearchField, searchData, onChange)
+                            :
+                            <Fragment>
+                                {
+                                    DefinitionFieldSection({ definitionFields, onChange })
+                                }
 
-                            {
-                                contactFields.map((field, index) => 
-                                (
-                                    <Fragment key={index}>
-                                        <Typography>{field.title}</Typography>
-                                        <TextField name={field.name} value={field.value} size="small" select
-                                            onChange={(event) => 
-                                            {
-                                                const selectedIndex = field.dataType.findIndex( (item) => item[field.keyProperty as keyof ContactInterface] === event.target.value);
-                                                onChange(event as ChangeEvent<HTMLInputElement>, selectedIndex);
-                                            }}
-                                        >
-                                            {field.dataType.map((item, index) => 
-                                            (
-                                                <MenuItem key={index} value={item[field.keyProperty as keyof ContactInterface]}>
-                                                    {item[field.keyProperty as keyof ContactInterface]}
-                                                </MenuItem>
-                                            ))}
-                                            <MenuItem value="All" sx={{ height: "40px" }}>All</MenuItem>
-                                        </TextField>
-                                    </Fragment>
-                                ))
-                            }
-                        </Fragment>
+                                {
+                                    ContactFieldSection({ contactFields, onChange })
+                                }
+                            </Fragment>
                         }
                     </Box>
                 </Card>
@@ -109,5 +67,6 @@ const SearchOptionFieldForBook:FC<BookOptionFieldModal> = ({...optionData}) =>
         </Fragment>
     )
 }
+
 
 export default SearchOptionFieldForBook

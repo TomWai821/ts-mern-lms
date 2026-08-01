@@ -1,4 +1,4 @@
-import { FC, Fragment, useState } from "react"
+import { FC, Fragment } from "react"
 import { FilterInterface } from "../../../../Model/TablePagesAndModalModel"
 import { Box, TextField, Button, MenuItem, IconButton } from "@mui/material";
 import { ItemToCenter } from "../../../../Data/Style";
@@ -9,18 +9,14 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 import OptionFields from "../../../Manager/OptionFieldsManager";
+import { useFilterActions } from "../../../../services/filters/filterActions";
 
 const RecordFilter:FC<FilterInterface> = (filterData) => 
 {
     const {value, searchData, onChange, Search, resetFilter} = filterData;
+    
+    const { optionVisiable, toggleCardVisibility } = useFilterActions();
     const Data = searchData as SelfLoanBookSearchInterface;
-
-    const [optionVisiable, setOptionVisiable] = useState(false);
-
-    const toggleCardVisibility = () => 
-    {
-        setOptionVisiable((prev) => !prev);
-    };
 
     return(
         <Box sx={{ padding: '25px 15%' }}>
