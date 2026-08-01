@@ -1,6 +1,6 @@
-import { ChangeEvent, FC, Fragment, useState } from "react";
+import { ChangeEvent, FC, Fragment } from "react";
 import { DefinitionInterface } from "../../../Model/ResultModel";
-import { Typography, TextField, MenuItem, Slider } from "@mui/material";
+import { Typography, TextField, MenuItem } from "@mui/material";
 
 interface DefinitionFieldsSectionProps
 {
