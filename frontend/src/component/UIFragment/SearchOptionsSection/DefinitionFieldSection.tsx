@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, Fragment } from "react";
 import { DefinitionInterface } from "../../../Model/ResultModel";
 import { Typography, TextField, MenuItem } from "@mui/material";
+import { optionFieldSlotProps } from "../../../Data/Style";
 
 interface DefinitionFieldsSectionProps
 {
@@ -17,8 +18,6 @@ interface DefinitionFields
     keyProperty: string;
     descriptionProperty: string;
 }
-
-const optionFieldSlotProps = {select: { MenuProps: {PaperProps: { style: { maxHeight: 300 }}}}}
 
 const DefinitionFieldSection:FC<DefinitionFieldsSectionProps> = (props) =>
 {

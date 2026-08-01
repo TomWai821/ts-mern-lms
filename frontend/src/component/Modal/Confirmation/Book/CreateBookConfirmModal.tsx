@@ -30,10 +30,10 @@ const CreateBookConfirmModal:FC<CreateModalInterface> = ({...bookData}) =>
 
     const { image, imageURL, bookname, genre, language, author, publisher, description, publishDate} = bookData.data;
 
-    const languageID = definition.Language.find((languageData) => languageData.language === language)?._id as string;
-    const genreID = definition.Genre.find((genreData) => genreData.genre === genre)?._id as string;
-    const authorID = contact.Author.find((authorData) => authorData.author === author)?._id as string;
-    const publisherID = contact.Publisher.find((publisherData) => publisherData.publisher === publisher)?._id as string;
+    const genreID = definition[0].find((genreData) => genreData.genre === genre)?._id as string;
+    const languageID = definition[1].find((languageData) => languageData.language === language)?._id as string;
+    const authorID = contact[0].find((authorData) => authorData.author === author)?._id as string;
+    const publisherID = contact[1].find((publisherData) => publisherData.publisher === publisher)?._id as string;
     
     const width = image ? '600px': '400px';
 

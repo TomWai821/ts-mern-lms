@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, Fragment } from "react";
 import { ContactInterface } from "../../../Model/ResultModel";
 import { Typography, TextField, MenuItem } from "@mui/material";
+import { optionFieldSlotProps } from "../../../Data/Style";
 
 interface ContactFieldSectionProps
 {
@@ -16,8 +17,6 @@ interface ContactFields
     dataType: ContactInterface[];
     keyProperty: string;
 }
-
-const optionFieldSlotProps = {select: { MenuProps: {PaperProps: { style: { maxHeight: 300 }}}}}
 
 const ContactFieldSection:FC<ContactFieldSectionProps> = (props) => 
 {
