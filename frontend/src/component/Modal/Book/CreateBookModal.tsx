@@ -16,7 +16,7 @@ import { CreateBookModalInterface } from '../../../Model/ModelForModal';
 
 // Data (CSS Syntax and dropdown data)
 import { useDefinitionContext } from '../../../Context/Book/DefinitionContext';
-import { BookImageFormat, DeleteButton, displayAsColumn, displayAsRow, ModalBodySyntax } from '../../../Data/Style';
+import { BookImageFormat, DeleteButton, displayAsColumn, displayAsRow, ModalBodySyntax, optionFieldSlotProps } from '../../../Data/Style';
 import { useContactContext } from '../../../Context/Book/ContactContext';
 import { ContactInterface, DefinitionInterface } from '../../../Model/ResultModel';
 import { GetCurrentDate } from '../../../Controller/OtherController';
@@ -47,10 +47,10 @@ const CreateBookModal: FC<CreateBookModalInterface> = ({...bookData}) =>
     const CreateBookInputField = useMemo(() => 
     [
         {name: "bookname", label: "Book Name", type:"text", select: false, slotProps: {}, multiline: false, rows: 1 },
-        {name: "genre", label: "Genre", type:"text", select: true, options:definition[0], slotProps:{}, multiline: false, rows: 1},
-        {name: "language", label: "Language", type:"text", select: true, options:definition[1], slotProps: {}, multiline: false, rows: 1},
-        {name: "author", label: "Author", type:"text", select: true, options:contact[0], slotProps:{}, multiline: false, rows: 1},
-        {name: "publisher", label: "Publisher", type:"text", select: true, options:contact[1], slotProps:{}, multiline: false, rows: 1},
+        {name: "genre", label: "Genre", type:"text", select: true, options:definition[0], slotProps:optionFieldSlotProps, multiline: false, rows: 1},
+        {name: "language", label: "Language", type:"text", select: true, options:definition[1], slotProps: optionFieldSlotProps, multiline: false, rows: 1},
+        {name: "author", label: "Author", type:"text", select: true, options:contact[0], slotProps:optionFieldSlotProps, multiline: false, rows: 1},
+        {name: "publisher", label: "Publisher", type:"text", select: true, options:contact[1], slotProps:optionFieldSlotProps, multiline: false, rows: 1},
         {name: "publishDate", label: "Publish Date", type:"Date", select: false, slotProps:{}, multiline: false, rows: 1},
         {name: "description", label: "Description", type: "text", select: false, slotProps:{}, multiline: true, rows: 8}
     ],[definition, contact])
