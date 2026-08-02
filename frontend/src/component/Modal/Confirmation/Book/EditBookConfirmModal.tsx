@@ -88,12 +88,12 @@ const EditBookConfirmModal:FC<EditModalInterface> = (editModalData) =>
     {
         const genreID = definition[0].find((genreData) => genreData.genre === EditData.genre)?._id as string;
         const langaugeID = definition[1].find((languageData) => languageData.language === EditData.language)?._id as string;
-        const publisherID = contact[0].find((publisherData) => publisherData.publisher === EditData.publisher)?._id as string;
-        const authorID = contact[1].find((authorData) => authorData.author === EditData.author)?._id as string;
+        const authorID = contact[0].find((authorData) => authorData.author === EditData.author)?._id as string;
+        const publisherID = contact[1].find((publisherData) => publisherData.publisher === EditData.publisher)?._id as string;
 
         const response: Response = await editBook(EditData._id, CompareData.filename, EditData.image as File, EditData.bookname, genreID, langaugeID, publisherID, EditData.publishDate as string, authorID, EditData.description);
 
-         const result: GetResultInterface = await response.json();
+        const result: GetResultInterface = await response.json();
                 
         if (alertContext && alertContext.setAlertConfig) 
         {

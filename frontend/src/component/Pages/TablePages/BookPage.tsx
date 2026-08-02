@@ -27,7 +27,7 @@ const BookPage = () =>
     const { tabValue, paginationValue, changeValue } = usePageService();
     const { searchBook, setSearchBook, onChange, SearchBook, resetFilter } = useBookFilter(tabValue);
 
-    const { title } = getTablePageTitle("Contact", tabValue, IsAdmin);
+    const { title } = getTablePageTitle("Book", tabValue, IsAdmin);
 
     useEffect(() => 
     { 
