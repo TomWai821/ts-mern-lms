@@ -10,7 +10,7 @@ export const useWebSocket = <T extends Record<string, string>>(dispatch: React.D
 {
     useEffect(() => 
     {
-        const ws = new WebSocket(`${process.env.REACT_APP_BACKEND_BASE_URL}/ws` as string);
+        const ws = new WebSocket(`${process.env.REACT_APP_WEB_SOCKET_SERVER}` as string);
 
         ws.onopen = () => console.log("Connected to WS server");
 
@@ -26,13 +26,20 @@ export const useWebSocket = <T extends Record<string, string>>(dispatch: React.D
                     dispatch({ type: actionType, payload: data.payload });
                 }
             } 
-            catch (err) 
+            catch (error) 
             {
-                console.error("WS parse error:", err);
+                console.error(`WebSocket parse error: ${error}`);
             }
         };
 
+        ws.onerror = (error) => 
+        {
+            console.error(`WebSocket error: ${error}`);
+        };
+
         ws.onclose = () => console.log("Disconnected from WS server");
+
         return () => ws.close();
+
     }, [dispatch, eventMap]);
 };
