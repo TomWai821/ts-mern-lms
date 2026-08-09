@@ -1,5 +1,5 @@
 import { BookWSEventToAction } from "./Book/AllBookWSConfig";
-import { LoanBooKWSEventToAction } from "./Book/LoanBookWSConfig";
+import { LoanBookWSEventToAction } from "./Book/LoanBookWSConfig";
 import { AuthorWSEventToAction } from "./Contact/AuthorWSConfig";
 import { PublisherWSEventToAction } from "./Contact/PublisherWSConfig";
 
@@ -30,5 +30,5 @@ export const UserRecordwsEventToActionMap =
 export const BookRecordwsEventToActionMap = 
 {
     ...BookWSEventToAction,
-    ...LoanBooKWSEventToAction
+    ...LoanBookWSEventToAction
 }
