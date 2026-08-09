@@ -1,4 +1,4 @@
-import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
+import { createContext, FC, useCallback, useContext, useEffect } from "react";
 
 // Another Useful Function
 import { FetchUserData } from "../../Controller/UserController/UserGetController";
@@ -7,52 +7,27 @@ import { ModifySuspendListDataController, ModifyStatusController, ModifyUserData
 import { RegisterController } from "../../Controller/UserController/UserPostController";
 
 // Models
-import { GetResultInterface, UserResultDataInterface } from "../../Model/ResultModel";
+import { GetResultInterface } from "../../Model/ResultModel";
 import { FindUserInterface } from "../../Model/UserTableModel";
 import { ChildProps, UserContextProps } from "../../Model/ContextAndProviderModel";
 import { DeleteUserController } from "../../Controller/UserController/UserDeleteController";
+
 import { useAuthContext } from "./AuthContext";
-
-
-interface UserRecordState 
-{
-    AllUser: UserResultDataInterface[];
-    SuspendUser: UserResultDataInterface[];
-}
-
-type UserRecordAction =
-    | { type: "SET_ALL_USER"; payload: UserResultDataInterface[] }
-    | { type: "SET_SUSPEND_USER"; payload: UserResultDataInterface[] };
-
-const initialState: UserRecordState = 
-{
-    AllUser: [],
-    SuspendUser: [],
-};
-
-const userRecordReducer = (state: UserRecordState, action: UserRecordAction): UserRecordState => 
-{
-    switch (action.type) 
-    {
-        case "SET_ALL_USER":
-            return { ...state, AllUser: action.payload };
-
-        case "SET_SUSPEND_USER":
-            return { ...state, SuspendUser: action.payload };
-
-        default:
-            return state;
-    }
-};
+import { useUserRecordReducer } from "../../Reducer/UserRecordReducer";
+import { UserRecordwsEventToActionMap } from "../../services/ws/config/WSConfig";
+import { useWebSocket } from "../../services/ws/useWebSocket";
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider: FC<ChildProps> = ({ children }) =>
 {
     const { GetData } = useAuthContext();
-    const [state, dispatch] = useReducer(userRecordReducer, initialState);
-    const authToken = GetData("authToken") as string;
+    const { dispatch, state } = useUserRecordReducer();
+
     const userData = [state.AllUser, state.SuspendUser];
+    const authToken = GetData("authToken") as string;
+
+    useWebSocket(dispatch, UserRecordwsEventToActionMap);
 
     // For init
     const fetchAllUser = useCallback(async () => 
@@ -70,10 +45,10 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
             dispatch({ type: "SET_SUSPEND_USER", payload: resultForSuspendUser.foundUser });
         }
 
-    },[authToken])
+    },[authToken, dispatch])
 
     // For search function
-    const fetchUser = useCallback(async (type:string, UserData: {username?: string, role?: string , status?: string, gender?: string} | undefined) => 
+    const fetchUser = useCallback(async (type:string, UserData: {username?: string, role?: string, status?: string, gender?: string} | undefined) => 
     {
         const {username, role, status, gender} = UserData as FindUserInterface;
 
@@ -93,52 +68,31 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
             }
             
         }
-    },[authToken])
+    },[authToken, dispatch])
 
     const createUser = useCallback(async (username:string, email:string, password:string, role:string, gender:string, birthDay:string) => 
     {
         const result: Response = await RegisterController(username, email, password, role, gender, birthDay);
-
-        if(result)
-        {
-            fetchAllUser();
-        }
-        
         return result;
-
-    },[fetchAllUser])
+    },[])
 
     const editUserData = useCallback(async (userId: string, username:string, email:string, gender:string, role:string) => 
     {
         const result: Response = await ModifyUserDataController(authToken, userId, username, email, gender, role);
-
-        if(result)
-        {
-            fetchAllUser();
-        }
-
         return result;
-
-    },[fetchAllUser, authToken])
+    },[authToken])
     
     const editSuspendUserData = useCallback(async (userId:string, suspendedListID:string, dueDate:Date, description:string) => 
     {
-        const result: Response = await ModifySuspendListDataController(authToken, userId, suspendedListID, dueDate, description);
-
-        if(result)
-        {
-            fetchAllUser();
-        }
-        
+        const result: Response = await ModifySuspendListDataController(authToken, userId, suspendedListID, dueDate, description);        
         return result;
-
-    },[fetchAllUser, authToken])
+    },[authToken])
 
     const changeUserStatus = useCallback(async (type: string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => 
     {
         const startDate = GetCurrentDate("Date") as Date;
         const dueDate = CalculateDueDate(duration as number);
-        let result : Response;
+        let result: Response;
         
         switch(type)
         {
@@ -150,28 +104,17 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
                 result = await ModifyStatusController(type, authToken, userId, status, undefined, startDate, dueDate, description);
                 break;
         }
-    
-        if(result)
-        {
-            fetchAllUser();
-        }
         
         return result;
 
-    },[fetchAllUser, authToken]);
+    },[authToken]);
 
     const actualDeleteUser = useCallback(async(userId:string) => 
     {
         const result = await DeleteUserController(authToken, userId);
-
-        if(result)
-        {
-            fetchAllUser();
-        }
-        
         return result;
 
-    },[fetchAllUser, authToken]);
+    },[authToken]);
     
 
     useEffect(() => 

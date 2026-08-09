@@ -1,51 +1,26 @@
-import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
+import { createContext, FC, useCallback, useContext, useEffect } from "react";
 import { ChildProps, DefinatonProps } from "../../Model/ContextAndProviderModel";
 
 import { DefinitionInterface, GetResultInterface } from "../../Model/ResultModel";
 import { CreateDefinitionData, DeleteDefinitionData, EditDefinitionData, GetDefinition } from "../../Controller/BookController/DefinitionController";
 
 import { useAuthContext } from "../User/AuthContext";
-
-interface DefinitionState
-{
-    Genre: DefinitionInterface[];
-    Language: DefinitionInterface[];
-}
-
-type DefinitionAction =
-    | { type: "SET_GENRE"; payload: DefinitionInterface[] }
-    | { type: "SET_LANGUAGE"; payload: DefinitionInterface[] };
-
-const initialState: DefinitionState =
-{
-    Genre:[],
-    Language:[]
-}
-
-const definitionReducer = (state: DefinitionState, action: DefinitionAction): DefinitionState =>
-{
-    switch (action.type)
-    {
-        case "SET_GENRE":
-            return { ...state, Genre: action.payload };
-
-        case "SET_LANGUAGE":
-            return { ...state, Language: action.payload };
-
-        default:
-            return state;
-    }
-}
+import { useDefinitionReducer } from "../../Reducer/DefinitionReducer";
+import { DefinitionwsEventToActionMap } from "../../services/ws/config/WSConfig";
+import { useWebSocket } from "../../services/ws/useWebSocket";
 
 const DefinitionContext = createContext<DefinatonProps | undefined>(undefined);
 
 export const DefinitionProvider:FC<ChildProps> = ({children}) => 
 {
-    const {GetData} = useAuthContext();
-    const [state, dispatch] = useReducer(definitionReducer, initialState);
+    const { GetData } = useAuthContext();
+    const { state, dispatch } = useDefinitionReducer();
+    
     const definition = [state.Genre, state.Language];
     
     const authToken = GetData("authToken") as string;
+
+    useWebSocket(dispatch, DefinitionwsEventToActionMap);
 
     const fetchAllDefinition = useCallback(async () => 
     {
@@ -73,7 +48,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
             }
         }    
     }
-    ,[])
+    ,[dispatch])
 
     const fetchDefinitionDataWithFilterData = useCallback(async (type:string, data?:string) => 
     {
@@ -85,6 +60,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
 
             if(Array.isArray(DefinitionData.foundDefinition as DefinitionInterface[]))
             {
+                
                 switch(type)
                 {
                     case "Genre":
@@ -98,43 +74,28 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
             }
         }
     }
-    ,[])
+    ,[dispatch])
 
     const createDefinition = useCallback(async (type:string, shortName:string, detailsName:string) => 
     {
         const result: Response = await CreateDefinitionData(type, authToken, shortName, detailsName);
-
-        if(result)
-        {
-            fetchAllDefinition();
-        }
         return result;
     }
-    ,[fetchAllDefinition, authToken])
+    ,[authToken])
 
     const editDefinition = useCallback( async (type:string, id:string, shortName:string, detailsName:string) => 
     {
         const result: Response = await EditDefinitionData(type, authToken, id, shortName, detailsName);
-
-        if(result)
-        {
-            fetchAllDefinition();
-        }
         return result;
     }
-    ,[fetchAllDefinition, authToken])
+    ,[authToken])
 
     const deleteDefinition = useCallback(async (type:string, id:string) => 
     {
         const result: Response = await DeleteDefinitionData(type, authToken, id);
-
-        if(result)
-        {
-            fetchAllDefinition();
-        }
         return result;
     }
-    ,[fetchAllDefinition, authToken])
+    ,[authToken])
 
     useEffect(() => 
     {

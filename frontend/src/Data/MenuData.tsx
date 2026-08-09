@@ -26,7 +26,7 @@ const adminPage =
     {name: 'Book Management', clickEvent: () => ChangePage("./viewBook"), icon: <MenuBookIcon/>},
     {name: 'User Management', clickEvent: () => ChangePage("./viewUser"), icon: <PersonIcon/>},
     {name: 'Contact Data Management', clickEvent: () => ChangePage("./contact"), icon:<EmailIcon/>},
-    {name: 'Definition Management', clickEvent: () => ChangePage("./defination"), icon:<BookmarkBorderIcon/>}
+    {name: 'Definition Management', clickEvent: () => ChangePage("./definition"), icon:<BookmarkBorderIcon/>}
 ];
 
 const settings =

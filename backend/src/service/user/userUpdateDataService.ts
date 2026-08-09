@@ -1,8 +1,10 @@
 import { NextFunction, Response } from "express";
-import { FindUser } from "../../schema/user/user";
-import { CreateSuspendList, FindSuspendList } from "../../schema/user/suspendList";
-import { UserInterface } from "../../model/userSchemaInterface";
+import { FindUser, FindUserByIDAndUpdate } from "../../schema/user/user";
+import { FindSuspendList } from "../../schema/user/suspendList";
+import { SuspendListInterface, UserInterface } from "../../model/userSchemaInterface";
 import { AuthRequest } from "../../model/requestInterface";
+import { broadcast, UserEvent } from "../../ws";
+import { SuspendUserDTO } from "./SuspendUserDTOService";
 
 // For user update(Require login)
 export const BuildUserUpdateDataService = async (req: AuthRequest, res:Response, next:NextFunction) => 
@@ -58,33 +60,20 @@ export const BuildUserUpdateDataService = async (req: AuthRequest, res:Response,
     next();
 }
 
-export const CreateStatusListService = async (statusForUserList: string,  userId: string, description: string, startDate: Date, dueDate: Date) => 
+
+export const UserDataUpdateService = async (foundUser: UserInterface, updateData: Record<string, any>) => 
 {
-    try 
+    const modifyData = await FindUserByIDAndUpdate(foundUser._id as unknown as string, updateData); 
+
+    if(!modifyData)
     {
-        switch (statusForUserList) 
-        {
-            case "Suspend":
-                const existingSuspend = await FindSuspendList({ userId: userId });
-                
-                if (existingSuspend) 
-                {
-                    return existingSuspend;
-                }
-
-                const newSuspendList = await CreateSuspendList({  userID: userId,  description: description, startDate: startDate, dueDate: dueDate });
-                
-                return newSuspendList;
-
-            default:
-                console.warn(`Invalid status provided: ${statusForUserList}`);
-                return null;
-        }
-
-    } 
-    catch (error) 
-    {
-        console.error("CreateStatusListService Error:", error);
-        throw new Error("Internal Service Error: Failed to process status list.");
+        return {success: false, statusCode: 401, message: "Fail to update User Record!"}
     }
-};
+
+    const suspendListData = await FindSuspendList({userID: foundUser._id}) as SuspendListInterface;
+
+    broadcast(UserEvent.USER_UPDATE, modifyData);
+    broadcast(UserEvent.SUSPEND_USER_UPDATE, SuspendUserDTO(modifyData, suspendListData));
+    return {success: true, statusCode: 200, message: "User Data Updated successfully!"}
+}
+

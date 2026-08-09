@@ -125,11 +125,11 @@ export const FindBookLoanedByID = async (bookLoanedId: string, select?: Record<s
     }
 }
 
-export const FindBookLoanedByIDAndUpdate  = async (bookLoanedId: string, data: Record<string, any>) =>
+export const FindBookLoanedByIDAndUpdate = async (bookLoanedId: string, data: Record<string, any>) =>
 {
     try
     {
-        return await BookLoaned.findByIdAndUpdate(bookLoanedId, data);
+        return await BookLoaned.findByIdAndUpdate(bookLoanedId, data, {new: true});
     }
     catch(error)
     {

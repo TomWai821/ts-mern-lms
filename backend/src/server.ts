@@ -2,6 +2,8 @@
 import { connectToMongoDB } from './init/connectToMongo';
 import { scheduleDailyMidnightTasks } from './utils/detectRecord';
 import { config } from './config/config';
+import { initWsServer } from './ws';
+import http from "http";
 import app from './app'
 
 export const startServer = async () =>
@@ -11,8 +13,11 @@ export const startServer = async () =>
     try
     {  
         await connectToMongoDB();
+        const server = http.createServer(app);
 
-        app.listen(PORT, () => 
+        initWsServer(server);
+
+        server.listen(PORT, () => 
         { 
             console.log(`Server listen to http://localhost:${PORT}`);
         });

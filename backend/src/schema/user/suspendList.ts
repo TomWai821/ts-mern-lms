@@ -96,6 +96,19 @@ export const FindSuspendListByIDAndUpdate = async (suspendListID: string, data: 
     }
 }
 
+export const FindSuspendListByIDAndDelete = async (suspendListID: string) =>
+{
+    try 
+    {
+        return await SuspendList.findByIdAndDelete(suspendListID);
+    } 
+    catch (error) 
+    {
+        printError(error);
+    }
+}
+
+
 export const detectExpiredSuspendRecord = async () => 
 {
     try

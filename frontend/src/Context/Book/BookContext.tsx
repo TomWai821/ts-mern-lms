@@ -1,9 +1,9 @@
-import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
+import { createContext, FC, useCallback, useContext, useEffect } from "react";
 
 import { BookContextProps, ChildProps } from "../../Model/ContextAndProviderModel";
 
 import { CalculateDueDate, GetCurrentDate } from "../../Controller/OtherController";
-import { BookDataInterface, GetResultInterface, LoanBookInterface } from "../../Model/ResultModel";
+import { GetResultInterface } from "../../Model/ResultModel";
 import { fetchBook, fetchLoanBook, GetExternalData } from "../../Controller/BookController/BookGetController";
 import { createBookRecord, createLoanBookRecord } from "../../Controller/BookController/BookPostController";
 import { returnBookAndChangeStatus, updateBookRecord } from "../../Controller/BookController/BookPutController";
@@ -11,37 +11,9 @@ import { deleteBookRecord } from "../../Controller/BookController/BookDeleteCont
 
 import { useAuthContext } from "../User/AuthContext";
 import { useRecommendBookContext } from "./RecommendBookContext";
-
-interface BookState 
-{
-    AllBook: BookDataInterface[];
-    OnLoanBook: LoanBookInterface[];
-}
-
-type BookAction =
-    | { type: "SET_ALL_BOOK"; payload: BookDataInterface[] }
-    | { type: "SET_ON_LOAN_BOOK"; payload: LoanBookInterface[] };
-
-const initialState: BookState = 
-{
-    AllBook: [],
-    OnLoanBook: [],
-};
-
-const bookReducer = (state: BookState, action: BookAction): BookState => 
-{
-    switch (action.type) 
-    {
-        case "SET_ALL_BOOK":
-            return { ...state, AllBook: action.payload };
-
-        case "SET_ON_LOAN_BOOK":
-            return { ...state, OnLoanBook: action.payload };
-
-        default:
-            return state;
-    }
-};
+import { useBookReduer } from "../../Reducer/BookRecordReducer";
+import { useWebSocket } from "../../services/ws/useWebSocket";
+import { BookRecordwsEventToActionMap } from "../../services/ws/config/WSConfig";
 
 const BookContext = createContext<BookContextProps | undefined>(undefined);
 
@@ -50,11 +22,12 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
     const { GetData } = useAuthContext();
     const { fetchNewPublishBook, fetchMostPopularBook } = useRecommendBookContext();
 
-    const [state, dispatch] = useReducer(bookReducer, initialState);
-    const { AllBook, OnLoanBook } = state;
-    const bookData = [AllBook, OnLoanBook];
+    const {state, dispatch} = useBookReduer();
+    const bookData = [state.AllBook, state.OnLoanBook];
     
     const authToken = GetData("authToken") as string;
+
+    useWebSocket(dispatch, BookRecordwsEventToActionMap);
 
     const fetchAllBook = useCallback(async () => 
     {
@@ -68,9 +41,9 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
 
         if(resultForLoanBook && Array.isArray(resultForLoanBook.foundLoanBook))
         {
-            dispatch({ type: "SET_ON_LOAN_BOOK", payload: resultForLoanBook.foundLoanBook });
+            dispatch({ type: "SET_LOAN_BOOK", payload: resultForLoanBook.foundLoanBook });
         }
-    },[authToken])
+    },[authToken, dispatch])
 
     const fetchBookWithFliterData = useCallback(async (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => 
     {
@@ -80,7 +53,7 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         {
             dispatch({ type: "SET_ALL_BOOK", payload: result.foundBook });
         }
-    },[])
+    },[dispatch])
 
     const fetchLoanBookWithFliterData = useCallback(async (type:string, bookname?:string, username?:string, status?:string, finesPaid?:string) => 
     {
@@ -88,9 +61,9 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
 
         if(result && Array.isArray(result.foundLoanBook))
         {
-            dispatch({ type: "SET_ON_LOAN_BOOK", payload: result.foundLoanBook });
+            dispatch({ type: "SET_LOAN_BOOK", payload: result.foundLoanBook });
         }
-    },[authToken])
+    },[authToken, dispatch])
 
     const fetchAllRecord = useCallback(async () => 
     {
@@ -101,26 +74,15 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
     const createBook = useCallback(async (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 
     {
         const result: Response = await createBookRecord(authToken, image, bookname, genreID, languageID, publisherID, authorID, description, publishDate);
-
-        if(result)
-        {
-            fetchAllRecord();
-        }
         return result;
-
-    },[fetchAllRecord, authToken])
+    },[authToken])
 
     const editBook = useCallback(async (bookID:string, imageName:string, newFile:File, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => 
     {
         const result: Response = await updateBookRecord(authToken, bookID, imageName, newFile, bookname, genreID, languageID, publisherID, publishDate, authorID, description);
-
-        if(result)
-        {
-            fetchAllRecord();
-        }
         return result;
         
-    },[fetchAllRecord, authToken])
+    },[authToken])
 
     const loanBook = useCallback(async(bookID:string, userID?:string) => 
     {
@@ -128,43 +90,25 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         const dueDate = CalculateDueDate(7);
         const result: Response = await createLoanBookRecord(authToken, bookID, loanDate, dueDate, userID);
 
-        if(result)
-        {
-            fetchAllRecord();
-        }
         return result;
-
-    },[fetchAllRecord, authToken])
+    },[authToken])
 
     const returnBook = useCallback(async(loanRecordID:string, finesPaid?:string) =>
     {
         const result: Response = await returnBookAndChangeStatus(authToken, loanRecordID, finesPaid);
-
-        if(result)
-        {
-            fetchAllRecord();
-        }
         return result;
-
-    },[fetchAllRecord, authToken])
+    },[authToken])
 
     const deleteBook = useCallback(async (bookID:string) => 
     {
         const result: Response = await deleteBookRecord("Book", authToken, bookID);
-
-        if(result)
-        {
-            fetchAllRecord();
-        }
         return result;
-
-    },[fetchAllRecord, authToken])
+    },[authToken])
 
     const getExternalData = useCallback(async(bookname:string, author:string) => 
     {
         const result = await GetExternalData(authToken, bookname, author);
         return result;
-        
     },[authToken])
 
     useEffect(() => 

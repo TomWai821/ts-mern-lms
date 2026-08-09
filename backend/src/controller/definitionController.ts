@@ -2,6 +2,31 @@ import { Request, Response } from "express"
 import { DefinitionConfig, DefinitionType } from "../config/definitionConfig";
 import { validateDefinition } from "../middleware/Definition/DefinitionHelper";
 
+import { DefinitionEvent, broadcast } from '../ws';
+
+interface DefinitionEventMap 
+{
+    create: DefinitionEvent;
+    update: DefinitionEvent;
+    delete: DefinitionEvent;
+}
+
+const DefinitionEventMap: Record<DefinitionType, DefinitionEventMap> = 
+{
+    Genre: 
+    {
+        create: DefinitionEvent.GENRE_CREATE,
+        update: DefinitionEvent.GENRE_UPDATE,
+        delete: DefinitionEvent.GENRE_DELETE
+    },
+    Language: 
+    {
+        create: DefinitionEvent.LANGUAGE_CREATE,
+        update: DefinitionEvent.LANGUAGE_UPDATE,
+        delete: DefinitionEvent.LANGUAGE_DELETE
+    }
+};
+
 export const GetDefinitionRecord = async (req: Request, res: Response) => 
 {
     const definitionType = req.params.type as DefinitionType;
@@ -65,6 +90,8 @@ export const CreateDefinitionRecord = async (req: Request, res: Response) =>
             return res.status(400).json({ success: false, error: `Failed to create ${definitionType}` });
         }
 
+
+        broadcast(DefinitionEventMap[definitionType].create, record);
         return res.json({ success: true, message: `Created ${definitionType} successfully!` });
     } 
     catch(error) 
@@ -102,6 +129,7 @@ export const UpdateDefinitionRecord = async (req: Request, res: Response) =>
             return res.status(404).json({ success: false, error: `Record not found` });
         }
 
+        broadcast(DefinitionEventMap[definitionType].update, record);
         return res.json({ success: true, message: `Update ${definitionType} successfully!`, data: record });
     } 
     catch(error) 
@@ -131,6 +159,7 @@ export const DeleteDefinitionRecord = async (req: Request, res: Response) =>
             return res.status(400).json({ success: false, error: `Failed to delete ${definitionType} data` });
         }
 
+        broadcast(DefinitionEventMap[definitionType].delete, id);
         return res.json({ success: true, message: `Delete ${definitionType} Data successfully!` });
     } 
     catch (error) 

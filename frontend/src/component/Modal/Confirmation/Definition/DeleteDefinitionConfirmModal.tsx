@@ -32,7 +32,7 @@ const DeleteDefinitionConfirmModal:FC<DeleteModalInterface> = (deleteData) =>
         let setTitle = {title: "", subTitle: ""};
         
         setTitle.title = `Delete ${type} Definition`;
-        setTitle.subTitle = "Do you want to delete this defination?"
+        setTitle.subTitle = "Do you want to delete this definition?"
 
         return setTitle;
     }

@@ -2,11 +2,18 @@ import { Request, Response } from 'express';
 import { AuthRequest, CreateUserInterface } from '../model/requestInterface';
 import { jwtSign, bcryptHash, comparePassword } from './hashing'
 import { UserInterface } from '../model/userSchemaInterface';
-import { CreateUser, FindUser, FindUserByIDAndDelete, FindUserByIDAndUpdate } from '../schema/user/user';
+import { CreateUser, FindUser, FindUserByIDAndUpdate } from '../schema/user/user';
 
 import { ObjectId } from 'mongoose';
-import { CreateStatusListService } from '../service/user/userUpdateDataService';
 import { FindSuspendListByIDAndUpdate } from '../schema/user/suspendList';
+
+import { broadcast, UserEvent } from '../ws';
+import { SuspendUserEditDTO } from '../service/user/SuspendUserDTOService';
+import { DeleteUserService } from '../service/user/DeleteUserDataService';
+import { UnsuspendUserService } from '../service/user/UnSuspendUserService';
+import { SuspendUserService } from '../service/user/SuspendUserService';
+import { UserDataUpdateService } from '../service/user/userUpdateDataService';
+import { GetUserDataService } from '../service/user/GetUserDataService';
 
 export const UserRegister = async(req: Request, res: Response) =>
 {
@@ -35,6 +42,7 @@ export const UserRegister = async(req: Request, res: Response) =>
         const authToken = await jwtSign(data); 
         success = true; 
     
+        broadcast(UserEvent.USER_CREATE, newUser);
         res.json({ success, message: "Register successfully!", data:{authToken, username, status: newUser.status, role: newUser.role, avatarUrl: avatarUrl} })
     }
     catch (error) 
@@ -71,10 +79,21 @@ export const UserLogin = async (req: AuthRequest, res: Response) =>
 
 export const GetUserData = async (req: AuthRequest, res: Response) =>
 {
+    const userId = req.user?._id;
+    const tableName = req.params.tableName;
+    const queryParams = req.query;
+
     try 
     {
-        const foundUser = req.foundUser;
-        res.send({ success: true, foundUser });
+        const {success, statusCode, message, foundUser} = await GetUserDataService(userId as unknown as string, tableName, queryParams);
+
+        if(!success)
+        {
+            return res.status(statusCode).send({ success, message });
+        }
+
+        res.status(statusCode).send({ success, foundUser });
+        
     } 
     catch (error) 
     {
@@ -107,15 +126,8 @@ export const ChangeUserData = async (req: AuthRequest, res: Response) =>
 
     try 
     {
-        const modifyData = await FindUserByIDAndUpdate(foundUser._id as unknown as string, updateData); 
-
-        if(!modifyData)
-        {
-            return res.json({success, message: "Fail to update Data!"})
-        }
-
-        success = true;
-        res.json({ success, message: "Data updated successfully!" });
+        const {success, statusCode, message} = await UserDataUpdateService(foundUser, updateData);
+        res.status(statusCode).json({ success, message });
     } 
     catch (error) 
     {
@@ -124,7 +136,7 @@ export const ChangeUserData = async (req: AuthRequest, res: Response) =>
     }
 };
 
-export const UpdateUserData = async (req:AuthRequest, res:Response) => 
+export const UpdateUserProfileData = async (req:AuthRequest, res:Response) => 
 {
     const {username, password} = req.body;
     const {type} = req.params;
@@ -149,7 +161,9 @@ export const UpdateUserData = async (req:AuthRequest, res:Response) =>
 
             case "password":
                 const GetUserData = await FindUser({_id: userId}) as UserInterface;
+
                 const match = await comparePassword(password, GetUserData.password);
+                
                 if(match)
                 {
                     return res.status(400).json({ success, error: "New password cannot be the same as the old password!" });
@@ -178,51 +192,46 @@ export const UpdateUserData = async (req:AuthRequest, res:Response) =>
     }
 }
 
-export const ChangeStatus = async (req:AuthRequest, res:Response) => 
+export const SuspendUser = async(req: AuthRequest, res: Response) => 
 {
-    const { statusForUserList, description, startDate, dueDate, suspendListID } = req.body;
+    const { description, startDate, dueDate } = req.body;
     const foundUser = req.foundUser as UserInterface;
     const userId = foundUser._id as ObjectId;
+    const success = false;
+
+    try
+    {
+        if(foundUser.status === "Normal")
+        {
+            const { statusCode, success, message } = await SuspendUserService(userId as unknown as string, description, startDate, dueDate, foundUser);
+            return res.status(statusCode).json({success, message});
+        }
+
+        res.status(400).json({success, message:"This user already got suspend"});
+    }
+    catch(error)
+    {
+        console.error(`Unhandled error: ${error}`);
+        res.status(500).json({ success, error: "Internal Server Error!" });
+    }
+}
+
+export const UnsuspendUser = async(req: AuthRequest, res: Response) => 
+{
+    const { suspendListID } = req.body;
     let success = false;
 
     try
     {
-        if(statusForUserList !== "Normal" && foundUser.status === "Normal")
-        {
-            const createStatusData = await CreateStatusListService(statusForUserList, userId as unknown as string, description, startDate, dueDate);
-
-            if(!createStatusData)
-            {
-                return res.status(400).json({success, message:"Fail to Create Record in Suspend List"});
-            }
-        }
-
-        const changeStatusInUsertable = await FindUserByIDAndUpdate(userId as unknown as string, {status: statusForUserList});
-
-        if(!changeStatusInUsertable) 
-        {
-            return res.status(400).json({success, message:"Failed to update status in User Table"});
-        }
-
-        if(statusForUserList === "Normal")
-        {
-            const unSuspendDate = new Date();
-            const changeSuspendListStatus = await FindSuspendListByIDAndUpdate(suspendListID, {status: "Unsuspend", unSuspendDate: unSuspendDate});
-
-            if(!changeSuspendListStatus)
-            {
-                return res.status(400).json({success, message:"Failed to update status in Suspend List Table"});
-            }
-        }
-
-        success = true;
-        res.json({ success, message:"Change Status Successfully!"});
+        const {statusCode, success, message} = await UnsuspendUserService(suspendListID);
+        res.status(statusCode).json({ success, message });
     }
-    catch (error) 
+    catch(error)
     {
-         console.error(`Unhandled error: ${error}`);
+        console.error(`Unhandled error: ${error}`);
         res.status(500).json({ success, error: "Internal Server Error!" });
     }
+    
 }
 
 export const ModifySuspendListData = async (req: AuthRequest, res:Response) => 
@@ -240,6 +249,7 @@ export const ModifySuspendListData = async (req: AuthRequest, res:Response) =>
         }
 
         success = true;
+        broadcast(UserEvent.SUSPEND_USER_UPDATE, await SuspendUserEditDTO(modifySuspendList));
         res.json({ success, message: "Suspend List Record Update Successfully!"});
     }
     catch(error)
@@ -256,15 +266,8 @@ export const DeleteUser = async (req: AuthRequest, res: Response) =>
 
     try 
     {
-        const deleteUser = await FindUserByIDAndDelete(foundUser._id as unknown as string);
-
-        if(!deleteUser)
-        {
-            return res.status(401).json({ success, error: "Failed to delete user!" });
-        }
-
-        success = true;
-        res.json({ success, message: "Delete user successfully!" });
+        const {statusCode, success, message} = await DeleteUserService(foundUser);
+        res.status(statusCode).json({ success, message });
     }
     catch(error)
     {

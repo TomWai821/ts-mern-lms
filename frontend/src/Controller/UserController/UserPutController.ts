@@ -1,7 +1,7 @@
 const contentType:string = 'application/json';
-const localhost = process.env.REACT_APP_API_URL;
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
 
-const url:string = `${localhost}/user`;
+const url:string = `${localhost}/api/user`;
 
 const fetchData = async (authToken:string, url: string, data: Record<string, any>) => 
 {
@@ -58,7 +58,7 @@ const ModifyStatusController = async (type:string, authToken:string, userId: str
 
     const statusData = statusDataConfig[type as keyof typeof statusDataConfig];
         
-    const URL = `${url}/Status/id=${userId}`;
+    const URL = `${url}/${type}/id=${userId}`;
     return await fetchData(authToken, URL, statusData) as Response;
 };
 

@@ -1,7 +1,7 @@
-const localhost = process.env.REACT_APP_API_URL;
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
 const contentType = "application/json";
 
-const baseUrl = `${localhost}/definition`
+const baseUrl = `${localhost}/api/definition`
 
 export const GetDefinition = async (type:string, data?:string) => 
 {

@@ -1,6 +1,6 @@
 const contentType = "application/json";
-const localhost = process.env.REACT_APP_API_URL;
-const url:string = `${localhost}/book`;
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const url:string = `${localhost}/api/book`;
 
 export const createBookRecord = async (authToken:string, image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 
 {
@@ -13,7 +13,7 @@ export const createBookRecord = async (authToken:string, image:File, bookname:st
             body: formData
         }
     );
-
+    console.log(response);
     return response;
 }
 

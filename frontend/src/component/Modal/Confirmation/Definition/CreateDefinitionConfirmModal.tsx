@@ -23,9 +23,9 @@ import CreateDefinitionModal from "../../Definition/CreateDefinitionModal";
 import { AlertContext } from "../../../../Context/AlertContext";
 
 
-const CreateDefinitionConfirmModal:FC<CreateModalInterface> = (definationData) => 
+const CreateDefinitionConfirmModal:FC<CreateModalInterface> = (definitionData) => 
 {
-    const {value, data} = definationData;
+    const {value, data} = definitionData;
     const Data = data as DefinitionInterface;
     const type = value === 0 ? "Genre" : "Language";
  
@@ -35,7 +35,7 @@ const CreateDefinitionConfirmModal:FC<CreateModalInterface> = (definationData) =
 
     const returnCreateUserModal = () => 
     {
-        handleOpen(<CreateDefinitionModal {...definationData}/>);
+        handleOpen(<CreateDefinitionModal {...definitionData}/>);
     }
 
     const createDefinitionData = async () => 

@@ -21,7 +21,7 @@ const RouteMap : Record<string, JSX.Element> =
     "/viewBook": <BookPage/>,
     "/viewUser": <UserPage/>,
     "/records": <SelfLoanRecordPage/>,
-    "/defination": <DefinitionPage/>,
+    "/definition": <DefinitionPage/>,
     "/contact": <ContactPage/>,
 }
 

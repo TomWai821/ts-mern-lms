@@ -39,7 +39,6 @@ export const GetPublisher = async (data?:Record<string, any>) =>
     {
         printError(error);
     }
-
 };
         
 export const FindPublisher = async (data: Record<string, any>) => 
@@ -74,7 +73,7 @@ export const FindPublisherByIDAndUpdate = async (publisherID: string, data: Reco
 {
     try
     {
-        return await Publisher.findByIdAndUpdate(publisherID, data);
+        return await Publisher.findByIdAndUpdate(publisherID, data, { new: true });
     }
     catch(error)
     {

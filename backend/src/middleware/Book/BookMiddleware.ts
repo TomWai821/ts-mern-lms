@@ -10,7 +10,7 @@ export const GetBookDataMiddleware = async (req: AuthRequest, res: Response, nex
 
         if (!foundBook) 
         {
-            return res.status(404).json({ success: false, error: "Could not find any books." });
+            return res.status(404).json({ success: false, error: "Could not find any books" });
         }
 
         req.foundBook = foundBook;

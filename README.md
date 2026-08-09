@@ -206,12 +206,12 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 - Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI, GOOGLE_BOOKS_API_KEY, GOOGLE_BOOKS_BASE_URL, BACKEND_BASE_URL, STORAGE_TYPE
-- Edit frontend/.env: set at minimum: REACT_APP_API_URL, REACT_APP_MAIN_PAGE
+- Edit frontend/.env: set at minimum: REACT_APP_BACKEND_BASE_URL, REACT_APP_MAIN_PAGE
 
 **Notes about ports and hostnames** 
 - If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`). Docker Compose maps container ports to the host automatically
 - If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
-- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:5000`, `REACT_APP_API_URL=http://localhost:5000/api`, `REACT_APP_MAIN_PAGE=http://localhost:3000`, `BACKEND_BASE_URL=http://localhost:5000`, `STORAGE_TYPE=LOCAL`
+- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:5000`, `REACT_APP_BACKEND_BASE_URL=http://localhost:5000`, `REACT_APP_MAIN_PAGE=http://localhost:3000`, `BACKEND_BASE_URL=http://localhost:5000`, `STORAGE_TYPE=LOCAL`
 
 ### 2. Launch with Docker Compose
 ```bash
@@ -334,10 +334,10 @@ This project focuses on high-standard engineering practices. Key highlights incl
     1. Copy template:
        ```bash
        cp frontend/.env.example frontend/.env
-      REACT_APP_API_URL
+      REACT_APP_BACKEND_BASE_URL
       
     2. Required variables (fill with real values):
-       - REACT_APP_API_URL               —> Backend API endpoint, e.g. http://localhost:5000/api
+       - REACT_APP_BACKEND_BASE_URL               —> Backend API endpoint, e.g. http://localhost:5000
        - REACT_APP_MAIN_PAGE             —> Frontend URL, e.g. http://localhost:3000
       
     ### Backend
@@ -417,7 +417,7 @@ This project focuses on high-standard engineering practices. Key highlights incl
     ```
 
 6. **Expected URLs:**
-    - Backend API → http://localhost:5000/api
+    - Backend → http://localhost:5000
     - Frontend    → http://localhost:3000
   
 ### Notes

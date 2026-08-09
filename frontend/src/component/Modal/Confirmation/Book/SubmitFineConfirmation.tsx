@@ -24,9 +24,9 @@ const SubmitFinesConfirmModal:FC<ReturnBookInterface> = (returnBookModalData) =>
 
     const submitFinesConfirm = async () => 
     {
-        const response: Response  = await returnBook(Data._id, "Paid");
+        const response: Response = await returnBook(Data._id, "Paid");
 
-         const result: GetResultInterface = await response.json();
+        const result: GetResultInterface = await response.json();
                 
         if (alertContext && alertContext.setAlertConfig) 
         {

@@ -1,5 +1,7 @@
-import { CreateBook, FindBookByIDAndDelete } from "../../schema/book/book";
+import { broadcast, BookEvent } from "../../ws";
+import { CreateBook, FindBookByIDAndDelete, GetBook } from "../../schema/book/book";
 import { ImageDataBuilder, UploadImage } from "../image/bookCreateImageService";
+import { BookInterface } from "@/model/bookSchemaInterface";
 
 interface BookDataInterface
 {
@@ -32,7 +34,7 @@ export const CreateBookRecordService = async (bookData: BookDataInterface, file?
 
         if (!createBook) 
         {
-            throw new Error("Failed to create book record");
+            return {success: false, statusCode: 400, error: "Failed to create book record"};
         }
 
         createdBookId = createBook._id.toString();
@@ -43,7 +45,10 @@ export const CreateBookRecordService = async (bookData: BookDataInterface, file?
             await UploadImage(file, imageData.image.filename);
         }
 
-        return { success: true, bookId: createdBookId };
+        const newBookRecord = await GetBook({ _id: createBook._id }) as unknown as BookInterface[];
+
+        broadcast(BookEvent.BOOK_CREATE, newBookRecord[0]);
+        return { success: true, statusCode: 200, message: "Book Record Created Successfully!"};
     } 
     catch (error) 
     {

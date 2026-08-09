@@ -2,6 +2,32 @@ import { Request, Response } from "express"
 import { ContactConfig, ContactType } from "../config/contactConfig";
 import { validateContact } from "../middleware/Contact/ContactHelper";
 
+import { ContactEvent, broadcast } from '../ws';
+
+interface ContactEventMap 
+{
+    create: ContactEvent;
+    update: ContactEvent;
+    delete: ContactEvent;
+}
+
+const ContactEventMap: Record<ContactType, ContactEventMap> = 
+{
+    Author: 
+    {
+        create: ContactEvent.AUTHOR_CREATE,
+        update: ContactEvent.AUTHOR_UPDATE,
+        delete: ContactEvent.AUTHOR_DELETE
+    },
+    Publisher: 
+    {
+        create: ContactEvent.PUBLISHER_CREATE,
+        update: ContactEvent.PUBLISHER_UPDATE,
+        delete: ContactEvent.PUBLISHER_DELETE
+    }
+};
+
+
 export const GetContactRecord = async (req: Request, res: Response) => 
 {
     const type = req.params.type as ContactType;
@@ -68,6 +94,7 @@ export const CreateContactRecord = async (req: Request, res: Response) =>
             return res.status(400).json({ success: false, error: `Failed to create ${type}` });
         }
 
+        broadcast(ContactEventMap[type].create, record);
         return res.json({ success: true, message: `Created ${type} successfully!` });
     } 
     catch (error: any) 
@@ -108,6 +135,7 @@ export const UpdateContactRecord = async (req: Request, res: Response) =>
             return res.status(404).json({ success: false, error: "Record not found!" });
         }
 
+        broadcast(ContactEventMap[type].update, record);
         return res.json({ success: true, message: `Updated ${type} successfully!`, data: record });
     } 
     catch (error: any) 
@@ -121,8 +149,8 @@ export const UpdateContactRecord = async (req: Request, res: Response) =>
 export const DeleteContactRecord = async (req: Request, res: Response) => 
 {
     const { id } = req.body;
-    const definitionType = req.params.type as ContactType;
-    const config = ContactConfig[definitionType];
+    const contactType = req.params.type as ContactType;
+    const config = ContactConfig[contactType];
 
     if (!config)
     {
@@ -135,10 +163,11 @@ export const DeleteContactRecord = async (req: Request, res: Response) =>
         
         if (!deleteData) 
         {
-            return res.status(400).json({ success: false, error: `Failed to delete ${definitionType} data` });
+            return res.status(400).json({ success: false, error: `Failed to delete ${contactType} data` });
         }
 
-        return res.json({ success: true, message: `Delete ${definitionType} Data successfully!` });
+        broadcast(ContactEventMap[contactType].delete, id);
+        return res.json({ success: true, message: `Delete ${contactType} Data successfully!` });
     } 
     catch (error) 
     {

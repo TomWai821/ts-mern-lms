@@ -1,7 +1,7 @@
-const localhost = process.env.REACT_APP_API_URL;
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
 
 const contentType:string = 'application/json';
-const url:string = `${localhost}/user`;
+const url:string = `${localhost}/api/user`;
 
 const LoginController = async (email:String, password:String): Promise<any> => 
 {

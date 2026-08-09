@@ -1,14 +1,16 @@
 import { FindBookFavouriteAndDeleteMany } from "../../schema/book/bookFavourite";
-import { FindBookLoanedAndDelete } from "../../schema/book/bookLoaned";
-import { BookInterface } from "../../model/bookSchemaInterface";
+import { FindBookLoaned, FindBookLoanedAndDelete, FindBookLoanedByID } from "../../schema/book/bookLoaned";
+import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
 import { FindBookByID, FindBookByIDAndDelete } from "../../schema/book/book";
 import { HandleDeleteImage } from "../image/bookDeleteImageService";
+import { BookEvent, broadcast } from "../../ws";
 
 interface ServiceResponse 
 {
     success: boolean;
-    status: number;
+    statusCode: number;
     error?: string;
+    message?: string;
 }
 
 export const BookDeletionService = async (bookID: string): Promise<ServiceResponse> => 
@@ -18,7 +20,7 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
 
     if (!bookRecord)
     {
-        return { success: false, status: 404, error: "Book not found" };
+        return { success: false, statusCode: 404, error: "Book not found" };
     }
     
     // 2. Delete the book record
@@ -26,15 +28,18 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
 
     if (!deletedBook)
     {
-        return { success: false, status: 500, error: "Failed to delete book master record" };
+        return { success: false, statusCode: 500, error: "Failed to delete book master record" };
     }
 
     // 3. Fire-and-forget background cleanup: do not await to avoid blocking primary delete
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     void ExecuteBackgroundCleanup(bookID, bookRecord.image.filename);
 
+    broadcast(BookEvent.BOOK_DELETE, bookID);
+    broadcast(BookEvent.LOAN_BOOK_DELETE, bookID);
+
     // 4. Return success response (If main deletion succeeded)
-    return { success: true, status: 200 };
+    return { success: true, statusCode: 200, message: "Delete Book Record Successfully"};
 }
 
 /**
@@ -62,7 +67,7 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
 const ExecuteBackgroundCleanup = (bookID: string, filename: string): void => 
 {
     // 1. Delete related records in parallel (Loaned and Favourite)
-    Promise.allSettled([FindBookLoanedAndDelete({ bookID }),FindBookFavouriteAndDeleteMany({ bookID })])
+    Promise.allSettled([FindBookLoanedAndDelete({ bookID }), FindBookFavouriteAndDeleteMany({ bookID })])
         .then(([loanResult, favouriteResult]) => 
         {
             // Log any failures in related record cleanup (But do not affect the main response)

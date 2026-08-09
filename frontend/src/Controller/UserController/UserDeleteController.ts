@@ -1,6 +1,6 @@
-const localhost = process.env.REACT_APP_API_URL;
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
 
-const url:string = `${localhost}/user`;
+const url:string = `${localhost}/api/user`;
 const contentType:string = 'application/json';
 
 const DeleteUserController = async(authToken:string, userId:string) => 

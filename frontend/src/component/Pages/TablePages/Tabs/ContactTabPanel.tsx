@@ -25,7 +25,7 @@ const ContactTabPanel:FC<ContactTableInterface> = (TabData) =>
             {
                 ContactTable.map((table, index) => 
                 (
-                    <CustomTabPanel index={index} value={value as number}>
+                    <CustomTabPanel key={index} index={index} value={value as number}>
                         {table}
                     </CustomTabPanel>
                 ))

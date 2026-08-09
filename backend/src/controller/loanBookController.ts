@@ -1,13 +1,12 @@
 import { Response } from 'express'
-import { CreateBookLoaned, FindBookLoanedByIDAndUpdate, GetBookLoaned } from '../schema/book/bookLoaned';
+import { GetBookLoaned } from '../schema/book/bookLoaned';
 import { AuthRequest } from '../model/requestInterface';
-import { FindBookByIDAndUpdate } from '../schema/book/book';
 import { BookLoanedInterface } from '../model/bookSchemaInterface';
 import { ObjectId } from 'mongodb';
 import { buildLoanedQuery } from '../middleware/Book/bookValidationMiddleware';
-import { jwtVerify } from './hashing';
-import { UserInterface } from '../model/userSchemaInterface';
-import { FindUser } from '../schema/user/user';
+
+import { CreateLoanBookRecordService } from '../service/loanBook/loanBookCreateDataService';
+import { LoanBookRecordUpdateService } from '../service/loanBook/loanBookUpdateDataService';
 
 export const GetLoanBookRecord = async (req: AuthRequest, res:Response) => 
 {
@@ -58,46 +57,19 @@ export const GetLoanBookRecord = async (req: AuthRequest, res:Response) =>
 export const CreateLoanBookRecord = async (req: AuthRequest, res:Response) => 
 {
     const {userID, bookID, loanDate, dueDate} = req.body;
-    const id = req.user?._id;
+    const librarianUserID = req.user?._id;
     let success = false;
     
     try
     {
-        let UserID;
-        
-        if (userID) 
-        {
-            const data = await jwtVerify(userID); 
-            UserID = data.user?._id;
+        const {success, statusCode, error, message} = await CreateLoanBookRecordService(userID, librarianUserID as unknown as string, bookID, loanDate, dueDate);
 
-            const user = await FindUser({ _id: UserID }) as UserInterface;
-            
-            if(user.status === "Suspend")
-            {
-                return res.status(401).json({success: false, error: "This user is suspended!"});
-            }
-        }
-        else 
+        if(!success)
         {
-            UserID = id;
+            res.status(statusCode).json({ success, error });
         }
 
-        const [createLoanRecord, changeBookState] = await Promise.all(
-            [CreateBookLoaned({userID:UserID, bookID, loanDate, dueDate}), FindBookByIDAndUpdate(bookID, {status: 'OnLoan'})]
-        );
-
-        if(!createLoanRecord)
-        {
-            return res.status(400).json({success, error: "Failed to create Loaned Book Record"});
-        }
-
-        if(!changeBookState)
-        {
-            return res.status(400).json({success, error: "Failed to change Book status"});
-        }
-
-        success = true;
-        res.json({success, message: "Create Loaned Book Record Successfully!"})
+        res.status(statusCode).json({success, message});
     }
     catch(error)
     {
@@ -114,30 +86,14 @@ export const UpdateLoanBookRecord = async (req: AuthRequest, res:Response) =>
 
     try
     {
-        const currentDate = new Date();
-        const dueDate = new Date(foundLoanedRecord.dueDate); 
-        
-        const status = dueDate && currentDate <= dueDate ? 'Returned' : 'Returned(Late)';
+        const {success, statusCode, error, message} = await LoanBookRecordUpdateService(foundLoanedRecord, finesPaid);
 
-        const [changeLoanRecordStatus, changeBookStatus] = await Promise.all(
-            [
-                FindBookLoanedByIDAndUpdate(foundLoanedRecord._id as unknown as string, {status: status, returnDate: currentDate, finesPaid: finesPaid}),
-                FindBookByIDAndUpdate(foundLoanedRecord.bookID as unknown as string, {status: 'OnShelf'})
-            ]
-        );
-
-        if(!changeLoanRecordStatus)
+        if(!success)
         {
-            return res.status(400).json({success, error: "Failed to return Book"});
+            res.status(statusCode).json({ success, error });
         }
 
-        if(!changeBookStatus)
-        {
-            return res.status(400).json({success, error:"Failed to change Book status!"});
-        }
-
-        success = true;
-        res.json({success, message: "Return Loan Book Successfully!"})
+        res.status(statusCode).json({success, message})
     }
     catch(error)
     {

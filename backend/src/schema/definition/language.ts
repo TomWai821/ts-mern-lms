@@ -73,7 +73,7 @@ export const FindLanguageByIDAndUpdate = async (languageID: string, data: Record
 {
     try
     {
-        return await Language.findByIdAndUpdate(languageID, data);
+        return await Language.findByIdAndUpdate(languageID, data, { new: true });
     }
     catch(error)
     {

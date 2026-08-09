@@ -73,7 +73,7 @@ export const FindGenreByIDAndUpdate  = async (genreId: string, data: Record<stri
 {
     try
     {
-        return await Genre.findByIdAndUpdate(genreId, data);
+        return await Genre.findByIdAndUpdate(genreId, data, { new: true });
     }
     catch(error)
     {

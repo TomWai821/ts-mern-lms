@@ -25,7 +25,7 @@ const DeleteContactConfirmModal:FC<DeleteModalInterface> = (deleteData) =>
         let setTitle = {title:"", subTitle:""};
 
         setTitle.title = `Delete ${type} Contact Data`;
-        setTitle.subTitle = "Do you want to delete this defination?"
+        setTitle.subTitle = "Do you want to delete this contact data?"
         return setTitle;
     }
 

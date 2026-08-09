@@ -74,7 +74,7 @@ export const FindAuthorByIDAndUpdate = async (authorID: string, data: Record<str
 {
     try
     {
-        return await Author.findByIdAndUpdate(authorID, data);
+        return await Author.findByIdAndUpdate(authorID, data, { new: true });
     }
     catch(error)
     {

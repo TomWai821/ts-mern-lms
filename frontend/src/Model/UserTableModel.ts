@@ -1,4 +1,4 @@
-import { UserResultDataInterface } from "./ResultModel";
+import { DetailsInterfaceForSuspend, UserResultDataInterface } from "./ResultModel";
 
 interface UserDataInterface
 {
@@ -29,7 +29,7 @@ interface CreateUserInterface extends UserDataInterface
 interface UserDataTableInterface
 {
     value: number;
-    userData: UserResultDataInterface[][];
+    userData: (UserResultDataInterface[] | DetailsInterfaceForSuspend[])[];
     paginationValue: number;
     changeValue?: (type: string, newValue: number) => void;
     setSearchUserData?: (data: { username: string, role: string, status: string, gender: string }) => void;

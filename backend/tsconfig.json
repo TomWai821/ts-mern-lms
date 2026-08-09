@@ -1,7 +1,7 @@
 {
   "compilerOptions": 
   {
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "ws"],
     "target": "ES2022",
     "module": "nodenext",
     "moduleResolution": "nodenext",
@@ -16,7 +16,7 @@
     "paths": 
     {
       "@/*": ["./src/*"]
-    },
+    }
   },
   "include": ["src/**/*", "tests/**/*", "**/*.test.ts"],
   "exclude": ["node_modules", "dist"]

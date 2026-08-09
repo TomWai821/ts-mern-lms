@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { BookDataInterface, ContactInterface, DefinitionInterface, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
+import { BookDataInterface, ContactInterface, DefinitionInterface, DetailsInterfaceForSuspend, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
 import { BookTableDataInterface } from "./BookTableModel";
 import { ViewProfileModel } from "./InputFieldModel";
 
@@ -52,7 +52,7 @@ export interface AuthContextProps
 // For Context
 export interface UserContextProps
 {
-    userData: UserResultDataInterface[][];
+    userData:  (UserResultDataInterface[] | DetailsInterfaceForSuspend[])[];
     fetchAllUser: () => Promise<void>;
     fetchUser: (type:string, UserData: {username?: string, role?: string , status?: string, gender?: string} | undefined) => Promise<void>;
     createUser: (username:string, email:string, password:string, role:string, gender:string, birthDay:string) => Promise<Response>;

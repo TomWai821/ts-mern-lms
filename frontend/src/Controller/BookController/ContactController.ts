@@ -1,7 +1,7 @@
-const localhost = process.env.REACT_APP_API_URL;
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
 const contentType = "application/json";
 
-const baseUrl = `${localhost}/contact`
+const baseUrl = `${localhost}/api/contact`
 
 export const GetContact = async (type:string, filterData?:string) => 
 {

@@ -1,7 +1,7 @@
 import { GetResultInterface } from "../../Model/ResultModel";
 
-const localhost = process.env.REACT_APP_API_URL;
-const baseUrl = `${localhost}/recommend`
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const baseUrl = `${localhost}/api/recommend`
 const contentType:string = "application/json";
 
 export const fetchSuggestBook = async (type:string, authToken?:string) => 

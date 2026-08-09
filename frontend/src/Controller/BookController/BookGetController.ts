@@ -1,7 +1,7 @@
 import { GetResultInterface } from "../../Model/ResultModel";
 
-const localhost = process.env.REACT_APP_API_URL;
-const url:string = `${localhost}/book`;
+const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const url:string = `${localhost}/api/book`;
 const contentType:string = "application/json";
 
 export const fetchBook = async (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => 
@@ -109,7 +109,7 @@ const BuildQuery = (params:Record<string, number | string | Date | boolean | und
 
 export const GetExternalData = async (authToken:string, bookname:string, author:string) =>
 {
-      const response = await fetch(`${localhost}/book/external?bookname=${bookname}&author=${author}`,
+      const response = await fetch(`${localhost}/api/book/external?bookname=${bookname}&author=${author}`,
         {
             method: 'GET',
             headers: { 'content-type': contentType, 'authToken': authToken },

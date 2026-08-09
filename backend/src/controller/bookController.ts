@@ -1,13 +1,14 @@
 import { Request, Response } from 'express'
-import { FindBookByIDAndUpdate } from '../schema/book/book';
 import { AuthRequest, EditImageInterface } from '../model/requestInterface';
 
 import { externalBookService } from '../service/book/externalBookService';
-import { UploadImage } from '../service/image/bookCreateImageService';
-import { HandleDeleteImage } from '../service/image/bookDeleteImageService';
+
 import { getStorageStrategy } from '../storage/StorageFactory';
 import { BookDeletionService } from '../service/book/bookDeleteDataService';
 import { CreateBookRecordService } from '../service/book/bookCreateDataService';
+
+import { BookUpdateDataService } from '../service/book/bookUpdateDataService';
+import { BookInterface } from '../model/bookSchemaInterface';
 
 export const GetBookRecord = (req: AuthRequest, res: Response) => 
 {
@@ -45,9 +46,14 @@ export const CreateBookRecord = async (req: Request, res: Response) =>
 
         const bookData = { bookname, languageID, genreID, authorID, publisherID, description, publishDate };
 
-        const result = await CreateBookRecordService(bookData, req.file as Express.Multer.File);
+        const {success, statusCode, error, message} = await CreateBookRecordService(bookData, req.file as Express.Multer.File);
+        
+        if(!success)
+        {
+            res.status(statusCode).json({ success, error });
+        }
 
-        res.json({ success: result.success, message: "Book Record Created Successfully!", bookId: result.bookId });
+        res.status(statusCode).json({ success, message });
     } 
     catch (error) 
     {
@@ -60,33 +66,21 @@ export const CreateBookRecord = async (req: Request, res: Response) =>
 export const EditBookRecord = async (req: AuthRequest, res: Response) => 
 {
     const bookID = req.params.id;
-    const { isImageChanged, oldImageName, newImageName, newImageUrl} = req.editImageData as EditImageInterface;
-    const { bookname, languageID, genreID, authorID, publisherID, description, publishDate } = req.body;
+    const editImageData = req.editImageData as EditImageInterface;
+    const editBookData = req.body;
+    const fileData = req.file;
     let success = false;
 
     try 
     {
-        const updateData: Record<string, any> = { bookname, languageID, genreID, authorID, publisherID, description, publishDate: new Date(publishDate) };
+        const {success, statusCode, error, message} = await BookUpdateDataService(bookID as string, editBookData as BookInterface, editImageData as EditImageInterface, fileData);
 
-        const updateBookRecord = await FindBookByIDAndUpdate(bookID as string, {$set: {image: { url: newImageUrl, filename: newImageName }, ...updateData }});
-
-        if (!updateBookRecord) 
+        if(!success)
         {
-            return res.status(400).json({ success, error: 'Failed to Update Book Record' });
+            res.status(statusCode).json({ success, error });
         }
 
-        if (isImageChanged && req.file) 
-        {
-            await UploadImage(req.file as Express.Multer.File, newImageName);
-
-            if (oldImageName) 
-            {
-                await HandleDeleteImage(oldImageName);
-            }
-        }
-
-        success = true;
-        return res.json({ success, message: 'Book Record Updated Successfully!' });
+        return res.status(statusCode).json({ success, message });
     } 
     catch (error) 
     {
@@ -101,18 +95,15 @@ export const DeleteBookRecord = async (req: Request, res: Response) =>
 
     try 
     {
-        console.log("DeleteBookRecord called with bookID:", bookID);
         // 1. Call the encapsulated service (Handle the entire deletion process)
-        const { success, error, status } = await BookDeletionService(bookID as string);
-        
-        // 2. Send the response (Based on the service result)
-        if (!success) 
+        const { success, statusCode, error, message  } = await BookDeletionService(bookID as string);
+
+        if(!success)
         {
-            return res.status(status).json({ success: false, error });
+            res.status(statusCode).json({ success, error });
         }
-
-        return res.json({ success: true, message: "Book Record Delete Successfully!" });
-
+        
+        res.status(statusCode).json({ success, message });
     } 
     catch (error) 
     {

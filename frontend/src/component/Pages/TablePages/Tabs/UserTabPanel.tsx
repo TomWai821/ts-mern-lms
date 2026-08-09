@@ -25,7 +25,7 @@ const UserTabPanel:FC<UserDataTableInterface> = (userTableData) =>
             {
                 UserRecordTables.map((table, index) => 
                 (
-                    <CustomTabPanel index={index} value={value}>
+                    <CustomTabPanel key={index} index={index} value={value}>
                         {table}
                     </CustomTabPanel>
                 ))

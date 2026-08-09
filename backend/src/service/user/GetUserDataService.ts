@@ -1,41 +1,26 @@
-import { NextFunction, Response } from "express";
-import { AuthRequest } from "../../model/requestInterface";
 import { FindUserByID, FindUserWithData, GetUser } from "../../schema/user/user";
 
-export const GetUserDataService = async (req: AuthRequest, res: Response, next: NextFunction) => 
-{
-    const userId = req.user?._id;
-    const tableName = req.params.tableName;
-    const queryParams = req.query;
-    
+export const GetUserDataService = async (userId: string, tableName: string[] | string, queryParams: any) => 
+{    
     let foundUserData: any = null;
 
-    try 
+    if (userId) 
     {
-        if (userId) 
-        {
-            const hasBodyParameter = Object.keys(queryParams).length > 0;
-            foundUserData = (!hasBodyParameter && !tableName)? await FindUserByID(userId as unknown as string) : await fetchUserData(tableName as string, queryParams, userId as unknown as string);
-        } 
-        else 
-        {
-            foundUserData = await GetUser();
-        }
-
-        if (!foundUserData) 
-        {
-            return res.status(404).json({ success: false, message: "User information not found" });
-        }
-
-        req.foundUser = foundUserData;
-        next();
-
+        const hasBodyParameter = Object.keys(queryParams).length > 0;
+        foundUserData = (!hasBodyParameter && !tableName)? await FindUserByID(userId as unknown as string) : await fetchUserData(tableName as string, queryParams, userId as unknown as string);
     } 
-    catch (error) 
+    else 
     {
-        console.error("BuildUserQuery Middleware Error:", error);
-        return res.status(500).json({ success: false, error: "Internal Server Error" });
+        foundUserData = await GetUser();
     }
+
+    if (!foundUserData) 
+    {
+        return {success: false, statusCode: 404, message: "User information not found"}
+    }
+
+    const foundUser = foundUserData;
+    return {success: true, statusCode: 200, foundUser};
 };
 
 const fetchUserData = async (tableName: string, queryParams: any, userId?: string) => 

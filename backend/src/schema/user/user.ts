@@ -74,14 +74,11 @@ export const FindUserWithData = async (tableName:string, data: Record<string, an
     try
     {
         data._id = { $ne: userId };
-        
+
         switch(tableName)
         {
             case "SuspendUser":
                 return await GetUsersWithSuspendnedDetails(data);
-
-            case "DeleteUser":
-                return await GetUsersWithDeleteDetails(data);
 
             case "AllUser":
                 return await User.find(data).select("-password");
@@ -121,26 +118,6 @@ const GetUsersWithSuspendnedDetails = async (data: any) =>
     );
 
     return await User.aggregate(pipeline);
-}
-
-// Local variable(For get delete user data)
-const GetUsersWithDeleteDetails = async (data: any) => 
-{
-    return await User.aggregate(
-        [
-            { $match: data }, 
-            {
-                $lookup: {
-                    from: 'deletelists',  // the table name user want to joins
-                    localField: '_id',  // the local column name user want to compare with join table column
-                    foreignField: 'userID',  // the another table column name user want to compare with local column name
-                    as: 'deleteDetails'  
-                }
-            },
-            { $unwind: '$deleteDetails' },
-            { $project: { 'deleteDetails.password': 0  }}
-        ]
-    );
 }
 
 export const FindUserByID = async (userID: string, select?: Record<string, any>) =>

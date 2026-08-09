@@ -23,7 +23,7 @@ export const GetSuggestBookDataService = async (req: AuthRequest, res: Response,
             case "forUser":
                 if (!userId) 
                 {
-                    return res.status(400).json({ success: false, message: `This suggestion type requires authToken!` });
+                    return res.status(400).json({ success: false, error: `This suggestion type requires authToken!` });
                 }
                 foundBook = await getRecommendedBooksForUserService(userId as unknown as string);
                 break;
@@ -33,7 +33,7 @@ export const GetSuggestBookDataService = async (req: AuthRequest, res: Response,
                 break;
 
             default:
-                return res.status(400).json({ success: false, message: "Invalid Suggest Type: " + suggestType });
+                return res.status(400).json({ success: false, error: "Invalid Suggest Type: " + suggestType });
         }
 
         req.foundBook = foundBook;

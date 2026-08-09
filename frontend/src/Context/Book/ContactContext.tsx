@@ -1,4 +1,4 @@
-import { createContext, FC, useCallback, useContext, useEffect, useReducer } from "react";
+import { createContext, FC, useCallback, useContext, useEffect } from "react";
 
 import { CreateContact, DeleteContact, EditContact, GetContact } from "../../Controller/BookController/ContactController";
 
@@ -6,47 +6,21 @@ import { ChildProps, ContactProps } from "../../Model/ContextAndProviderModel";
 import { ContactInterface, GetResultInterface } from "../../Model/ResultModel";
 
 import { useAuthContext } from "../User/AuthContext";
-
-interface ContactState
-{
-    Author: ContactInterface[];
-    Publisher: ContactInterface[];
-}
-
-type ContactAction =
-    | { type: "SET_AUTHOR"; payload: ContactInterface[] }
-    | { type: "SET_PUBLISHER"; payload: ContactInterface[] };
-
-const initialState: ContactState = 
-{
-    Author: [],
-    Publisher: [],
-};
-
-const contactReducer = (state: ContactState, action: ContactAction): ContactState => 
-{
-    switch (action.type) 
-    {
-        case "SET_AUTHOR":
-            return { ...state, Author: action.payload };
-
-        case "SET_PUBLISHER":
-            return { ...state, Publisher: action.payload };
-
-        default:
-            return state;
-    }
-};
+import { useContactReducer } from "../../Reducer/ContactReducer";
+import { ContactwsEventToActionMap } from "../../services/ws/config/WSConfig";
+import { useWebSocket } from "../../services/ws/useWebSocket";
 
 const ContactContext = createContext<ContactProps | undefined>(undefined);
 
 export const ContactProvider:FC<ChildProps> = ({children}) => 
 {
-    const [state, dispatch] = useReducer(contactReducer, initialState);
+    const { state, dispatch } = useContactReducer();
     const contact = [state.Author, state.Publisher];
 
     const {GetData} = useAuthContext();
     const authToken = GetData("authToken") as string;
+
+    useWebSocket(dispatch, ContactwsEventToActionMap);
 
     const fetchAllContactData = useCallback(async () => 
     {
@@ -74,7 +48,7 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
             }
         }
     }
-    ,[])
+    ,[dispatch])
 
     const fetchContactDataWithFilterData = useCallback(async (type:string, filtData:string) => 
     {
@@ -99,43 +73,28 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
             }
         }
     }
-    ,[])
+    ,[dispatch])
 
     const createContactData = useCallback(async (type:string, contactName:string, phoneNumber:string, email:string) => 
     {
         const result: Response = await CreateContact(authToken, type, contactName, phoneNumber, email);
-
-        if(result)
-        {
-            fetchAllContactData();
-        }
         return result;
     }
-    ,[fetchAllContactData, authToken])
+    ,[authToken])
 
     const editContactData = useCallback( async (type:string, id:string, contactName:string, phoneNumber:string, email:string) => 
     {
         const result: Response = await EditContact(authToken, type, contactName, phoneNumber, email, id);
-
-        if(result)
-        {
-            fetchAllContactData();
-        }
         return result;
     }
-    ,[fetchAllContactData, authToken])
+    ,[authToken])
 
     const deleteContactData = useCallback(async (type:string, id:string) => 
     {
         const result: Response = await DeleteContact(authToken, type, id);
-
-        if(result)
-        {
-            fetchAllContactData();
-        }
         return result;
     }
-    ,[fetchAllContactData, authToken])
+    , [authToken])
 
     useEffect(() => 
     {
