@@ -16,8 +16,6 @@ export const startServer = async () =>
         await connectToMongoDB();
         const server = http.createServer(app);
 
-        initWsServer(server);
-
         server.listen(PORT, () => 
         { 
             console.log(`Server listen to http://localhost:${PORT}`);
@@ -27,6 +25,7 @@ export const startServer = async () =>
         {
             case 'LOCAL':
                 console.log('Storge environment is local, launch local detector...');
+                initWsServer(server);
                 scheduleDailyMidnightTasks();
                 break;
 

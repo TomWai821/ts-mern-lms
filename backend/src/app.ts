@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { routerHandler } from './routes';
 
-
 const ORIGIN_URI = process.env.ORIGIN_URI || "";
 const avaliable_ORIGIN_URI = ORIGIN_URI ? ORIGIN_URI.split(",").map(url => url.trim()) : [];
 

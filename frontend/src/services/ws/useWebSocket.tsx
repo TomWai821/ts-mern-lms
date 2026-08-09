@@ -6,7 +6,7 @@ type WsMessage<T> =
     payload: any;
 };
 
-export const useWebSocket = <T extends Record<string, string>>(dispatch: React.Dispatch<any>, eventMap: T) => 
+export const useWebSocket = async <T extends Record<string, string>>(dispatch: React.Dispatch<any>, eventMap: T) => 
 {
     useEffect(() => 
     {
