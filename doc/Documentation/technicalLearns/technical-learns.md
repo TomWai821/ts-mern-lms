@@ -63,3 +63,15 @@
         - **Benefit**
             - Achieved Zero-Downtime Deployments and optimised operational costs through Serverless scaling
             - Established a Hybrid Execution Model that seamlessly handles both persistent REST API traffic and scheduled background tasks across any environment
+
+
+- State Management - **WebSocket + Reducer**
+    - Eliminated redundant get API calls after every Create / Update / Delete (CUD) action
+    - Leveraged WebSocket events bound to a reducer to update state directly in real time
+
+    - **Benefit**
+        - Lower server load and network overhead
+        - Immediate UI synchronization without extra fetches
+        - Centralised state transitions ensure a single source of truth
+        - All connected clients reflect changes simultaneously<br>
+          (Which is especially useful for management/admin pages where multiple users monitor or control shared resources)

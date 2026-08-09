@@ -1,7 +1,7 @@
 import { broadcast, BookEvent } from "../../ws";
 import { CreateBook, FindBookByIDAndDelete, GetBook } from "../../schema/book/book";
 import { ImageDataBuilder, UploadImage } from "../image/bookCreateImageService";
-import { BookInterface } from "@/model/bookSchemaInterface";
+import { BookInterface } from "../../model/bookSchemaInterface";
 
 interface BookDataInterface
 {

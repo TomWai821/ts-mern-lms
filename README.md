@@ -418,7 +418,7 @@ This project focuses on high-standard engineering practices. Key highlights incl
 
 6. **Expected URLs:**
     - Backend → http://localhost:5000
-    - Frontend    → http://localhost:3000
+    - Frontend → http://localhost:3000
   
 ### Notes
 - Express backend default port: 5000. React frontend default port: 3000

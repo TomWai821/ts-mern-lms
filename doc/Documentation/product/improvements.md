@@ -21,10 +21,14 @@
 
 5. **Context State Management (useReducer over useState)**
     - Refactored Context Providers to adopt useReducer instead of multiple useState hooks
-    - Centralised state transition logic into a pure reducer function<br>
-      (This improved predictability, scalability, and testability of state management, while reducing boilerplate and enhancing maintainability)<br>
-      (Ref: [BookContext.tsx](../../../frontend/src/Context/Book/BookContext.tsx), [UserContext.tsx](../../../frontend/src/Context/User/UserContext.tsx))
+    - Extracted state transition logic out of Context into pure reducer functions<br>
+      (This separation prevents Context from becoming bloated, while improving predictability, scalability, and testability of state management)<br>
+      (Ref: [BookReducer.tsx](../../../frontend/src/Reducer/Book/BookReducer.tsx), [UserContext.tsx](../../../frontend/src/Context/Reducer/UserReducer.tsx))
   
+6. **State Management with WebSocket + Reducer**
+    - Eliminated redundant get API calls after every Create / Update / Delete (CUD) action
+    - Leveraged WebSocket events bound to a reducer to update state directly in real time
+      (Ref: [Web Socket Service and Config](../../../frontend/src/services/ws))
 
 #### Backend Side
 1. **Modularised backend routes for cleaner structure**
