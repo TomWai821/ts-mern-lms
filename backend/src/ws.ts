@@ -1,4 +1,6 @@
 import { WebSocketServer, WebSocket } from "ws";
+import { config } from "./config/config";
+import { ApiGatewayWebSocketEvent, broadcastForAWS } from "./init/connectToDynamoDB";
 
 export enum UserEvent 
 {
@@ -55,7 +57,7 @@ export const initWsServer = (server: any) =>
     });
 }
 
-export const broadcast = (event: WebSocketEvent, payload: any) =>
+const broadcastForLocal = (event: WebSocketEvent, payload: any) =>
 {
     if (!wss) return;
 
@@ -68,4 +70,17 @@ export const broadcast = (event: WebSocketEvent, payload: any) =>
             client.send(message);
         }
     });
+}
+
+
+export const broadcast = async (wsEvent: WebSocketEvent, payload: any, event?: ApiGatewayWebSocketEvent) => 
+{
+    switch(config.STORAGE_TYPE)
+    {
+        case "S3":
+            return broadcastForAWS(event as ApiGatewayWebSocketEvent, wsEvent, payload);
+
+        default:
+            return broadcastForLocal(wsEvent, payload);
+    }
 }

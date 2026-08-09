@@ -1,0 +1,68 @@
+import { DynamoDB, ApiGatewayManagementApi } from "aws-sdk";
+
+export interface ApiGatewayWebSocketEvent 
+{
+    requestContext: 
+    {
+        connectionId: string;
+        domainName: string;
+        stage: string;
+        routeKey: string;
+    };
+    body?: string;
+}
+
+const db = new DynamoDB.DocumentClient();
+
+export const ConnectHandler = async (event: ApiGatewayWebSocketEvent) => 
+{
+    const connectionId = event.requestContext.connectionId;
+
+    await db.put({ TableName: "WebSocketConnections", Item: { connectionId, connectedAt: Date.now() }}).promise();
+
+    return { statusCode: 200 };
+};
+
+export const DisconnectHandler = async (event: ApiGatewayWebSocketEvent) => 
+{
+    const connectionId = event.requestContext.connectionId;
+
+    await db.delete({ TableName: "WebSocketConnections", Key: { connectionId }}).promise();
+
+    return { statusCode: 200 };
+};
+
+export const DefaultHandler = async (event: ApiGatewayWebSocketEvent) =>
+{
+    const api = new ApiGatewayManagementApi({endpoint: event.requestContext.domainName + "/" + event.requestContext.stage});
+
+    const message = JSON.stringify({ event: "error", payload: { message: "Unknown route or action" }});
+
+    await api.postToConnection({ConnectionId: event.requestContext.connectionId, Data: message}).promise();
+
+    return { statusCode: 200 };
+};
+
+export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: string, payload: any) => 
+{
+    const api = new ApiGatewayManagementApi({ endpoint: event.requestContext.domainName + "/" + event.requestContext.stage });
+
+    const message = JSON.stringify({ event: wsEvent, payload });
+
+    const connections = await db.scan({ TableName: "WebSocketConnections" }).promise();
+
+    for (const conn of connections.Items || [])
+    {
+        try 
+        {
+            await api.postToConnection({ ConnectionId: conn.connectionId, Data: message}).promise();
+        } 
+        catch (err: any) 
+        {
+            if (err.statusCode === 410) 
+            {
+                await db.delete({ TableName: "WebSocketConnections", Key: { connectionId: conn.connectionId }}).promise();
+            }
+        }
+    }
+};

@@ -46,7 +46,7 @@ export const CreateBookRecordService = async (bookData: BookDataInterface, file?
         }
 
         const newBookRecord = await GetBook({ _id: createBook._id }) as unknown as BookInterface[];
-
+        
         broadcast(BookEvent.BOOK_CREATE, newBookRecord[0]);
         return { success: true, statusCode: 200, message: "Book Record Created Successfully!"};
     } 
