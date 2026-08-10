@@ -30,12 +30,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy API and WebSocket via Serverless Compose
+      - name: Deploy WebSocket & API sequentially
         working-directory: ./backend
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
-          npx serverless@3 deploy
+          npx serverless@3 deploy --config serverless-ws.yml
+          npx serverless@3 deploy --config serverless-api.yml
 
   deploy-frontend:
     runs-on: ubuntu-latest
