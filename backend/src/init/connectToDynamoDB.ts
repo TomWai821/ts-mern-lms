@@ -37,7 +37,7 @@ export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) =>
 export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 {
     console.log(`default:${event}`);
-    const endpoint =  `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
+    const endpoint =  `https://${event.requestContext.domainName}`;
     console.log(endpoint);
     const api = new ApiGatewayManagementApi({endpoint});
 
@@ -45,12 +45,12 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 
     await api.postToConnection({ConnectionId: event.requestContext.connectionId, Data: message}).promise();
 
-    return { statusCode: 200, body: "Default" };
+    return { statusCode: 200, body: "Message received" };
 };
 
 export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: string, payload: any) => 
 {
-    const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
+    const endpoint = `https://${event.requestContext.domainName}`;
     const api = new ApiGatewayManagementApi({endpoint});
     const message = JSON.stringify({ event: wsEvent, payload });
 
