@@ -21,7 +21,7 @@ export const connectHandler = async (event: ApiGatewayWebSocketEvent) =>
 
     await db.put({ TableName: "WebSocketConnections", Item: { connectionId, connectedAt: Date.now() }}).promise();
 
-    return { statusCode: 200 };
+    return { statusCode: 200, body: "Connected" };
 };
 
 export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) => 
@@ -31,7 +31,7 @@ export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) =>
 
     await db.delete({ TableName: "WebSocketConnections", Key: { connectionId }}).promise();
 
-    return { statusCode: 200 };
+    return { statusCode: 200, body: "Disconnected" };
 };
 
 export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
@@ -45,7 +45,7 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 
     await api.postToConnection({ConnectionId: event.requestContext.connectionId, Data: message}).promise();
 
-    return { statusCode: 200 };
+    return { statusCode: 200, body: "Default" };
 };
 
 export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: string, payload: any) => 
