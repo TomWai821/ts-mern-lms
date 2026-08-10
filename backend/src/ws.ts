@@ -73,12 +73,12 @@ const broadcastForLocal = (event: WebSocketEvent, payload: any) =>
 }
 
 
-export const broadcast = async (wsEvent: WebSocketEvent, payload: any, event?: ApiGatewayWebSocketEvent) => 
+export const broadcast = async (wsEvent: WebSocketEvent, payload: any) => 
 {
     switch(config.STORAGE_TYPE)
     {
         case "S3":
-            return broadcastForAWS(event as ApiGatewayWebSocketEvent, wsEvent, payload);
+            return broadcastForAWS(wsEvent, payload);
 
         default:
             return broadcastForLocal(wsEvent, payload);

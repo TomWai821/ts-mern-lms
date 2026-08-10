@@ -46,8 +46,14 @@ export const connectHandler = async (event: ApiGatewayWebSocketEvent) =>
     try 
     {
         const connectionId = event.requestContext.connectionId;
+        const domainName = event.requestContext.domainName;
+        const stage = event.requestContext.stage;
 
-        await db.send(new PutCommand({ TableName: TABLE_NAME, Item: { connectionId, connectedAt: Date.now() }}));
+        await db.send(new PutCommand(
+        { 
+            TableName: TABLE_NAME, 
+            Item: { connectionId, connectedAt: Date.now(), domainName, stage }
+        }));
 
         return { statusCode: 200, body: "Connected" };
     } 
@@ -95,23 +101,25 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
     }
 };
 
-export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: string, payload: any) => 
+export const broadcastForAWS = async (wsEvent: string, payload: any) => 
 {
     try 
     {
-        const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
-        const api = new ApiGatewayManagementApiClient({ endpoint });
-        const message = Buffer.from(JSON.stringify({ event: wsEvent, payload }));
-
         const connections = await db.send(new ScanCommand({ TableName: TABLE_NAME }));
         const items = connections.Items || [];
 
         await Promise.allSettled(
             items.map(async (conn) => 
             {
+                if (!conn.connectionId || !conn.domainName || !conn.stage) return;
+
+                const endpoint = `https://${conn.domainName}/${conn.stage}`;
+                const api = new ApiGatewayManagementApiClient({ endpoint });
+                const message = Buffer.from(JSON.stringify({ event: wsEvent, payload }));
+
                 try 
                 {
-                    await api.send(new PostToConnectionCommand({ ConnectionId: conn.connectionId, Data: message}));
+                    await api.send(new PostToConnectionCommand({ ConnectionId: conn.connectionId, Data: message }));
                 } 
                 catch (error: any) 
                 {
