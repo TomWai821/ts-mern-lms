@@ -46,6 +46,7 @@
     "eslint": "^8.57.1",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
+    "serverless": "^3.40.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
