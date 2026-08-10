@@ -34,7 +34,7 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
-          npx serverless deploy
+          npx serverless@3 deploy
 
   deploy-frontend:
     runs-on: ubuntu-latest

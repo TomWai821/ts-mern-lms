@@ -1,9 +1,9 @@
 services:
   ws-service:
-    path: .
+    path: backend
     configFile: serverless-ws.yml
 
   api-service:
-    path: .
+    path: backend
     configFile: serverless-api.yml
     dependsOn: ws-service
