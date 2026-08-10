@@ -20,7 +20,7 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
     const {GetData} = useAuthContext();
     const authToken = GetData("authToken") as string;
 
-    useWebSocket(dispatch, ContactwsEventToActionMap);
+    await useWebSocket(dispatch, ContactwsEventToActionMap);
 
     const fetchAllContactData = useCallback(async () => 
     {

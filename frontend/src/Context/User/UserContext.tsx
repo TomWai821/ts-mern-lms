@@ -27,7 +27,7 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
     const userData = [state.AllUser, state.SuspendUser];
     const authToken = GetData("authToken") as string;
 
-    useWebSocket(dispatch, UserRecordwsEventToActionMap);
+    await useWebSocket(dispatch, UserRecordwsEventToActionMap);
 
     // For init
     const fetchAllUser = useCallback(async () => 

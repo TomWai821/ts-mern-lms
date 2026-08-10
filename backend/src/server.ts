@@ -14,23 +14,27 @@ export const startServer = async () =>
     try
     {  
         await connectToMongoDB();
-        const server = http.createServer(app);
-
-        server.listen(PORT, () => 
-        { 
-            console.log(`Server listen to http://localhost:${PORT}`);
-        });
 
         switch (config.STORAGE_TYPE)
         {
             case 'LOCAL':
                 console.log('Storge environment is local, launch local detector...');
+                const server = http.createServer(app);
+
+                server.listen(PORT, () => 
+                { 
+                    console.log(`Server listen to http://localhost:${PORT}`);
+                });
                 initWsServer(server);
                 scheduleDailyMidnightTasks();
                 break;
 
             case 'S3':
                 console.log('Storage environment is S3, AWS EventBridge handle the cron job...');
+                app.listen(PORT, () => 
+                { 
+                    console.log(`Server listen to ${config.BACKEND_BASE_URL}:${PORT}`);
+                });
                 break;
 
             default:

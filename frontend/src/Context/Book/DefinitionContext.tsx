@@ -20,7 +20,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
     
     const authToken = GetData("authToken") as string;
 
-    useWebSocket(dispatch, DefinitionwsEventToActionMap);
+    await useWebSocket(dispatch, DefinitionwsEventToActionMap);
 
     const fetchAllDefinition = useCallback(async () => 
     {
