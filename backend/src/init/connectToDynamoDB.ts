@@ -18,7 +18,6 @@ export const connectHandler = async (event: ApiGatewayWebSocketEvent) =>
 {
     try 
     {
-        console.log("connect", event.body);
         const connectionId = event.requestContext.connectionId;
         await db.put({ TableName: "WebSocketConnections", Item: { connectionId, connectedAt: Date.now() }}).promise();
 
@@ -51,7 +50,7 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 {
     try 
     {
-        const endpoint = `https://${event.requestContext.domainName}`;
+        const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
         const api = new ApiGatewayManagementApi({ endpoint });
 
         const message = JSON.stringify({ event: "error", payload: { message: "Unknown route or action" }});
@@ -71,7 +70,7 @@ export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: 
 {
     try
     {
-        const endpoint = `https://${event.requestContext.domainName}`;
+        const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
         const api = new ApiGatewayManagementApi({endpoint});
         const message = JSON.stringify({ event: wsEvent, payload });
 
