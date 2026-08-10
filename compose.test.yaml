@@ -15,8 +15,6 @@ services:
     build:
       context: ./frontend
       target: test
-    depends_on:
-      - mongo
     volumes:
       - ./frontend:/app
       - /app/node_modules
