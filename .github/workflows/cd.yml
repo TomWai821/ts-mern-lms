@@ -20,7 +20,6 @@ jobs:
 
       - name: Install dependencies & Build TS
         run: |
-          npm ci
           npm ci --prefix backend
           npm run build --prefix backend
 

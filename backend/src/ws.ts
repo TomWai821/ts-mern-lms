@@ -1,6 +1,6 @@
 import { WebSocketServer, WebSocket } from "ws";
 import { config } from "./config/config";
-import { ApiGatewayWebSocketEvent, broadcastForAWS } from "./init/connectToDynamoDB";
+import { broadcastForAWS } from "./init/connectToDynamoDB";
 
 export enum UserEvent 
 {
