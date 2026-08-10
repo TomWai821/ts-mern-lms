@@ -18,6 +18,7 @@ export const connectHandler = async (event: ApiGatewayWebSocketEvent) =>
 {
     try 
     {
+        console.log("connect", event.body);
         const connectionId = event.requestContext.connectionId;
         await db.put({ TableName: "WebSocketConnections", Item: { connectionId, connectedAt: Date.now() }}).promise();
 
