@@ -1,4 +1,5 @@
 import { DynamoDB, ApiGatewayManagementApi } from "aws-sdk";
+import { AWS_REGION } from '../init/connectToS3';
 
 export interface ApiGatewayWebSocketEvent 
 {
@@ -12,7 +13,7 @@ export interface ApiGatewayWebSocketEvent
     body?: string;
 }
 
-const db = new DynamoDB.DocumentClient();
+const db = new DynamoDB.DocumentClient({ region: AWS_REGION });
 
 export const connectHandler = async (event: ApiGatewayWebSocketEvent) => 
 {
