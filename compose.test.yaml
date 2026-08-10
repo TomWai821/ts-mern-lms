@@ -22,7 +22,7 @@ services:
       - /app/node_modules
 
   mongo:
-    image: mongo:6.0
+    image: public.ecr.aws/docker/library/mongo:6.0
     ports:
       - "27017:27017"
     healthcheck:
