@@ -34,7 +34,7 @@ export const useWebSocket = <T extends Record<string, string>>(dispatch: React.D
 
         ws.onerror = (event) => 
         {
-            console.error(`WebSocket error event: ${event}`);
+            console.error(`WebSocket error event: ${JSON.stringify(event)}`);
         };
 
         ws.onclose = () => console.log("Disconnected from WS server");
