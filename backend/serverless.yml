@@ -3,7 +3,7 @@ service: book-management-system
 provider:
   name: aws
   region: ap-east-1
-  stage: dev
+  stage: production
   memorySize: 512
   timeout: 15
 
@@ -31,6 +31,7 @@ provider:
             - s3:GetObject
             - s3:DeleteObject
           Resource: "arn:aws:s3:::${self:custom.bucketName}/*"
+          
 
 custom:
   bucketName: my-book-system-uploads-${self:provider.stage}
@@ -48,6 +49,24 @@ functions:
       cors: false 
     events:
       - httpApi: '*'
+
+  connect:
+    handler: handler.connect
+    events:
+      - websocket:
+          route: $connect
+
+  disconnect:
+    handler: handler.disconnect
+    events:
+      - websocket:
+          route: $disconnect
+
+  default:
+    handler: handler.default
+    events:
+      - websocket:
+          route: $default
 
 resources:
   Resources:
