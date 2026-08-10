@@ -34,7 +34,8 @@ export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) =>
 
 export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 {
-    const api = new ApiGatewayManagementApi({endpoint: event.requestContext.domainName + "/" + event.requestContext.stage});
+    const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
+    const api = new ApiGatewayManagementApi({endpoint});
 
     const message = JSON.stringify({ event: "error", payload: { message: "Unknown route or action" }});
 
@@ -45,7 +46,8 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 
 export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: string, payload: any) => 
 {
-    const api = new ApiGatewayManagementApi({ endpoint: event.requestContext.domainName + "/" + event.requestContext.stage });
+    const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
+    const api = new ApiGatewayManagementApi({ endpoint });
 
     const message = JSON.stringify({ event: wsEvent, payload });
 
