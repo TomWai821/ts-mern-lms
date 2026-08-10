@@ -11,10 +11,10 @@ jobs:
   lint-typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
       - run: npm ci --prefix backend
       - run: npm ci --prefix frontend
       - run: npm run lint --prefix backend || echo "Lint warnings are non-blocking"
@@ -24,9 +24,8 @@ jobs:
   frontend-test:
     runs-on: ubuntu-latest
     needs: lint-typecheck
-    if: success()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build frontend test container
         run: docker compose -f compose.test.yaml build frontend-test
       - name: Run frontend tests
@@ -34,10 +33,9 @@ jobs:
 
   backend-test:
     runs-on: ubuntu-latest
-    needs: frontend-test
-    if: success()
+    needs: lint-typecheck
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build backend test container
         run: docker compose -f compose.test.yaml build backend-test
       - name: Run backend tests
@@ -48,12 +46,11 @@ jobs:
           name: backend-coverage
           path: backend/coverage
 
-  build:
+  build-check:
     runs-on: ubuntu-latest
     needs: [frontend-test, backend-test]
-    if: success()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: npm ci --prefix backend
       - run: npm ci --prefix frontend
       - run: npm run build --prefix backend
@@ -65,64 +62,3 @@ jobs:
             echo "Waiting for backend..."
             sleep 5
           done
-
-  # Create digest after build test and push to AWS ECR, then trigger CD pipeline on success
-  push-to-aws:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ needs.build.result == 'success' }}
-    outputs:
-      registry: ${{ steps.login-ecr.outputs.registry }}
-      digest: ${{ steps.image-digest.outputs.digest }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ts_mern_lms-backend
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker build -t $IMAGE_URI ./backend
-          docker push $IMAGE_URI
-
-      - name: Get image digest
-        id: image-digest
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          ECR_REPOSITORY: ts_mern_lms-backend
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          set -e
-          DIGEST=""
-          for i in 1 2 3 4 5; do
-            DIGEST=$(aws ecr describe-images \
-              --repository-name "$ECR_REPOSITORY" \
-              --image-ids imageTag="$IMAGE_TAG" \
-              --region "$AWS_REGION" \
-              --query 'imageDetails[0].imageDigest' --output text 2>/dev/null || true)
-            if [ -n "$DIGEST" ] && [ "$DIGEST" != "None" ]; then
-              echo "Found digest: $DIGEST"
-              break
-            fi
-            echo "Digest not found yet, retrying ($i)..."
-            sleep 3
-          done
-          if [ -z "$DIGEST" ] || [ "$DIGEST" = "None" ]; then
-            echo "Failed to obtain image digest" >&2
-            exit 1
-          fi
-          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
