@@ -1,6 +1,6 @@
 import { FindBookFavouriteAndDeleteMany } from "../../schema/book/bookFavourite";
-import { FindBookLoaned, FindBookLoanedAndDelete, FindBookLoanedByID } from "../../schema/book/bookLoaned";
-import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
+import { FindBookLoanedAndDelete } from "../../schema/book/bookLoaned";
+import { BookInterface } from "../../model/bookSchemaInterface";
 import { FindBookByID, FindBookByIDAndDelete } from "../../schema/book/book";
 import { HandleDeleteImage } from "../image/bookDeleteImageService";
 import { BookEvent, broadcast } from "../../ws";
