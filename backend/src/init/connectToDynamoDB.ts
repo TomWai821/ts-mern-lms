@@ -1,4 +1,6 @@
-import { DynamoDB, ApiGatewayManagementApi } from "aws-sdk";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, DeleteCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { ApiGatewayManagementApiClient, PostToConnectionCommand } from "@aws-sdk/client-apigatewaymanagementapi";
 import { AWS_REGION } from '../init/connectToS3';
 
 export interface ApiGatewayWebSocketEvent 
@@ -13,14 +15,39 @@ export interface ApiGatewayWebSocketEvent
     body?: string;
 }
 
-const db = new DynamoDB.DocumentClient({ region: AWS_REGION });
+const TABLE_NAME = process.env.WS_CONNECTION_TABLE_NAME || "WebSocketConnections";
+const REGION = AWS_REGION || "ap-east-1";
+
+const ddbClient = new DynamoDBClient({ region: REGION });
+const db = DynamoDBDocumentClient.from(ddbClient);
+
+export const wsHandler = async (event: ApiGatewayWebSocketEvent) => 
+{
+    const route = event.requestContext.routeKey;
+
+    switch (route) 
+    {
+        case '$connect':
+            return await connectHandler(event);
+
+        case '$disconnect':
+            return await disconnectHandler(event);
+
+        case '$default':
+            return await defaultHandler(event);
+
+        default:
+            return { statusCode: 400, body: 'Unsupported route' };
+    }
+};
 
 export const connectHandler = async (event: ApiGatewayWebSocketEvent) => 
 {
     try 
     {
         const connectionId = event.requestContext.connectionId;
-        await db.put({ TableName: "WebSocketConnections", Item: { connectionId, connectedAt: Date.now() }}).promise();
+
+        await db.send(new PutCommand({ TableName: TABLE_NAME, Item: { connectionId, connectedAt: Date.now() }}));
 
         return { statusCode: 200, body: "Connected" };
     } 
@@ -36,7 +63,8 @@ export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) =>
     try 
     {
         const connectionId = event.requestContext.connectionId;
-        await db.delete({ TableName: "WebSocketConnections", Key: { connectionId }}).promise();
+
+        await db.send(new DeleteCommand({ TableName: TABLE_NAME, Key: { connectionId }}));
 
         return { statusCode: 200, body: "Disconnected" };
     } 
@@ -52,11 +80,11 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
     try 
     {
         const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
-        const api = new ApiGatewayManagementApi({ endpoint });
+        const api = new ApiGatewayManagementApiClient({ endpoint });
 
-        const message = JSON.stringify({ event: "error", payload: { message: "Unknown route or action" }});
+        const message = JSON.stringify({ event: "error", payload: { message: "Unknown route or action" } });
 
-        await api.postToConnection({ ConnectionId: event.requestContext.connectionId,Data: message }).promise();
+        await api.send(new PostToConnectionCommand({ ConnectionId: event.requestContext.connectionId, Data: Buffer.from(message)}));
 
         return { statusCode: 200, body: "Message received" };
     } 
@@ -69,30 +97,35 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 
 export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: string, payload: any) => 
 {
-    try
+    try 
     {
         const endpoint = `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
-        const api = new ApiGatewayManagementApi({endpoint});
-        const message = JSON.stringify({ event: wsEvent, payload });
+        const api = new ApiGatewayManagementApiClient({ endpoint });
+        const message = Buffer.from(JSON.stringify({ event: wsEvent, payload }));
 
-        const connections = await db.scan({ TableName: "WebSocketConnections" }).promise();
+        const connections = await db.send(new ScanCommand({ TableName: TABLE_NAME }));
+        const items = connections.Items || [];
 
-        for (const conn of connections.Items || [])
-        {
-            try 
+        await Promise.allSettled(
+            items.map(async (conn) => 
             {
-                await api.postToConnection({ ConnectionId: conn.connectionId, Data: message}).promise();
-            } 
-            catch (error: any) 
-            {
-                if (error.statusCode === 410) 
+                try 
                 {
-                    await db.delete({ TableName: "WebSocketConnections", Key: { connectionId: conn.connectionId }}).promise();
+                    await api.send(new PostToConnectionCommand({ ConnectionId: conn.connectionId, Data: message}));
+                } 
+                catch (error: any) 
+                {
+                    if (error.$metadata?.httpStatusCode === 410) 
+                    {
+                        await db.send(new DeleteCommand({ TableName: TABLE_NAME, Key: { connectionId: conn.connectionId }}));
+                    }
                 }
-            }
-        }
-    }
-    catch(error)
+            })
+        );
+
+        return { statusCode: 200, body: "Broadcast sent" };
+    } 
+    catch (error) 
     {
         console.error("Broadcast error:", error);
         return { statusCode: 500, body: "Broadcast failed" };
