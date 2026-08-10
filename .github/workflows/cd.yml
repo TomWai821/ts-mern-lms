@@ -20,8 +20,8 @@ jobs:
 
       - name: Install dependencies & Build TS
         run: |
-          npm ci
-          npm run build
+          npm --prefix ci
+          npm run build --prefix backend
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
