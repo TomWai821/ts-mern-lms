@@ -23,9 +23,9 @@ export const connectHandler = async (event: ApiGatewayWebSocketEvent) =>
 
         return { statusCode: 200, body: "Connected" };
     } 
-    catch (err) 
+    catch (error) 
     {
-        console.error("Connect error:", err);
+        console.error("Connect error:", error);
         return { statusCode: 500, body: "Connect failed" };
     }
 };
@@ -39,9 +39,9 @@ export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) =>
 
         return { statusCode: 200, body: "Disconnected" };
     } 
-    catch (err) 
+    catch (error) 
     {
-        console.error("Disconnect error:", err);
+        console.error("Disconnect error:", error);
         return { statusCode: 500, body: "Disconnect failed" };
     }
 };
@@ -59,9 +59,41 @@ export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 
         return { statusCode: 200, body: "Message received" };
     } 
-    catch (err) 
+    catch (error) 
     {
-        console.error("Default handler error:", err);
+        console.error("Default handler error:", error);
         return { statusCode: 500, body: "Default handler failed" };
+    }
+};
+
+export const broadcastForAWS = async (event: ApiGatewayWebSocketEvent, wsEvent: string, payload: any) => 
+{
+    try
+    {
+        const endpoint = `https://${event.requestContext.domainName}`;
+        const api = new ApiGatewayManagementApi({endpoint});
+        const message = JSON.stringify({ event: wsEvent, payload });
+
+        const connections = await db.scan({ TableName: "WebSocketConnections" }).promise();
+
+        for (const conn of connections.Items || [])
+        {
+            try 
+            {
+                await api.postToConnection({ ConnectionId: conn.connectionId, Data: message}).promise();
+            } 
+            catch (error: any) 
+            {
+                if (error.statusCode === 410) 
+                {
+                    await db.delete({ TableName: "WebSocketConnections", Key: { connectionId: conn.connectionId }}).promise();
+                }
+            }
+        }
+    }
+    catch(error)
+    {
+        console.error("Broadcast error:", error);
+        return { statusCode: 500, body: "Broadcast failed" };
     }
 };

@@ -33,7 +33,7 @@ export const startServer = async () =>
                 
                 app.listen(PORT, () => 
                 { 
-                    console.log(`Server listen to ${config.BACKEND_BASE_URL}:${PORT}`);
+                    console.log(`Server listen to ${config.BACKEND_BASE_URL}`);
                 });
                 break;
 
