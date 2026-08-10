@@ -51,19 +51,19 @@ functions:
       - httpApi: '*'
 
   connect:
-    handler: handler.connect
+    handler: connectToDynamoDB.connectHandler
     events:
       - websocket:
           route: $connect
 
   disconnect:
-    handler: handler.disconnect
+    handler: connectToDynamoDB.connectHandler
     events:
       - websocket:
           route: $disconnect
 
   default:
-    handler: handler.default
+    handler: connectToDynamoDB.default
     events:
       - websocket:
           route: $default

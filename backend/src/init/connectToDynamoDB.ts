@@ -14,7 +14,7 @@ export interface ApiGatewayWebSocketEvent
 
 const db = new DynamoDB.DocumentClient();
 
-export const ConnectHandler = async (event: ApiGatewayWebSocketEvent) => 
+export const connectHandler = async (event: ApiGatewayWebSocketEvent) => 
 {
     const connectionId = event.requestContext.connectionId;
 
@@ -23,7 +23,7 @@ export const ConnectHandler = async (event: ApiGatewayWebSocketEvent) =>
     return { statusCode: 200 };
 };
 
-export const DisconnectHandler = async (event: ApiGatewayWebSocketEvent) => 
+export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) => 
 {
     const connectionId = event.requestContext.connectionId;
 
@@ -32,7 +32,7 @@ export const DisconnectHandler = async (event: ApiGatewayWebSocketEvent) =>
     return { statusCode: 200 };
 };
 
-export const DefaultHandler = async (event: ApiGatewayWebSocketEvent) =>
+export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 {
     const api = new ApiGatewayManagementApi({endpoint: event.requestContext.domainName + "/" + event.requestContext.stage});
 

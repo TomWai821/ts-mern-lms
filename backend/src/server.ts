@@ -5,7 +5,6 @@ import { config } from './config/config';
 import { initWsServer } from './ws';
 import http from "http";
 import app from './app'
-import { ConnectHandler, DefaultHandler, DisconnectHandler } from './init/connectToDynamoDB';
 
 export const startServer = async () =>
 {
@@ -49,21 +48,5 @@ export const startServer = async () =>
         process.exit(1);
     }
 }
-
-export const connectHandler = async (event: any) => 
-{
-    return ConnectHandler(event);
-};
-
-export const disconnectHandler = async (event: any) => 
-{
-    return DisconnectHandler(event);
-    
-};
-
-export const defaultHandler = async (event: any) => 
-{
-    return DefaultHandler(event);
-};
 
 startServer();
