@@ -16,6 +16,7 @@ const db = new DynamoDB.DocumentClient();
 
 export const connectHandler = async (event: ApiGatewayWebSocketEvent) => 
 {
+    console.log(`connect:${event}`);
     const connectionId = event.requestContext.connectionId;
 
     await db.put({ TableName: "WebSocketConnections", Item: { connectionId, connectedAt: Date.now() }}).promise();
@@ -25,6 +26,7 @@ export const connectHandler = async (event: ApiGatewayWebSocketEvent) =>
 
 export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) => 
 {
+    console.log(`disconnect:${event}`);
     const connectionId = event.requestContext.connectionId;
 
     await db.delete({ TableName: "WebSocketConnections", Key: { connectionId }}).promise();
@@ -34,7 +36,9 @@ export const disconnectHandler = async (event: ApiGatewayWebSocketEvent) =>
 
 export const defaultHandler = async (event: ApiGatewayWebSocketEvent) =>
 {
+    console.log(`default:${event}`);
     const endpoint =  `https://${event.requestContext.domainName}/${event.requestContext.stage}`;
+    console.log(endpoint);
     const api = new ApiGatewayManagementApi({endpoint});
 
     const message = JSON.stringify({ event: "error", payload: { message: "Unknown route or action" }});
