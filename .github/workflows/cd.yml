@@ -20,7 +20,8 @@ jobs:
 
       - name: Install dependencies & Build TS
         run: |
-          npm --prefix ci
+          npm ci
+          npm ci --prefix backend
           npm run build --prefix backend
 
       - name: Configure AWS credentials
