@@ -27,7 +27,7 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
     
     const authToken = GetData("authToken") as string;
 
-    await useWebSocket(dispatch, BookRecordwsEventToActionMap);
+    useWebSocket(dispatch, BookRecordwsEventToActionMap);
 
     const fetchAllBook = useCallback(async () => 
     {

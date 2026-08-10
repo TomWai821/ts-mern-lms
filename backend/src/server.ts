@@ -31,6 +31,7 @@ export const startServer = async () =>
 
             case 'S3':
                 console.log('Storage environment is S3, AWS EventBridge handle the cron job...');
+                
                 app.listen(PORT, () => 
                 { 
                     console.log(`Server listen to ${config.BACKEND_BASE_URL}:${PORT}`);
