@@ -31,6 +31,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy API and WebSocket via Serverless Compose
+        working-directory: ./backend
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
