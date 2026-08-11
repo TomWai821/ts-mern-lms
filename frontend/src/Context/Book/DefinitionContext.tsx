@@ -7,7 +7,8 @@ import { CreateDefinitionData, DeleteDefinitionData, EditDefinitionData, GetDefi
 import { useAuthContext } from "../User/AuthContext";
 import { useDefinitionReducer } from "../../Reducer/DefinitionReducer";
 import { DefinitionwsEventToActionMap } from "../../services/ws/config/WSConfig";
-import { useWebSocket } from "../../services/ws/useWebSocket";
+import { useWebSocket } from "../../customhook/WebSocket";
+import { executeMutationWithFallback } from "../../Controller/MutationWithFallback";
 
 const DefinitionContext = createContext<DefinatonProps | undefined>(undefined);
 
@@ -78,24 +79,21 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
 
     const createDefinition = useCallback(async (type:string, shortName:string, detailsName:string) => 
     {
-        const result: Response = await CreateDefinitionData(type, authToken, shortName, detailsName);
-        return result;
+        return executeMutationWithFallback(() => CreateDefinitionData(type, authToken, shortName, detailsName), fetchAllDefinition);
     }
-    ,[authToken])
+    ,[authToken, fetchAllDefinition])
 
     const editDefinition = useCallback( async (type:string, id:string, shortName:string, detailsName:string) => 
     {
-        const result: Response = await EditDefinitionData(type, authToken, id, shortName, detailsName);
-        return result;
+        return executeMutationWithFallback(() => EditDefinitionData(type, authToken, id, shortName, detailsName), fetchAllDefinition);
     }
-    ,[authToken])
+    ,[authToken, fetchAllDefinition])
 
     const deleteDefinition = useCallback(async (type:string, id:string) => 
     {
-        const result: Response = await DeleteDefinitionData(type, authToken, id);
-        return result;
+        return executeMutationWithFallback(() => DeleteDefinitionData(type, authToken, id), fetchAllDefinition);
     }
-    ,[authToken])
+    ,[authToken, fetchAllDefinition])
 
     useEffect(() => 
     {

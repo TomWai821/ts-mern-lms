@@ -10,18 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies & Build TS
+      - name: Ensure triggering CI run included successful push-to-aws
+        env:
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm ci --prefix backend
-          npm run build --prefix backend
+          set -euo pipefail
+          echo "Checking triggering run id=$RUN_ID for push-to-aws job"
+          JOBS_JSON=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/runs/${RUN_ID}/jobs")
+          # find job named exactly "push-to-aws"
+          PUSH_CONCLUSION=$(echo "$JOBS_JSON" | jq -r '.jobs[] | select(.name=="push-to-aws") | .conclusion' || true)
+          if [ -z "$PUSH_CONCLUSION" ]; then
+            echo "No push-to-aws job found in triggering run (run id=$RUN_ID). Exiting to avoid unintended deploy."
+            exit 0
+          fi
+          if [ "$PUSH_CONCLUSION" != "success" ]; then
+            echo "push-to-aws job did not succeed (status: $PUSH_CONCLUSION). Exiting."
+            exit 0
+          fi
+          echo "push-to-aws job present and successful."
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -30,13 +37,87 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy WebSocket & API sequentially
-        working-directory: ./backend
+      - name: Resolve image digest from ECR with retries
         env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REPOSITORY: ts_mern_lms-backend
+          IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
         run: |
-          npx serverless@3 deploy --config serverless-ws.yml
-          npx serverless@3 deploy --config serverless-api.yml
+          set -euo pipefail
+          DIGEST=""
+          for i in 1 2 3 4 5 6; do
+            DIGEST=$(aws ecr describe-images \
+              --repository-name "$ECR_REPOSITORY" \
+              --image-ids imageTag="$IMAGE_TAG" \
+              --region "$AWS_REGION" \
+              --query 'imageDetails[0].imageDigest' --output text 2>/dev/null || true)
+            if [ -n "$DIGEST" ] && [ "$DIGEST" != "None" ]; then
+              echo "Found digest: $DIGEST"
+              break
+            fi
+            echo "Digest not found yet, retrying ($i)..."
+            sleep $((i < 4 ? 3 : 6))
+          done
+          if [ -z "$DIGEST" ] || [ "$DIGEST" = "None" ]; then
+            echo "ERROR: Failed to obtain image digest for tag $IMAGE_TAG" >&2
+            exit 1
+          fi
+          echo "IMAGE_DIGEST=$DIGEST" >> $GITHUB_ENV
+
+      - name: Update Lambda with image digest and wait
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          IMAGE_DIGEST: ${{ env.IMAGE_DIGEST }}
+          ECR_REPOSITORY: ts_mern_lms-backend
+          LAMBDA_NAME: ${{ secrets.AWS_LAMBDA_FUNCTION_NAME }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "${{ secrets.ECR_REGISTRY }}" ]; then
+            REGISTRY="${{ secrets.ECR_REGISTRY }}"
+          else
+            ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+            REGISTRY="$ACCOUNT_ID.dkr.ecr.${AWS_REGION}.amazonaws.com"
+          fi
+          IMAGE="$REGISTRY/${ECR_REPOSITORY}@${IMAGE_DIGEST}"
+          echo "Updating Lambda with image: $IMAGE"
+
+          RESPONSE_JSON=$(aws lambda update-function-code \
+            --function-name "$LAMBDA_NAME" \
+            --image-uri "$IMAGE" \
+            --region "$AWS_REGION" \
+            --output json)
+
+          echo "$RESPONSE_JSON" > lambda_response.json
+          jq -r '{FunctionName, FunctionArn, CodeSha256, RevisionId, LastUpdateStatus, LastUpdateStatusReason, LastUpdateStatusReasonCode}' lambda_response.json || true
+
+          echo "Polling Lambda LastUpdateStatus..."
+          MAX_RETRIES=20
+          SLEEP_SECONDS=6
+          for i in $(seq 1 $MAX_RETRIES); do
+            STATUS_JSON=$(aws lambda get-function-configuration --function-name "$LAMBDA_NAME" --region "$AWS_REGION" --output json)
+            STATUS=$(echo "$STATUS_JSON" | jq -r '.LastUpdateStatus // "Unknown"')
+            REASON=$(echo "$STATUS_JSON" | jq -r '.LastUpdateStatusReason // ""')
+            echo "Attempt $i: LastUpdateStatus=$STATUS"
+            if [ "$STATUS" = "Successful" ]; then
+              echo "Lambda update succeeded."
+              echo "$STATUS_JSON" > lambda_final_status.json
+              jq -r '{FunctionName, FunctionArn, CodeSha256, RevisionId, LastUpdateStatus, LastUpdateStatusReason}' lambda_final_status.json || true
+              exit 0
+            fi
+            if [ "$STATUS" = "Failed" ]; then
+              echo "Lambda update failed: $REASON" >&2
+              echo "$STATUS_JSON" > lambda_final_status.json
+              jq -r '.' lambda_final_status.json || true
+              exit 1
+            fi
+            sleep $SLEEP_SECONDS
+          done
+
+          echo "Timed out waiting for Lambda update to complete" >&2
+          echo "Last known status:"
+          jq -r '.' lambda_final_status.json || true
+          exit 1
 
   deploy-frontend:
     runs-on: ubuntu-latest

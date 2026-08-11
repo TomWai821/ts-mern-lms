@@ -8,7 +8,8 @@ import { ContactInterface, GetResultInterface } from "../../Model/ResultModel";
 import { useAuthContext } from "../User/AuthContext";
 import { useContactReducer } from "../../Reducer/ContactReducer";
 import { ContactwsEventToActionMap } from "../../services/ws/config/WSConfig";
-import { useWebSocket } from "../../services/ws/useWebSocket";
+import { useWebSocket } from "../../customhook/WebSocket";
+import { executeMutationWithFallback } from "../../Controller/MutationWithFallback";
 
 const ContactContext = createContext<ContactProps | undefined>(undefined);
 
@@ -77,24 +78,21 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
 
     const createContactData = useCallback(async (type:string, contactName:string, phoneNumber:string, email:string) => 
     {
-        const result: Response = await CreateContact(authToken, type, contactName, phoneNumber, email);
-        return result;
+        return executeMutationWithFallback(() => CreateContact(authToken, type, contactName, phoneNumber, email) , fetchAllContactData);
     }
-    ,[authToken])
+    ,[authToken, fetchAllContactData])
 
     const editContactData = useCallback( async (type:string, id:string, contactName:string, phoneNumber:string, email:string) => 
     {
-        const result: Response = await EditContact(authToken, type, contactName, phoneNumber, email, id);
-        return result;
+        return executeMutationWithFallback(() => EditContact(authToken, type, contactName, phoneNumber, email, id), fetchAllContactData);
     }
-    ,[authToken])
+    ,[authToken, fetchAllContactData])
 
     const deleteContactData = useCallback(async (type:string, id:string) => 
     {
-        const result: Response = await DeleteContact(authToken, type, id);
-        return result;
+        return executeMutationWithFallback(() => DeleteContact(authToken, type, id), fetchAllContactData);
     }
-    , [authToken])
+    ,[authToken, fetchAllContactData])
 
     useEffect(() => 
     {

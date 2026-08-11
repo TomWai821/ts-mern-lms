@@ -12,8 +12,9 @@ import { deleteBookRecord } from "../../Controller/BookController/BookDeleteCont
 import { useAuthContext } from "../User/AuthContext";
 import { useRecommendBookContext } from "./RecommendBookContext";
 import { useBookReduer } from "../../Reducer/BookRecordReducer";
-import { useWebSocket } from "../../services/ws/useWebSocket";
+import { useWebSocket } from "../../customhook/WebSocket";
 import { BookRecordwsEventToActionMap } from "../../services/ws/config/WSConfig";
+import { executeMutationWithFallback } from "../../Controller/MutationWithFallback";
 
 const BookContext = createContext<BookContextProps | undefined>(undefined);
 
@@ -43,7 +44,8 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         {
             dispatch({ type: "SET_LOAN_BOOK", payload: resultForLoanBook.foundLoanBook });
         }
-    },[authToken, dispatch])
+    }
+    ,[authToken, dispatch])
 
     const fetchBookWithFliterData = useCallback(async (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => 
     {
@@ -53,7 +55,8 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         {
             dispatch({ type: "SET_ALL_BOOK", payload: result.foundBook });
         }
-    },[dispatch])
+    }
+    ,[dispatch])
 
     const fetchLoanBookWithFliterData = useCallback(async (type:string, bookname?:string, username?:string, status?:string, finesPaid?:string) => 
     {
@@ -63,47 +66,54 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
         {
             dispatch({ type: "SET_LOAN_BOOK", payload: result.foundLoanBook });
         }
-    },[authToken, dispatch])
+    }
+    ,[authToken, dispatch])
 
     const fetchAllRecord = useCallback(async () => 
     {
         const task = [fetchAllBook(), fetchNewPublishBook(), fetchMostPopularBook()];
         await Promise.allSettled(task);
-    },[fetchAllBook, fetchNewPublishBook, fetchMostPopularBook])
+    }
+    ,[fetchAllBook, fetchNewPublishBook, fetchMostPopularBook])
 
     const createBook = useCallback(async (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 
     {
-        const result: Response = await createBookRecord(authToken, image, bookname, genreID, languageID, publisherID, authorID, description, publishDate);
-        return result;
-    },[authToken])
+        return executeMutationWithFallback(() => 
+            createBookRecord(authToken, image, bookname, genreID, languageID, publisherID, authorID, description, publishDate), 
+        fetchAllBook
+        );
+    }
+    ,[authToken, fetchAllBook])
 
     const editBook = useCallback(async (bookID:string, imageName:string, newFile:File, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => 
     {
-        const result: Response = await updateBookRecord(authToken, bookID, imageName, newFile, bookname, genreID, languageID, publisherID, publishDate, authorID, description);
-        return result;
-        
-    },[authToken])
+        return executeMutationWithFallback(() => 
+            updateBookRecord(authToken, bookID, imageName, newFile, bookname, genreID, languageID, publisherID, publishDate, authorID, description), 
+            fetchAllBook
+        );
+    }
+    ,[authToken, fetchAllBook])
 
     const loanBook = useCallback(async(bookID:string, userID?:string) => 
     {
         const loanDate = GetCurrentDate("Date") as Date
         const dueDate = CalculateDueDate(7);
-        const result: Response = await createLoanBookRecord(authToken, bookID, loanDate, dueDate, userID);
 
-        return result;
-    },[authToken])
+        return executeMutationWithFallback(() => createLoanBookRecord(authToken, bookID, loanDate, dueDate, userID), fetchAllBook);
+    }
+    ,[authToken, fetchAllBook])
 
     const returnBook = useCallback(async(loanRecordID:string, finesPaid?:string) =>
     {
-        const result: Response = await returnBookAndChangeStatus(authToken, loanRecordID, finesPaid);
-        return result;
-    },[authToken])
+        return executeMutationWithFallback(() => returnBookAndChangeStatus(authToken, loanRecordID, finesPaid), fetchAllBook);
+    }
+    ,[authToken, fetchAllBook])
 
-    const deleteBook = useCallback(async (bookID:string) => 
+    const deleteBook = useCallback((bookID:string) => 
     {
-        const result: Response = await deleteBookRecord("Book", authToken, bookID);
-        return result;
-    },[authToken])
+        return executeMutationWithFallback(() => deleteBookRecord("Book", authToken, bookID), fetchAllBook);
+    }
+    ,[authToken, fetchAllBook])
 
     const getExternalData = useCallback(async(bookname:string, author:string) => 
     {

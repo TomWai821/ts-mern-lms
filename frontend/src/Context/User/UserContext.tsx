@@ -15,7 +15,8 @@ import { DeleteUserController } from "../../Controller/UserController/UserDelete
 import { useAuthContext } from "./AuthContext";
 import { useUserRecordReducer } from "../../Reducer/UserRecordReducer";
 import { UserRecordwsEventToActionMap } from "../../services/ws/config/WSConfig";
-import { useWebSocket } from "../../services/ws/useWebSocket";
+import { useWebSocket } from "../../customhook/WebSocket";
+import { executeMutationWithFallback } from "../../Controller/MutationWithFallback";
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
@@ -47,6 +48,7 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
 
     },[authToken, dispatch])
 
+
     // For search function
     const fetchUser = useCallback(async (type:string, UserData: {username?: string, role?: string, status?: string, gender?: string} | undefined) => 
     {
@@ -68,53 +70,55 @@ export const UserProvider: FC<ChildProps> = ({ children }) =>
             }
             
         }
-    },[authToken, dispatch])
+    }
+    ,[authToken, dispatch])
 
-    const createUser = useCallback(async (username:string, email:string, password:string, role:string, gender:string, birthDay:string) => 
-    {
-        const result: Response = await RegisterController(username, email, password, role, gender, birthDay);
-        return result;
-    },[])
 
-    const editUserData = useCallback(async (userId: string, username:string, email:string, gender:string, role:string) => 
+    const createUser = useCallback((username:string, email:string, password:string, role:string, gender:string, birthDay:string) => 
     {
-        const result: Response = await ModifyUserDataController(authToken, userId, username, email, gender, role);
-        return result;
-    },[authToken])
+        return executeMutationWithFallback(() => RegisterController(username, email, password, role, gender, birthDay), fetchAllUser);
+    }
+    ,[fetchAllUser])
+
+
+    const editUserData = useCallback((userId: string, username:string, email:string, gender:string, role:string) => 
+    {
+        return executeMutationWithFallback(() => ModifyUserDataController(authToken, userId, username, email, gender, role), fetchAllUser);
+    }
+    ,[authToken, fetchAllUser])
     
-    const editSuspendUserData = useCallback(async (userId:string, suspendedListID:string, dueDate:Date, description:string) => 
-    {
-        const result: Response = await ModifySuspendListDataController(authToken, userId, suspendedListID, dueDate, description);        
-        return result;
-    },[authToken])
 
-    const changeUserStatus = useCallback(async (type: string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => 
+    const editSuspendUserData = useCallback((userId:string, suspendedListID:string, dueDate:Date, description:string) => 
+    {
+        return executeMutationWithFallback(() => ModifySuspendListDataController(authToken, userId, suspendedListID, dueDate, description), fetchAllUser);
+    }
+    ,[authToken, fetchAllUser])
+
+
+    const changeUserStatus = useCallback((type: string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => 
     {
         const startDate = GetCurrentDate("Date") as Date;
         const dueDate = CalculateDueDate(duration as number);
-        let result: Response;
         
-        switch(type)
+        return executeMutationWithFallback(() => 
         {
-            case "UnSuspend":
-                result = await ModifyStatusController(type, authToken, userId, status, ListID);
-                break;
+            if(type === "UnSuspend")
+            {
+                return ModifyStatusController(type, authToken, userId, status, ListID);
+            }
 
-            default:
-                result = await ModifyStatusController(type, authToken, userId, status, undefined, startDate, dueDate, description);
-                break;
-        }
-        
-        return result;
+            return ModifyStatusController(type, authToken, userId, status, undefined, startDate, dueDate, description);
+        }, fetchAllUser)
+    
+    }
+    ,[authToken, fetchAllUser]);
 
-    },[authToken]);
 
-    const actualDeleteUser = useCallback(async(userId:string) => 
+    const actualDeleteUser = useCallback((userId:string) => 
     {
-        const result = await DeleteUserController(authToken, userId);
-        return result;
-
-    },[authToken]);
+        return executeMutationWithFallback(() => DeleteUserController(authToken, userId), fetchAllUser);
+    }
+    ,[authToken, fetchAllUser]);
     
 
     useEffect(() => 
