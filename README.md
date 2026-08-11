@@ -206,12 +206,19 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 - Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI, GOOGLE_BOOKS_API_KEY, GOOGLE_BOOKS_BASE_URL, BACKEND_BASE_URL, STORAGE_TYPE
-- Edit frontend/.env: set at minimum: REACT_APP_BACKEND_BASE_URL, REACT_APP_MAIN_PAGE
+- Edit frontend/.env: set at minimum: REACT_APP_BACKEND_BASE_URL, REACT_APP_MAIN_PAGE, 
 
 **Notes about ports and hostnames** 
-- If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`). Docker Compose maps container ports to the host automatically
+- If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`)<br>
+  (Docker Compose maps container ports to the host automatically)
 - If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
-- Always include protocol and port for URLs: `ORIGIN_URI=http://localhost:5000`, `REACT_APP_BACKEND_BASE_URL=http://localhost:5000`, `REACT_APP_MAIN_PAGE=http://localhost:3000`, `BACKEND_BASE_URL=http://localhost:5000`, `STORAGE_TYPE=LOCAL`
+- Always include protocol and port for URLs
+    - `ORIGIN_URI=http://localhost:3000`
+    - `REACT_APP_BACKEND_BASE_URL=http://localhost:5000`
+    - `REACT_APP_MAIN_PAGE=http://localhost:3000`
+    - `BACKEND_BASE_URL=http://localhost:5000`
+    - `STORAGE_TYPE=LOCAL`
+    - `REACT_APP_WEB_SOCKET_SERVER=http://localhost:5000/ws` (This variable can be ignored for cloud - Lambda deployment)
 
 ### 2. Launch with Docker Compose
 ```bash
@@ -228,6 +235,7 @@ docker-compose -f compose.yaml up --build -d
 - **Backend** 
     - Node.js
     - Express.js
+    - ws (WebSocket) - For local/docker deployment
 
 - **Database** 
     - MongoDB with Mongoose (With Nodemon for development)
@@ -245,7 +253,7 @@ docker-compose -f compose.yaml up --build -d
     - dotenv for managing environment variables
 
 - **Algorithms** 
-    - TF‑IDF for book recommendation engine
+    - TF‑IDF for book recommendation service
 
 - **CI/CD & Code quality**
     - GitHub Actions for CI/CD
@@ -337,8 +345,9 @@ This project focuses on high-standard engineering practices. Key highlights incl
       REACT_APP_BACKEND_BASE_URL
       
     2. Required variables (fill with real values):
-       - REACT_APP_BACKEND_BASE_URL               —> Backend API endpoint, e.g. http://localhost:5000
+       - REACT_APP_BACKEND_BASE_URL      —> Backend API endpoint, e.g. http://localhost:5000
        - REACT_APP_MAIN_PAGE             —> Frontend URL, e.g. http://localhost:3000
+       - REACT_APP_WEB_SOCKET_SERVER     -> Web Socket Server Url, e.g. http://localhost:5000/ws (For local/docket, Serverless could ignore it)
       
     ### Backend
     1. Copy template:
@@ -417,8 +426,9 @@ This project focuses on high-standard engineering practices. Key highlights incl
     ```
 
 6. **Expected URLs:**
-    - Backend → http://localhost:5000
-    - Frontend → http://localhost:3000
+    - BACKEND_BASE_URL (backend) → http://localhost:5000
+    - ORIGIN_URI (frontend) → http://localhost:3000
+    - REACT_APP_WEB_SOCKET_SERVER → http://localhost:5000/ws
   
 ### Notes
 - Express backend default port: 5000. React frontend default port: 3000

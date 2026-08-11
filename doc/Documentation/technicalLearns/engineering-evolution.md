@@ -1,7 +1,7 @@
 ### The Engineering Evolution
 After graduation, I refactored the entire system to align with industry-standard engineering principles, focusing on Decoupling, Resilience, and Cloud-Native scalability:
 
-- Architectural Overhaul: **Layered Decoupling**
+1. Architectural Overhaul: **Layered Decoupling**
     - Transitioned from a monolithic script to a Layered Architecture (Router-Middleware-Controller-Service-Model)
     
     - **Impact**
@@ -9,7 +9,7 @@ After graduation, I refactored the entire system to align with industry-standard
           (Enable independent scaling of services and reducing regression risks during feature iterations)
 
 
-- Logic Refactoring: **Backend-Driven Computation**
+2. Logic Refactoring: **Backend-Driven Computation**
     - Offloaded heavy business logic (such as the TF-IDF Recommendation Engine, from the client-side to the Backend Service Layer)
 
     - **Benefit**
@@ -22,7 +22,7 @@ After graduation, I refactored the entire system to align with industry-standard
 
 
 
-- DevOps Integration: **Environment Parity & CD Readiness**
+3. DevOps Integration: **Environment Parity & CD Readiness**
     - Orchestrated a Dockerized environment integrated with GitHub Actions to enforce a rigorous CI pipeline (Linting, Integration Testing)
 
     - **Implementation**

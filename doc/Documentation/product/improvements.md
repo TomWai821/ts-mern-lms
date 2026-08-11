@@ -25,10 +25,12 @@
       (This separation prevents Context from becoming bloated, while improving predictability, scalability, and testability of state management)<br>
       (Ref: [BookReducer.tsx](../../../frontend/src/Reducer/Book/BookReducer.tsx), [UserContext.tsx](../../../frontend/src/Context/Reducer/UserReducer.tsx))
   
-6. **State Management with WebSocket + Reducer**
+6. **State Management with WebSocket + Reduce (Client Side - Local)**
     - Eliminated redundant get API calls after every Create / Update / Delete (CUD) action
-    - Leveraged WebSocket events bound to a reducer to update state directly in real time
-      (Ref: [Web Socket Service and Config](../../../frontend/src/services/ws))
+    - Leveraged WebSocket events bound to a reducer to update state directly in real time (with useWebSocket custom hook)<br>
+      (Ref: [Web Socket Service and Config](../../../frontend/src/services/ws), [useWebSocket](../../../frontend/src/customhook/WebSocket.tsx))
+
+
 
 #### Backend Side
 1. **Modularised backend routes for cleaner structure**
@@ -67,6 +69,8 @@
     - Orchestrated a dynamic Promise.all input pipeline for user profile updates<br>
       (Leverage label index alignment to optimise conditional database queries)<br>
       (Ref: [userUpdateDataService.ts](../../../backend/src/service/user/userUpdateDataService.ts) - BuildUserUpdateDataService)
+
+
 
 #### Infrastructure and Security
 1. **Multi-Environment Containerization (Docker)**
@@ -130,6 +134,7 @@
       (This standardises request/response formats and error-handling protocols, significantly decoupling business logic from the underlying fetch implementation)
 
 
+
 #### Backend Side
 1. **Server-side RBAC (Role-Based Access Control)**
     - Implement server-side role validation for all API requests to ensure data integrity (currently handled on the frontend for demo scope)
@@ -153,6 +158,7 @@
       (Ensure strict atomicity across related collections (e.g. cascading deletes) in production replica-set environments)
 
 
+
 #### Infrastructure and Security
 1. **Container Granularity**
    - Migrating from a unified container to a fully decoupled micro-service architecture, separating Frontend (Nginx), Backend (Node.js), and Database (MongoDB) into isolated, dedicated containers
@@ -168,6 +174,8 @@
     
 5. **HttpOnly Server-side Cookies**
     - Migrate `authToken` storage to **HttpOnly Cookies** to mitigate **XSS (Cross-Site Scripting)** risks by preventing client-side script access
+
+
 
 #### CI/CD
 1. **Comprehensive Test Coverage (Jest)**
