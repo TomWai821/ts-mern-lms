@@ -4,7 +4,7 @@ import { displayAsColumn, displayAsRow, ItemToCenter } from "../../../../Data/St
 import { BookDataInterface, LoanBookInterface } from "../../../../Model/ResultModel";
 import DashboardCard from "../../../UIFragment/DashboardCard";
 import FinesDataPieChart from "./Piechart/FinesDataPieChart";
-import FinesNotPaidDataPieChart from "./Piechart/FinesNotPaidDataChart";
+import FinesNotPaidDataPieChart from "./Piechart/FinesNotPaidDataPieChart";
 
 const OverdueBookHelper = (loanBookRecords: LoanBookInterface[]) => 
 {
