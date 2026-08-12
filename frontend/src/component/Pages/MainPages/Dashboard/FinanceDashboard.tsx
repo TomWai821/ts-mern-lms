@@ -4,6 +4,7 @@ import { displayAsColumn, displayAsRow, ItemToCenter } from "../../../../Data/St
 import { BookDataInterface, LoanBookInterface } from "../../../../Model/ResultModel";
 import DashboardCard from "../../../UIFragment/DashboardCard";
 import FinesDataPieChart from "./Piechart/FinesDataPieChart";
+import FinesNotPaidDataPieChart from "./Piechart/FinesNotPaidDataChart";
 
 const OverdueBookHelper = (loanBookRecords: LoanBookInterface[]) => 
 {
@@ -18,8 +19,19 @@ const OverdueBookHelper = (loanBookRecords: LoanBookInterface[]) =>
 
     const totalAmount = NotPaidTotal + PaidTotal;
 
-    return { NotPaidTotal, PaidTotal, NotPaidCount, PaidCount, totalAmount };
+    return { notPaid, NotPaidTotal, PaidTotal, NotPaidCount, PaidCount, totalAmount };
 };
+
+const FinesNotPaidHelper = (notPaidData: LoanBookInterface[]) => 
+{
+    const returnBook = notPaidData.filter(data => data.status === "Return(Late)");
+    const notReturnBook = notPaidData.filter(data => data.status === "Loaned");
+
+    const returnBookTotal = returnBook.reduce((sum, record) => sum + (record.fineAmount ?? 0), 0);
+    const notReturnBookTotal = notReturnBook.reduce((sum, record) => sum + (record.fineAmount ?? 0), 0);
+
+    return {returnBookTotal, notReturnBookTotal};
+}
 
 const useFinanceData = (bookData: (LoanBookInterface[] | BookDataInterface[])[]) => 
 {
@@ -40,6 +52,7 @@ const FinanceDashboard = () =>
 {
     const {bookData} = useBookContext();
     const {FinanceCardData} = useFinanceData(bookData);
+    const {returnBookTotal, notReturnBookTotal} = FinesNotPaidHelper(OverdueBookHelper(bookData[1] as LoanBookInterface[]).notPaid);
 
     return(
         <Box sx={CardSectionSyntax}>
@@ -56,6 +69,11 @@ const FinanceDashboard = () =>
                 <FinesDataPieChart 
                     PaidFines={OverdueBookHelper(bookData[1] as LoanBookInterface[]).PaidTotal} 
                     NotPaidFines={OverdueBookHelper(bookData[1] as LoanBookInterface[]).NotPaidTotal}
+                />
+
+                <FinesNotPaidDataPieChart 
+                    ReturnBook={returnBookTotal} 
+                    NotReturnBook={notReturnBookTotal}
                 />
             </Box>
             

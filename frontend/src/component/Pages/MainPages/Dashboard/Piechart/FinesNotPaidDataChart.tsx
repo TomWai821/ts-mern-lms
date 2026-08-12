@@ -9,21 +9,21 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 interface IFinesDataPieChart
 {
-    PaidFines: number;
-    NotPaidFines: number;
+    ReturnBook: number 
+    NotReturnBook: number;
 }
 
-const FinesDataPieChart:FC<IFinesDataPieChart> = (props) =>
+const FinesNotPaidDataPieChart:FC<IFinesDataPieChart> = (props) =>
 {
-    const { PaidFines, NotPaidFines } = props;
+    const { ReturnBook, NotReturnBook } = props;
 
     const data = 
     {
-        labels: ["Paid Fines", "Not Paid Fines"],
+        labels: ["Return Book", "Not Return Book"],
         datasets: 
         [
             {
-                data: [PaidFines, NotPaidFines],
+                data: [ReturnBook, NotReturnBook],
                 backgroundColor: ["#4CAF50", "#FF6384"],
                 hoverBackgroundColor: ["#4CAF50", "#FF6384"],
             }
@@ -94,4 +94,4 @@ const FinesDataPieChart:FC<IFinesDataPieChart> = (props) =>
     )
 };
 
-export default FinesDataPieChart;
+export default FinesNotPaidDataPieChart;
