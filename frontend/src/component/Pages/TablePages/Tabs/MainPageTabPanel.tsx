@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react"
+import { FC } from "react"
 
 // UI Fragment
 import CustomTabPanel from "../../../UIFragment/CustomTabPanel"
