@@ -33,6 +33,7 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     command: npm start
     environment:
       NODE_ENV: production
