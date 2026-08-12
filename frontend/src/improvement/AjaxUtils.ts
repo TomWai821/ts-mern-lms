@@ -1,6 +1,6 @@
 type MethodType = "GET" | "POST" | "PUT" | "DELETE";
 
-export const AjaxUtils = async <T, R = Response>(requestMethod: MethodType, url:string, authToken?:string, body?: T) => 
+export const AjaxUtils = async <T, R = Response>(requestMethod: MethodType, url: string, authToken?: string, body?: T) => 
 {
     try
     {   
