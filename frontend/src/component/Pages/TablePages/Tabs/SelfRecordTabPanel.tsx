@@ -23,7 +23,7 @@ const SelfRecordTabPanel:FC<BookRecordTableInterface> = (TabData) =>
             {
                 SelfRecordTables.map((table, index) => 
                 (
-                    <CustomTabPanel index={index} value={value}>
+                    <CustomTabPanel key={index} index={index} value={value}>
                         {table}
                     </CustomTabPanel>
                 ))

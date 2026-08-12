@@ -10,7 +10,7 @@ const buttonFontColor = "white";
 const DeleteButton = {color: buttonFontColor, backgroundColor: 'rgb(230, 0, 0)', '&:hover': {backgroundColor: 'rgb(210, 0, 0)'}}
 
 // For all items/tables
-const flex =  {display: 'flex' };
+const flex =  { display: 'flex' };
 
 const ItemToCenter = { ...flex, justifyContent: 'center' };
 
@@ -34,7 +34,8 @@ const AvatarSize = "42px";
 const PageTitleSyntax = { fontSize: '32px', marginBottom: '3px' }
 
 // For modal
-const ModalSyntax = {
+const ModalSyntax = 
+{
     position: 'absolute',
     top: '50%',
     left: '50%',

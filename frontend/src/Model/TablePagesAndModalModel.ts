@@ -51,7 +51,7 @@ export interface RecordTableCellInterface
 export interface TabInterface
 {
     tabLabel: { label: string; }[];
-    type:string;
+    type: string;
     value: number;
     paginationValue?: number;
     changeValue: (type:string, newValue: number) => void;
