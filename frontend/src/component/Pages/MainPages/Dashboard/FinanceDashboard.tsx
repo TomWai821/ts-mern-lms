@@ -24,13 +24,10 @@ const OverdueBookHelper = (loanBookRecords: LoanBookInterface[]) =>
 
 const FinesNotPaidHelper = (notPaidData: LoanBookInterface[]) => 
 {
-    const returnBook = notPaidData.filter(data => data.status === "Return(Late)");
-    const notReturnBook = notPaidData.filter(data => data.status === "Loaned");
+    const returnBook = notPaidData.filter(data => data.status === "Return(Late)").length;
+    const notReturnBook = notPaidData.filter(data => data.status === "Loaned").length;
 
-    const returnBookTotal = returnBook.reduce((sum, record) => sum + (record.fineAmount ?? 0), 0);
-    const notReturnBookTotal = notReturnBook.reduce((sum, record) => sum + (record.fineAmount ?? 0), 0);
-
-    return {returnBookTotal, notReturnBookTotal};
+    return {returnBook, notReturnBook};
 }
 
 const useFinanceData = (bookData: (LoanBookInterface[] | BookDataInterface[])[]) => 
@@ -52,7 +49,7 @@ const FinanceDashboard = () =>
 {
     const {bookData} = useBookContext();
     const {FinanceCardData} = useFinanceData(bookData);
-    const {returnBookTotal, notReturnBookTotal} = FinesNotPaidHelper(OverdueBookHelper(bookData[1] as LoanBookInterface[]).notPaid);
+    const {returnBook, notReturnBook} = FinesNotPaidHelper(OverdueBookHelper(bookData[1] as LoanBookInterface[]).notPaid);
 
     return(
         <Box sx={CardSectionSyntax}>
@@ -72,8 +69,8 @@ const FinanceDashboard = () =>
                 />
 
                 <FinesNotPaidDataPieChart 
-                    ReturnBook={returnBookTotal} 
-                    NotReturnBook={notReturnBookTotal}
+                    ReturnBook={returnBook} 
+                    NotReturnBook={notReturnBook}
                 />
             </Box>
             

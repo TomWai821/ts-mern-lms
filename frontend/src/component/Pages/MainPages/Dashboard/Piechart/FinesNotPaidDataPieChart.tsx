@@ -72,7 +72,7 @@ const FinesNotPaidDataPieChart:FC<IFinesDataPieChart> = (props) =>
                                 const value = dataset.data[i] as number;
                                 
                                 return {
-                                    text: `${label} - HKD$${value}`, 
+                                    text: `${label} - ${value} Records`, 
                                     fillStyle: Array.isArray(dataset.backgroundColor)
                                         ? dataset.backgroundColor[i] as string
                                         : (dataset.backgroundColor as string) || "#ccc",
