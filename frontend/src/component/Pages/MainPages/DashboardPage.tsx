@@ -11,7 +11,7 @@ const DashboardPage = () =>
     [
         {label: "User Section"},
         {label: "Book Section"},
-        {label: "Finance Section"}
+        {label: "Fine Records Section"}
     ]
 
     return(

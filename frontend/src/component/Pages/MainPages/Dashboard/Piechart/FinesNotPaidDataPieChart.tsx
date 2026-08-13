@@ -38,7 +38,7 @@ const FinesNotPaidDataPieChart:FC<IFinesDataPieChart> = (props) =>
         {
             title: 
             { 
-                display: true, text: "Fines Not Paid Status",
+                display: true, text: "Breakdown of Unpaid Fines (By Book Return Status)",
                 font: { size: 18, weight: "bold" },
                 padding: { top: 10, bottom: 20 }
             },
