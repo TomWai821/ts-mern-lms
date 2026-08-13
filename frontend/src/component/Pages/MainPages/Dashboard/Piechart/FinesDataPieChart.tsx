@@ -52,7 +52,7 @@ const FinesDataPieChart:FC<IFinesDataPieChart> = (props) =>
                         const total = dataset.reduce((acc, val) => acc + val, 0);
                         const value = context.raw as number;
                         const percentage = ((value / total) * 100).toFixed(1);
-                        return `${context.label}: ${value} (${percentage}%)`;
+                        return `${value} (${percentage}%)`;
                     }
                 }
             },
