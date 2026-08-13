@@ -21,103 +21,133 @@ Image 1.3 - Navigation For Admin(Librarian)<br>
 Image 2.1 - Main Page For User / Authenticated User (who does not have a loan book record)<br>
 
 <img src="../../Image/UILayout/MainPage-AuthenticateUser.png" style="width:90%;"/><br>
-Image 2.2 - Main Page For Authenticated User (Include Librarian)<br>
+Image 2.2 - Main Page For Authenticated User<br>
 
 #### Description:<br>
 - Without the Loan Book record (Image 2.1), one can see the most popular book and the newest published book
 - With the Loan Book record (Image 2.2), you can view recommended books from the backend system
 
-***3. Authenticate Pages***<br>
+
+***3. Main Page (For librarian)***
+
+<img src="../../Image/UILayout/MainPage-Librarian.png" style="width:90%;"/><br>
+Image 3.1 - Main Page For Librarian (Admin)<br>
+
+<img src="../../Image/UILayout/Dashboard_User.png" style="width:90%;"/><br>
+Image 3.2 - User Data Dashboard<br>
+
+<img src="../../Image/UILayout/Dashboard_Book.png" style="width:90%;"/><br>
+Image 3.3 - Book Data Dashboard<br>
+
+<img src="../../Image/UILayout/Dashboard_fineRecords.png" style="width:90%;"/><br>
+Image 3.4 - Loan Book Record Data Dashboard<br>
+
+<img src="../../Image/UILayout/Dashboard_PieChart_Tooltip.png" style="width:90%;"/><br>
+Image 3.5 - Pie Chart tooltip<br>
+
+#### Description:<br>
+- The librarian’s main page includes both the Book Recommendation module (Image 3.1) and a comprehensive Dashboard for data visualisation (Image 3.2)
+- Multiple tabs are provided, allowing the librarian to switch between different data sections<br>
+  (Such as User Section, Book Section, and Fine Records Section — to view specific datasets)
+- Each section displays accurate data summaries and corresponding pie charts<br>
+  (Enabling the librarian to grasp key insights in the shortest time possible)
+- The pie chart tooltips provice:
+    - The meaning of each color (e.g. red indicates important or abnormal data such as suspended users or unpaid fines)
+    - The exact numerical value
+    - The percentage of that value within the dataset
+
+
+***4. Authenticate Pages***<br>
 <img src="../../Image/UILayout/RegisterCard.png" style="width:40%;"/><br>
-Image 3.1 - Registration Page<br>
+Image 4.1 - Registration Page<br>
 
 <img src="../../Image/UILayout/LoginCard.png" style="width:40%;"/><br>
-Image 3.2 - Login Page<br>
+Image 4.2 - Login Page<br>
 
 #### Description:
-- Registration Page (Image 3.1) requires input of all the data to register an account, and has a validator to verify data in the input field
-- The Login Page (Image 3.2) requires input of all the data to log in, and it also has a validator to verify the data in the input field (It has a checkbox to decide whether to store data in session storage or cookie storage)
+- Registration Page (Image 4.1) requires input of all the data to register an account, and has a validator to verify data in the input field
+- The Login Page (Image 4.2) requires input of all the data to log in, and it also has a validator to verify the data in the input field (It has a checkbox to decide whether to store data in session storage or cookie storage)
 
 
-***4. Profile Page***<br>
+***5. Profile Page***<br>
 <img src="../../Image/UILayout/ProfileCard.png" style="width:40%;"/><br>
-Image 4.1 - Profile Page<br>
+Image 5.1 - Profile Page<br>
 
 <img src="../../Image/UILayout/DisplayQRCodeModal.png" style="width:40%;"/><br>
-Image 4.2 - QR Code Modal<br>
+Image 5.2 - QR Code Modal<br>
 
 <img src="../../Image/UILayout/EditProfileDataModal-username.png" style="width:40%;"/><br>
-Image 4.3 - Edit Profile Data Modal (Username)<br>
+Image 5.3 - Edit Profile Data Modal (Username)<br>
 
 <img src="../../Image/UILayout/EditProfileDataModal-password.png" style="width:40%;"/><br>
-Image 4.4 - Edit Profile Data Modal (Password)<br>
+Image 4=5.4 - Edit Profile Data Modal (Password)<br>
 
 #### Description
-- Profile card (Image 4.1) could view all the data
-- QR Code modal (Image 4.2) has a QR Code used to loan a book, and it has a hint to ask the user how to use the QR Code
-- The Username Edit Modal (Image 4.3) requires input of a new username
-- The Edit Password Modal (Image 4.4) requires the input of a new password and a confirmation of the password
+- Profile card (Image 5.1) could view all the data
+- QR Code modal (Image 5.2) has a QR Code used to loan a book, and it has a hint to ask the user how to use the QR Code
+- The Username Edit Modal (Image 5.3) requires input of a new username
+- The Edit Password Modal (Image 5.4) requires the input of a new password and a confirmation of the password
 
 
-***5. Content Page***<br>
+***6. Content Page***<br>
 <img src="../../Image/UILayout/TopOfTableContentWithFilter-User.png" style="width:90%;"/><br>
-Image 5.1 - Top of Table Content With Filter (For User)<br>
+Image 6.1 - Top of Table Content With Filter (For User)<br>
 
 <img src="../../Image/UILayout/TopOfTableContentWithFilter-Admin.png" style="width:90%;"/><br>
-Image 5.2 - Top of Table Content With Filter (For Librarian)<br>
+Image 6.2 - Top of Table Content With Filter (For Librarian)<br>
 
 #### Description
-- The User Table Top (Image 5.1) includes a filter with an expandable panel, a title with the total number of records and a dropdown for the pagination 
-- Librarian Table Top (Image 5.2) has a tab to change the table and has an action button between the search button, another function is the same as that of the user
+- The User Table Top (Image 6.1) includes a filter with an expandable panel, a title with the total number of records and a dropdown for the pagination 
+- Librarian Table Top (Image 6.2) has a tab to change the table and has an action button between the search button, another function is the same as that of the user
 
 
-***6. Modal for view data***<br>
+***7. Modal for view data***<br>
 <img src="../../Image/UILayout/BookInfoModal-Guest.png" style="width:40%;"/><br>
-Image 6.1 - Book data modal (For Guest user)<br>
+Image 7.1 - Book data modal (For Guest user)<br>
 
 <img src="../../Image/UILayout/BookInfo-AuthenticateUser.png" style="width:40%;"/><br>
-Image 6.2 - Book data modal (For Authenticated User)<br>
+Image 7.2 - Book data modal (For Authenticated User)<br>
 
 <img src="../../Image/UILayout/BookInfo_GoogleBook-AuthenicateUser.png" style="width:40%;"/><br>
-Image 6.3 - Book data modal (Google Book - For Authenticated User)<br>
+Image 7.3 - Book data modal (Google Book - For Authenticated User)<br>
 
 #### Description
-- Guest users' book data modal (Image 6.1) only includes basic book data
-- Authenticated users (including librarians) book data modal (Image 6.2) has book status, and it is the same as that of guest users
-- Authenticated users (including librarians) book data modal (image 6.3) has Google Book data, and ISBM display as a BarCode Image
+- Guest users' book data modal (Image 7.1) only includes basic book data
+- Authenticated users (including librarians) book data modal (Image 7.2) has book status, and it is the same as that of guest users
+- Authenticated users (including librarians) book data modal (image 7.3) has Google Book data, and ISBM display as a BarCode Image
 
 
-***7. Modal for CRUD operations (Librarian only)***<br>
+***8. Modal for CRUD operations (Librarian only)***<br>
 <img src="../../Image/UILayout/CreateBookModal.png" style="width:50%;"/><br>
-Image 7.1 - Book record Creation Modal <br>
+Image 8.1 - Book record Creation Modal <br>
 
 <img src="../../Image/UILayout/CreateBookConfrimationModal.png" style="width:40%;"/><br>
-Image 7.2 - Book record Create Confirmation Modal <br>
+Image 8.2 - Book record Create Confirmation Modal <br>
 
 <img src="../../Image/UILayout/EditBookRecordModal.png" style="width:50%;"/><br>
-Image 7.3 - Book data Modification Modal <br>
+Image 8.3 - Book data Modification Modal <br>
 
 <img src="../../Image/UILayout/EditBookConfirmationModal.png" style="width:40%;"/><br>
-Image 7.4 - Book data Modify Confirmation Modal <br>
+Image 8.4 - Book data Modify Confirmation Modal <br>
 
 <img src="../../Image/UILayout/DeleteBookConfrimationModal.png" style="width:40%;"/><br>
-Image 7.5 - Book record Delete Confirmation Modal <br>
+Image 8.5 - Book record Delete Confirmation Modal <br>
 
 #### Description
-- Book Creation Model (Image 7.1) requires input data and has a validator to validate data
-- Book Create Confirmation Modal (Image 7.2) allows viewing the input data again
-- Book Data Modification Modal (Image 7.3) requires input of most of the data and has a validator to validate data
-- Book Data Modify Confirmation Modal (Image 7.4) displays the modified data
-- Book Data Delete Confirmation  Modal (Image 7.5) displays the data to be deleted and requires librarian confirmation
+- Book Creation Model (Image 8.1) requires input data and has a validator to validate data
+- Book Create Confirmation Modal (Image 8.2) allows viewing the input data again
+- Book Data Modification Modal (Image 8.3) requires input of most of the data and has a validator to validate data
+- Book Data Modify Confirmation Modal (Image 8.4) displays the modified data
+- Book Data Delete Confirmation  Modal (Image 8.5) displays the data to be deleted and requires librarian confirmation
 
 
-***8. Way to display data***<br>
+***9. Way to display data***<br>
 <img src="../../Image/UILayout/TableCell_BookManagementPage.png" style="width:90%;"/><br>
-Image 8.1 - Table Cell with buttons
+Image 9.1 - Table Cell with buttons
 
 <img src="../../Image/UILayout/DefinitionPage.png" style="width:90%;"/><br>
-Image 8.2 - Chip set
+Image 9.2 - Chip set
 
 #### Description
-- The table cell (Image 8.1) stores book data, and the actions allow the user/librarian to implement
-- The Chipset table (Image 8.2) could reduce the space to display data
+- The table cell (Image 9.1) stores book data, and the actions allow the user/librarian to implement
+- The Chipset table (Image 9.2) could reduce the space to display data
