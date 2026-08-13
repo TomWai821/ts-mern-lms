@@ -42,7 +42,7 @@ Image 3.3 - Book Data Dashboard<br>
 <img src="../../Image/UILayout/Dashboard_fineRecords.png" style="width:90%;"/><br>
 Image 3.4 - Loan Book Record Data Dashboard<br>
 
-<img src="../../Image/UILayout/Dashboard_PieChart_Tooltip.png" style="width:90%;"/><br>
+<img src="../../Image/UILayout/Dashboard_PieChart_Tooltip.png" style="width:45%;"/><br>
 Image 3.5 - Pie Chart tooltip<br>
 
 #### Description:<br>

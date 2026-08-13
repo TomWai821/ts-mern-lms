@@ -231,11 +231,12 @@ docker-compose -f compose.yaml up --build -d
     - React
     - Material-UI for styling (Leveraging CSS3 Standard)
     - React-router-dom for SPA (Single Page Application) navigation
+    - chart.js + react-chartjs-2 for data visualisation
 
 - **Backend** 
     - Node.js
     - Express.js
-    - ws (WebSocket) - For local/docker deployment
+    - ws (WebSocket) for local/docker deployment
 
 - **Database** 
     - MongoDB with Mongoose (With Nodemon for development)
