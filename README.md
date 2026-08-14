@@ -158,7 +158,7 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
 </details>
 
 ## Video for demonstration
-- **[Features Speedrun Video](https://youtu.be/P8W-779EQ3k) (16 min):** A fast-paced showcase of the system's core features across different roles
+- **[Features Speedrun Video](https://youtu.be/P8W-779EQ3k) (17 min):** A fast-paced showcase of the system's core features across different roles
     - 00:00 Librarian
     - 13:55 User
     - 15:52 Guest
