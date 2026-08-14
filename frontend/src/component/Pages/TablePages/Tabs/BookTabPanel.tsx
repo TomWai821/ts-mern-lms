@@ -1,14 +1,13 @@
-import { FC, Fragment } from "react"
+import { FC, Fragment, lazy, Suspense } from "react"
 
 // UI Fragment
 import CustomTabPanel from "../../../UIFragment/CustomTabPanel"
 
-// 
-import LoanBookTable from "../Tables/Book/LoanBookTable"
-import AllBookTable from "../Tables/Book/AllBookTable"
-
 // Model
 import { BookRecordTableInterface } from "../../../../Model/BookTableModel"
+
+const LoanBookTable = lazy(() => import("../Tables/Book/LoanBookTable"));
+const AllBookTable = lazy(() => import("../Tables/Book/AllBookTable"));
 
 const BookTabPanel:FC<BookRecordTableInterface> = (TabData) =>
 {
@@ -22,6 +21,7 @@ const BookTabPanel:FC<BookRecordTableInterface> = (TabData) =>
     
     return(
         <Fragment>
+            <Suspense fallback={<div>Loading...</div>}>
             {
                 BookRecordTable.map((table, index) => 
                 (
@@ -30,6 +30,7 @@ const BookTabPanel:FC<BookRecordTableInterface> = (TabData) =>
                     </CustomTabPanel>
                 ))
             }
+            </Suspense>
         </Fragment>
     )
 }

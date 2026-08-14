@@ -1,11 +1,11 @@
-import { FC } from "react"
+import { FC, lazy, Suspense } from "react"
 
 // UI Fragment
 import CustomTabPanel from "../../../UIFragment/CustomTabPanel"
-
-import BookRecommendationPage from "../../MainPages/BookRecommendationPage"
-import DashboardPage from "../../MainPages/DashboardPage"
 import { Box } from "@mui/material"
+
+const DashboardPage = lazy(() => import("../../MainPages/DashboardPage"));
+const BookRecommendationPage = lazy(() => import("../../MainPages/BookRecommendationPage"));
 
 interface PropsInterface
 {
@@ -26,6 +26,7 @@ const MainPageTabPanel:FC<PropsInterface> = (props) =>
     
     return(
         <Box sx={TabSyntax}>
+            <Suspense fallback={<div>Loading...</div>}>
             {
                 MainPages.map((table, index) => 
                 (
@@ -34,6 +35,7 @@ const MainPageTabPanel:FC<PropsInterface> = (props) =>
                     </CustomTabPanel>
                 ))
             }
+            </Suspense>
         </Box>
     )
 }

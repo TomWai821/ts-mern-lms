@@ -1,14 +1,14 @@
-import { FC, Fragment } from "react"
+import { FC, Fragment, lazy, Suspense } from "react"
 
 // UI Fragment
 import CustomTabPanel from "../../../UIFragment/CustomTabPanel"
 
-// 
-import AuthorTable from "../Tables/Contact/AuthorTable"
-import PublisherTable from "../Tables/Contact/PublisherTable"
-
 // Model
-import {ContactTableInterface } from "../../../../Model/BookTableModel"
+import { ContactTableInterface } from "../../../../Model/BookTableModel"
+
+const AuthorTable = lazy(() => import("../Tables/Contact/AuthorTable"));
+const PublisherTable = lazy(() => import("../Tables/Contact/PublisherTable"));
+
 
 const ContactTabPanel:FC<ContactTableInterface> = (TabData) =>
 {
@@ -22,6 +22,7 @@ const ContactTabPanel:FC<ContactTableInterface> = (TabData) =>
     
     return(
         <Fragment>
+            <Suspense fallback={<div>Loading...</div>}>
             {
                 ContactTable.map((table, index) => 
                 (
@@ -30,6 +31,7 @@ const ContactTabPanel:FC<ContactTableInterface> = (TabData) =>
                     </CustomTabPanel>
                 ))
             }
+            </Suspense>
         </Fragment>
     )
 }

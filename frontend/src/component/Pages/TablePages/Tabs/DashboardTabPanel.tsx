@@ -1,9 +1,11 @@
-import { FC } from "react";
+import { FC, lazy, Suspense } from "react";
 import { Fragment } from "react/jsx-runtime";
+
 import CustomTabPanel from "../../../UIFragment/CustomTabPanel";
-import UserDashboard from "../../MainPages/Dashboard/UserDashboard";
-import FinanceDashboard from "../../MainPages/Dashboard/FinanceDashboard";
-import BookDashboard from "../../MainPages/Dashboard/BookDashboard";
+
+const UserDashboard = lazy(() => import("../../MainPages/Dashboard/UserDashboard"));
+const FinanceDashboard = lazy(() => import("../../MainPages/Dashboard/FinanceDashboard"));
+const BookDashboard = lazy(() => import("../../MainPages/Dashboard/BookDashboard"));
 
 interface PropsInterface
 {
@@ -23,6 +25,7 @@ const DashboardTabPanel:FC<PropsInterface> = (props) =>
     
     return(
         <Fragment>
+            <Suspense fallback={<div>Loading...</div>}>
             {
                 DashboardComponent.map((table, index) => 
                 (
@@ -31,6 +34,7 @@ const DashboardTabPanel:FC<PropsInterface> = (props) =>
                     </CustomTabPanel>
                 ))
             }
+            </Suspense>
         </Fragment>
     )
 }

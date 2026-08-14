@@ -1,14 +1,13 @@
-import { FC, Fragment } from "react"
+import { FC, Fragment, lazy, Suspense } from "react"
 
 // Tabs
 import CustomTabPanel from "../../../UIFragment/CustomTabPanel"
 
-// Another Component
-import AllUserTable from "../Tables/User/AllUserTable"
-import SuspendedUserTable from "../Tables/User/SuspendUserTable"
-
 // Model
 import { UserDataTableInterface } from "../../../../Model/UserTableModel"
+
+const AllUserTable = lazy(() => import("../Tables/User/AllUserTable"));
+const SuspendedUserTable = lazy(() => import("../Tables/User/SuspendUserTable"));
 
 const UserTabPanel:FC<UserDataTableInterface> = (userTableData) =>
 {
@@ -22,6 +21,7 @@ const UserTabPanel:FC<UserDataTableInterface> = (userTableData) =>
 
     return(
         <Fragment>
+            <Suspense fallback={<div>Loading...</div>}>
             {
                 UserRecordTables.map((table, index) => 
                 (
@@ -30,6 +30,7 @@ const UserTabPanel:FC<UserDataTableInterface> = (userTableData) =>
                     </CustomTabPanel>
                 ))
             }
+            </Suspense>
         </Fragment>
     )
 }
