@@ -232,7 +232,7 @@ docker-compose -f compose.yaml up --build -d
 - **Backend** 
     - Node.js
     - Express.js
-    - ws (WebSocket) for local/docker deployment
+    - ws (WebSocket) for real-time data handling (local/docker deployment)
 
 - **Database** 
     - MongoDB with Mongoose (With Nodemon for development)
@@ -266,7 +266,7 @@ docker-compose -f compose.yaml up --build -d
     - EventBridge Scheduler (Serverless cron job orchestrator) triggering periodic business logic (e.g. daily fine calculations)
 
 - **Other**
-    - RESTful APIs with modular design
+    - RESTful APIs with layered architecture and modular design
     - Docker for containerisation and environment consistency
 
 
