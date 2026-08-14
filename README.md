@@ -158,15 +158,11 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
 </details>
 
 ## Video for demonstration
-### SpeedRun version
-- **[Features Speedrun Video](https://youtu.be/rX7ZyLw9i8w) (18 min):** A fast-paced showcase of the system's core features across different roles
-    - 00:00 User
-    - 07:33 Librarian
-    - 17:01 Guest
-    
-- **Demonstration Video (Total: 33 min):** A walkthrough of the project's features and live functionalities for each role<br>
-    - [For Non-Librarian (Guest User and Authenticate User)](https://youtu.be/CtT22CMBoSo) - 15 min<br>
-    - [For Librarian](https://youtu.be/ae6o5S0cZn0) - 18 min<br>
+- **[Features Speedrun Video](https://youtu.be/P8W-779EQ3k) (16 min):** A fast-paced showcase of the system's core features across different roles
+    - 00:00 Librarian
+    - 13:55 User
+    - 15:52 Guest
+
 
 ## Table of Contents
 - [Introduction](#introduction)
