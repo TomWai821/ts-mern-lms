@@ -25,7 +25,7 @@
 | Routing          | Resource-based dispatching (e.g. /books, /users)                                | Decoupled Modules using express.Router                    |
 | Middleware       | Handles Auth (JWT), Validation, and Integrity checks                            | The Quality Gate for incoming data                        |
 | Controller       | Orchestrates request lifecycle and core CRUD operations                         | Action-oriented and delegated Query Building to Services  |
-| Service          | Core Algorithms (TF-IDF), External API (Google Books)	                         | Pure logic Isolation; strictly return-value driven        |
+| Service          | Core Algorithms (TF-IDF), External API (Google Books), WebSocket Event Handling | Pure logic Isolation; strictly return-value driven        |
 | Model (DB)       | Schema definitions and Data Access Logic	                                       | Data Integrity via Mongoose static methods                |
 
 **Architectural Decision: Service Logic Integration**
@@ -63,6 +63,11 @@
 
     - **Backend**
       - Automates Docker Build & Push to Amazon ECR and updates Lambda via AWS CLI
+      
+    - **Real-Time Updates (Development vs Production)**
+      - In development environments, WebSocket is used for instant event broadcasting to achieve real-time responsiveness
+      - In serverless production (AWS Lambda), real-time synchronization is achieved by re-fetching updated data (GET) after each event<br>
+        (It ensure compatibility with Lambda’s short-lived execution model and avoiding persistent connections)
 
     - **Automated Scheduling**
       - Configures EventBridge to trigger cron jobs, with backend logic designed to distinguish between REST API requests and system tasks
