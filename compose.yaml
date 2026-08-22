@@ -34,6 +34,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: production
     command: npm start
     environment:
       NODE_ENV: production

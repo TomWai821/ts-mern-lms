@@ -401,8 +401,13 @@ This project focuses on high-standard engineering practices. Key highlights incl
 
     - Please ensure Docker Config is:
         - [compose.yaml](compose.yaml)
-            - backend -> environment -> NODE_ENV: development
-            - frontend -> environment -> NODE_ENV: development
+            - backend
+                - environment -> NODE_ENV: development
+                - build -> target: development
+
+            - frontend 
+                - environment -> NODE_ENV: development
+                - build -> target: development
 
         - [Backend Dockerfile](./backend/Dockerfile)
             - ENV NODE_ENV=development (Line 41)

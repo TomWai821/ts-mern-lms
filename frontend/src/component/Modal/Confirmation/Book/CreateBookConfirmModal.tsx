@@ -9,7 +9,7 @@ import { useModal } from "../../../../Context/ModalContext"
 
 // Another Modal
 import CreateBookModal from "../../Book/CreateBookModal"
-import { CreateModalInterface } from "../../../../Model/ModelForModal"
+import { CreateBookModalInterface, CreateModalInterface } from "../../../../Model/ModelForModal"
 
 // Data(CSS Syntax)
 import { useBookContext } from "../../../../Context/Book/BookContext"
@@ -20,77 +20,90 @@ import ExpandableTypography from "../../../UIFragment/ExpandableTypography"
 import { AlertContext } from "../../../../Context/AlertContext"
 import { GetResultInterface } from "../../../../Model/ResultModel"
 
-const CreateBookConfirmModal:FC<CreateModalInterface> = ({...bookData}) => 
+const useBookCreationConfirm = (book: CreateBookModalInterface["book"], imageData: CreateBookModalInterface["imageData"], isCustomBook: boolean) => 
 {
-    const { handleOpen, handleClose } = useModal();
+    const { handleClose } = useModal();
     const { createBook } = useBookContext();
+
     const { definition } = useDefinitionContext();
     const { contact } = useContactContext();
     const alertContext = useContext(AlertContext);
 
-    const { image, imageURL, bookname, genre, language, author, publisher, description, publishDate} = bookData.data;
-
-    const genreID = definition[0].find((genreData) => genreData.genre === genre)?._id as string;
-    const languageID = definition[1].find((languageData) => languageData.language === language)?._id as string;
-    const authorID = contact[0].find((authorData) => authorData.author === author)?._id as string;
-    const publisherID = contact[1].find((publisherData) => publisherData.publisher === publisher)?._id as string;
+    const genreID = definition[0].find((genreData) => genreData.genre === book.genre)?._id as string;
+    const languageID = definition[1].find((languageData) => languageData.language === book.language)?._id as string;
+    const authorID = contact[0].find((authorData) => authorData.author === book.author)?._id as string;
+    const publisherID = contact[1].find((publisherData) => publisherData.publisher === book.publisher)?._id as string;
     
-    const width = image ? '600px': '400px';
-
-    // Data for rendering
-    const fieldData = 
-    [   
-        {label:"BookName", data: bookname},
-        {label:"Language", data: language},
-        {label:"Genre", data: genre},
-        {label:"Publisher", data: publisher},
-        {label:"Author", data: author},
-        {label:"Publish Date", data: publishDate},
-    ]
-    
-    const backToCreateModal = () => 
+    const RequestData = 
     {
-        handleOpen( <CreateBookModal image={image} imageURL={imageURL} bookname={bookname} language={language} genre={genre} author={author} 
-                publisher={publisher} description={description} publishDate={publishDate}/> );
+        bookname: book.bookname, description: book.description, 
+        publishDate: book.publishDate as string, genreID, languageID, authorID, publisherID,
+        image: imageData?.image
     }
 
     const CreateBook = async () => 
     {
-        const response: Response = await createBook(image, bookname, genreID, languageID, publisherID, authorID, description, publishDate);
+        const response: Response = await createBook(RequestData);
 
         const result: GetResultInterface = await response.json();
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            switch(response.status)
+            if(!response.ok)
             {
-                case 200:
-                    alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
-                    setTimeout(() => { handleClose() }, 2000);
-                    break;
-
-                default:
-                    alertContext.setAlertConfig({ AlertType: "error", Message:  result.error as string });
-                    break;
+                alertContext.setAlertConfig({ AlertType: "error", Message:  result.error as string });
+                return;
             }
+            
+            alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
+            setTimeout(() => { handleClose() }, 2000);
         }
     }
+
+    return {CreateBook};
+}
+
+const CreateBookConfirmModal:FC<CreateModalInterface> = ({...bookData}) => 
+{
+    const { book, imageData, isCustomBook } = bookData.data;
+    const { CreateBook } = useBookCreationConfirm(book, imageData, isCustomBook);
+
+    const { handleOpen } = useModal();
+    
+    const backToCreateModal = () => 
+    {
+        handleOpen( <CreateBookModal book={book} imageData={imageData} isCustomBook={isCustomBook} /> );
+    }
+
+    const width = imageData.image ? '600px': '400px';
+
+    // Data for rendering
+    const fieldData = 
+    [   
+        {label:"BookName", data: book.bookname},
+        {label:"Language", data: book.language},
+        {label:"Genre", data: book.genre},
+        {label:"Publisher", data: book.publisher},
+        {label:"Author", data: book.author},
+        {label:"Publish Date", data: book.publishDate},
+    ]
+
 
     return(
         <ModalTemplate title={"Create Book Confirmation"} width={width} cancelButtonName={"No"} cancelButtonEvent={() => backToCreateModal()}>
             <Box id="modal-description" sx={ModalBodySyntax}>
                 <Typography sx={ModalSubTitleSyntax}>Do you want to create this book record?</Typography>
                 <Box sx={displayAsRow}>
-                    {imageURL &&
+                    {imageData.imageURL &&
                         (
                             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-                                <Avatar src={imageURL} alt="Preview" variant="rounded" sx={BookImageFormat}/>
+                                <Avatar src={imageData.imageURL} alt="Preview" variant="rounded" sx={BookImageFormat}/>
                             </Box>
                         )
                     } 
 
                     <Box sx={{...displayAsColumn, margin: '10px 0 0 20px', gap:"20px 50px"}}>
-                        {!imageURL && <Typography>Image: N/A</Typography>}
+                        {!imageData.imageURL && <Typography>Image: N/A</Typography>}
                         {
                             fieldData.map((field, index) => 
                                 (
@@ -98,7 +111,7 @@ const CreateBookConfirmModal:FC<CreateModalInterface> = ({...bookData}) =>
                                 )
                             )
                         }
-                        <ExpandableTypography title={"Description"}>{description}</ExpandableTypography>
+                        <ExpandableTypography title={"Description"}>{book.description}</ExpandableTypography>
                     </Box>
                 </Box>
                 <Typography sx={ModalRemarkSyntax}>Please ensure this information is correct</Typography>

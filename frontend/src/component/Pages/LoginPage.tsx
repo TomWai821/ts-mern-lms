@@ -72,18 +72,14 @@ const LoginPage = () =>
                 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            switch(response.status)
+            if(!response.ok)
             {
-                case 200:
-                    alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
-                    handleSuccess(result as unknown as ResultInterface, Credentials.stayLogin);
-                    setTimeout(() => { ChangePage("/") }, 2000);
-                    break;
-
-                default:
-                    alertContext.setAlertConfig({ AlertType: "error", Message:  result.error as string });
-                    break;
+                alertContext.setAlertConfig({ AlertType: "error", Message:  result.error as string });
+                return;
             }
+            alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
+            handleSuccess(result as unknown as ResultInterface, Credentials.stayLogin);
+            setTimeout(() => { ChangePage("/") }, 2000);
         }
     };
     

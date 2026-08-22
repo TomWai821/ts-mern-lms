@@ -80,6 +80,7 @@ const BookImageFormatForEdit = { width: '250px', height: '350px', borderRadius: 
 
 const BookDescriptionDisplayFormat = { display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', whiteSpace: 'normal',  wordWrap: 'break-word', maxWidth: '100%', textOverflow: 'ellipsis'};
 
-const optionFieldSlotProps = {select: { MenuProps: {PaperProps: { style: { maxHeight: 300 }}}}}
+const optionFieldSlotProps = {select: { MenuProps: { PaperProps: { sx: { maxHeight: 'clamp(300px, 50vh, 500px)', overflowY: 'auto' }}}}};
+
 
 export {ViewProfileButton, buttonFontColor, DeleteButton, ItemToCenter, displayAsRow, displayAsColumn, PageItemToCenter, NavColor, NavButtonTransition, NavSyntax, AvatarSize, MenuItemSyntax, PageTitleSyntax, ModalTitleSyntax, ModalSubTitleSyntax, ModalSyntax, ModalRemarkSyntax, ModalBodySyntax, ImportantActionButtonSyntax, BookImageFormat, BookImageFormatForEdit, BookDescriptionDisplayFormat, optionFieldSlotProps}

@@ -10,7 +10,7 @@ CMD ["npm", "test"]
 FROM node:24-alpine as development
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --silent
+RUN npm install
 COPY . .
 EXPOSE 3000
 CMD ["npm", "start"]

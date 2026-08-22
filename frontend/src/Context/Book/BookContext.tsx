@@ -5,8 +5,8 @@ import { BookContextProps, ChildProps } from "../../Model/ContextAndProviderMode
 import { CalculateDueDate, GetCurrentDate } from "../../Controller/OtherController";
 import { GetResultInterface } from "../../Model/ResultModel";
 import { fetchBook, fetchLoanBook, GetExternalData } from "../../Controller/BookController/BookGetController";
-import { createBookRecord, createLoanBookRecord } from "../../Controller/BookController/BookPostController";
-import { returnBookAndChangeStatus, updateBookRecord } from "../../Controller/BookController/BookPutController";
+import { createBookRecord, createLoanBookRecord, IBookCreationData } from "../../Controller/BookController/BookPostController";
+import { IBookUpdateData, returnBookAndChangeStatus, updateBookRecord } from "../../Controller/BookController/BookPutController";
 import { deleteBookRecord } from "../../Controller/BookController/BookDeleteController";
 
 import { useAuthContext } from "../User/AuthContext";
@@ -76,19 +76,19 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
     }
     ,[fetchAllBook, fetchNewPublishBook, fetchMostPopularBook])
 
-    const createBook = useCallback(async (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 
+    const createBook = useCallback(async (bookCreationData: IBookCreationData) => 
     {
         return executeMutationWithFallback(() => 
-            createBookRecord(authToken, image, bookname, genreID, languageID, publisherID, authorID, description, publishDate), 
+            createBookRecord(authToken, bookCreationData), 
         fetchAllBook
         );
     }
     ,[authToken, fetchAllBook])
 
-    const editBook = useCallback(async (bookID:string, imageName:string, newFile:File, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => 
+    const editBook = useCallback(async (bookID:string, bookUpdateData: IBookUpdateData) => 
     {
         return executeMutationWithFallback(() => 
-            updateBookRecord(authToken, bookID, imageName, newFile, bookname, genreID, languageID, publisherID, publishDate, authorID, description), 
+            updateBookRecord(authToken, bookID, bookUpdateData), 
             fetchAllBook
         );
     }

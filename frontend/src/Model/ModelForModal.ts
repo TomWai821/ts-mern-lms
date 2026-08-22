@@ -20,15 +20,22 @@ export interface CreateContactModalInterface
 
 export interface CreateBookModalInterface
 {
-    image?:File;
-    imageURL?:string;
-    bookname?:string;
-    language?:string;
-    genre?:string;
-    author?:string; 
-    publisher?:string; 
-    publishDate?:Date;
-    description?:string;
+    book: 
+    {
+        bookname: string;
+        language: string;
+        genre: string;
+        author: string;
+        publisher: string;
+        description: string;
+        publishDate: string | Date;
+    };
+    imageData:
+    {
+        image?:File;
+        imageURL?:string;
+    };
+    isCustomBook: boolean;
 }
 
 export interface EditModalInterface

@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { BookDataInterface, ContactInterface, DefinitionInterface, DetailsInterfaceForSuspend, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
 import { BookTableDataInterface } from "./BookTableModel";
 import { ViewProfileModel } from "./InputFieldModel";
+import { IBookCreationData } from "../Controller/BookController/BookPostController";
+import { IBookUpdateData } from "../Controller/BookController/BookPutController";
 
 export interface ChildProps
 {
@@ -69,8 +71,8 @@ export interface BookContextProps
     fetchAllBook: () => Promise<void>;
     fetchBookWithFliterData: (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => Promise<void>;
     fetchLoanBookWithFliterData: (type:string, bookname?:string, username?:string, status?:string, finesPaid?:string) => Promise<void>;
-    createBook: (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => Promise<Response>;
-    editBook: (bookID:string, imageName:string, newFile:File, bookname:string, genreID:string, languageID:string, publisherID:string, publishDate:string, authorID:string, description:string) => Promise<Response>;
+    createBook: (bookCreationData: IBookCreationData) => Promise<Response>;
+    editBook: (bookID:string, bookUpdateData: IBookUpdateData) => Promise<Response>;
     loanBook: (bookID:string, userID?:string) => Promise<Response>;
     returnBook: (loanRecordID:string, finesPaid?:string) => Promise<Response>;
     deleteBook: (bookID:string) => Promise<Response>;

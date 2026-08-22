@@ -28,15 +28,13 @@ const ActionTableCellForUser:FC<UserActionTableCellInterface> = (actionTableCell
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            switch(response.status)
+            if(response.ok)
             {
-                case 200:
-                    alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
-                    break;
-
-                default:
-                    alertContext.setAlertConfig({ AlertType: "error", Message: result.error as string });
-                    break;
+                alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
+            }
+            else
+            {
+                alertContext.setAlertConfig({ AlertType: "error", Message: result.error as string });
             }
         }
     }

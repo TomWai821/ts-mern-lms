@@ -2,9 +2,21 @@ const contentType = "application/json";
 const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
 const url:string = `${localhost}/api/book`;
 
-export const createBookRecord = async (authToken:string, image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 
+export interface IBookCreationData
 {
-    const formData = createFormData(image, bookname, genreID, languageID, publisherID, authorID, description, publishDate);
+    image?: File | null;
+    bookname: string;
+    genreID: string;
+    languageID: string;
+    publisherID: string;
+    authorID: string;
+    description: string;
+    publishDate: string;
+}
+
+export const createBookRecord = async (authToken: string, bookCreationData: IBookCreationData) => 
+{
+    const formData = createFormData(bookCreationData);
     
     const response = await fetch(`${url}/record`,
         {
@@ -13,8 +25,28 @@ export const createBookRecord = async (authToken:string, image:File, bookname:st
             body: formData
         }
     );
-    console.log(response);
+
     return response;
+}
+
+const createFormData = (bookCreationData: IBookCreationData) => 
+{
+    const formData = new FormData();
+
+    if(bookCreationData.image)
+    {
+        formData.append('image', bookCreationData?.image);
+    }
+
+    formData.append('bookname', bookCreationData.bookname);
+    formData.append('genreID', bookCreationData.genreID);
+    formData.append('languageID', bookCreationData.languageID);
+    formData.append('publisherID', bookCreationData.publisherID);
+    formData.append('authorID', bookCreationData.authorID);
+    formData.append('description', bookCreationData.description);
+    formData.append('publishDate', bookCreationData.publishDate);
+
+    return formData;
 }
 
 export const createLoanBookRecord = async (authToken:string, bookID:string, loanDate:Date, dueDate:Date, userID?:string) => 
@@ -50,19 +82,4 @@ export const createFavouriteBookRecord = async (authToken:string, bookID:string)
     );
     
     return response
-}
-
-const createFormData = (image:File, bookname:string, genreID:string, languageID:string, publisherID:string, authorID:string, description:string, publishDate:string) => 
-{
-    const formData = new FormData();
-    formData.append('image', image);
-    formData.append('bookname', bookname);
-    formData.append('genreID', genreID);
-    formData.append('languageID', languageID);
-    formData.append('publisherID', publisherID);
-    formData.append('authorID', authorID);
-    formData.append('description', description);
-    formData.append('publishDate', publishDate);
-
-    return formData;
 }

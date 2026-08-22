@@ -83,21 +83,22 @@ const EditProfileDataModal = () =>
 
         const response = await ModifyProfileDataController(GetData("authToken") as string, option, bodyData);
 
-         const result: GetResultInterface = await response.json();
+        const result: GetResultInterface = await response.json();
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            switch(response.status)
+            if(!response.ok)
             {
-                case 200:
-                    alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
-                    setTimeout(() => {handleClose(); window.location.reload()}, 2000);
-                    break;
-
-                default:
-                    alertContext.setAlertConfig({ AlertType: "error", Message: result.error as string });
-                    break;
+                alertContext.setAlertConfig({ AlertType: "error", Message: result.error as string });
+                return;
             }
+
+            alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
+            setTimeout(() => 
+            {
+                handleClose();
+                window.location.reload()
+            }, 2000);
         }
     }
 
