@@ -27,7 +27,7 @@ const RecordBookTableCell:FC<RecordTableCellInterface> = (returnBookTableCellDat
     const {value, Information} = returnBookTableCellData;
 
     const {handleOpen} = useModal();
-    const {unfavouriteBook} = useSelfBookRecordContext();
+    const {noLongerFavouriteBook} = useSelfBookRecordContext();
     const alertContext = useContext(AlertContext);
 
     const openReturnBookModal = () => 
@@ -35,11 +35,11 @@ const RecordBookTableCell:FC<RecordTableCellInterface> = (returnBookTableCellDat
         handleOpen(<ReturnBookConfirmModal data={Information as LoanBookInterface} modalOpenPosition={"LoanBookTableCell"}/>);
     }
 
-    const unfavourite = async () => 
+    const noLongerFavourite = async () => 
     {
-        const response =  await unfavouriteBook(Information._id);
+        const response =  await noLongerFavouriteBook(Information._id);
         
-          const result: GetResultInterface = await response.json();
+        const result: GetResultInterface = await response.json();
 
         if (alertContext && alertContext.setAlertConfig) 
         {
@@ -67,8 +67,8 @@ const RecordBookTableCell:FC<RecordTableCellInterface> = (returnBookTableCellDat
                 value === 1 &&
                 <Fragment>
                     {
-                        <Tooltip title={"Unfavourite"} arrow>
-                            <IconButton sx={{color: "gold"}} onClick={unfavourite}>
+                        <Tooltip title={"No Longer Favourite"} arrow>
+                            <IconButton sx={{color: "gold"}} onClick={noLongerFavourite}>
                                 <StarIcon />
                             </IconButton>
                         </Tooltip>

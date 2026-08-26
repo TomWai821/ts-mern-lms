@@ -96,7 +96,7 @@ export interface SelfBookRecordContextProps
     fetchSelfFavouriteBookWithFilterData: (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => Promise<void>;
     fetchSelfLoanBookWithFilterData: (type:string, bookname?:string, status?:string) => Promise<void>;
     favouriteBook: (bookID:string) => Promise<Response>;
-    unfavouriteBook: (favouriteBookID:string) => Promise<Response>;
+    noLongerFavouriteBook: (favouriteBookID:string) => Promise<Response>;
 }
 
 export interface DefinatonProps

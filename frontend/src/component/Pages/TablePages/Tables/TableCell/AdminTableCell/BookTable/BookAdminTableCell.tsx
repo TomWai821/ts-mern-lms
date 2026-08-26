@@ -19,7 +19,7 @@ const BookAdminTableCell: FC<ActionTableCellInterface> = (tableCellData) =>
 {
     const { handleOpen } = useModal();
     const { fetchLoanBookWithFliterData } = useBookContext();
-    const { BookRecordForUser, favouriteBook: favouriteBookHandler, unfavouriteBook: unfavouriteBookHandler } = useSelfBookRecordContext();
+    const { BookRecordForUser, favouriteBook: favouriteBookHandler, noLongerFavouriteBook: noLongerFavouriteBookHandler } = useSelfBookRecordContext();
     const alertContext = useContext(AlertContext);
 
     const { value, Information, changeValue, setSearchBook, searchBook } = tableCellData;
@@ -75,7 +75,7 @@ const BookAdminTableCell: FC<ActionTableCellInterface> = (tableCellData) =>
 
     const favouriteHandler = async () =>
     {
-        const response = isFavourite ? await unfavouriteBookHandler(favouriteBookID as string) : await favouriteBookHandler(bookData._id);
+        const response = isFavourite ? await noLongerFavouriteBookHandler(favouriteBookID as string) : await favouriteBookHandler(bookData._id);
         const result: GetResultInterface = await response.json();
 
         if (alertContext && alertContext.setAlertConfig)
@@ -95,7 +95,7 @@ const BookAdminTableCell: FC<ActionTableCellInterface> = (tableCellData) =>
         { title: "Delete (Actual)", syntax: ImportantActionButtonSyntax, clickEvent: openDeleteBookModal, icon: <DeleteIcon />, disable: bookData.status === "OnLoan" },
         { title: "View Loan Book History", syntax: { "&:hover": { backgroundColor: "lightGray" } }, clickEvent: viewLoanBookRecord, icon: <SearchIcon /> },
         { title: "Loan Book", syntax: { "&:hover": { backgroundColor: "lightGray" } }, clickEvent: openLoanBookModal, icon: <EventAvailableIcon />, disable: StatusDetection(bookData.status, "OnLoan") },
-        { title: isFavourite ? "Unfavourite" : "Favourite", syntax: favouriteIconSyntax, clickEvent: favouriteHandler, icon: isFavourite ? <StarIcon /> : <StarBorderIcon /> },
+        { title: isFavourite ? "No Longer favourite" : "Favourite", syntax: favouriteIconSyntax, clickEvent: favouriteHandler, icon: isFavourite ? <StarIcon /> : <StarBorderIcon /> },
     ];
 
     return (

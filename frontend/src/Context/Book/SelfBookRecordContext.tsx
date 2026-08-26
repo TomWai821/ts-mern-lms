@@ -130,7 +130,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
 
     },[authToken, fetchSelfRecord])
 
-    const unfavouriteBook = useCallback(async(FavouriteBookID:string) => 
+    const noLongerFavouriteBook = useCallback(async(FavouriteBookID:string) => 
     {
         const result: Response = await deleteBookRecord("Favourite", authToken, FavouriteBookID);
 
@@ -164,7 +164,7 @@ export const SelfBookRecordProvider:FC<ChildProps> = ({children}) =>
     },[authToken, allRecordTask])
 
     return (
-        <SelfBookRecordContext.Provider value={{ BookRecordForUser, bookForUser, fetchFavouriteRecord, fetchSelfLoanRecord, fetchSelfFavouriteBookWithFilterData, fetchSelfLoanBookWithFilterData, favouriteBook, unfavouriteBook }}>
+        <SelfBookRecordContext.Provider value={{ BookRecordForUser, bookForUser, fetchFavouriteRecord, fetchSelfLoanRecord, fetchSelfFavouriteBookWithFilterData, fetchSelfLoanBookWithFilterData, favouriteBook, noLongerFavouriteBook }}>
             {children}
         </SelfBookRecordContext.Provider>
     );

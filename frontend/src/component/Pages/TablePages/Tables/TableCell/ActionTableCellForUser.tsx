@@ -12,7 +12,7 @@ import { useSelfBookRecordContext } from "../../../../../Context/Book/SelfBookRe
 
 const ActionTableCellForUser:FC<UserActionTableCellInterface> = (actionTableCellData) => 
 {
-    const {BookRecordForUser, favouriteBook, unfavouriteBook} = useSelfBookRecordContext();
+    const {BookRecordForUser, favouriteBook, noLongerFavouriteBook} = useSelfBookRecordContext();
     
     const {Information} = actionTableCellData;
 
@@ -23,19 +23,17 @@ const ActionTableCellForUser:FC<UserActionTableCellInterface> = (actionTableCell
 
     const FavouriteHandler = async () => 
     {
-        let response = isFavourite ? await unfavouriteBook(FavouriteID as string) : await favouriteBook((Information as BookDataInterface)._id); 
+        let response = isFavourite ? await noLongerFavouriteBook(FavouriteID as string) : await favouriteBook((Information as BookDataInterface)._id); 
         const result: GetResultInterface = await response.json();
 
         if (alertContext && alertContext.setAlertConfig) 
         {
-            if(response.ok)
-            {
-                alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
-            }
-            else
+            if(!response.ok)
             {
                 alertContext.setAlertConfig({ AlertType: "error", Message: result.error as string });
+                return;
             }
+            alertContext.setAlertConfig({ AlertType: "success", Message: result.message as string });
         }
     }
 
