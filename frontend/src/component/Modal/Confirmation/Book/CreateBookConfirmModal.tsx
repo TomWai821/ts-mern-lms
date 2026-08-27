@@ -20,7 +20,7 @@ import ExpandableTypography from "../../../UIFragment/ExpandableTypography"
 import { AlertContext } from "../../../../Context/AlertContext"
 import { GetResultInterface } from "../../../../Model/ResultModel"
 
-const useBookCreationConfirm = (book: CreateBookModalInterface["book"], imageData: CreateBookModalInterface["imageData"], isCustomBook: boolean) => 
+const useBookCreationConfirm = (book: CreateBookModalInterface["book"], imageData: CreateBookModalInterface["imageData"]) => 
 {
     const { handleClose } = useModal();
     const { createBook } = useBookContext();
@@ -29,7 +29,7 @@ const useBookCreationConfirm = (book: CreateBookModalInterface["book"], imageDat
     const { contact } = useContactContext();
     const alertContext = useContext(AlertContext);
 
-    const genreID = definition[0].find((genreData) => genreData.genre === book.genre)?._id as string;
+    const genreID = definition[0].find((genreData) =>  genreData.genre === book.genre )?._id as string;
     const languageID = definition[1].find((languageData) => languageData.language === book.language)?._id as string;
     const authorID = contact[0].find((authorData) => authorData.author === book.author)?._id as string;
     const publisherID = contact[1].find((publisherData) => publisherData.publisher === book.publisher)?._id as string;
@@ -51,7 +51,7 @@ const useBookCreationConfirm = (book: CreateBookModalInterface["book"], imageDat
         {
             if(!response.ok)
             {
-                alertContext.setAlertConfig({ AlertType: "error", Message:  result.error as string });
+                alertContext.setAlertConfig({ AlertType: "error", Message: result.error as string });
                 return;
             }
             
@@ -65,14 +65,14 @@ const useBookCreationConfirm = (book: CreateBookModalInterface["book"], imageDat
 
 const CreateBookConfirmModal:FC<CreateModalInterface> = ({...bookData}) => 
 {
-    const { book, imageData, isCustomBook } = bookData.data;
-    const { CreateBook } = useBookCreationConfirm(book, imageData, isCustomBook);
+    const { book, imageData } = bookData.data;
+    const { CreateBook } = useBookCreationConfirm(book, imageData);
 
     const { handleOpen } = useModal();
     
     const backToCreateModal = () => 
     {
-        handleOpen( <CreateBookModal book={book} imageData={imageData} isCustomBook={isCustomBook} /> );
+        handleOpen( <CreateBookModal book={book} imageData={imageData} /> );
     }
 
     const width = imageData.image ? '600px': '400px';

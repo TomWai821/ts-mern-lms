@@ -23,18 +23,18 @@ import { dateOption } from "../../../Data/TextFieldsData";
 const SuspendUserModal:FC<SuspendModalInterface> = ({...userData}) => 
 {
     const { _id, username, durationOption, description} = userData as SuspendModalInterface;
-    const [banData, setSuspendData] = useState({durationOption: durationOption ?? 0, description: description});
+    const [suspendData, setSuspendData] = useState({durationOption: durationOption ?? 0, description: description});
     const {handleOpen} = useModal();
 
     const onChange = (event:ChangeEvent<HTMLInputElement>) => 
     {
         const {name, value} = event.target;
-        setSuspendData({...banData, [name] : value});
+        setSuspendData({...suspendData, [name] : value});
     }
 
     const OpenSuspendUserConfirmModal = () => 
     {
-        handleOpen(<SuspendUserConfirmModal _id={_id} username={username} durationOption={banData.durationOption} description={banData.description}/>)
+        handleOpen(<SuspendUserConfirmModal _id={_id} username={username} durationOption={suspendData.durationOption} description={suspendData.description}/>)
     }
 
     return(
@@ -42,7 +42,7 @@ const SuspendUserModal:FC<SuspendModalInterface> = ({...userData}) =>
             <Box id="modal-description" sx={ModalBodySyntax}>
                 <Typography>Username: {username}</Typography>
 
-                <TextField size="small" name="durationOption" label={"duration"} onChange={onChange} value={banData.durationOption} select>
+                <TextField size="small" name="durationOption" label={"duration"} onChange={onChange} value={suspendData.durationOption} select>
                     {
                         dateOption.map((option, index) => 
                             (
@@ -51,7 +51,7 @@ const SuspendUserModal:FC<SuspendModalInterface> = ({...userData}) =>
                         )
                     }
                 </TextField>
-                <TextField size="small" rows={5} name="description" onChange={onChange} label={"description"} value={banData.description} multiline/>
+                <TextField size="small" rows={5} name="description" onChange={onChange} label={"description"} value={suspendData.description} multiline/>
             </Box>
             
             <ModalConfirmButton clickEvent={OpenSuspendUserConfirmModal} name={"Suspend"} buttonType={"Important"}/>

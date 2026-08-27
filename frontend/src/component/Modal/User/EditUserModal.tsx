@@ -10,29 +10,22 @@ import ModalTemplate from '../../Templates/ModalTemplate';
 // Another Modal
 import EditUserConfirmModal from '../Confirmation/User/EditUserConfirmModal';
 
-// Context
-import { useModal } from '../../../Context/ModalContext';
-
 // Models
 import { UserResultDataInterface } from '../../../Model/ResultModel';
 import { UserDataInterface } from '../../../Model/UserTableModel';
 import { EditModalInterface } from '../../../Model/ModelForModal';
 import { ModalBodySyntax } from '../../../Data/Style';
 import { EditUserInputField } from '../../../Data/TextFieldsData';
-import { DataValidateField } from '../../../Controller/ValidateController';
+import { useDataValidation } from '../../../customhook/DataValidation';
 
-const EditUserModal:FC<EditModalInterface> = (editModalData) => 
+const validationList = {username: "", email: "", genre: "", role: "", status: "", gender: ""};
+const ignoreList = ["_id", "gender", "role", "status"];
+
+const useEditDataHandler = (editData: UserResultDataInterface) => 
 {
-    const {value, editData, compareData} = editModalData;
-    const {handleOpen} = useModal();
-    
-    const {_id, username, email, role, status, gender} = editData as UserResultDataInterface;
-    
-    const [user, setUser] = useState<UserResultDataInterface>({_id: _id, username: username, email:email, role:role, status:status, gender:gender});
-
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [errors, setErrors] = useState({username: "", email: "", genre: "", role: "", status: "", gender: ""});
-    const [helperTexts, setHelperText] = useState({username: "", email: "", genre: "", role: "", status: "", gender: ""});
+    const [user, setUser] = useState<UserResultDataInterface>(
+        { _id: editData._id, username: editData.username, email: editData.email, role: editData.role, status: editData.status, gender: editData.gender}
+    );
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -40,41 +33,19 @@ const EditUserModal:FC<EditModalInterface> = (editModalData) =>
         setUser({...user, [name] : value})
     }
 
-    const HandleDataValidate = async () => 
-    {
-        let validationPassed = true;
-        const newErrors = { ...errors };
-        const newHelperTexts = { ...helperTexts };
-        setIsSubmitted(true);
-    
-        Object.keys(user).forEach((field) => 
-        {
-            if(["_id", "gender", "role", "status"].includes(field))
-            {
-                return;
-            }
+    return { user, onChange };
+}
 
-            const { helperText, error, success } = DataValidateField(field, user[field as keyof UserDataInterface] as string);
-            newHelperTexts[field as keyof typeof newHelperTexts] = helperText;
-            newErrors[field as keyof typeof newErrors] = error;
+const EditUserModal:FC<EditModalInterface> = (editModalData) => 
+{
+    const { value, editData, compareData } = editModalData;
     
-            if(!success)
-            {
-                validationPassed = false;
-            }
+    const { user, onChange } = useEditDataHandler(editData as UserResultDataInterface);
 
-            console.log({ helperText, error, success })
-        });
-    
-        setHelperText(newHelperTexts);
-        setErrors(newErrors);
-
-        if(validationPassed)
-        {
-            handleOpen(<EditUserConfirmModal value={value} editData={user} compareData={compareData} />)
-        }
-    }
-    
+    const {isSubmitted, errors, helperTexts, handleDataValidate} = useDataValidation<UserDataInterface>(
+        user, validationList, ignoreList, 
+        <EditUserConfirmModal value={value} editData={user} compareData={compareData} />
+    );   
     
     return(
         <ModalTemplate title={"Edit User Record"} width="400px" cancelButtonName={"Exit"}>
@@ -96,7 +67,7 @@ const EditUserModal:FC<EditModalInterface> = (editModalData) =>
                 }
             </Box>
 
-            <ModalConfirmButton clickEvent={HandleDataValidate} name={"Edit"} buttonType={""}/>
+            <ModalConfirmButton clickEvent={handleDataValidate} name={"Edit"} buttonType={""}/>
         </ModalTemplate>
     );
 }

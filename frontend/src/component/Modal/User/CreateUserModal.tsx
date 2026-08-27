@@ -1,9 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { Box, MenuItem, TextField } from '@mui/material'
 
-// Context
-import { useModal } from '../../../Context/ModalContext';
-
 // Another Modals
 import CreateUserConfirmModal from '../Confirmation/User/CreateUserConfirmModal';
 
@@ -19,56 +16,21 @@ import ModalConfirmButton from '../../UIFragment/ModalConfirmButton';
 // Data And Object(For Dropdown Data and css syntax)
 import { ModalBodySyntax } from '../../../Data/Style';
 import { CreateUserInputField } from '../../../Data/TextFieldsData';
-import { DataValidateField } from '../../../Controller/ValidateController';
+import { useDataValidation } from '../../../customhook/DataValidation';
+
+const validationList = {username: "", email: "", genre: "", role: "", status: "", gender: "", birthDay: ""};
+const ignoreList = ["gender", "role", "status"];
 
 const CreateUserModal = () => 
 {
-    const {handleOpen} = useModal();
-
     const [user, setUser] = useState({username: "", password: "", email: "", role: "User", status: "", gender: "Male", birthDay: GetCurrentDate("String") as Date});
-
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [errors, setErrors] = useState({username: "", email: "", genre: "", role: "", status: "", gender: "", birthDay: ""});
-    const [helperTexts, setHelperText] = useState({username: "", email: "", genre: "", role: "", status: "", gender: "", birthDay: ""});
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
         setUser({...user, [event.target.name] : event.target.value})
     }
 
-    const HandleDataValidate = async () => 
-    {
-        let validationPassed = true;
-        const newErrors = { ...errors };
-        const newHelperTexts = { ...helperTexts };
-        setIsSubmitted(true);
-    
-        Object.keys(user).forEach((field) => 
-        {
-            if(["gender", "role", "status"].includes(field))
-            {
-                return;
-            }
-
-            const { helperText, error, success } = DataValidateField(field, user[field as keyof UserDataInterface]);
-            newHelperTexts[field as keyof typeof newHelperTexts] = helperText;
-            newErrors[field as keyof typeof newErrors] = error;
-
-            if(!success)
-            {
-                validationPassed = false;
-            }
-
-        });
-    
-        setHelperText(newHelperTexts);
-        setErrors(newErrors);
-
-        if(validationPassed)
-        {
-            handleOpen(<CreateUserConfirmModal {...user}/>);
-        }
-    }
+    const { isSubmitted, errors, helperTexts, handleDataValidate } = useDataValidation<UserDataInterface>(user, validationList, ignoreList, <CreateUserConfirmModal {...user}/>);
     
     return(
         <ModalTemplate title={"Create User Record"} width="400px" cancelButtonName={"Exit"}>
@@ -91,7 +53,7 @@ const CreateUserModal = () =>
             }
             </Box>
             
-            <ModalConfirmButton clickEvent={HandleDataValidate} name={"Create"} buttonType={""}/>
+            <ModalConfirmButton clickEvent={handleDataValidate} name={"Create"} buttonType={""}/>
         </ModalTemplate>
     );
 }

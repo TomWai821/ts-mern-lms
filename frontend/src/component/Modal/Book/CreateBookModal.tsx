@@ -3,53 +3,16 @@ import { Box, Button } from '@mui/material';
 
 import ModalTemplate from '../../Templates/ModalTemplate';
 import CreateBookConfirmModal from '../Confirmation/Book/CreateBookConfirmModal';
-import { useModal } from '../../../Context/ModalContext';
 import { CreateBookModalInterface } from '../../../Model/ModelForModal';
 import { displayAsRow, ModalBodySyntax } from '../../../Data/Style';
 import { GetCurrentDate } from '../../../Controller/OtherController';
-import { DataValidateField } from '../../../Controller/ValidateController';
-import { BookTableDataInterface } from '../../../Model/BookTableModel';
 
 import BookImageSection, { useImageHandler } from './BookCreationModalSections/BookImageSection';
 import { BookDataSection } from './BookCreationModalSections/BookDataSection';
+import { useDataValidation } from '../../../customhook/DataValidation';
 
-const useDataValidation = (book: Record<string, any>, imageData: Record<string, any>) => 
-{
-    const { handleOpen } = useModal();
-
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [errors, setErrors] = useState({ bookname: '', author: '', genre: '', publisher: '', publishDate: '', description: '' });
-    const [helperTexts, setHelperText] = useState({ bookname: '', author: '', genre: '', publisher: '', publishDate: '', description: '' });
-
-    const handleDataValidate = async () => 
-    {
-        let validationPassed = true;
-        const newErrors = { ...errors };
-        const newHelperTexts = { ...helperTexts };
-        setIsSubmitted(true);
-
-        Object.keys(book).forEach((field) => 
-        {
-            if (['publishDate', 'description'].includes(field)) return;
-
-            const { helperText, error, success } = DataValidateField(field, book[field as keyof BookTableDataInterface]) || {};
-            newHelperTexts[field as keyof typeof newHelperTexts] = helperText;
-            newErrors[field as keyof typeof newErrors] = error;
-
-            if (!success) validationPassed = false;
-        });
-
-        setHelperText(newHelperTexts);
-        setErrors(newErrors);
-
-        if (validationPassed) 
-        {
-            handleOpen(<CreateBookConfirmModal data={{ ...book, image: imageData.imageFile, imageURL: imageData.previewUrl }} />);
-        }
-    };
-
-    return { isSubmitted, errors, helperTexts, handleDataValidate };
-};
+const validationList = { bookname: '', language: '', genre: '', author: '', publisher: '', publishDate: '', description: '' };
+const ignoreList = ['publishDate', 'description'];
 
 const useCreateBookData = (bookData?: CreateBookModalInterface["book"]) => 
 {
@@ -70,9 +33,12 @@ const useCreateBookData = (bookData?: CreateBookModalInterface["book"]) =>
 
 const CreateBookModal: FC<CreateBookModalInterface> = ({ ...bookData }) => 
 {
-    const { book, onDataChange,  } = useCreateBookData(bookData["book"]);
-    const { previewUrl, handleFileChange, removeImage, requestData } = useImageHandler(bookData["imageData"]);
-    const { isSubmitted, errors, helperTexts, handleDataValidate } = useDataValidation(book, requestData);
+    const { book, onDataChange } = useCreateBookData(bookData["book"]);
+    const { previewUrl, handleFileChange, removeImage, imageData } = useImageHandler(bookData["imageData"]);
+    const { isSubmitted, errors, helperTexts, handleDataValidate } = useDataValidation<CreateBookModalInterface["book"]>(
+        book, validationList,ignoreList,
+        <CreateBookConfirmModal data={{book, imageData}} />
+    );
 
     return (
         <ModalTemplate title="Create Book Record" minWidth="500px" maxWidth="750px" width="100%" cancelButtonName="Exit">

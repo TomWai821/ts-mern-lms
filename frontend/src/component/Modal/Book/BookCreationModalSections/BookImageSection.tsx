@@ -37,9 +37,9 @@ export const useImageHandler = (bookImageData?: CreateBookModalInterface["imageD
         }
     };
 
-    const requestData = {image: imageFile};
+    const imageData = {image: imageFile, imageURL: previewUrl};
 
-    return {previewUrl, handleFileChange, removeImage, requestData};
+    return {imageFile, previewUrl, handleFileChange, removeImage, imageData};
 }
 
 const BookImageSection: FC<BookImageSectionProps> = (props) => 

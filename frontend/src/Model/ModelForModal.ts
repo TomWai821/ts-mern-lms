@@ -35,7 +35,6 @@ export interface CreateBookModalInterface
         image?:File;
         imageURL?:string;
     };
-    isCustomBook: boolean;
 }
 
 export interface EditModalInterface

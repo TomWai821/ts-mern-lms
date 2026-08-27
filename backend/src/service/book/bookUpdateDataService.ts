@@ -30,10 +30,13 @@ export const BookUpdateDataService = async (bookID: string, editBookData: BookIn
     }
 
     const editBookRecord = await GetBook({ _id: updateBookRecord._id }) as unknown as BookInterface[];
-
     const loanBookRecord = await GetBookLoaned({bookID: updateBookRecord._id}) as unknown as BookLoanedInterface[];
-    
     broadcast(BookEvent.BOOK_UPDATE, editBookRecord[0]);
-    broadcast(BookEvent.LOAN_BOOK_UPDATE, loanBookRecord[0]);
+
+    if(loanBookRecord.length > 0)
+    {
+        broadcast(BookEvent.LOAN_BOOK_UPDATE, loanBookRecord[0]);
+    }
+    
     return {success: true, statusCode: 200, message: "Book Record Updated Successfully!"}
 }

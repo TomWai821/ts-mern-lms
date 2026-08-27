@@ -1,43 +1,51 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const initResult = {success: false, error: "", helperText: ""};
+
+interface IRegexResult
+{
+    success: boolean;
+    helperText: string;
+    error: string;
+}
+
+const validateMap:Record<string, (name: string, value: string) => IRegexResult> =
+{
+    email: EmailValidate,
+    username: (name: string, value: string) => DataLengthValidate(name, value, 6),
+    password: (name: string, value: string) => DataLengthValidate(name, value, 6),
+    birthDay: (name: string, value: string) => BirthDayValidate(name, value, 6),
+    gender: EmptyDataValidation,
+    role: EmptyDataValidation,
+    bookname: EmptyDataValidation,
+    language: EmptyDataValidation,
+    genre: EmptyDataValidation,
+    author: EmptyDataValidation,
+    publisher: EmptyDataValidation,
+    description: EmptyDataValidation
+};
+
 export const DataValidateField = (name: string, value: string | any) => 
 {
-    const validateMap = 
-    [
-        { validateName: "email", validateType: (name:string, value: string) => EmailValidate(name, value) },
-        { validateName: "username", validateType: (name: string, value: string) => DataLengthValidate(name, value, 6) },
-        { validateName: "password", validateType: (name: string, value: string) => DataLengthValidate(name, value, 6) },
-        { validateName: "birthDay", validateType: (name:string, value: string) => BirthDayValidate(name, value, 6) },
-        { validateName: "gender", validateType: (name: string, value: string) => EmptyDataValidation(name, value) },
-        { validateName: "role", validateType: (name: string, value: string) => EmptyDataValidation(name, value) },
-        { validateName: "bookname", validateType: (name: string, value: string) => EmptyDataValidation(name, value) },
-        { validateName: "language", validateType: (name: string, value: string) => EmptyDataValidation(name, value) },
-        { validateName: "genre", validateType: (name: string, value: string) => EmptyDataValidation(name, value) },
-        { validateName: "author", validateType: (name: string, value: string) => EmptyDataValidation(name, value) },
-        { validateName: "publisher", validateType: (name: string, value: string) => EmptyDataValidation(name, value) },
-        { validateName: "description", validateType: (name: string, value: string) => EmptyDataValidation(name, value) }
-    ];
 
-    const findValidateField = validateMap.find((item) => item.validateName === name);
+    const findValidateField = validateMap[name];
 
     if (!findValidateField) 
     {
         return { success: false, helperText: `Invalid field: ${name}`, error: "Validation failed" };
     }
 
-    return findValidateField.validateType(name, value);
+    return findValidateField(name, value);
 };
 
-const EmailValidate = (name:string, value:string) => 
+function EmailValidate(name:string, value:string): IRegexResult
 {
-    let error = "";
-    let helperText  = "";
-    let success = false;
+    let {success, error, helperText} = initResult;
 
     if(!emailRegex.test(value) || value === "")
     {
-        error = "Invalid email address!";
-        helperText = "Please enter a valid email address";
+        error = `Invalid ${name} address!`;
+        helperText = `Please enter a valid ${name} address`;
     }
 
     if(error === "" && helperText === "")
@@ -48,11 +56,9 @@ const EmailValidate = (name:string, value:string) =>
     return {success, helperText, error};
 }
 
-const DataLengthValidate = (name:string, value:string, limitLength:number) => 
+function DataLengthValidate(name:string, value:string, limitLength:number): IRegexResult
 {
-    let error = "";
-    let helperText  = "";
-    let success = false;
+   let {success, error, helperText} = initResult;
 
     if(value.length < limitLength)
     {
@@ -68,11 +74,9 @@ const DataLengthValidate = (name:string, value:string, limitLength:number) =>
     return {success, helperText, error};
 }
 
-const BirthDayValidate = (name:string, value:string, limitAge:number) => 
+function BirthDayValidate(name:string, value:string, limitAge:number): IRegexResult
 {
-    let error = "";
-    let helperText  = "";
-    let success = false;
+    let {success, error, helperText} = initResult;
 
     const birthDate = new Date(value);
     const today = new Date();
@@ -81,7 +85,7 @@ const BirthDayValidate = (name:string, value:string, limitAge:number) =>
 
     if (isNaN(birthDate.getTime()) || !isOldEnough) 
     {
-        error = "Invalid Birthday!";
+        error = `Invalid ${name}!`;
         helperText = `Only users aged ${limitAge} years and older can register`;
     }
 
@@ -93,11 +97,9 @@ const BirthDayValidate = (name:string, value:string, limitAge:number) =>
     return {success, helperText, error};
 }
 
-const EmptyDataValidation = (name:string, value:string) =>
+function EmptyDataValidation(name:string, value:string): IRegexResult
 {
-    let error = "";
-    let helperText  = "";
-    let success = false;
+   let {success, error, helperText} = initResult;
 
     if(value === "")
     {
