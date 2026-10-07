@@ -112,7 +112,7 @@ jobs:
               --region "$AWS_REGION" \
               --query 'imageDetails[0].imageDigest' \
               --output text 2>/dev/null || true)
-            DIGEST=$(echo "$DIGEST" | xargs) # 去掉空格/換行
+            DIGEST=$(echo "$DIGEST" | xargs)
             if [ -n "$DIGEST" ] && [ "$DIGEST" != "None" ]; then
               echo "Found digest: $DIGEST"
               break
