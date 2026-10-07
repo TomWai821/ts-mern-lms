@@ -94,11 +94,11 @@ Image 1 - CI/CD process overview<br>
     | Secret Name              | Description / Purpose                                     | How to Obtain                                                  |
     | ------------------------ | --------------------------------------------------------- | -------------------------------------------------------------- |
     | VERCEL_DEPLOY_HOOK       | Triggers automated deployment for the Frontend on Vercel  | Vercel Project Settings → Git → Deploy Hooks                   |    
-    | AWS_ACCESS_KEY_ID        | IAM user identifier for GitHub Actions                    | AWS Console → IAM → Users → Security creds                     |
-    | AWS_SECRET_ACCESS_KEY    | Private key paired with Access Key ID                     | AWS Console → IAM → Users → Create Access Key (shown once)     |
+    | AWS_ROLE_ARN             | IAM Role ARN for GitHub OIDC AssumeRole                   | AWS Console → IAM → Roles → Select Role → Copy Role ARN        |
     | AWS_REGION               | Target region for AWS resources (e.g. ap-east-1)          | AWS Console → Region selector (top bar)                        |
     | AWS_LAMBDA_FUNCTION_NAME | Target Lambda function for CD updates                     | AWS Console → Lambda → Functions                               |
 
+		
 
     - **Security And Operational Excellence**
         - **Zero-Credential Exposure**
