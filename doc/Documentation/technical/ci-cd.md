@@ -100,14 +100,15 @@ Image 1 - CI/CD process overview<br>
 
 		
 
-    - **Security And Operational Excellence**
-        - **Zero-Credential Exposure**
-            - Ensure the source code does not have private data, and fulfil the OWASP standard
-        - **Automated Lifecycle**
-            - Reduce the deployment mistakes on manual trigger with GitHub Actions
+- **Security And Operational Excellence**
+    - **Zero-Credential Exposure**
+        - Ensure the source code does not have private data, and fulfil the OWASP standard
+
+    - **Automated Lifecycle**
+        - Reduce the deployment mistakes on manual trigger with GitHub Actions
 
             
-- **Changes**
+- **Iteration Description**
     - **Production Environment Realignment**
         - Migrated BACKEND_BASE_URL and BASE_URL from localhost to production endpoints (Vercel / AWS API Gateway)<br>
           (Ensured seamless communication between decoupled frontend and backend services in a live cloud environment)
@@ -119,6 +120,12 @@ Image 1 - CI/CD process overview<br>
     - **Immutable Artefact Deployment**
         - CI pipeline builds and pushes Docker images to AWS ECR, capturing image digest as output<br>
           (Ensures CD stage updates Lambda using tested artefacts instead of latest tags, guaranteeing reproducibility and reducing regression risk)
+
+    - **Security & IAM Best Practices**
+        - Transitioned CI/CD authentication from long‑lived IAM User keys to short‑lived OIDC AssumeRole
+        - Separated CI/CD Role (ECR push + Lambda update) from Lambda Execution Role (S3/CloudWatch access)
+        - Enforced the least‑privilege principle<br>
+          (Reduced credential leakage risk and aligned with AWS recommended practices)
 
 
 ### Remarks
