@@ -106,11 +106,13 @@ jobs:
           set -e
           DIGEST=""
           for i in {1..10}; do
+            echo "Listing images in repository..."
+            aws ecr list-images --repository-name "$ECR_REPOSITORY" --region "$AWS_REGION"
             DIGEST=$(aws ecr describe-images \
               --repository-name "$ECR_REPOSITORY" \
-              --image-ids imageTag="$IMAGE_TAG" \
               --region "$AWS_REGION" \
-              --query 'imageDetails[0].imageDigest' --output text 2>/dev/null || true)
+              --query "imageDetails[?contains(imageTags, '$IMAGE_TAG')].imageDigest" \
+              --output text 2>/dev/null || true)
             if [ -n "$DIGEST" ] && [ "$DIGEST" != "None" ]; then
               echo "Found digest: $DIGEST"
               break
