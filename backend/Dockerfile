@@ -1,5 +1,5 @@
 # For Test
-FROM node:24.22.1 AS test
+FROM node:24.22.1-alpine AS test
 RUN apk update && apk upgrade --no-cache
 WORKDIR /app
 COPY package*.json ./
