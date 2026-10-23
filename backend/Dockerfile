@@ -1,5 +1,5 @@
 # For Test
-FROM node:22-alpine AS test
+FROM node:24.22.1 AS test
 RUN apk update && apk upgrade --no-cache
 WORKDIR /app
 COPY package*.json ./
@@ -8,7 +8,7 @@ COPY . .
 CMD ["npm", "test"]
 
 # For development
-FROM node:22-alpine AS development
+FROM node:24.22.1 AS development
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -17,7 +17,7 @@ COPY . .
 CMD ["npm", "run", "dev"]
 
 # For Build to compile TypeScript to JavaScript
-FROM node:22-alpine AS builder
+FROM node:24.22.1 AS builder
 RUN apk update && apk upgrade --no-cache
 WORKDIR /app
 COPY package*.json ./
@@ -26,7 +26,7 @@ COPY . .
 RUN npm run build
 
 # For Production 
-FROM node:22-alpine AS production
+FROM node:24.22.1 AS production
 RUN apk update && apk upgrade --no-cache
 WORKDIR /app
 
