@@ -163,6 +163,12 @@ Demonstrating administrative transparency and data-driven intelligence (Login as
     - 13:55 User
     - 15:52 Guest
 
+    - Key features demonstrated:
+        - Dashboard & Analytics
+        - Book Recommendation Service
+        - Book Management
+        - User Loan History & Filtering
+
 
 ## Table of Contents
 - [Introduction](#introduction)
