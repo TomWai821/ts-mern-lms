@@ -8,7 +8,7 @@
     "start": "node dist/index.js",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "typecheck": "tsc --noEmit",
-    "test": "jest --coverage --verbose",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage --verbose",
     "deploy": "npm run build"
   },
   "dependencies": {
