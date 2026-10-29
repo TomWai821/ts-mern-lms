@@ -43,11 +43,11 @@ This Information Technology Project (ITP) is a library management system enginee
     - 13:55 User
     - 15:52 Guest
 
-    - Key features demonstrated:
-        - Dashboard & Analytics
-        - Book Recommendation Service
-        - Book Management
-        - User Loan History & Filtering
+- Key features demonstrated:
+    - Dashboard & Analytics
+    - Book Recommendation Service
+    - Book Management
+    - User Loan History & Filtering
 
 
 ## Table of Contents
