@@ -1,6 +1,5 @@
-- The following walkthrough highlights the platform's core business workflows and domain-specific features
-
-- Administrative CRUD operations are available but intentionally omitted for brevity
+The following walkthrough highlights the platform's core business workflows and domain-specific features<br>
+Administrative CRUD operations are available but intentionally omitted for brevity
 
 <details>
 <summary>1. Dashboard & Analytics</summary>
@@ -69,7 +68,4 @@
     - Recommendation engine based on historical borrowing records
     - Google Books API integration
     - Rich book metadata display through a dedicated book details modal
-
-- Note
-    - The demo account includes sample borrowing records to showcase recommendation results immediately
 </details>

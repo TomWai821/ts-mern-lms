@@ -87,8 +87,19 @@ All contact information provided in this file is fictitious and used solely for 
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
-- Edit backend/.env: set at minimum: MONGO_URI, JWT_SECRET, PORT, ORIGIN_URI, GOOGLE_BOOKS_API_KEY, GOOGLE_BOOKS_BASE_URL, BACKEND_BASE_URL, STORAGE_TYPE
-- Edit frontend/.env: set at minimum: REACT_APP_BACKEND_BASE_URL, REACT_APP_MAIN_PAGE, 
+- Edit backend/.env (Set at minimum)
+    - MONGO_URI
+    - JWT_SECRET
+    - PORT
+    - ORIGIN_URI (frontend origin url)
+    - GOOGLE_BOOKS_API_KEY
+    - GOOGLE_BOOKS_BASE_URL
+    - BACKEND_BASE_URL
+    - STORAGE_TYPE
+
+- Edit frontend/.env (Set at minimum): 
+    - REACT_APP_BACKEND_BASE_URL
+    - REACT_APP_MAIN_PAGE
 
 **Notes about ports and hostnames** 
 - If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`)<br>
