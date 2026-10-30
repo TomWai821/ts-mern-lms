@@ -34,7 +34,7 @@ This Information Technology Project (ITP) is a library management system enginee
     - Initial request may experience a 3–5s delay due to AWS Lambda cold start (dormant environment)
 
 - For a detailed walkthrough and recommended evaluation flow, see:
-    - [Live Demo Guild](/doc/Documentation/LiveDemoGuild.md)
+    - [Live Demo Guild](/doc/Documentation/livedemo-guild.md)
 
 
 ## Video for demonstration
@@ -55,9 +55,10 @@ This Information Technology Project (ITP) is a library management system enginee
 - [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
 - [Features](#features)
-- [Technical Documentation](#technical-documentation)
 - [Core Business Logic Overview](#core-business-logic-overview)
-- [Product Evolution And Roadmap](#product-evolution-and-roadmap)
+- [Engineering Documentation](#engineering-documentation)
+- [Product Evolution and Roadmap](#product-evolution-and-roadmap)
+- [Product Limitations](#product-limitations)
 - [Installation](#installation)
 - [Contributing](#contributing)
 - [License](#license)
@@ -71,6 +72,9 @@ Developed as an Information Technology Project (ITP) to modernise traditional li
 
 - [Engineering Evolution](/doc/Documentation/technicalLearns/engineering-evolution.md)
     - Refactoring journey after graduation — layered architecture, backend-driven computation, and DevOps integration
+
+- [Technical Trade-offs & Architecture Decisions](/doc/Documentation/technicalLearns/technical-tradeoff.md)
+    - Evaluation of WebSocket vs CRUD Fetch, Lambda vs EC2, and Serverless vs Traditional deployment approaches
 
 - [Technical Learns](/doc/Documentation/technicalLearns/technical-learns.md)
     - Key engineering lessons — layered architecture, data consistency, type safety, dual-token security, frontend optimisation, and cloud-native DevOps
@@ -121,50 +125,23 @@ docker-compose -f compose.yaml up --build -d
 
 ## Technology Stack
 - **Frontend** 
-    - React
-    - Material-UI for styling (Leveraging CSS3 Standard)
-    - React-router-dom for SPA (Single Page Application) navigation
-    - chart.js + react-chartjs-2 for data visualisation
+    - React, Typescript, Material-UI, Chart.js
 
 - **Backend** 
-    - Node.js
-    - Express.js
-    - ws (WebSocket) for real-time data handling (local/docker deployment)
+    - Node.js, Express.js, WebSocket
 
 - **Database** 
-    - MongoDB with Mongoose (With Nodemon for development)
+    - MongoDB, Mongoose
 
-- **Image Data Handling** 
-    - Multer for file uploads
-    - FS for local image handling
-    - aws-sdk/client-s3 for s3 bucket image handling
+- **Cloud & DevOps**
+    - GitHub Actions, Jest, ESLint
+    - AWS (Lambda, ECR, S3, IAM, EventBridge)
 
-- **Data security** 
-    - JWT(JSON web token) for Authentication
-    - Bcrypt for password hashing
+- **Security** 
+    - JWT(JSON web token), Bcrypt
 
-- **Environment Configuration** 
-    - dotenv for managing environment variables
-
-- **Algorithms** 
-    - TF‑IDF for book recommendation service
-
-- **CI/CD & Code quality**
-    - GitHub Actions for CI/CD
-    - Jest for testing
-    - ESLint for linting
-
-- **Cloud Infrastructure (AWS)** 
-    - Amazon S3 (Bucket Scalable object storage) for persistent handling of user-uploaded images
-    - AWS Lambda (Serverless computing platform) for executing backend logic with auto-scaling capabilities
-    - Amazon ECR (Container registry) for storing and managing production-ready Docker images
-    - IAM (Identity and Access Management) for secure cross-service communication (Implementing the principle of least privilege (PoLP))
-    - Amazon API Gateway for handling RESTful API requests and enforcing CORS security policies
-    - EventBridge Scheduler (Serverless cron job orchestrator) triggering periodic business logic (e.g. daily fine calculations)
-
-- **Other**
-    - RESTful APIs with layered architecture and modular design
-    - Docker for containerisation and environment consistency
+- **Algorithm**
+    - TF-IDF Recommendation Service
 
 
 
@@ -186,38 +163,53 @@ docker-compose -f compose.yaml up --build -d
 
 
 
-## Technical Documentation
-For a detailed look at the system's engineering standards and design patterns, please refer to:
-- [Architecture](./doc/Documentation/technical/architecture.md)
-    - System diagrams, database schema, and design patterns
-- [UI Layout](./doc/Documentation/technical/ui-design.md)
-    - Component architecture and Role-Based UI rendering
-- [API Endpoints](./doc/Documentation/technical/api.md)
-    - Full RESTful API documentation and endpoint details
-- [Testing Strategy](./doc/Documentation/technical/testing.md)
-    - Unit/Integration test strategy and coverage reports
-- [CI/CD Workflow](./doc/Documentation/technical/ci-cd.md)
-    - Automation pipeline for testing and deployment
-
-
-
 ## Core Business Logic Overview
 This document outlines the implementation of the system's background automation, focusing on task scheduling and asynchronous execution stability
+
 - [Automated Logic](./doc/Documentation/businessLogic/automated-logic.md)
     - Managed background tasks using setTimeout, setInterval, and Promise.allSettled to ensure resilient, non-blocking process execution
+    
 - [TF-IDF Logic](./doc/Documentation/businessLogic/tf-idf-logic.md)
     - Implemented a custom text-mining algorithm to calculate term weights for an intelligent book recommendation system
+
 - [External Metadata Integration](./doc/Documentation/businessLogic/external-metadata.md)
     - Integrated Google Books API to automate book data retrieval and synchronize high-quality catalog metadata
+
 - [QR Code Handling (Frontend Only)](./doc/Documentation/businessLogic/qr-code-handling.md)
     - Implemented entirely on the frontend using a JSON-encoded object (username, userID) to facilitate real-time loan verification via interactive modals, eliminating unnecessary backend API overhead
 
 
 
-## Product Evolution And Roadmap
+## Engineering Documentation
+For a detailed look at the system's engineering standards and design patterns, please refer to:
+- [Architecture](./doc/Documentation/technical/architecture.md)
+    - System diagrams, database schema, and design patterns
+
+- [UI Layout](./doc/Documentation/technical/ui-design.md)
+    - Component architecture and Role-Based UI rendering
+
+- [API Endpoints](./doc/Documentation/technical/api.md)
+    - Full RESTful API documentation and endpoint details
+
+- [Testing Strategy](./doc/Documentation/technical/testing.md)
+    - Unit/Integration test strategy and coverage reports
+
+- [CI/CD Workflow](./doc/Documentation/technical/ci-cd.md)
+    - Automation pipeline for testing and deployment
+
+
+
+## Product Evolution and Roadmap
 This project focuses on high-standard engineering practices. Key highlights include:
-- [Improvements](./doc/Documentation/product/improvements.md)
-    - Optimised system performance and deployment efficiency through I/O Concurrency (Promise.allSettled), Multi-stage Dockerisation, and an Automated Serverless CI/CD Pipeline (GitHub Actions + AWS ECR/Lambda)
+- [Complete Improvements](./doc/Documentation/product/completed-improvements.md)
+    - Delivered engineering improvements across frontend, backend, infrastructure, and CI/CD, including route-based lazy loading, layered backend architecture, Dockerised environments, automated testing, and AWS-ready deployment workflows
+
+- [Planned Improvements](./doc/Documentation/product/planned-improvements.md)
+    - Future roadmap focused on production-grade security, transactional consistency, automated testing, and architectural scalability
+
+
+
+## Product Limitations
 - [Product Limitation](./doc/Documentation/product/limitations.md)
     - Strategic Limitations: A transparent analysis of current architectural trade-offs (3NF vs Performance), security considerations (XSS/JWT), and the future engineering roadmap
 

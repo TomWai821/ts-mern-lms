@@ -2,8 +2,7 @@
 These automated backend functions run silently in the background and are difficult to showcase in a live demo. Instead, we present annotated source code images and accompanying logic descriptions to clearly explain their purpose and behavior<br>
 
 **Remarks**
-- The following function located in "backend/src/detectRecord.ts"
-
+- The following function located in backend/src/detectRecord.ts
 
 ***1. Detect Record Functions***<br>
 ### TasksList
@@ -67,6 +66,7 @@ To ensure consistent daily execution within a Serverless cloud environment:
     - Stateless Resilience
         - Bypasses AWS Lambda's execution freezing by using external infrastructure to "wake up" the service<br>
           (Ensure tasks run reliably even if the instance was recently idle)
+
     - Security & Validation
         - Implemented a dedicated controller (AWSTaskDetect) that enforces payload integrity checks (source/task verification)<br>
           (Prevent unauthorised external execution of sensitive administrative tasks)
@@ -135,13 +135,15 @@ A robust background service designed for recurring calculation and dynamic scali
     - **Atomic State Validation**
         - Implements a pre-update state check (fineAmount !== finalAmount) to bypass redundant database writes<br>
           (This optimization reduces database I/O overhead by over 95%, only executing updates during actual daily amount transitions)
+
     - **Asynchronous Parallelism**
         - Replaced traditional synchronous loops with Promise.allSettled to achieve concurrent database updates<br>
           (This significantly increases system throughput, ensuring rapid batch processing even under heavy loan record volumes)
           
-**Resilient Data Workflow & Error Handling**
+- **Resilient Data Workflow & Error Handling**
     - **Clean Data Transformation**
         - Leverages flatMap to filter and transform record streams in a single pass, proactively pruning null or invalid data from the asynchronous pipeline to prevent runtime exception
+
     - **Granular Failure Tracking**
         - Utilises allSettled results to implement non-blocking error logging<br>
           (This ensures the failure of a single update does not jeopardize the entire batch, maintaining High Availability (HA) of the service)
@@ -149,6 +151,7 @@ A robust background service designed for recurring calculation and dynamic scali
 - **Financial Safeguards (Business Logic Integrity)**
     - **Debt Capping**
         - Enforces a maximum threshold of $130 (via Math.min) to prevent runaway debt accumulation
+
     - **Anomaly Protection**
         - Incorporates Math.max(0, ...) as a safety guard to prevent illogical negative-day calculations in edge-case data scenarios
 
@@ -163,6 +166,7 @@ This background task manages the automatic restoration of user accounts once the
 - **Status Synchronisation**: Performs a dual-update process to ensure data consistency:
     - **User Record**
         - Reverts the user's status from "Suspended" back to "Normal"
+
     - **Suspension Log**
         - Marks the specific suspension entry as "Unsuspend" and timestamps the exact unSuspendDate
     

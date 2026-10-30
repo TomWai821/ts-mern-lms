@@ -49,7 +49,7 @@ export const usePageConfigData = (data: any) =>
         const endIndex = startIndex + paginationValue[tabValue];
 
         const paginatedData = data[tabValue].slice(startIndex, endIndex);
-        const countPage = Math.ceil(data.length / paginationValue[tabValue]);
+        const countPage = Math.ceil(total / paginationValue[tabValue]);
 
         return {total, countPage, paginatedData};
     }

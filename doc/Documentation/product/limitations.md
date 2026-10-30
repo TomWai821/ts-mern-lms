@@ -1,7 +1,7 @@
 ## Product Limitation
 
 ### Architecture
-- **3NF-style Schema** 
+- **3NF Schema** 
     - Adopted early to accelerate prototyping (Note: This increases cross‑collection lookups, complicating server‑side RBAC and raising runtime costs)
     
 - **Query Strategy**
@@ -10,16 +10,13 @@
 
 
 ### Frontend
-- **Separation of Concerns:** 
-    - Component views and controllers are currently coupled (Appropriate for demo scope; requires refactoring for production maintenance)
-
-- **Performance** 
+- **Production Optimisation Still Pending** 
     - No production-grade optimisations (e.g. component memo, advanced caching)
 
 
 
 ### Backend
-- **Testing** 
+- **Testing Coverage** 
     - Integration test coverage is constrained by project scope (Core authentication flows are validated)
 
 - **Error Handling** 
@@ -28,23 +25,18 @@
 
 
 ### Hardware Dependencies
-- **Scanner Requirement** 
-    - Requires a physical scanner or camera for seamless QR input
-
-- **Manual Fallback** 
-    - In non-scanner environments, manual injection of the `authToken` is required to simulate the scanning trigger
+- **QR Code Scanner Requirement** 
+    - QR-based workflows currently require either a physical scanner or manual token injection during local testing
 
 
 
 ### Security
-- **Token Storage** 
-    - `authToken` is currently in Client-side storage to facilitate manual testing in non-scanner environments (Standard production requires HttpOnly Cookies)
-
-- **Vulnerability** 
-    - Susceptible to client-side script access (XSS risk), this trade-off is accepted specifically for the **Initial Prototype/Demo phase**
+- **Client-side Token Storage** 
+    - Authentication tokens are temporarily stored client-side to simplify demo and scanner-free testing workflows
+    - This introduces XSS exposure risks and would be replaced by HttpOnly cookies in a production deployment
 
 
 
 ### Summary
-- These limitations reflect the **demo-oriented nature** of the project
-- Core flows are validated, while production-grade features (scaling, unified error handling) are intentionally deferred to focus on prototyping efficiency and recruiter clarity
+- These limitations reflect deliberate trade-offs made to prioritise prototyping speed, architectural experimentation, and demonstration clarity
+- Core business workflows are fully functional, while production-grade concerns such as advanced security, scalability, and comprehensive testing remain part of the long-term roadmap

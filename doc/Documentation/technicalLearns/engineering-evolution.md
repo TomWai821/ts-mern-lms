@@ -2,7 +2,7 @@
 After graduation, I refactored the entire system to align with industry-standard engineering principles, focusing on Decoupling, Resilience, and Cloud-Native scalability:
 
 1. Architectural Overhaul: **Layered Decoupling**
-    - Transitioned from a monolithic script to a Layered Architecture (Router-Middleware-Controller-Service-Model)
+    - Transitioned from a fat controller to a Layered Architecture (Router-Middleware-Controller-Service-Model)
     
     - **Impact**
         - Isolated business logic from transport and persistence layers<br>
@@ -31,3 +31,14 @@ After graduation, I refactored the entire system to align with industry-standard
     - **Impact**
         - Achieved high-fidelity environment parity between local development and AWS Serverless runtime
         - Effectively eliminating "it works on my machine" issues during the migration from PaaS to AWS
+
+
+
+4. Frontend Standardisation: **Metadata-Driven UI Configuration**
+    - Centralised table definitions, tab structures, filter options, and pagination settings into shared [TypeScript configuration modules](../../../frontend/src/Data/TableData.ts)
+    - Extracted reusable pagination and tab-navigation behaviour into [custom React hooks](../../../frontend/src/customhook/PageConfig.ts)
+
+    - **Impact**
+        - Reduced duplicated page-level state management logic across administration interfaces
+        - Established a metadata-driven UI pattern (Allowing new management pages to reuse existing table, tab, and pagination configurations with minimal code changes)
+        - Improved consistency and maintainability by separating UI configuration from page-level business logic
