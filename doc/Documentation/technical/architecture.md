@@ -5,11 +5,11 @@
 Figure 1 - Deployment Architecture Diagram<br>
 
 - The production stack leverages managed Cloud/SaaS solutions for high availability and performance:
-  - Frontend: Vercel
-  - Backend: AWS Lambda + ECR
-  - Storage: Amazon S3
-  - Database: MongoDB Atlas
-  - Automation: EventBridge Scheduler
+  - **Frontend**: Vercel
+  - **Backend**: AWS Lambda + ECR
+  - **Storage**: Amazon S3
+  - **Database**: MongoDB Atlas
+  - **Automation**: EventBridge Scheduler
 
 
 

@@ -28,7 +28,7 @@ services:
       retries: 5
     volumes: 
       - db-data:/data/db
-      - ./backend/MongoDBSchema:/docker-entrypoint-initdb.d
+      - ./backend/MongoDBSeed:/docker-entrypoint-initdb.d
 
 volumes:
   db-data:

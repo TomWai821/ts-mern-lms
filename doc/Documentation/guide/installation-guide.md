@@ -51,7 +51,7 @@ npm start
 
 ### MongoDB Seed Data
 - Demo data is located in: 
-    - [MongoDB Schema Directory](../../../backend/MongoDBSchema)
+    - [MongoDB Seed Directory](../../../backend/MongoDBSeed)
 
 - **Docker**
     - Seed data is automatically imported when the MongoDB volume is created for the first time.
@@ -121,4 +121,4 @@ docker compose up --build -d
     - If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
 
     - Always include protocol and port for URLs
-<details>
+</details>
