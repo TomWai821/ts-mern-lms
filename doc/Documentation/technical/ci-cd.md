@@ -23,11 +23,12 @@ Figure 1 - CI/CD process overview <br>
 - Frontend deployment is triggered through Vercel Deploy Hooks only after backend deployment succeeds
 - MongoDB Atlas and Amazon S3 are integrated as managed cloud services for data and asset storage
 
-
+<hr>
 
 ### Security & Reliability
 - GitHub Actions authenticates with AWS using OIDC-based AssumeRole authentication, eliminating long-lived access keys
 - CI/CD and Lambda execution responsibilities are separated into dedicated IAM roles following the principle of least privilege
+
 
 
 ### Design Decisions
@@ -39,7 +40,7 @@ Figure 1 - CI/CD process overview <br>
     - Replaced long-lived AWS access keys with GitHub OIDC AssumeRole authentication
     - Eliminated credential storage within CI/CD pipelines while aligning with AWS security best practices
 
-
+<hr>
 
 ### Remarks
 - Documentation-only changes (README, doc/**) are excluded to avoid unnecessary pipeline executions

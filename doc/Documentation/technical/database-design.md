@@ -55,7 +55,7 @@ Figure 1 - ERD of Library Management Plafrotm
 | finesPaid	    | String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
 
 
-Remarks:
+### Remarks
 - Every collection contains a MongoDB ObjectId (_id) as its primary identifier
 - Relationships between collections are established through referenced ObjectId fields rather than embedded documents
 - Supporting collections (Author, Genre, Publisher and Language) are designed to minimise data duplication and simplify maintenance

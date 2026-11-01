@@ -52,7 +52,7 @@ Figure 3 - Backend Process Flow Diagram<br>
 - Complex operations such as TF-IDF recommendations, image processing and query generation are delegated to dedicated services<br>
   (While MongoDB persistence is managed through Mongoose models)
 
-
+<hr>
 
 ### Architectural Characteristics
 - Serverless architecture based on AWS Lambda
@@ -60,7 +60,7 @@ Figure 3 - Backend Process Flow Diagram<br>
 - JWT-based authentication and platform-managed secret storage
 - Horizontal scalability through managed cloud services
 
-
+<hr>
 
 ### Key Engineering Decisions & Trade-offs
 - **JWT Authentication**

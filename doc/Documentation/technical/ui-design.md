@@ -89,7 +89,7 @@ Image 5.2 - QR Code Modal<br>
 Image 5.3 - Edit Profile Data Modal (Username)<br>
 
 <img src="../../Image/UILayout/EditProfileDataModal-password.png" style="width:40%;"/><br>
-Image 4=5.4 - Edit Profile Data Modal (Password)<br>
+Image 5.4 - Edit Profile Data Modal (Password)<br>
 
 #### Description
 - Users can review their account information and access their personal QR code

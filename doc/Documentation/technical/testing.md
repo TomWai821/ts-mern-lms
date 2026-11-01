@@ -49,7 +49,9 @@ npm run test
 ### Test Scope
 - The following test case are using docker test compose (Jest)
 
-#### Frontend Unit Tests
+<details>
+<summary>1. Frontend Unit Tests</summary>
+
 - Covered scenarios include:
     - User registration
     - Duplicate account registration
@@ -66,10 +68,13 @@ npm run test
 
 - **Source Code Files**
     - [Frontend Test Case Directory](../../../frontend/src/__tests__/)
+</details>
 
 
 
-#### Backend Integration Tests
+<details>
+<summary>2. Backend Integration Tests</summary>
+
 - Covered scenarios include:
     - **User Management**
         - Account registration
@@ -94,3 +99,4 @@ npm run test
 
 - **Source Code Files**
     - [Backend Test Case Directory](../../../backend/__tests__/)
+</details>

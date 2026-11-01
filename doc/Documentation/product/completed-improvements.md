@@ -19,38 +19,34 @@
     - Eliminated redundant get API calls after every Create / Update / Delete (CUD) action
     - Leveraged WebSocket events bound to a reducer to update state directly in real time (with useWebSocket custom hook)<br>
       
-
+<hr>
 
 ### Backend Side
-1. **Modularised backend routes for cleaner structure**
+- **Modularised backend routes for cleaner structure**
     - Decoupled monolithic routes into modularised controllers, implementing Middleware for centralised authentication and validation to ensure DRY (Don't Repeat Yourself) principles
 
-2. **Automated Library Compliance & Fine Processing**
+- **Automated Library Compliance & Fine Processing**
     - Engineered a custom task scheduler to automate mission-critical daily operations (Expired Loans, Fines Calculation, Suspend Records) at UTC+8 midnight
 
-3. **Pipeline Filtering**
+- **Pipeline Filtering**
    - Engineered a multi-stage Middleware Pipeline for granular request filtering
-   - Decoupled Type Validation, Data Integrity checks, and Query Sanitisation into discrete, reusable stages to enforce strict Domain Logic before reaching the controller layer<Br>
+   - Decoupled Type Validation, Data Integrity checks, and Query Sanitisation into discrete, reusable stages to enforce strict Domain Logic before reaching the controller layer<br>
      (Ref: [ContactValidationMiddleware.ts](../../../backend/src/middleware/Book/ContactValidationMiddleware.ts), [DefinitionValidationMiddleware.ts](../../../backend/src/middleware/Book/DefinitionValidationMiddleware.ts))
 
-4. **Hybrid Image Storage Engine**
+- **Hybrid Image Storage Engine**
     - Engineered a dual-strategy storage layer that dynamically switches between Local FS and Amazon S3 via environment toggles
     - This decouples business logic from infrastructure<br>
       (Ensure a zero-dependency local setup while optimising for the Stateless architecture of AWS Lambda)<br>
       (Ref: [Image Service Directory](../../../backend/src/service/image/))
 
-
+<hr>
 
 ### Infrastructure and Security
-1. **Multi-Environment Containerization (Docker)**
+- **Multi-Environment Containerization (Docker)**
     - Implemented Dockerization with dedicated configurations for different stages<br>
       (docker-compose.yaml for production-ready consistency and docker-compose.test.yaml for automated testing workflows)<br>
 
-2. **Secure Configuration Management (dotenv)**
-   - Implemented Environment Variable management using dotenv to decouple sensitive configuration from the source code<br>
-     (It enhanced system security by protecting API keys, Database URIs, and JWT secrets, facilitating seamless transitions between development and production environments)
-
-
+<hr>
 
 ### CI/CD
 1. **Automated Quality Gates** (GitHub Actions)

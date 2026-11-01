@@ -18,7 +18,7 @@
     - Frequent fetch retained as a fallback pattern in serverless contexts (Lambda)<br>
      (Where long-lived connections are unsuitable)
 
-
+<hr>
 
 ### Cloud backend architecture trade-off - Lambda (Serverless) vs EC2
 - **Lambda (Serverless) Advantages**

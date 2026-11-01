@@ -12,6 +12,7 @@ After graduation, I refactored the entire system to align with industry-standard
 - **Key Lesson**
     - Separation of concerns improves maintainability, testing, and long-term scalability by isolating business logic from transport and persistence layers
 
+<hr>
 
 ### External API Integration Refactoring
 - **Problem**
@@ -27,6 +28,7 @@ After graduation, I refactored the entire system to align with industry-standard
 - **Key Lesson**
     - External service integrations should be mediated through backend services whenever security, request validation, response transformation, or future extensibility are required
 
+<hr>
 
 ### DevOps & Deployment Evolution
 - **Problem**
@@ -38,6 +40,7 @@ After graduation, I refactored the entire system to align with industry-standard
 - **Key Lesson**
     - Automated validation and consistent runtime environments significantly reduce environment-specific failures
 
+<hr>
 
 ### Security Evolution
 - **Challenge**
@@ -49,6 +52,7 @@ After graduation, I refactored the entire system to align with industry-standard
 - **Key Lesson**
     - Security requirements should be reflected directly in business workflows rather than treated as a separate concern
 
+<hr>
 
 ### Frontend Standardisation
 - **Problem**
@@ -60,6 +64,7 @@ After graduation, I refactored the entire system to align with industry-standard
 - **Key Lesson**
     - Configuration-driven design reduces duplication and improves long-term maintainability
 
+<hr>
 
 ### Background Job Evolution
 - **Problem**
