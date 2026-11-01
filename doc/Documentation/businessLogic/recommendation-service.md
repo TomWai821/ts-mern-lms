@@ -176,11 +176,11 @@ Figure 2. Metadata Normalisation and Corpus Construction
 
 
 #### Discovery vs Loyalty Balance
-- The recommendation model adopts a hybrid scoring strategy:
+- The recommendation model adopts a hybrid scoring strategy
     - 70% Content Similarity
     - 30% Genre Preference
 
-- This weighting allows the engine to recommend:
+- This weighting allows the engine to recommend
     - New books with similar characteristics
     - Books from genres frequently selected by the user
 
