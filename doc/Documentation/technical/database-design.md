@@ -1,6 +1,6 @@
-### Database Design
+## Database Design
 
-#### Entity-Relational Diagram<br>
+### Entity-Relational Diagram<br>
 <img src="../../Image/Diagrams/EntityRelationDiagram-LibraryManagementSystem.png" style="width:75%;"/><br>
 Figure 1 - ERD of Library Management Plafrotm
 
@@ -12,7 +12,7 @@ Figure 1 - ERD of Library Management Plafrotm
 - Figure 1 illustrates the relationships between the primary entities within the Library Management System
 
 
-#### Book Collection
+### Book Collection
 | Key Attribute | Type     | Description                                                              |
 | ------------- | ---------| ------------------------------------------------------------------------ |
 | image         | Object   | Stores book cover image details, including URL and filename              |
@@ -27,7 +27,7 @@ Figure 1 - ERD of Library Management Plafrotm
 
 
 
-#### User Collection
+### User Collection
 | Key Attribute | Type    | Description                                   |
 | ------------- | ------- | --------------------------------------------- |
 | Username      | String  | The unique display name chosen by the user    |
@@ -41,7 +41,7 @@ Figure 1 - ERD of Library Management Plafrotm
 
 
 
-#### BookLoaned Collection
+### BookLoaned Collection
 
 | Key Attribute | Type     | Description                                                                                          |
 | ------------- | -------- | ---------------------------------------------------------------------------------------------------- |

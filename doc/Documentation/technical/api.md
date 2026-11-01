@@ -1,6 +1,6 @@
 ## API Overview
 
-#### Authentication APIs
+### Authentication APIs
 - JWT-based authentication is used for user identity verification and access control
 
 | Endpoint                | Purpose             |
@@ -10,7 +10,7 @@
 
 
 
-#### User Management APIs
+### User Management APIs
 | Endpoint               | Purpose                  |
 | ---------------------- | ------------------------ |
 | GET /api/user/UserData | Retrieve user data       |
@@ -20,7 +20,7 @@
 
 
 
-#### Book Management APIs
+### Book Management APIs
 | Endpoint                | Purpose                 |
 | ----------------------- | ----------------------- |
 | GET /api/book/record    | Retrieve book records   |
@@ -30,7 +30,7 @@
 
 
 
-#### Loan Management APIs
+### Loan Management APIs
 | Endpoint                    | Purpose               |
 | --------------------------- | --------------------- |
 | GET /api/book/loanRecord	   | Retrieve loan records |
@@ -40,7 +40,7 @@
 
 
 
-#### Favourite Management APIs
+### Favourite Management APIs
 | Endpoint                   | Purpose                  |
 | -------------------------- | ------------------------ |
 | GET /api/book/favourite	  | Retrieve user favourites |
@@ -49,14 +49,14 @@
 
 
 
-#### External Integration APIs
+### External Integration APIs
 | Endpoint               | Purpose                  |
 | ---------------------- | ------------------------ |
 | GET /api/book/external | Google Books integration |
 
 
 
-#### Supporting Data APIs
+### Supporting Data APIs
 | Category              | Resources          |
 | --------------------- | ------------------ |
 | Definition Management | Genre, Language    |
@@ -65,7 +65,7 @@
 
 
 
-#### Standard Response Format
+### Standard Response Format
 - Success
    - Most endpoints follow a consistent response structure:
       ```json

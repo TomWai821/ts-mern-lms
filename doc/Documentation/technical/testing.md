@@ -8,36 +8,41 @@
 ### Test Environment Configuration
 <details>
 <summary>Docker test compose</summary>
-    - Build test containers
-    ```bash
-    docker compose -f compose.test.yaml build
-    ```
-    - Start test environment
-    ```bash
-    docker-compose -f docker-compose.test.yml up
-    ```
-    - Run Jest tests inside container  
-    ```bash
-    docker exec backend npm test
-    ```
+
+- Build test containers
+```bash
+docker compose -f compose.test.yaml build
+```
+
+- Start test environment
+```bash
+docker-compose -f docker-compose.test.yml up
+```
+
+- Run Jest tests inside container  
+```bash
+docker exec backend npm test
+```
 </details>
 
 <details>
 <summary>Local test (Jest)</summary>
-    - Start local server
-        - For backend side
-        ```bash
-        npm run dev
-        ```
-        - For frontend side:
-        ```bash
-        npm run start
-        ``` 
 
-    - Run tests locally  
-    ```bash
-    npm run test
-    ```
+### Start local server
+- For backend side
+```bash
+npm run dev
+```
+
+- For frontend side:
+```bash
+npm run start
+``` 
+
+###  Run tests locally  
+```bash
+npm run test
+```
 </details>
 
 

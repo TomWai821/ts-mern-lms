@@ -1,6 +1,6 @@
 ## Completed Improvements
 
-#### Frontend Side
+### Frontend Side
 1. **Performance Optimisation (Route-based Lazy Loading)**
     - Implemented React Lazy & Suspense for Page Component Lazy Loading, significantly reducing the initial bundle size and improving the First Contentful Paint (FCP)
 
@@ -21,7 +21,7 @@
       
 
 
-#### Backend Side
+### Backend Side
 1. **Modularised backend routes for cleaner structure**
     - Decoupled monolithic routes into modularised controllers, implementing Middleware for centralised authentication and validation to ensure DRY (Don't Repeat Yourself) principles
 
@@ -41,7 +41,7 @@
 
 
 
-#### Infrastructure and Security
+### Infrastructure and Security
 1. **Multi-Environment Containerization (Docker)**
     - Implemented Dockerization with dedicated configurations for different stages<br>
       (docker-compose.yaml for production-ready consistency and docker-compose.test.yaml for automated testing workflows)<br>
@@ -52,10 +52,11 @@
 
 
 
-#### CI/CD
+### CI/CD
 1. **Automated Quality Gates** (GitHub Actions)
     - Automatically triggers Jest test suites and ESLint on every functional Push and Pull Request
-      (Implemented Path-based Filtering to bypass CI/CD triggers for non-documentation changes (e.g. Markdown files, Images), ensuring CI resources are focused only on code-related regressions)<br>
+    - Implemented Path-based Filtering to bypass CI/CD triggers for non-documentation changes (e.g. Markdown files, Images)<br>
+      (It ensures CI resources are focused only on code-related regressions)
   
 2. **Security & Secret Orchestration** (OWASP Compliance)
     - Decoupled sensitive credentials (JWT Secrets, MongoDB URIs) from the source code using Platform Environment Variables and GitHub Action Secrets<br>

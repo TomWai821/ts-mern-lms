@@ -1,8 +1,6 @@
 ## System Design
 
-### Sequence Diagrams
-
-- **Authentication Flow**
+### Authentication Flow
 <img src="../../Image/Diagrams/LoginSequenceDiagram.png" style="width:90%;"/><br>
 Figure 1 - User Login Sequence Diagram
 
@@ -11,7 +9,7 @@ Figure 1 - User Login Sequence Diagram
 
 
 
-- **External Service Integration Flow**
+### External Service Integration Flow
 <img src="../../Image/Diagrams/SequenceDiagramForGetDataFromGoogleBook.png" style="width:90%;"/><br>
 Figure 2 - Google Books Integration Sequence Diagram
 
@@ -20,7 +18,7 @@ Figure 2 - Google Books Integration Sequence Diagram
     
 
 
-- **Feature Workflow**
+### Feature Workflow
 <img src="../../Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
 Figure 3 - QR Code Generation Sequence Diagram
 

@@ -1,7 +1,7 @@
 ## The Engineering Evolution
 After graduation, I refactored the entire system to align with industry-standard engineering principles, focusing on Decoupling, Resilience, and Cloud-Native scalability:
 
-### 1. Architecture Overhaul
+### Architecture Overhaul
 - **Problem**
     - The original implementation concentrated request handling and business logic within controllers, making the codebase harder to maintain as features expanded
 
@@ -13,7 +13,7 @@ After graduation, I refactored the entire system to align with industry-standard
     - Separation of concerns improves maintainability, testing, and long-term scalability by isolating business logic from transport and persistence layers
 
 
-### 2. External API Integration Refactoring
+### External API Integration Refactoring
 - **Problem**
     - Google Books API requests were originally performed directly from the frontend to improve iteration speed during early development
 
@@ -28,7 +28,7 @@ After graduation, I refactored the entire system to align with industry-standard
     - External service integrations should be mediated through backend services whenever security, request validation, response transformation, or future extensibility are required
 
 
-### 3. DevOps & Deployment Evolution
+### DevOps & Deployment Evolution
 - **Problem**
     - Local development, testing, and deployment environments frequently drifted apart
 
@@ -39,7 +39,7 @@ After graduation, I refactored the entire system to align with industry-standard
     - Automated validation and consistent runtime environments significantly reduce environment-specific failures
 
 
-### 4. Security Evolution
+### Security Evolution
 - **Challenge**
     - Certain loan operations required validation from multiple parties
 
@@ -50,7 +50,7 @@ After graduation, I refactored the entire system to align with industry-standard
     - Security requirements should be reflected directly in business workflows rather than treated as a separate concern
 
 
-### 5. Frontend Standardisation
+### Frontend Standardisation
 - **Problem**
     - Administration pages contained duplicated state management and UI configuration logic
 
@@ -61,7 +61,7 @@ After graduation, I refactored the entire system to align with industry-standard
     - Configuration-driven design reduces duplication and improves long-term maintainability
 
 
-### 6. Background Job Evolution
+### Background Job Evolution
 - **Problem**
     - AWS Lambda cannot maintain continuously running background schedulers due to its stateless execution model
 

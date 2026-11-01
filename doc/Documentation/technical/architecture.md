@@ -2,7 +2,7 @@
 
 ### Production Architecture
 <img src="../../Image/Diagrams/ArchitectureDiagram_CD.png" style="width:90%;"/><br>
-Figure 3 - Deployment Architecture Diagram<br>
+Figure 1 - Deployment Architecture Diagram<br>
 
 - The production stack leverages managed Cloud/SaaS solutions for high availability and performance:
   - Frontend: Vercel
@@ -15,7 +15,7 @@ Figure 3 - Deployment Architecture Diagram<br>
 
 ### Development Architecture
 <img src="../../Image/Diagrams/ArchitectureDiagram_Development.png" style="width:90%;"/><br>
-Figure 1 - Development Architecture Diagram<br>
+Figure 2 - Development Architecture Diagram<br>
 
 **Development Infrastructure**
 - Environment Parity
@@ -34,7 +34,7 @@ Figure 1 - Development Architecture Diagram<br>
 
 ### Backend Architecture
 <img src="../../Image/Diagrams/ProcessFlowDiagram.png" style="width:90%;"/><br>
-Figure 2 - Backend Process Flow Diagram<br>
+Figure 3 - Backend Process Flow Diagram<br>
 
 | Layer            | Responsibility	             |
 | ---------------- | ----------------------------|

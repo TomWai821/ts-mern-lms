@@ -58,7 +58,7 @@ Image 3.5 - Pie Chart tooltip<br>
 - Dashboard tabs provide summaries for users, books, and loan/fine records
 - Interactive pie charts help librarians quickly identify important trends and exceptions
 - Tooltips display category descriptions, values, and percentage distributions
-<details>
+</details>
 
 
 

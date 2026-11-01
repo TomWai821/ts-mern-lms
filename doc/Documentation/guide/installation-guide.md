@@ -1,6 +1,6 @@
 ## Installation Guide
 
-#### Prerequisites
+### Prerequisites
 - Before starting, ensure the following software is installed:
     - Docker Desktop
     - Node.js (for local development)
@@ -9,7 +9,7 @@
 
 
 
-#### Environment Variables
+### Environment Variables
 - Environment templates are provided:
     - cp backend/.env.example backend/.env
     - cp frontend/.env.example frontend/.env
@@ -18,7 +18,7 @@
 
 
 
-#### Docker Setup
+### Docker Setup
 - The Docker environment is the recommended development setup and closely mirrors the project's intended development workflow
 
 - Start the entire development environment:
@@ -32,7 +32,7 @@ docker compose -f compose.yaml up --build -d
 
 
 
-#### Local Development
+### Local Development
 - Backend
 ```Shell
 cd backend
@@ -49,7 +49,7 @@ npm start
 
 
 
-#### MongoDB Seed Data
+### MongoDB Seed Data
 - Demo data is located in:
     - backend/MongoDBSchema/
 
@@ -61,7 +61,7 @@ npm start
 
 
 
-#### Volume Reset
+### Volume Reset
 - To completely reset demo data:
 ```Shell
 docker compose down -v
@@ -72,7 +72,7 @@ docker compose up --build -d
 
 
 
-#### Troubleshooting
+### Troubleshooting
 - **Seed data not imported**
     - Reset Docker volumes:
 

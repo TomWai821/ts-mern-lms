@@ -1,6 +1,6 @@
 ## Technical Tradeoff
 
-### 1. Real-time Synchronisation – WebSocket vs CRUD Fetch
+### Real-time Synchronisation – WebSocket vs CRUD Fetch
 - **WebSocket Advantages**
     - Persistent connection enables instant push updates from server
     - Lower network overhead compared to repeated polling/fetch
@@ -20,7 +20,7 @@
 
 
 
-### 2. Cloud backend architecture trade-off - Lambda (Serverless) vs EC2
+### Cloud backend architecture trade-off - Lambda (Serverless) vs EC2
 - **Lambda (Serverless) Advantages**
     - Automatic scaling with no server management required
     - Pay-per-use model, ideal for event-driven or intermittent workloads

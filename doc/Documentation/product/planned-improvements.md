@@ -1,6 +1,6 @@
-### Planned Improvements
+## Planned Improvements
 
-#### Frontend Side
+### Frontend Side
 1. **System-wide Hook Migration**
     - Transition the remaining View components to the Custom Hook pattern to standardise state management and logic separation across the entire application<br>
       (Ref: [customhook Directory](../../../frontend/src/customhook))
@@ -12,7 +12,7 @@
 
 
 
-#### Backend Side
+### Backend Side
 1. **Server-side RBAC (Role-Based Access Control)**
     - Implement server-side role validation for all API requests to ensure data integrity (currently handled on the frontend for demo scope)
     
@@ -29,7 +29,7 @@
 
 
 
-#### Infrastructure and Security
+### Infrastructure and Security
 1. **Secure QR Code via Redis & UUID**
     - Map sessions to short-lived UUIDs in **Redis** with **TTL** to prevent `authToken` exposure and token reuse
     
@@ -38,7 +38,7 @@
 
 
 
-#### CI/CD
+### CI/CD
 1. **Automated System Testing (E2E)**
     - Implementing End-to-End (E2E) / System Testing to simulate real-world user journeys from Frontend to Database<br>
       (It provides a higher dimension of verification beyond isolated units, ensuring the entire integrated stack functions correctly as a single system)
