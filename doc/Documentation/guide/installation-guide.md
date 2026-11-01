@@ -33,14 +33,14 @@ docker compose -f compose.yaml up --build -d
 
 
 ### Local Development
-- Backend
+- **Backend**
 ```Shell
 cd backend
 npm install
 npm run dev
 ```
 
-- Frontend
+- **Frontend**
 ```Shell
 cd frontend
 npm install
@@ -50,8 +50,8 @@ npm start
 
 
 ### MongoDB Seed Data
-- Demo data is located in:
-    - backend/MongoDBSchema/
+- Demo data is located in: 
+    - [MongoDB Schema Directory](../../../backend/MongoDBSchema)
 
 - **Docker**
     - Seed data is automatically imported when the MongoDB volume is created for the first time.
@@ -100,7 +100,7 @@ docker compose up --build -d
 <details>
 <summary>Environment Configuration Reference</summary>
 
-1. Expected URLs
+1. **Expected URLs**
     | Variable                    | Value                    |
     | --------------------------- | ------------------------ |
     | ORIGIN_URI                  | http://localhost:3000    |
@@ -114,7 +114,7 @@ docker compose up --build -d
         - REACT_APP_WEB_SOCKET_SERVER can be ignored for cloud - Lambda deployment
 
 
-2. Ports and hostnames
+2. **Ports and hostnames**
     - If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`)<br>
       (Docker Compose maps container ports to the host automatically)
 

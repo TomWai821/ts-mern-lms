@@ -66,7 +66,7 @@
 
 
 ### Standard Response Format
-- Success
+- **Success**
    - Most endpoints follow a consistent response structure:
       ```json
       {
@@ -77,7 +77,7 @@
 
    - Actual response payload names may vary depending on the resource type (e.g. foundBook, foundUser or foundLoanBook)
 
-- Failure
+- **Failure**
    ```json
    {
       "success": false,

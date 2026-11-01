@@ -25,6 +25,8 @@ docker exec backend npm test
 ```
 </details>
 
+
+
 <details>
 <summary>Local test (Jest)</summary>
 
@@ -44,6 +46,7 @@ npm run start
 npm run test
 ```
 </details>
+
 
 
 ### Test Scope
