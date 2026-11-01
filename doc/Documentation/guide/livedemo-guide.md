@@ -1,5 +1,6 @@
-The following walkthrough highlights the platform's core business workflows and domain-specific features<br>
-Administrative CRUD operations are available but intentionally omitted for brevity
+### Live Demo Guide
+- The following walkthrough highlights the platform's core business workflows and domain-specific features
+- Administrative CRUD operations are available but intentionally omitted for brevity
 
 <details>
 <summary>1. Dashboard & Analytics</summary>

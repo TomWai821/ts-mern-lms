@@ -6,7 +6,18 @@
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-000000?logo=jsonwebtokens&logoColor=white)
 <br>
-This Information Technology Project (ITP) is a library management system engineered to implement industry-standard software engineering best practices, transforming academic requirements into a scalable, production-grade cloud-native application
+This Information Technology Project (ITP) is a library management system engineered to implement industry-standard software engineering best practices, transforming academic requirements into a scalable, cloud-native application inspired by modern software engineering practices
+
+
+
+## Architecture Highlights
+- React + TypeScript frontend with reusable hooks and role-aware UI rendering
+- Express.js backend following a layered architecture (Router → Middleware → Controller → Service → Model)
+- MongoDB Atlas persistence with Mongoose-based data access
+- AWS Lambda serverless deployment with Amazon ECR container images
+- GitHub Actions CI/CD pipeline with automated testing and immutable deployments
+- JWT authentication with frontend route guards and bcrypt password hashing
+
 
 
 ## Live Demo
@@ -34,7 +45,7 @@ This Information Technology Project (ITP) is a library management system enginee
     - Initial request may experience a 3–5s delay due to AWS Lambda cold start (dormant environment)
 
 - For a detailed walkthrough and recommended evaluation flow, see:
-    - [Live Demo Guild](/doc/Documentation/livedemo-guild.md)
+    - [Live Demo Guide](/doc/Documentation/guide/livedemo-guide.md)
 
 
 ## Video for demonstration
@@ -54,9 +65,9 @@ This Information Technology Project (ITP) is a library management system enginee
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
-- [Features](#features)
+- [Key Features](#key-features)
 - [Core Business Logic Overview](#core-business-logic-overview)
-- [Engineering Documentation](#engineering-documentation)
+- [Technical Documentation](#technical-documentation)
 - [Product Evolution and Roadmap](#product-evolution-and-roadmap)
 - [Product Limitations](#product-limitations)
 - [Installation](#installation)
@@ -71,13 +82,11 @@ This Information Technology Project (ITP) is a library management system enginee
 Developed as an Information Technology Project (ITP) to modernise traditional library operations. The initial focus was on functional implementation: CRUD operations, QR Code integration, and a TF-IDF recommendation engine using the MERN stack
 
 - [Engineering Evolution](/doc/Documentation/technicalLearns/engineering-evolution.md)
-    - Refactoring journey after graduation — layered architecture, backend-driven computation, and DevOps integration
+    - Refactoring journey after graduation — architecture redesign, API integration refactoring, security improvements, frontend standardisation, and DevOps adoption
 
 - [Technical Trade-offs & Architecture Decisions](/doc/Documentation/technicalLearns/technical-tradeoff.md)
-    - Evaluation of WebSocket vs CRUD Fetch, Lambda vs EC2, and Serverless vs Traditional deployment approaches
+    - Evaluation of WebSocket vs CRUD Fetch, Lambda vs EC2, and other engineering decisions made throughout the project
 
-- [Technical Learns](/doc/Documentation/technicalLearns/technical-learns.md)
-    - Key engineering lessons — layered architecture, data consistency, type safety, dual-token security, frontend optimisation, and cloud-native DevOps
 
 
 ### Disclaimer
@@ -91,31 +100,6 @@ All contact information provided in this file is fictitious and used solely for 
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
-- Edit backend/.env (Set at minimum)
-    - MONGO_URI
-    - JWT_SECRET
-    - PORT
-    - ORIGIN_URI (frontend origin url)
-    - GOOGLE_BOOKS_API_KEY
-    - GOOGLE_BOOKS_BASE_URL
-    - BACKEND_BASE_URL
-    - STORAGE_TYPE
-
-- Edit frontend/.env (Set at minimum): 
-    - REACT_APP_BACKEND_BASE_URL
-    - REACT_APP_MAIN_PAGE
-
-**Notes about ports and hostnames** 
-- If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`)<br>
-  (Docker Compose maps container ports to the host automatically)
-- If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
-- Always include protocol and port for URLs
-    - `ORIGIN_URI=http://localhost:3000`
-    - `REACT_APP_BACKEND_BASE_URL=http://localhost:5000`
-    - `REACT_APP_MAIN_PAGE=http://localhost:3000`
-    - `BACKEND_BASE_URL=http://localhost:5000`
-    - `STORAGE_TYPE=LOCAL`
-    - `REACT_APP_WEB_SOCKET_SERVER=http://localhost:5000/ws` (This variable can be ignored for cloud - Lambda deployment)
 
 ### 2. Launch with Docker Compose
 ```bash
@@ -145,7 +129,7 @@ docker-compose -f compose.yaml up --build -d
 
 
 
-## Features 
+## Key Features 
 - **Intelligent Recommendation**
     - Developed a custom TF-IDF engine to provide data-driven book recommendations based on user history, enhancing personalised content discovery
       
@@ -156,7 +140,7 @@ docker-compose -f compose.yaml up --build -d
     - Built an automated tracking system for loaned books and return statuses, ensuring real-time data consistency and operational visibility
       
 - **QR-based Operations**
-    - Streamlined book loaning via QR Code integration, implementing a multi-token exchange protocol to facilitate identity verification and transaction authorization between the borrower and the librarian
+    - Client-side QR code workflow for loan verification, reducing manual user identification during borrowing operations
       
 - **Security Architecture**
     - Implemented JWT-based Authentication with Bcrypt hashing, utilising Frontend Route Guards and Role-aware UI rendering for access control
@@ -167,35 +151,41 @@ docker-compose -f compose.yaml up --build -d
 This document outlines the implementation of the system's background automation, focusing on task scheduling and asynchronous execution stability
 
 - [Automated Logic](./doc/Documentation/businessLogic/automated-logic.md)
-    - Managed background tasks using setTimeout, setInterval, and Promise.allSettled to ensure resilient, non-blocking process execution
+    - Background task execution using setTimeout, setInterval and Promise.allSettled
     
-- [TF-IDF Logic](./doc/Documentation/businessLogic/tf-idf-logic.md)
-    - Implemented a custom text-mining algorithm to calculate term weights for an intelligent book recommendation system
+- [Recommendation Service](./doc/Documentation/businessLogic/recommendation-service.md)
+    - TF-IDF-based recommendation engine for similarity scoring and book discovery
 
 - [External Metadata Integration](./doc/Documentation/businessLogic/external-metadata.md)
-    - Integrated Google Books API to automate book data retrieval and synchronize high-quality catalog metadata
+    - Google Books API integration for metadata enrichment and catalogue enhancement
 
-- [QR Code Handling (Frontend Only)](./doc/Documentation/businessLogic/qr-code-handling.md)
-    - Implemented entirely on the frontend using a JSON-encoded object (username, userID) to facilitate real-time loan verification via interactive modals, eliminating unnecessary backend API overhead
+- [QR Code Handling](./doc/Documentation/businessLogic/qr-code-handling.md)
+    - Client-side QR generation for loan verification workflows with lightweight JSON payload encoding
 
 
 
-## Engineering Documentation
+## Technical Documentation
 For a detailed look at the system's engineering standards and design patterns, please refer to:
 - [Architecture](./doc/Documentation/technical/architecture.md)
-    - System diagrams, database schema, and design patterns
+    - Development, backend and production architecture with key design decisions
+
+- [System Design](./doc/Documentation/technical/system-design.md)
+    - Authentication workflows, external integrations and feature-level sequence diagrams
+
+- [Database Design](./doc/Documentation/technical/database-design.md)
+    - Entity relationships and core MongoDB collection design
 
 - [UI Layout](./doc/Documentation/technical/ui-design.md)
-    - Component architecture and Role-Based UI rendering
+    - Role-based UI rendering and component organisation
 
 - [API Endpoints](./doc/Documentation/technical/api.md)
-    - Full RESTful API documentation and endpoint details
+    - REST API domains, endpoint categories and response conventions
 
 - [Testing Strategy](./doc/Documentation/technical/testing.md)
-    - Unit/Integration test strategy and coverage reports
+    - Unit testing, integration testing and CI-based validation
 
 - [CI/CD Workflow](./doc/Documentation/technical/ci-cd.md)
-    - Automation pipeline for testing and deployment
+    - Automated build, testing and deployment workflow
 
 
 
@@ -216,125 +206,15 @@ This project focuses on high-standard engineering practices. Key highlights incl
 
 
 ## Installation
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/TomWai821/TS_MERN_LMS
-    cd TS_MERN_LMS
-
-2. **Set up environment variable:**
-    - `.example` templates are included [Frontend .env example](./frontend/.env.example) and [Backend .env example](./backend/.env.example)
-    - Copy the appropriate file, fill required values, then remove the `.example` suffix to run.
-    ### Frontend
-    1. Copy template:
-       ```bash
-       cp frontend/.env.example frontend/.env
-      REACT_APP_BACKEND_BASE_URL
-      
-    2. Required variables (fill with real values):
-       - REACT_APP_BACKEND_BASE_URL      —> Backend API endpoint, e.g. http://localhost:5000
-       - REACT_APP_MAIN_PAGE             —> Frontend URL, e.g. http://localhost:3000
-       - REACT_APP_WEB_SOCKET_SERVER     -> Web Socket Server Url, e.g. http://localhost:5000/ws (For local/docket, Serverless could ignore it)
-      
-    ### Backend
-    1. Copy template:
-       ```bash
-       cp backend/.env.example backend/.env
-       ```
-      
-    2. Required variables (fill with real values):
-       - PORT       —> backend port (default 5000)
-       - MONGO_URI  —> MongoDB connection string
-           - Docker: mongodb://mongo:27017
-           - Local:  mongodb://localhost:27017
-           - If connection issues, append /test (e.g. mongodb://localhost:27017/test)
-       - JWT_SECRET —> secret for JWT authentication
-       - ORIGIN_URI —> frontend URL, e.g. http://localhost:3000
-       - GOOGLE_BOOKS_API_KEY  —> Google Books API key
-       - GOOGLE_BOOKS_BASE_URL —> e.g. https://www.googleapis.com/books/v1/volumes
-       - BACKEND_BASE_URL -> the backend base url for image, e.g. http://localhost:5000
-       - STORAGE_TYPE -> the location of the image storage (S3 or LOCAL) 
-
-    
-3. **Import data into MongoDB (Local only):**
-    - Open MongoDB Compass and import the JSON file located in the MongoDBSchema folder
-    - This JSON file contains the complete data schema required for the application
-  
-4. **Run the application:**
-    ### Using Docker
-    ```bash
-    # Start the project (use --detach to run in background)
-    docker compose -f compose.yaml up --build --detach
-
-    # If you need to reset the demo database and re-run initialisation scripts, stop containers and remove volumes
-    # WARNING: this will permanently delete all persisted DB data
-    docker compose down -v
-    docker compose up --build --detach
-    ```
-
-    **Remarks**
-    - The `./backend/MongoDBSchema` folder is mounted to `/docker-entrypoint-initdb.d` in the MongoDB container
-
-    - These initialisation scripts run **only when the `db-data` volume is created for the first time**<br>
-      (If the `db-data` volume already contains data, the scripts will be skipped)
-
-    - To re-run initialization and restore the demo data, remove the volume and restart the stack:
-      - `docker compose -f compose.yaml down -v`  # WARNING: permanently deletes all persisted DB data
-      - `docker compose -f compose.yaml up --build`
-
-    - The backend requires this demo data for proper functionality
-      (If you run MongoDB locally instead of via Docker, import the Schema [JSON files](./backend/MongoDBSchema) (e.g. via MongoDB Compass))
-
-    - Changing `JWT_SECRET` will invalidate existing JWTs and require users to re-login
-
-    - `STORAGE_TYPE` will affect the logic on image handling and it is require in the .env
-
-    - Please ensure Docker Config is:
-        - [compose.yaml](compose.yaml)
-            - backend
-                - environment -> NODE_ENV: development
-                - build -> target: development
-
-            - frontend 
-                - environment -> NODE_ENV: development
-                - build -> target: development
-
-        - [Backend Dockerfile](./backend/Dockerfile)
-            - ENV NODE_ENV=development (Line 41)
-
-
-    ### Using local environment
-    #### Backend
-    ```bash
-    cd backend
-    npm install
-    nodemon backend/src/server.ts  
-    ```
-    #### Frontend
-    ```bash
-    cd frontend
-    npm install
-    npm start
-    ```
-
-6. **Expected URLs:**
-    - BACKEND_BASE_URL (backend) → http://localhost:5000
-    - ORIGIN_URI (frontend) → http://localhost:3000
-    - REACT_APP_WEB_SOCKET_SERVER → http://localhost:5000/ws
-  
-### Notes
-- Express backend default port: 5000. React frontend default port: 3000
-- MongoDB default DB: test
-    - If DB init scripts are used in Docker, they run only when the volume is created for the first time
-    - To re-run init scripts, remove the volume and restart
-- [Demo Data](doc/DemonstrationMaterial/DemonStrationData.txt) (if needed)
+- [Installation Guide](./doc/Documentation/guide/installation-guide.md)
 
 
 
 ## Contributing
-1. Fork the repository.
-2. Create a new branch (`git checkout -b ${branchname}`).
-3. Commit your changes (`git commit -m "comment"`).
-4. Push the branch (`git push origin`).
+1. Fork the repository
+2. Create a new branch (`git checkout -b ${branchname}`)
+3. Commit your changes (`git commit -m "comment"`)
+4. Push the branch (`git push origin`)
 5. Open a Pull Request.
 
 

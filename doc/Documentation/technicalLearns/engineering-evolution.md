@@ -1,44 +1,72 @@
-### The Engineering Evolution
+## The Engineering Evolution
 After graduation, I refactored the entire system to align with industry-standard engineering principles, focusing on Decoupling, Resilience, and Cloud-Native scalability:
 
-1. Architectural Overhaul: **Layered Decoupling**
-    - Transitioned from a fat controller to a Layered Architecture (Router-Middleware-Controller-Service-Model)
-    
-    - **Impact**
-        - Isolated business logic from transport and persistence layers<br>
-          (Enable independent scaling of services and reducing regression risks during feature iterations)
+### 1. Architecture Overhaul
+- **Problem**
+    - The original implementation concentrated request handling and business logic within controllers, making the codebase harder to maintain as features expanded
+
+- **Solution**
+    - Refactored the backend into a layered architecture:
+        - Router → Middleware → Controller → Service → Model
+
+- **Key Lesson**
+    - Separation of concerns improves maintainability, testing, and long-term scalability by isolating business logic from transport and persistence layers
 
 
-2. Logic Refactoring: **Backend-Driven Computation**
-    - Offloaded heavy business logic (such as the TF-IDF Recommendation Engine, from the client-side to the Backend Service Layer)
+### 2. External API Integration Refactoring
+- **Problem**
+    - Google Books API requests were originally performed directly from the frontend to improve iteration speed during early development
 
-    - **Benefit**
-        - **Resource Decoupling**
-            - Prevented client-side browser freesing during high-intensity vector computations, ensuring a responsive interface regardless of the library's data volume
+- **Challenge**
+    - Client-side API integration exposed implementation details and made sensitive configuration difficult to protect<br>
+      (Since frontend environment variables are ultimately bundled and delivered to the browser)
 
-        - **Centralised Computation** 
-            - Guaranteed a single source of truth for recommendation logic
-              (Ensure consistent results across all user sessions and facilitating future algorithmic updates without client-side redeployment)
+- **Solution**
+    - Moved Google Books integration to the backend service layer and exposed a controlled internal API for frontend consumption
 
-
-
-3. DevOps Integration: **Environment Parity & CD Readiness**
-    - Orchestrated a Dockerized environment integrated with GitHub Actions to enforce a rigorous CI pipeline (Linting, Integration Testing)
-
-    - **Implementation**
-        - Specifically engineered the Dockerfile to be compatible with AWS Lambda Web Adapter (e.g., configuring port mapping and extension layers)
-
-    - **Impact**
-        - Achieved high-fidelity environment parity between local development and AWS Serverless runtime
-        - Effectively eliminating "it works on my machine" issues during the migration from PaaS to AWS
+- **Key Lesson**
+    - External service integrations should be mediated through backend services whenever security, request validation, response transformation, or future extensibility are required
 
 
+### 3. DevOps & Deployment Evolution
+- **Problem**
+    - Local development, testing, and deployment environments frequently drifted apart
 
-4. Frontend Standardisation: **Metadata-Driven UI Configuration**
-    - Centralised table definitions, tab structures, filter options, and pagination settings into shared [TypeScript configuration modules](../../../frontend/src/Data/TableData.ts)
-    - Extracted reusable pagination and tab-navigation behaviour into [custom React hooks](../../../frontend/src/customhook/PageConfig.ts)
+- **Solution**
+    - Introduced Docker-based environment parity and GitHub Actions CI/CD pipelines
 
-    - **Impact**
-        - Reduced duplicated page-level state management logic across administration interfaces
-        - Established a metadata-driven UI pattern (Allowing new management pages to reuse existing table, tab, and pagination configurations with minimal code changes)
-        - Improved consistency and maintainability by separating UI configuration from page-level business logic
+- **Key Lesson**
+    - Automated validation and consistent runtime environments significantly reduce environment-specific failures
+
+
+### 4. Security Evolution
+- **Challenge**
+    - Certain loan operations required validation from multiple parties
+
+- **Solution**
+    - Implemented dual-token authorisation requiring both librarian and borrower authentication
+
+- **Key Lesson**
+    - Security requirements should be reflected directly in business workflows rather than treated as a separate concern
+
+
+### 5. Frontend Standardisation
+- **Problem**
+    - Administration pages contained duplicated state management and UI configuration logic
+
+- **Solution**
+    - Introduced metadata-driven UI configuration and reusable custom hooks
+
+- **Key Lesson**
+    - Configuration-driven design reduces duplication and improves long-term maintainability
+
+
+### 6. Background Job Evolution
+- **Problem**
+    - AWS Lambda cannot maintain continuously running background schedulers due to its stateless execution model
+
+- **Solution** 
+    - Introduced Amazon EventBridge Scheduler to trigger maintenance jobs such as overdue loan processing
+
+- **Key Lesson**
+    - Serverless architectures require event-driven scheduling patterns rather than long-running background services

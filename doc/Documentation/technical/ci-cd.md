@@ -1,145 +1,45 @@
 ## CI/CD
 
-![CI Badge](https://img.shields.io/badge/CI-passing-brightgreen)
+### Deployment Flow
+<img src="../../Image/Diagrams/CICD-workflowDiagram.png" style="width:90%;"/><br>
+Figure 1 - CI/CD process overview <br>
 
-<img src="../../Image/CICD/CI_CD_Last_Implementation.png" style="width:90%;"/><br>
-Image 1 - CI/CD process overview<br>
-
-- **Remarks**
-    - CD pipeline is triggered only after CI jobs (lint, test, build, push) all succeed
-    - Documentation-only changes (README, doc/**) are excluded and will not trigger the CI/CD process
-
-### Continuous Integration (CI)
-- Implemented GitHub Actions workflows triggered on every Push/PR to enforce CI/CD
-
-- **Quality Assurance**
-    - **Frontend**: Unit tests with Jest to validate UI logic
-    - **Backend**: Integration tests to verify API request‑response cycles and DB interactions
-
-- **Linting**
-    - Enforced code consistency across the stack with ESLint
-
-- **Artefact Management**
-    - Generated backend coverage reports as CI artefacts for reviewer visibility
-    - Built backend Docker images and pushed to Amazon ECR
-    - Captured image digest as CI output, ensuring deployments reference immutable artefacts instead of latest tags
-
-- **Docker Integration**
-    - Automated multi‑stage Docker builds to guarantee reproducibility across environments
-
-- **CI/CD Status and Records**
-    - **Images**<br>
-    <img src="../../Image/CICD/CI_overview.png" style="width:90%;"/><br>
-    Image 1 - CI overview<br>
-
-    <img src="../../Image/CICD/CI_lint_typecheck.png" style="width:90%;"/><br>
-    Image 2 - Lint Type check<br>
-
-    <img src="../../Image/CICD/CI_frontend_test.png" style="width:90%;"/><br>
-    Image 3 - frontend test (Unit Test)<br>
-
-    <img src="../../Image/CICD/CI_backend_test.png" style="width:90%;"/><br>
-    Image 4 - backend test (Integration Test with virtual MongoDB)<br>
-
-    <img src="../../Image/CICD/CI_build_test.png" style="width:90%;"/><br>
-    Image 5 - build test (Frontend and backend with virtual MongoDB)<br>
-
-    <img src="../../Image/CICD/CI_push_to_aws.png" style="width:90%;"/><br>
-    Image 6 - Push to container to AWS (ECR)<br>
+- Key design decisions:
+    - CI and CD pipelines are separated to ensure deployments occur only after successful validation
+    - Docker images are deployed using immutable ECR image digests instead of mutable tags
+    - GitHub OIDC AssumeRole is used to eliminate long-lived AWS credentials
+    - Frontend deployment is triggered only after backend deployment succeeds
 
 
 
-### Continuous Deployment (CD)
-- **Multi-Platform Deployment Strategy**
-    - **Frontend (Vercel)**
-        - Integrated Deploy Hooks via GitHub Actions to replace default auto‑update
-        - Optimised builds with Ignored Build Step so frontend updates only after backend readiness<br>
-        
-    - **Backend (AWS ECR + S3 Bucket + Lambda)**
-        - Automated deployment pipeline updates Lambda functions using CI‑generated image digests<br>
-          (Guaranteeing synchronised production with tested artefacts)
-        - Engineered production‑ready Dockerfile for consistent runtime across local and AWS Serverless environments
-        - Leveraged Lambda’s event‑driven architecture to eliminate idle server costs<br>
-          (Adopting a cost‑effective pay‑as‑you‑go model)
-        
-    - **Database (MongoDB Atlas)**
-        - **DBaaS Integration**
-            - Direct Lambda integration with MongoDB Atlas for structured data (books, loans, users)
-            - Amazon S3 used for book image storage and static assets<br>
-              (Delivered securely via presigned URLs)
-
-- **Deployment Status and Records**
-    - **Images**<br>
-    <img src="../../Image/CICD/CD_overview.png" style="width:90%;"/><br>
-    Image 1 - CD overview<br>
-
-    <img src="../../Image/CICD/CD_deploy_backend.png" style="width:90%;"/><br>
-    Image 2 - Backend Deployment (AWS)<br>
-
-    <img src="../../Image/Deployment/AWS_Deployment(ECR).png" style="width:90%;"/><br>
-    Image 3 - AWS Deployment Record(ECR)<br>
-    
-    <img src="../../Image/Deployment/AWS_Deployment(Lambda).png" style="width:90%;"/><br>
-    Image 4 - AWS Deployment Record(Lambda)<br>
-
-    <img src="../../Image/CICD/CD_deploy_frontend.png" style="width:90%;"/><br>
-    Image 5 - Frontend Deployment (Vercel)<br>
-
-    <img src="../../Image/Deployment/Vercel_Deployment.png" style="width:90%;"/><br>
-    Image 6 - Vercel Deployment Record<br>
+### Continuous Integration (CI) Overview
+- GitHub Actions automates linting, testing, container builds and deployment workflows
+- Successful builds publish Docker images to Amazon ECR and generate immutable image digests for deployment
 
 
-    - **Deployment Secret Explanation**
 
-    | Secret Name              | Description / Purpose                                     | How to Obtain                                                  |
-    | ------------------------ | --------------------------------------------------------- | -------------------------------------------------------------- |
-    | VERCEL_DEPLOY_HOOK       | Triggers automated deployment for the Frontend on Vercel  | Vercel Project Settings → Git → Deploy Hooks                   |    
-    | AWS_ROLE_ARN             | IAM Role ARN for GitHub OIDC AssumeRole                   | AWS Console → IAM → Roles → Select Role → Copy Role ARN        |
-    | AWS_REGION               | Target region for AWS resources (e.g. ap-east-1)          | AWS Console → Region selector (top bar)                        |
-    | AWS_LAMBDA_FUNCTION_NAME | Target Lambda function for CD updates                     | AWS Console → Lambda → Functions                               |
+### Deployment Strategy
+- AWS Lambda deployments are updated using CI-generated image digests rather than mutable tags
+- Frontend deployment is triggered through Vercel Deploy Hooks only after backend deployment succeeds
+- MongoDB Atlas and Amazon S3 are integrated as managed cloud services for data and asset storage
 
-		
 
-- **Security And Operational Excellence**
-    - **Zero-Credential Exposure**
-        - Ensure the source code does not have private data, and fulfil the OWASP standard
 
-    - **Automated Lifecycle**
-        - Reduce the deployment mistakes on manual trigger with GitHub Actions
+### Security & Reliability
+- GitHub Actions authenticates with AWS using OIDC-based AssumeRole authentication, eliminating long-lived access keys
+- CI/CD and Lambda execution responsibilities are separated into dedicated IAM roles following the principle of least privilege
 
-            
-- **Iteration Description**
-    - **Production Environment Realignment**
-        - Migrated BACKEND_BASE_URL and BASE_URL from localhost to production endpoints (Vercel / AWS API Gateway)<br>
-          (Ensured seamless communication between decoupled frontend and backend services in a live cloud environment)
-          
-    - **Security & CORS Optimisation**
-        - Enhanced ORIGINAL_URI configuration to support multiple origins<br>
-          (Allowed backend to securely accept requests from both Vercel production domain and local development environments, improving workflow flexibility without compromising security)
 
-    - **Immutable Artefact Deployment**
-        - CI pipeline builds and pushes Docker images to AWS ECR, capturing image digest as output<br>
-          (Ensures CD stage updates Lambda using tested artefacts instead of latest tags, guaranteeing reproducibility and reducing regression risk)
+### Design Decisions
+- **Immutable Artefact Deployment**
+    - CI publishes Docker images to Amazon ECR and exports image digests as deployment artefacts
+    - AWS Lambda deployments reference immutable digests rather than mutable latest tags, ensuring reproducible releases and reducing deployment risk
 
-    - **Security & IAM Best Practices**
-        - Transitioned CI/CD authentication from long‑lived IAM User keys to short‑lived OIDC AssumeRole
-        - Separated CI/CD Role (ECR push + Lambda update) from Lambda Execution Role (S3/CloudWatch access)
-        - Enforced the least‑privilege principle<br>
-          (Reduced credential leakage risk and aligned with AWS recommended practices)
+- **OIDC-Based Authentication**
+    - Replaced long-lived AWS access keys with GitHub OIDC AssumeRole authentication
+    - Eliminated credential storage within CI/CD pipelines while aligning with AWS security best practices
+
 
 
 ### Remarks
-- **For CI/CD**
-    - The entire CI/CD workflow is managed and automated via GitHub Actions workflows
-    - CI/CD workflow definitions are located in `.github/workflows/`<br>
-      (The whole process could be viewed in the actions tab -> All workflows, CD workflow = CD pipeline)
-
-- **For CD (AWS Deployment)**
-    - **Production Environment Realignment**
-        - Migrated backend hosting from Railway to AWS Lambda (Container Image via ECR)
-        - Transitioned `BACKEND_BASE_URL` to the Amazon API Gateway endpoint<br>
-          (This ensures the frontend communicates with a scalable, production-grade REST API instead of a fixed-server environment)
-
-    - **Cost & Infrastructure Management**
-        - Utilising AWS Free Tier / Pay-as-you-go model for Lambda and ECR<br>
-          (Provide highly cost-effective scaling compared to fixed subscription models)
+- Documentation-only changes (README, doc/**) are excluded to avoid unnecessary pipeline executions
