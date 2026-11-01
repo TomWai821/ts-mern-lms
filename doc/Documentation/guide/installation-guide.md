@@ -73,27 +73,34 @@ docker compose up --build -d
 
 
 ### Troubleshooting
-- **Seed data not imported**
-    - Reset Docker volumes:
+<details>
+<summary>Common Setup Issues</summary>
 
+1. **Seed data not imported**
+    - Reset Docker volumes
 ```Shell
 docker compose down -v
 docker compose up --build -d
 ```
 
 
-- **MongoDB connection failed**
+2. **MongoDB connection failed**
     - Check:
         - Docker: mongodb://mongo:27017
         - Local : mongodb://localhost:27017
 
 
-- **JWT authentication issues**
+3. **JWT authentication issues**
     - Changing JWT_SECRET invalidates all existing authentication tokens
     - Users must log in again
+</details>
 
 
-- **Expected URLs**
+
+<details>
+<summary>Environment Configuration Reference</summary>
+
+1. Expected URLs
     | Variable                    | Value                    |
     | --------------------------- | ------------------------ |
     | ORIGIN_URI                  | http://localhost:3000    |
@@ -107,10 +114,11 @@ docker compose up --build -d
         - REACT_APP_WEB_SOCKET_SERVER can be ignored for cloud - Lambda deployment
 
 
-- **Notes about ports and hostnames** 
+2. Ports and hostnames
     - If you run the project with **Docker Compose**, use the Docker examples in `.env.example` (e.g. `MONGO_URI=mongodb://mongo:27017/...`)<br>
-    (Docker Compose maps container ports to the host automatically)
+      (Docker Compose maps container ports to the host automatically)
 
     - If you run services locally (not via Docker), replace container hostnames with `localhost` and ensure `PORT` matches the port you start the backend on (e.g. `3000`)
 
     - Always include protocol and port for URLs
+<details>
