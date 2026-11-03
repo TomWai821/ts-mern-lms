@@ -13,7 +13,7 @@ import { UserDataTableInterface } from "../../../../../Model/UserTableModel";
 import { ItemToCenter } from "../../../../../Data/Style";
 import { SuspendUserTableHeader } from "../../../../../Data/TableData";
 
-import { CalculateDuration, CountDuration, TransferDateToString } from "../../../../../Controller/OtherController";
+import { CalculateSuspendDuration, getRemainingSuspensionDays, TransferDateToString } from "../../../../../Controller/OtherController";
 import { useAuthContext } from "../../../../../Context/User/AuthContext";
 import { setDataTextColor } from "../../../../../Controller/SetTextController";
 import { UserResultDataInterface } from "../../../../../Model/ResultModel";
@@ -55,7 +55,7 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
                                             
 
                     <ContentTableCell TableName={TableName} value={value} Information={data}>
-                        {CalculateDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)} 
+                        {CalculateSuspendDuration(data.suspendedDetails?.startDate as Date, data.suspendedDetails?.dueDate as Date)} 
                     </ContentTableCell>
                     
                     {IsAdmin() &&
@@ -65,7 +65,7 @@ const SuspendUserTableCell = (propsData: SuspendUserTableCellInterface) =>
                                     {
                                         data.status === "Suspend" && data.suspendedDetails?.dueDate 
                                         ? 
-                                        `${CountDuration(data.suspendedDetails?.dueDate as Date)}`
+                                        `${getRemainingSuspensionDays(data.suspendedDetails?.dueDate as Date)}`
                                         : 
                                         "-"
                                     }

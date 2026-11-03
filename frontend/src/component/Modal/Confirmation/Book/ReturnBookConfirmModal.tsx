@@ -6,7 +6,7 @@ import ModalTemplate from "../../../Templates/ModalTemplate";
 
 
 import { ReturnBookInterface } from "../../../../Model/ModelForModal";
-import { countLateReturn, TransferDateToISOString } from "../../../../Controller/OtherController";
+import { getOverdueDays, TransferDateToISOString } from "../../../../Controller/OtherController";
 import { GetResultInterface, LoanBookInterface } from "../../../../Model/ResultModel";
 
 import { useBookContext } from "../../../../Context/Book/BookContext";
@@ -26,7 +26,7 @@ const ReturnBookConfirmModal:FC<ReturnBookInterface> = (returnBookModalData) =>
 
     const Data = data as LoanBookInterface; 
 
-    const CalculateLateReturn = countLateReturn(Data.dueDate as string) as number;
+    const CalculateLateReturn = getOverdueDays(Data.dueDate as string) as number;
 
     const ReturnBook = async () => 
     {

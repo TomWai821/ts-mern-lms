@@ -1,7 +1,7 @@
 import { FC, Fragment } from "react"
 import { DisplayDataModalBody } from "../../../../Model/ModelForModal";
 import { Avatar, Box, Typography } from "@mui/material";
-import { CalculateDuration, CountDuration, TransferDateToString } from "../../../../Controller/OtherController";
+import { CalculateSuspendDuration, getRemainingSuspensionDays, TransferDateToString } from "../../../../Controller/OtherController";
 import { UserResultDataInterface } from "../../../../Model/ResultModel";
 import { displayAsColumn } from "../../../../Data/Style";
 import { useAuthContext } from "../../../../Context/User/AuthContext";
@@ -27,7 +27,7 @@ const SuspendedUserDataBody:FC<DisplayDataModalBody> = (SuspendedUserData) =>
                                 <Typography>Gender: {Data.gender}</Typography>
                                 <Typography>
                                     Status: <Box component={"span"} color={setDataTextColor(Data.suspendedDetails?.status as string, "Unsuspend", "green", "red")}> {Data.suspendedDetails?.status} </Box> 
-                                    {Data.suspendedDetails?.status === "Unsuspend" && `(Unsuspend At: ${TransferDateToString(Data.suspendedDetails?.unSuspendDate as Date)})` }
+                                    {Data.suspendedDetails?.status === "Unsuspend" && `(Unsuspend At ${TransferDateToString(Data.suspendedDetails?.unSuspendDate as Date)})` }
                                 </Typography>
                         </Fragment>
                     )
@@ -36,11 +36,11 @@ const SuspendedUserDataBody:FC<DisplayDataModalBody> = (SuspendedUserData) =>
                     : `${TransferDateToString(Data.suspendedDetails?.startDate as Date)} - ${TransferDateToString(Data.suspendedDetails?.dueDate as Date)}` }
                 </Typography>
 
-                <Typography>Duration: { CalculateDuration(Data.suspendedDetails?.startDate as Date, Data.suspendedDetails?.dueDate as Date) }
+                <Typography>Duration: { CalculateSuspendDuration(Data.suspendedDetails?.startDate as Date, Data.suspendedDetails?.dueDate as Date) }
                 { 
                     IsAdmin() && Data.suspendedDetails?.status === "Suspend" && Data.suspendedDetails?.dueDate && new Date(Data.suspendedDetails?.dueDate).getTime() > 0 && 
                     (
-                        <Fragment> ({CountDuration(Data.suspendedDetails?.dueDate as Date)}) </Fragment>
+                        <Fragment> ({getRemainingSuspensionDays(Data.suspendedDetails?.dueDate as Date)}) </Fragment>
                     )
                 }
                 </Typography>

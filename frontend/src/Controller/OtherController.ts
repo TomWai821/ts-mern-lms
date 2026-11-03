@@ -5,7 +5,6 @@ export const ChangePage = (location: string) =>
     window.location.href = location;
 }
 
-
 export const GetCurrentDate = (type:string): Date | string => 
 { 
     const date = new Date();
@@ -51,12 +50,11 @@ export const TransferDateToISOString = (date: Date | string): string =>
 
 export const TransferDateToString = (date: Date | undefined):string => 
 {
-
     if (!date) return "N/A";
     return new Date(date).toISOString().split("T")[0];
 }
 
-export const CalculateDuration = (startDate:Date, dueDate: Date | string) => 
+export const CalculateSuspendDuration = (startDate:Date, dueDate: Date | string) => 
 {
     const start = new Date(startDate);
     const end = new Date(dueDate);
@@ -67,9 +65,9 @@ export const CalculateDuration = (startDate:Date, dueDate: Date | string) =>
     return days.toLocaleString('en-US') + " Days";
 }
 
-export const CountDuration = (dueDate: Date | string) => 
+export const getRemainingSuspensionDays = (dueDate: Date | string) => 
 {
-    if(dueDate === "N/A")
+    if (dueDate === "N/A") 
     {
         return "N/A";
     }
@@ -78,36 +76,28 @@ export const CountDuration = (dueDate: Date | string) =>
     const end = new Date(dueDate);
 
     const durationInMilliseconds = end.getTime() - currentDate.getTime();
-    const days = Math.floor(durationInMilliseconds / MillionSecondsToDay);
 
-    if(days < 1)
+    const days = Math.ceil(durationInMilliseconds / MillionSecondsToDay);
+
+    if (days <= 0) 
     {
-        return "Unsuspend Soon (Less than 1 Day)";
+        return "Ready for Unsuspension";
     }
 
-    return days.toLocaleString('en-US') + " Days Left";
-}
+    return `${days.toLocaleString("en-US")} ${ days === 1 ? "Day" : "Days"} Left`;
+};
 
-export const countLateReturn = (dueDate: Date | string, returnDate?: Date | string): number => 
+export const getOverdueDays = (dueDate: Date | string, returnDate?: Date | string): number => 
 {
     const due = new Date(dueDate);
-    const today = new Date();
-    
-    if (!returnDate)
-    {
-        const lateDays = Math.ceil((today.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)) - 1;
-        return (lateDays > 0) ? lateDays : 0;
-    }
-    
-    const actualReturn = new Date(returnDate);
-    
-    if (actualReturn > due) 
-    {
-        const lateDays = Math.ceil((actualReturn.getTime() - due.getTime()) / (1000 * 60 * 60 * 24)) - 1;
-        return lateDays;
-    }
-    
-    return 0;
+    due.setHours(0,0,0,0);
+
+    const compareDate = returnDate ? new Date(returnDate): new Date();
+    compareDate.setHours(0,0,0,0);
+
+    const diffDays = Math.floor((compareDate.getTime() - due.getTime()) / MillionSecondsToDay);
+
+    return Math.max(0, diffDays);
 };
 
 /*
@@ -121,7 +111,7 @@ export const maskedData = (type:string, data:string) =>
             return data === "N/A" ? data : `${hashedLocal}@${domain}`;
 
         case "phoneNumber":
-            return data.split("").map((char, i) => (i < 3 ? char: "*")).join("");
+            return data.split("").map((char, i) => (i < 2 ? char: "*")).join("");
 
         case "password":
             return data.split("").map((char) => (char = "*"));
@@ -131,4 +121,4 @@ export const maskedData = (type:string, data:string) =>
             break;
     }
 }
-    */
+*/

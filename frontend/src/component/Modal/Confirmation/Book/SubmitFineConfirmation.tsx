@@ -10,7 +10,7 @@ import { GetResultInterface, LoanBookInterface } from "../../../../Model/ResultM
 
 import { useBookContext } from "../../../../Context/Book/BookContext";
 import { useModal } from "../../../../Context/ModalContext";
-import { countLateReturn } from "../../../../Controller/OtherController";
+import { getOverdueDays } from "../../../../Controller/OtherController";
 import { AlertContext } from "../../../../Context/AlertContext";
 
 const SubmitFinesConfirmModal:FC<ReturnBookInterface> = (returnBookModalData) => 
@@ -46,7 +46,7 @@ const SubmitFinesConfirmModal:FC<ReturnBookInterface> = (returnBookModalData) =>
             <Box id="modal-description" sx={ModalBodySyntax}>
                 <Typography sx={ModalSubTitleSyntax}>Does {Data.userDetails?.username} submit fines now?</Typography>
                 <Typography>Fines Per Day: HKD$1.5</Typography>
-                <Typography>OverDue: {countLateReturn(Data.dueDate as string , data.returnDate as string)} days</Typography>
+                <Typography>OverDue: {getOverdueDays(Data.dueDate as string , data.returnDate as string)} days</Typography>
                 <Typography>Total: HKD${Data.fineAmount} </Typography>
             </Box>
             <Button variant='contained' onClick={submitFinesConfirm}>Yes</Button>
