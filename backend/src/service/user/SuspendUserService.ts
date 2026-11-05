@@ -17,7 +17,7 @@ export const SuspendUserService = async (userId: string, description: string, st
 
     if(!changeStatusInUsertable) 
     {
-        return {success: false, statusCode: 400, message: "Failed to update status in User Table"};
+        return {success: false, statusCode: 400, message: "Failed to Update status in User Table"};
     }
 
     broadcast(UserEvent.SUSPEND_USER_CREATE, SuspendUserDTO(foundUser, createSuspendRecord));
@@ -34,14 +34,14 @@ export const CreateSuspendRecordService = async (statusForUserList: string,  use
         switch (statusForUserList) 
         {
             case "Suspend":
-                const existingSuspend = await FindSuspendList({ userId: userId });
+                const existingSuspension = await FindSuspendList({ userId: userId, status: "Suspend" });
                 
-                if (existingSuspend) 
+                if (existingSuspension) 
                 {
-                    return existingSuspend;
+                    return existingSuspension;
                 }
 
-                const newSuspendList = await CreateSuspendList({ userID: userId, description: description, startDate: startDate, dueDate: dueDate });
+                const newSuspendList = await CreateSuspendList({ userID: userId, description: description, startDate: startDate, dueDate: dueDate, status: "Suspend" });
                 
                 return newSuspendList;
 
