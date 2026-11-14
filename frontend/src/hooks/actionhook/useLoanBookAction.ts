@@ -23,9 +23,9 @@ export const useLoanBookAction = () =>
         await executeMutationAndSync(response, syncTasks);
     }
 
-    const LoanBookByLibrarian = async (bookID:string, authToken: string) => 
+    const LoanBookByLibrarian = async (bookID:string, LoanUserAuthToken: string) => 
     {
-        const response: Response = await loanBook(bookID, authToken);
+        const response: Response = await loanBook(bookID, LoanUserAuthToken);
 
         const result: GetResultInterface = await response.json();
         await MutationFeedback(response, result);

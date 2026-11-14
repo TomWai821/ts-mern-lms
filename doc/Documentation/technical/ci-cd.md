@@ -7,6 +7,7 @@ Figure 1 - CI/CD process overview <br>
 - **Key design decisions**
     - CI and CD pipelines are separated to ensure deployments occur only after successful validation
     - Docker images are deployed using immutable ECR image digests instead of mutable tags
+    - Lambda images are built for one architecture without Buildx provenance indexes
     - GitHub OIDC AssumeRole is used to eliminate long-lived AWS credentials
     - Frontend deployment is triggered only after backend deployment succeeds
 

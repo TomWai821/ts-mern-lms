@@ -1,4 +1,3 @@
-import { jwtVerify } from "../../controller/hashing";
 import { UserInterface } from "../../model/userSchemaInterface";
 import { FindBookByIDAndUpdate, GetBook } from "../../schema/book/book";
 import { CreateBookLoaned, GetBookLoaned } from "../../schema/book/bookLoaned";
@@ -12,9 +11,8 @@ export const CreateLoanBookRecordService = async (userID: string, librarianUserI
             
     if (userID) 
     {
-        const data = await jwtVerify(userID); 
-        UserID = data.user?._id;
         const user = await FindUser({ _id: UserID }) as UserInterface;
+        console.log(user);
         
         if(user.status === "Suspend")
         {

@@ -28,7 +28,6 @@ export class LocalStrategy implements IStorageStrategy
     handleResponse(imageName: string, res: Response) 
     {
         const filePath = path.resolve(__dirname, '../upload', path.basename(imageName));
-        console.log(filePath);
         res.sendFile(filePath);
     }
 }

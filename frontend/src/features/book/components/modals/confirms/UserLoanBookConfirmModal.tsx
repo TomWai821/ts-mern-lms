@@ -11,7 +11,7 @@ import { UserLoanBookModalBodyInterface } from "../../../../../Model/ModelForMod
 import LoanBookConfirmationModal from "./LoanBookConfirmationModal";
 import ExpandableTypography from "../../../../../component/UIFragment/ExpandableTypography";
 import { useLoanBookAction } from "../../../../../hooks/actionhook/useLoanBookAction";
-import { QRCodeInterface } from "../../../../profile/components/modals/DisplayQRCodeModal";
+import { QRCodePayload } from "../../../../profile/components/modals/DisplayQRCodeModal";
 
 
 const UserLoanBookConfirmationModal:FC<UserLoanBookModalBodyInterface> = (LoanBookData) => 
@@ -27,8 +27,8 @@ const UserLoanBookConfirmationModal:FC<UserLoanBookModalBodyInterface> = (LoanBo
             return {username: "", userId: "", type: ""};
         }
 
-        const parseData = JSON.parse(qrCodeData) as QRCodeInterface;
-        return {username: parseData.data.username, userId: parseData.data.userId, type: parseData.data.type}
+        const parseData = JSON.parse(qrCodeData) as QRCodePayload;
+        return {username: parseData.username, userId: parseData.userId, type: parseData.type}
     }
 
     const returnUserLoanBookModal = () => 

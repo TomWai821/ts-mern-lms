@@ -56,13 +56,13 @@ export const GetLoanBookRecord = async (req: AuthRequest, res:Response) =>
 
 export const CreateLoanBookRecord = async (req: AuthRequest, res:Response) => 
 {
-    const {userID, bookID, loanDate, dueDate} = req.body;
+    const {userId, bookID, loanDate, dueDate} = req.body;
     const librarianUserID = req.user?._id;
     let success = false;
     
     try
     {
-        const {success, statusCode, error, message} = await CreateLoanBookRecordService(userID, librarianUserID as unknown as string, bookID, loanDate, dueDate);
+        const {success, statusCode, error, message} = await CreateLoanBookRecordService(userId, librarianUserID as unknown as string, bookID, loanDate, dueDate);
 
         if(!success)
         {

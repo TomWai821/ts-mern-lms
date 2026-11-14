@@ -25,7 +25,6 @@ const usePageConfigHandler = (tabValue: number) =>
     const setConfirmButtonName = ["Yes", "Confirm"];
 
     const [TabValue, setTabValue] = useState<number>(tabValue);
-    console.log(TabValue);
 
     const changeTabValue = (event: React.SyntheticEvent, newValue: number) =>
     {
@@ -50,19 +49,21 @@ const useQRCodeDataHandler = (qrCodeData: string | undefined) =>
 
 const QRCodeDataValidation = (QRCodeData: string) => 
 {
-    if (!QRCodeData)
+    try
+    {
+        const payload = JSON.parse(QRCodeData);
+
+        const isValid =
+            typeof payload.userId === "string" &&
+            typeof payload.username === "string" &&
+            payload.type === "library-member";
+
+        return { isValid };
+    }
+    catch
     {
         return { isValid: false };
     }
-
-    const payload = JSON.parse(QRCodeData);
-
-    const isValid = 
-        typeof payload.userId === "string" &&
-        typeof payload.username === "string" &&
-        payload.type === "library-member";
-
-    return {isValid};
 }
 
 const LoanBookConfirmationModal:FC<LoanBookModalInterface> = (LoanBookData) => 
@@ -71,7 +72,6 @@ const LoanBookConfirmationModal:FC<LoanBookModalInterface> = (LoanBookData) =>
 
     const { setSubTitle, setCancelButtonName, setConfirmButtonName, TabValue, changeTabValue } = usePageConfigHandler(tabValue as number);
     const { QrCodeData, onChange }  = useQRCodeDataHandler(qrCodeData);
-    const { isValid } = QRCodeDataValidation(QrCodeData);
     const { SelfLoanBook } = useLoanBookAction();
     const { handleOpen } = useModal();
     const alertContext = useContext(AlertContext);
@@ -86,6 +86,8 @@ const LoanBookConfirmationModal:FC<LoanBookModalInterface> = (LoanBookData) =>
 
         if (TabValue === 1)
         {
+            const { isValid } = QRCodeDataValidation(QrCodeData);
+
             if (!isValid)
             {
                 alertContext?.setAlertConfig({ AlertType: "error", Message: "Please Input Valid QR Code" });

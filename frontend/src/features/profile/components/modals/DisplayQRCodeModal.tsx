@@ -4,9 +4,11 @@ import QRCode from "react-qr-code";
 import ModalTemplate from "../../../../component/Templates/ModalTemplate";
 import { ModalBodySyntax } from "../../../../Data/Style";
 import { GetCurrentUserController } from "../../../../Controller/UserController/UserGetController";
+import { useEffect, useState } from "react";
 
 export interface QRCodeInterface
 {
+    success: boolean;
     data: 
     { 
         userId: string,
@@ -15,12 +17,19 @@ export interface QRCodeInterface
     }
 }
 
+export interface QRCodePayload 
+{
+    userId: string;
+    username: string;
+    type: "library-member";
+}
+
 const getQRCodeData = async () => 
 {
     const response = await GetCurrentUserController("QRCode");
-    const QRCodeData = await response?.json() as QRCodeInterface;
-
-    return QRCodeData.data;
+    const result = await response?.json() as QRCodeInterface;
+    
+    return result.data;
 }
 
 const DisplayQRCodeModal = () => 

@@ -101,6 +101,8 @@ jobs:
         with:
           context: ./backend
           push: true
+          platforms: linux/amd64
+          provenance: false
           tags: ${{ steps.login-ecr.outputs.registry }}/ts_mern_lms-backend:${{ github.sha }}
 
       - name: Get image digest

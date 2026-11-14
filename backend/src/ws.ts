@@ -51,7 +51,6 @@ export const initWsServer = (server: any) =>
 
     wss.on("connection", (ws: WebSocket) => 
     {
-        console.log("Client connected");
         ws.on("close", () => console.log("Client disconnected"));
     });
 }

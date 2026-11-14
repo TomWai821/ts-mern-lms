@@ -22,15 +22,15 @@ Description: A definitive guide to the modern patterns and paradigms for buildin
 
 ## For loan books to another user (For no scanner gun demo)
 # QR Code Data
-{"username":"WhateverAdmin","authToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3YzdjZjE0NWZkY2IwZTBlNTc1YWJlYSJ9LCJpYXQiOjE3NzI4ODg3NTR9.9htTliqerFlG0ytMtBzWnuOCxdqbaRFfX90AxdeOrfo"}
+{"userId": "67c7cddaae8c78bf45addf1b", "username": "WhateverAdmin", "type": "library-member"}
 
 # QR Code Data
-{"username":"IamTester","authToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY4MTFiZjFmODEzZDQ4NTY1MWI1YmY3MCJ9LCJpYXQiOjE3NzI4ODc5MTN9.hRp5kAIX-zcJvi4wDn_Z7vE7GGESHjRX5PwKNTD7wpg"}
+{"userId": "6811bf1f813d485651b5bf70", "username": "IamTester", "type": "library-member"}
 
 Remarks:
 - QR Code Data: Scanning the QR code with a Scanner Gun or mobile camera will output the following JSON (username, authToken)
 - [Demo Only] Manual Fallback: If no scanner is available, manually retrieve your active authToken from Session/Cookie storage and update the JSON below to simulate the process:
-  {"username": "IamTester", "authToken": "PASTE_YOUR_TOKEN_HERE"}
+  {"userId": "PASTE_YOUR_USER_ID_HERE", "username": "PASTE_YOUR_USERNAME_HERE", "type": "library-member"}
 
 Scenario Simulation: 
 - The QR code data (containing username and authToken) simulates a mobile-to-scanner gun borrowing process
