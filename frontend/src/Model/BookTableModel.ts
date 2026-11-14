@@ -46,7 +46,7 @@ interface BookRecordTableInterface
 
 interface ContactTableInterface
 {
-    value?: number;
+    value: number;
     contactData: ContactInterface[][];
     paginationValue:number;
 }

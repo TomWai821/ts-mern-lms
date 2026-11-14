@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactElement } from "react";
 import { TableCell } from "@mui/material";
 
 // Another Modal
@@ -19,7 +19,7 @@ const ContentTableCell:FC<ContentTableCellProps> = (contentTableCellData) =>
     
     const onClick = () => 
     {
-        const ModalMap:Record<string, JSX.Element> = 
+        const ModalMap:Record<string, ReactElement> =
         {
             "User": <DisplayUserDataModal value={value} data={Information as UserResultDataInterface} />,
             "Book": <DisplayBookDataModal position={"Table"} value={value} data={Information as BookDataInterface}/>

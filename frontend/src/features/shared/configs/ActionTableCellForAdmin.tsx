@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactElement } from "react";
 
 import { ActionTableCellInterface } from "../../../Model/TablePagesAndModalModel";
 
@@ -12,7 +12,7 @@ const ActionTableCellForAdmin: FC<ActionTableCellInterface> = (tableCellData) =>
 {
     const { TableName } = tableCellData;
 
-    const AdminActionTableCellConfig: Record<tableNameType, JSX.Element> = 
+    const AdminActionTableCellConfig: Record<tableNameType, ReactElement> =
     {
         Book: <BookPageAdminTableCell {...tableCellData} />,
         Contact: <ContactPageAdminTableCell {...tableCellData} />,

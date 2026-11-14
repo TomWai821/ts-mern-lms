@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useModal } from "../../Context/ModalContext";
 import { DataValidateField } from "../../Controller/ValidateController";
 
-export const useDataValidation = <T extends Record<string, any>> (data: T, validationList: Record<string, any>,  ignoreList:string[], confirmModal: JSX.Element) => 
+export const useDataValidation = <T extends Record<string, any>> (data: T, validationList: Record<string, any>,  ignoreList:string[], confirmModal: ReactElement) =>
 {
     const { handleOpen } = useModal();
 

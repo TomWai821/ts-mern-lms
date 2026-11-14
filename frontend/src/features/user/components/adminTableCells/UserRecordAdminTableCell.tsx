@@ -8,6 +8,7 @@ import TableCell from "@mui/material/TableCell/TableCell";
 import { useModal } from "../../../../Context/ModalContext";
 
 import { useUserContext } from "../../../../Context/User/UserContext";
+import { useAuthContext } from "../../../../Context/User/AuthContext";
 import { StatusDetection } from "../../../../Controller/OtherUsefulController";
 
 import { ImportantActionButtonSyntax } from "../../../../Data/Style";
@@ -23,7 +24,8 @@ import DeleteUserConfirmModal from "../modals/confirms/DeleteUserConfirmModal";
 const UserRecordAdminTableCell: FC<ActionTableCellInterface> = (tableCellData) =>
 {
     const { value, Information, changeValue, setSearchUserData, searchUserData } = tableCellData;
-    const { fetchUser } = useUserContext();
+    const { refreshUsers } = useUserContext();
+    const { isAdmin, isLoggedIn, isAuthLoading } = useAuthContext();
     const { handleOpen } = useModal();
 
     const userData = Information as UserResultDataInterface;
@@ -53,11 +55,11 @@ const UserRecordAdminTableCell: FC<ActionTableCellInterface> = (tableCellData) =
         handleOpen(<EditUserModal value={value} editData={userData} compareData={userData} />);
     };
 
-    const viewSuspendRecord = () =>
+    const viewSuspendRecord = async () =>
     {
         if (changeValue && setSearchUserData)
         {
-            fetchUser("SuspendUser", { username: userData.username, role: "", status: "", gender: "" });
+            await refreshUsers("SuspendUser", isAdmin, isLoggedIn, isAuthLoading);
             changeValue("Tab", 1);
             const currentSearchUserData = searchUserData ?? { username: "", role: "", status: "", gender: "" };
             setSearchUserData({ ...currentSearchUserData, username: userData.username });

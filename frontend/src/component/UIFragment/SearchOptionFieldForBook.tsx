@@ -53,11 +53,11 @@ const SearchOptionFieldForBook:FC<BookOptionFieldModal> = ({...optionData}) =>
                             :
                             <Fragment>
                                 {
-                                    DefinitionFieldSection({ definitionFields, onChange })
+                                    <DefinitionFieldSection definitionFields={definitionFields} onChange={onChange} />
                                 }
 
                                 {
-                                    ContactFieldSection({ contactFields, onChange })
+                                    <ContactFieldSection contactFields={contactFields} onChange={onChange} />
                                 }
                             </Fragment>
                         }

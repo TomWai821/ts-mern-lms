@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, ReactElement, useEffect, useState } from "react";
 
 // Context
 import { useModal } from "../../../../../Context/ModalContext";
@@ -28,7 +28,7 @@ import ExpandableTypography from "../../../../../component/UIFragment/Expandable
 import { useUserAction } from "../../../../../hooks/actionhook/useUserAction";
 import { useSuspendUserAction } from "../../../../../hooks/actionhook/useSuspendUserAction";
 
-const EditUserData = (tabValue: number, differences: JSX.Element[], compareData: UserResultDataInterface | DetailsInterfaceForSuspend, editData: UserResultDataInterface | DetailsInterfaceForSuspend) => 
+const EditUserData = (tabValue: number, differences: ReactElement[], compareData: UserResultDataInterface | DetailsInterfaceForSuspend, editData: UserResultDataInterface | DetailsInterfaceForSuspend) =>
 {
     const {EditUser} = useUserAction();
     const {EditSuspendUser} = useSuspendUserAction();
@@ -57,7 +57,7 @@ const EditUserData = (tabValue: number, differences: JSX.Element[], compareData:
 }
 
 
-const CompareSuspendUserDifference = (differences: JSX.Element[], editData: DetailsInterfaceForSuspend, compareData: DetailsInterfaceForSuspend) => 
+const CompareSuspendUserDifference = (differences: ReactElement[], editData: DetailsInterfaceForSuspend, compareData: DetailsInterfaceForSuspend) =>
 {
     const ignoreList = ["startDate", "dueDate", "description"];
 
@@ -97,7 +97,7 @@ const CompareSuspendUserDifference = (differences: JSX.Element[], editData: Deta
     return differences;
 }
 
-const CompareUserDifference = (differences: JSX.Element[], editData: UserDataInterface, compareData: UserDataInterface) => 
+const CompareUserDifference = (differences: ReactElement[], editData: UserDataInterface, compareData: UserDataInterface) =>
 {
     for (const key in editData) 
     {
@@ -122,7 +122,7 @@ const CompareUserDifference = (differences: JSX.Element[], editData: UserDataInt
 const EditUserConfirmModal:FC<EditModalInterface> = (editModalData) => 
 {
     const {value, editData, compareData} = editModalData;
-    const [differences, setDifferences] = useState<JSX.Element[]>([]);
+    const [differences, setDifferences] = useState<ReactElement[]>([]);
 
     const {handleOpen} = useModal();
     
@@ -130,7 +130,7 @@ const EditUserConfirmModal:FC<EditModalInterface> = (editModalData) =>
 
     const compareDifference = (editData: UserDataInterface | DetailsInterfaceForSuspend, compareData: UserDataInterface | DetailsInterfaceForSuspend) => 
     {
-        let differences: JSX.Element[] = [];
+        let differences: ReactElement[] = [];
        
         switch(value)
         {

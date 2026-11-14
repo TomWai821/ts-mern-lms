@@ -11,7 +11,7 @@ import { PublisherTableHeader } from "../../../Data/TableData";
 import { ItemToCenter } from "../../../Data/Style";
 import { ContactInterface } from "../../../Model/ResultModel";
 import { usePaginationService } from "../../../services/pages/paginationService";
-import { tableNameType } from "../../shared/factories/ActionTableCellForAdmin";
+import { tableNameType } from "../../shared/configs/ActionTableCellForAdmin";
 
 interface PublisherTableCellInterface
 {
