@@ -103,14 +103,14 @@ docker compose up --build -d
     | Variable                    | Value                    |
     | --------------------------- | ------------------------ |
     | ORIGIN_URI                  | http://localhost:3000    |
-    | REACT_APP_BACKEND_BASE_URL  | http://localhost:5000    |
-    | REACT_APP_MAIN_PAGE         | http://localhost:3000    |
+    | NEXT_PUBLIC_BACKEND_BASE_URL  | http://localhost:5000    |
+    | NEXT_PUBLIC_MAIN_PAGE         | http://localhost:3000    |
     | BACKEND_BASE_URL            | http://localhost:5000    |
     | STORAGE_TYPE                | LOCAL                    |
-    | REACT_APP_WEB_SOCKET_SERVER | http://localhost:5000/ws |
+    | NEXT_PUBLIC_WEB_SOCKET_SERVER | ws://localhost:5000/ws |
 
     - **Remarks**
-        - REACT_APP_WEB_SOCKET_SERVER can be ignored for cloud - Lambda deployment
+        - NEXT_PUBLIC_WEB_SOCKET_SERVER can be ignored for cloud - Lambda deployment
 
 
 2. **Ports and hostnames**

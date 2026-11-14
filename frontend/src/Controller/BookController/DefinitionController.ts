@@ -1,4 +1,4 @@
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 const contentType = "application/json";
 
 const baseUrl = `${localhost}/api/definition`
@@ -24,7 +24,7 @@ export const GetDefinition = async (type:string, data?:string) =>
     }
 }
 
-export const CreateDefinitionData = async (type:string, authToken:string, shortName:string, detailsName:string) => 
+export const CreateDefinitionData = async (type:string, shortName:string, detailsName:string) => 
 {
     try
     {
@@ -33,7 +33,8 @@ export const CreateDefinitionData = async (type:string, authToken:string, shortN
         const response = await fetch(`${baseUrl}/type=${type}`,
             {
                 method: 'POST',
-                headers: { 'content-type': contentType, 'authToken': authToken },
+                credentials:"include",
+                headers: { 'content-type': contentType},
                 body: JSON.stringify(data)
             }
         );
@@ -49,7 +50,7 @@ export const CreateDefinitionData = async (type:string, authToken:string, shortN
     }
 }
 
-export const EditDefinitionData = async (type:string, authToken:string, id:string, shortName:string, detailsName:string) => 
+export const EditDefinitionData = async (type:string, id:string, shortName:string, detailsName:string) => 
 {        
     const data = BuildBodyData(type, shortName, detailsName, id);
 
@@ -58,7 +59,8 @@ export const EditDefinitionData = async (type:string, authToken:string, id:strin
         const response = await fetch(`${baseUrl}/type=${type}`,
             {
                 method: 'PUT',
-                headers: { 'content-type': contentType, 'authToken': authToken  },
+                credentials:"include",
+                headers: { 'content-type': contentType },
                 body: JSON.stringify(data)
             }
         );
@@ -74,14 +76,15 @@ export const EditDefinitionData = async (type:string, authToken:string, id:strin
     }
 }
 
-export const DeleteDefinitionData = async (type:string, authToken:string, id:string) => 
+export const DeleteDefinitionData = async (type:string, id:string) => 
 {
     try
     {
         const response = await fetch(`${baseUrl}/type=${type}`,
             {
                 method: 'DELETE',
-                headers: { 'content-type': contentType, 'authToken': authToken  },
+                credentials:"include",
+                headers: { 'content-type': contentType },
                 body: JSON.stringify({id})
             }
         );

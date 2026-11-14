@@ -1,7 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import App from '../App';
 import { renderWithProviders } from './renderWithProviders'
+import RegisterPage from '../features/auth/RegisterPage';
+import LoginPage from '../features/auth/LoginPage';
 
 const mockResponse = ({ ok, status, body }: { ok: boolean; status: number; body: any }) =>
 {
@@ -12,10 +13,14 @@ beforeEach(() =>
 {
     document.cookie = "";
     sessionStorage.clear();
-    (global.fetch as jest.Mock) = jest.fn();
+    (global.fetch as jest.Mock) = jest.fn().mockResolvedValueOnce(
+        mockResponse({ ok: false, status: 401, body: { success: false } })
+    );
 });
 
 const user = userEvent.setup();
+const renderRegisterPage = () => renderWithProviders(<RegisterPage />);
+const renderLoginPage = () => renderWithProviders(<LoginPage />);
 
 // Test case for register page
 test('register successfully', async () => 
@@ -28,7 +33,7 @@ test('register successfully', async () =>
             body: 
             { 
                 success: true, 
-                message: "Register successfully!",
+                message: "Register Successfully!",
                 data: 
                 {
                     username: "TestUser1",
@@ -40,7 +45,7 @@ test('register successfully', async () =>
         })
     );
 
-    renderWithProviders(<App />, { route: '/register' } );
+    renderRegisterPage();
     
     const emailInput = await screen.findByPlaceholderText(/email/i);
     await user.type(emailInput, "TestUser1@example.com");
@@ -56,7 +61,7 @@ test('register successfully', async () =>
     await user.click(screen.getByRole('button', { name: /Register/i }));
 
     const alert = await screen.findByRole('alert');
-    expect(alert).toHaveTextContent(/Register successfully!/);
+    expect(alert).toHaveTextContent(/Register Successfully!/);
 });
 
 test('fail to register (Use already registration data)', async () => 
@@ -74,7 +79,7 @@ test('fail to register (Use already registration data)', async () =>
         })
     );
 
-    renderWithProviders(<App />, { route: '/register' } );
+    renderRegisterPage();
 
     await user.type(screen.getByPlaceholderText(/email/i), "TestUser1@example.com");
     await user.type(screen.getByPlaceholderText(/username/i), "TestUser1");
@@ -91,7 +96,7 @@ test('fail to register (Use already registration data)', async () =>
 
 test('Input the DOB which less than 6 years old', async () => 
 {
-    renderWithProviders(<App />, { route: '/register' } );
+    renderWithProviders(<RegisterPage/>);
     
     await user.type(screen.getByPlaceholderText(/email/i), "TestUser1@example.com");
     await user.type(screen.getByPlaceholderText(/username/i), "TestUser1");
@@ -127,7 +132,7 @@ test('login successfully', async () =>
         })
     );
 
-    renderWithProviders(<App />, { route: '/login' });
+    renderLoginPage();
 
     const emailInput = await screen.findByPlaceholderText(/email/i);
     await user.type(emailInput, "IamTester@gmail.com");
@@ -154,7 +159,7 @@ test('fail to login', async () =>
         })
     );
 
-    renderWithProviders(<App />, { route: '/login' });
+    renderWithProviders(<LoginPage/>);
 
     await user.type(screen.getByPlaceholderText(/email/i), "IamTester@gmail.com");
     await user.type(screen.getByPlaceholderText(/password/i), "IamTester123");
@@ -168,7 +173,7 @@ test('fail to login', async () =>
 // The following test case for helpText in login page
 test('the email input null (In login page)', async () => 
 {
-    renderWithProviders(<App />, { route: '/login' } );
+    renderLoginPage();
 
     await user.type(screen.getByPlaceholderText(/password/i), "IamTester123");
     await user.click(screen.getByRole('button', { name: /Login/i }));
@@ -178,7 +183,7 @@ test('the email input null (In login page)', async () =>
 
 test('the password input null (In login page)', async () => 
 {
-    renderWithProviders(<App />, { route: '/login' } );
+    renderLoginPage();
 
     await user.type(screen.getByPlaceholderText(/email/i), "IamTester@gmail.com");
     await user.click(screen.getByRole('button', { name: /Login/i }));

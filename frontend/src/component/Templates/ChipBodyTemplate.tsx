@@ -5,9 +5,9 @@ import { FC } from "react";
 import { ChipBodyInterface } from "../../Model/UserTableModel";
 
 // Modals
-import CreateDefinitionModal from "../Modal/Definition/CreateDefinitionModal";
-import EditDefinitionDataModal from "../Modal/Definition/EditDefinitionModal";
-import DeleteDefinitionConfirmModal from "../Modal/Confirmation/Definition/DeleteDefinitionConfirmModal";
+import CreateDefinitionModal from "../../features/definition/components/modals/actions/CreateDefinitionModal";
+import EditDefinitionDataModal from "../../features/definition/components/modals/actions/EditDefinitionModal";
+import DeleteDefinitionConfirmModal from "../../features/definition/components/modals/confirms/DeleteDefinitionConfirmModal";
 
 import { useModal } from "../../Context/ModalContext";
 

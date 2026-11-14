@@ -1,4 +1,4 @@
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 const url:string = `${localhost}/api/book`;
 const contentType:string = "application/json";
 
@@ -15,14 +15,14 @@ export interface IBookUpdateData
     description: string;
 }
 
-export const updateBookRecord = async (authToken:string, bookID: string, bookUpdateData: IBookUpdateData) => 
+export const updateBookRecord = async (bookID: string, bookUpdateData: IBookUpdateData) => 
 {
     const data = createFormData(bookUpdateData);
 
     const response = await fetch(`${url}/record/id=${bookID}`,
         {
             method: 'PUT',
-            headers: { 'authToken': authToken },
+            credentials:"include",
             body: data
         }
     );
@@ -30,12 +30,13 @@ export const updateBookRecord = async (authToken:string, bookID: string, bookUpd
     return response;
 }
 
-export const returnBookAndChangeStatus = async (authToken:string, loanBookRecord:string, finesPaid?:string) => 
+export const returnBookAndChangeStatus = async (loanBookRecord:string, finesPaid?:string) => 
 {
     const response = await fetch(`${url}/loanRecord/id=${loanBookRecord}`,
         {
             method: 'PUT',
-            headers: { 'content-type': contentType, 'authToken': authToken },
+            credentials:"include",
+            headers: { 'content-type': contentType },
             body: JSON.stringify({ finesPaid })
         }
     );

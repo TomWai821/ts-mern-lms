@@ -1,5 +1,5 @@
 const contentType = "application/json";
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 const url:string = `${localhost}/api/book`;
 
 export interface IBookCreationData
@@ -14,14 +14,14 @@ export interface IBookCreationData
     publishDate: string;
 }
 
-export const createBookRecord = async (authToken: string, bookCreationData: IBookCreationData) => 
+export const createBookRecord = async (bookCreationData: IBookCreationData) => 
 {
     const formData = createFormData(bookCreationData);
     
     const response = await fetch(`${url}/record`,
         {
             method: 'POST',
-            headers: { 'authToken': authToken },
+            credentials:"include",
             body: formData
         }
     );
@@ -49,7 +49,7 @@ const createFormData = (bookCreationData: IBookCreationData) =>
     return formData;
 }
 
-export const createLoanBookRecord = async (authToken:string, bookID:string, loanDate:Date, dueDate:Date, userID?:string) => 
+export const createLoanBookRecord = async (bookID:string, loanDate:Date, dueDate:Date, userID?:string) => 
 {
     const loanBookBody:Record<string, any> =
     {
@@ -62,7 +62,8 @@ export const createLoanBookRecord = async (authToken:string, bookID:string, loan
     const response = await fetch(`${url}/loanRecord`,
         {
             method: 'POST',
-            headers: { 'Content-Type': contentType, 'authToken': authToken },
+            credentials: "include",
+            headers: { 'Content-Type': contentType },
             body: JSON.stringify(loanBookBody)
         }
     );
@@ -70,13 +71,14 @@ export const createLoanBookRecord = async (authToken:string, bookID:string, loan
     return response;
 }
 
-export const createFavouriteBookRecord = async (authToken:string, bookID:string) => 
+export const createFavouriteBookRecord = async (bookID:string) => 
 {
     
     const response = await fetch(`${url}/favourite`,
         {
             method: 'POST',
-            headers: { 'Content-Type': contentType, 'authToken': authToken },
+            credentials:"include",
+            headers: { 'Content-Type': contentType},
             body: JSON.stringify({bookID})
         }
     );

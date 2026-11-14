@@ -9,9 +9,8 @@ import { useAuthContext } from "../../Context/User/AuthContext";
 
 const CustomTab:FC<TabInterface> = (TabData) => 
 {
-
     const {tabLabel, type, value, paginationValue, changeValue, paginationOption} = TabData;
-    const {IsAdmin, IsLoggedIn} = useAuthContext();
+    const {isAdmin, isLoggedIn} = useAuthContext();
 
     const handleTabChange = (event: ChangeEvent<{}>, newValue: number) => 
     {
@@ -26,7 +25,7 @@ const CustomTab:FC<TabInterface> = (TabData) =>
 
     const condition = () =>
     {
-        return IsAdmin() || (IsLoggedIn() && type === "Record");
+        return isAdmin || (isLoggedIn && type === "Record");
     }
 
     return(

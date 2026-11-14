@@ -18,17 +18,22 @@ Figure 1 - Deployment Architecture Diagram<br>
 Figure 2 - Development Architecture Diagram<br>
 
 **Development Infrastructure**
-- Environment Parity
-    - Leveraging Docker Compose to mirror the production environment locally<br>
-      (Reducing "works on my machine" inconsistencies via consistent container orchestration)
+- **Environment Parity**
+  - Docker Compose is used to replicate the application stack in a local development environment
+  - This reduces "works on my machine" issues by ensuring consistent containerized services and configurations across development environments
 
-- Network Isolation
-    - All internal services communicate securely within a Docker Virtual Network
-    - The database (MongoDB) is isolated from external access, accessible only by the backend service
-    
-- Persistence & Config
-    - Utilises Docker Volumes for persistent data retention
-    - Decoupled environment-specific settings via localised .env files for enhanced security
+- **Network Isolation**
+  - Frontend, backend, and database services communicate through an isolated Docker network
+  - MongoDB is not directly exposed to external clients and can only be accessed through the backend service
+
+- **Persistence & Configuration Management**
+  - Docker Volumes provide persistent database storage across container restarts
+  - Environment-specific configurations are managed through separate .env files, enabling secure and flexible deployment settings
+
+- **Continuous Integration**
+  - GitHub Actions is integrated as the CI/CD pipeline for automated build and testing processes
+  - Quality assurance checks are executed before code changes are integrated into the codebase
+
           
 
 

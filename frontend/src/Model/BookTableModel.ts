@@ -1,5 +1,5 @@
-import { ContactState } from "./ContextAndProviderModel";
-import { BookDataInterface, LoanBookInterface } from "./ResultModel";
+
+import { BookDataInterface, ContactInterface, LoanBookInterface } from "./ResultModel";
 
 interface BookSearchInterface extends SelfLoanBookSearchInterface, ContactSearchInterface
 {
@@ -47,7 +47,7 @@ interface BookRecordTableInterface
 interface ContactTableInterface
 {
     value?: number;
-    contactData: ContactState;
+    contactData: ContactInterface[][];
     paginationValue:number;
 }
 

@@ -15,10 +15,6 @@ interface FindUserDateInterface extends UserDataInterface
     dueDate:Date;
 }
 
-interface FindUserInterface extends FindUserDateInterface
-{
-    tableName?:string;
-}
 
 interface CreateUserInterface extends UserDataInterface
 {
@@ -43,4 +39,4 @@ interface ChipBodyInterface
     data:any[]; 
 }
 
-export type {UserDataInterface, FindUserInterface, CreateUserInterface, UserDataTableInterface, ChipBodyInterface}
+export type {UserDataInterface, CreateUserInterface, UserDataTableInterface, ChipBodyInterface}

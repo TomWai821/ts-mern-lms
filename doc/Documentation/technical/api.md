@@ -1,13 +1,20 @@
 ## API Overview
 
 ### Authentication APIs
-- JWT-based authentication is used for user identity verification and access control
+- Server-based JWT authentication is used for user identity verification and access control
 
 | Endpoint                | Purpose             |
 | ----------------------- | ------------------- |
 | POST /api/user/login    | User authentication |
 | POST /api/user/register | User registration   |
+| POST /api/user/logout   | User logout         |
 
+### User Data APIs
+
+| Endpoint               | Purpose                                  |
+| ---------------------- | ---------------------------------------- |
+| GET /api/me            | Get User Data (After login/registration) |
+| GET /api/me/qrCode     | Get QR Code Data                         |
 
 
 ### User Management APIs

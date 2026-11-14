@@ -1,77 +1,50 @@
 ## The Engineering Evolution
 After graduation, I refactored the entire system to align with industry-standard engineering principles, focusing on Decoupling, Resilience, and Cloud-Native scalability:
 
-### Architecture Overhaul
-- **Problem**
-    - The original implementation concentrated request handling and business logic within controllers, making the codebase harder to maintain as features expanded
+### Architecture & Separation of Concerns
+- **Original State**
+    - Business logic, request handling, and UI concerns were tightly coupled across the application
 
-- **Solution**
-    - Refactored the backend into a layered architecture:
-        - Router → Middleware → Controller → Service → Model
+- **Evolution**
+    - Introduced layered backend architecture (Router → Middleware → Controller → Service → Model)
+    - Refactored frontend pages to use reusable hooks and configuration-driven UI patterns
 
-- **Key Lesson**
-    - Separation of concerns improves maintainability, testing, and long-term scalability by isolating business logic from transport and persistence layers
-
-<hr>
-
-### External API Integration Refactoring
-- **Problem**
-    - Google Books API requests were originally performed directly from the frontend to improve iteration speed during early development
-
-- **Challenge**
-    - Client-side API integration exposed implementation details and made sensitive configuration difficult to protect<br>
-      (Since frontend environment variables are ultimately bundled and delivered to the browser)
-
-- **Solution**
-    - Moved Google Books integration to the backend service layer and exposed a controlled internal API for frontend consumption
-
-- **Key Lesson**
-    - External service integrations should be mediated through backend services whenever security, request validation, response transformation, or future extensibility are required
+- **Key Learning**
+    - Clear separation of concerns improves maintainability, testability, and long-term scalability
 
 <hr>
 
-### DevOps & Deployment Evolution
-- **Problem**
-    - Local development, testing, and deployment environments frequently drifted apart
+### Service Boundary & Security Thinking
+- **Original State**
+    - External APIs were integrated directly from the frontend for rapid prototyping
 
-- **Solution**
-    - Introduced Docker-based environment parity and GitHub Actions CI/CD pipelines
+- **Evolution**
+    - Moved third-party integrations into backend services and exposed controlled internal APIs
 
-- **Key Lesson**
-    - Automated validation and consistent runtime environments significantly reduce environment-specific failures
-
-<hr>
-
-### Security Evolution
-- **Challenge**
-    - Certain loan operations required validation from multiple parties
-
-- **Solution**
-    - Implemented dual-token authorisation requiring both librarian and borrower authentication
-
-- **Key Lesson**
-    - Security requirements should be reflected directly in business workflows rather than treated as a separate concern
+- **Key Learning**
+    - Backend services provide stronger control over validation, security, and future extensibility
 
 <hr>
 
-### Frontend Standardisation
-- **Problem**
-    - Administration pages contained duplicated state management and UI configuration logic
+### DevOps & Cloud-Native Deployment
+- **Original State**
+    - Deployment, development, and execution environments were treated as separate concerns
 
-- **Solution**
-    - Introduced metadata-driven UI configuration and reusable custom hooks
+- **Evolution**
+    - Introduced Docker and GitHub Actions
+    - Adapted background processing workflows to serverless constraints using EventBridge scheduling
 
-- **Key Lesson**
-    - Configuration-driven design reduces duplication and improves long-term maintainability
+- **Key Learning**
+    - Infrastructure decisions directly influence application design, especially in cloud-native environments
 
 <hr>
 
-### Background Job Evolution
-- **Problem**
-    - AWS Lambda cannot maintain continuously running background schedulers due to its stateless execution model
+### Security as Part of Business Logic
+- **Challenge
+    - Certain operations require approval from multiple actors rather than a single authenticated user
 
-- **Solution** 
-    - Introduced Amazon EventBridge Scheduler to trigger maintenance jobs such as overdue loan processing
+- **Evolution**
+    - Introduced dual-party approval flows requiring both librarian and borrower validation
 
-- **Key Lesson**
-    - Serverless architectures require event-driven scheduling patterns rather than long-running background services
+- **Key Learning**
+    - Security should be embedded into business workflows rather than implemented as a separate layer

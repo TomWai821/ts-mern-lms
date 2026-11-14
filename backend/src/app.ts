@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from "cookie-parser";
 import { routerHandler } from './routes';
 
 const ORIGIN_URI = process.env.ORIGIN_URI || "";
@@ -17,6 +18,7 @@ app.use(cors(
 }
 ));
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

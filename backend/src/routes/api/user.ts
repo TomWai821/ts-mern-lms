@@ -1,20 +1,22 @@
 import express from 'express';
 import { UserRegisterRules, UserLoginRules, UserModifyDataRules, UserModifySelfDataRules } from '../../validator/expressBodyValidator'
-import { DeleteUser, GetUserData, ChangeUserData, UserLogin, UserRegister, ModifySuspendListData, UpdateUserProfileData, GetSelfUserData, SuspendUser, UnsuspendUser } from '../../controller/userController';
-import { FetchUserFromHeader } from '../../middleware/User/authMiddleware';
+import { DeleteUser, GetUserData, ChangeUserData, ModifySuspendListData, UpdateUserProfileData, GetSelfUserData, SuspendUser, UnsuspendUser } from '../../controller/userController';
+import { FetchAuthTokenFromCookie } from '../../middleware/User/authMiddleware';
 import { SuspendListValidation, CompareUserStatus, FoundUserFromParams, UserLoginDataValidation, UserRegisterDataValidation } from '../../middleware/User/userValidationMiddleware';
 import { BuildUserUpdateDataService } from '../../service/user/userUpdateDataService';
 import { LoginAndFindUser, ValidateAuthTokenAsAdmin, ValidationForModifyStatus } from '../../data/middlewareGroup';
+import { UserRegister, UserLogin, UserLogout } from '../../controller/authController';
 
 const router = express.Router();
 
 // For librarian
-router.get('/UserData/tableName=:tableName', FetchUserFromHeader, GetUserData);
-router.get('/UserData', UserModifySelfDataRules, FetchUserFromHeader, GetSelfUserData);
+router.get('/UserData/tableName=:tableName', FetchAuthTokenFromCookie, GetUserData);
+router.get('/UserData', UserModifySelfDataRules, FetchAuthTokenFromCookie, GetSelfUserData);
 
 // For guest
 router.post('/Register', UserRegisterRules, UserRegisterDataValidation, UserRegister);
 router.post('/Login', UserLoginRules, UserLoginDataValidation, UserLogin);
+router.post('/Logout', UserLogout)
 
 // For modify user data as admin (librarian)
 router.put('/UserData/id=:id', UserModifyDataRules, ...ValidateAuthTokenAsAdmin, FoundUserFromParams, BuildUserUpdateDataService, ChangeUserData);

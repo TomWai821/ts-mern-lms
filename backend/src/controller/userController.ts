@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import { AuthRequest, CreateUserInterface } from '../model/requestInterface';
-import { jwtSign, bcryptHash, comparePassword } from './hashing'
+import { Response } from 'express';
+import { AuthRequest } from '../model/requestInterface';
+import { bcryptHash, comparePassword } from './hashing'
 import { UserInterface } from '../model/userSchemaInterface';
-import { CreateUser, FindUser, FindUserByIDAndUpdate } from '../schema/user/user';
+import { FindUser, FindUserByIDAndUpdate } from '../schema/user/user';
 
 import { ObjectId } from 'mongoose';
 import { FindSuspendListByIDAndUpdate } from '../schema/user/suspendList';
@@ -14,68 +14,6 @@ import { UnsuspendUserService } from '../service/user/UnSuspendUserService';
 import { SuspendUserService } from '../service/user/SuspendUserService';
 import { UserDataUpdateService } from '../service/user/userUpdateDataService';
 import { GetUserDataService } from '../service/user/GetUserDataService';
-
-export const UserRegister = async(req: Request, res: Response) =>
-{
-    const { email, username, password, gender, birthDay, role, status }: CreateUserInterface = req.body;
-    let success = false;
-
-    try
-    {   
-        const initals = (username.split(' ').map((word) => word[0].toUpperCase())).slice(0, 2);
-        const avatarUrl = `https://via.placeholder.com/150?text=${initals}`
-
-        // Hash password with bcrypt after validate email and username
-        const hashedPassword = await bcryptHash(password); 
-        const mongoDate = new Date(birthDay);
-    
-        // Create a new user after hashing the password
-        const newUser = await CreateUser({ email, username, password: hashedPassword, gender, role, status, birthDay: mongoDate, avatarUrl});
-
-        if(!newUser)
-        {
-            return res.status(400).json({success, error: "Failed to create User"});
-        }
-        
-        // Get user id after create the user and Transfer user id as authToken with jsonWebToken
-        const data = { user: { _id: newUser?._id } }; 
-        const authToken = await jwtSign(data); 
-        success = true; 
-    
-        broadcast(UserEvent.USER_CREATE, newUser);
-        res.json({ success, message: "Register successfully!", data:{authToken, username, status: newUser.status, role: newUser.role, avatarUrl: avatarUrl} })
-    }
-    catch (error) 
-    { 
-        console.error(`Unhandled error: ${error}`);
-        res.status(500).json({ success, error: 'Internal Server Error!' });
-    }
-}
-
-export const UserLogin = async (req: AuthRequest, res: Response) =>
-{
-    const user = req.user as UserInterface;
-    let success = false;
-    
-    try 
-    {
-        const data = { user: { _id: user._id } };
-        const username = user.username;
-        const role = user.role;
-        const status = user.status;
-        const avatarUrl = user.avatarUrl;
-    
-        const authToken: string = await jwtSign(data);
-
-        success = true;
-        res.json({ success, message: "Login Successfully!" , data:{username, role, authToken, status, avatarUrl} });
-    } 
-    catch (error) 
-    {
-        console.error(`Unhandled error: ${error}`);
-        res.status(500).json({ success, error: 'Internal Server Error!' });
-    }
-};
 
 export const GetUserData = async (req: AuthRequest, res: Response) =>
 {

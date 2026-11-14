@@ -35,7 +35,7 @@ root.render
                                     </ModalProvider>
                                 </AlertProvider>
                             </UserProvider>
-                            </BookProvider>
+                        </BookProvider>
                     </RecommendBookProvider>
                 </SelfBookRecordProvider>
             </DefinitionProvider>

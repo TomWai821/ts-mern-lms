@@ -1,20 +1,17 @@
 const contentType:string = 'application/json';
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 const url:string = `${localhost}/api/user`;
 
-const fetchData = async (authToken:string, url: string, data: Record<string, any>) => 
+const fetchData = async (url: string, data: Record<string, any>) => 
 {
     try 
     {
         const response = await fetch(url, 
         {
             method: 'PUT',
-            headers: 
-            { 
-                'content-type': contentType, 
-                'authToken': authToken
-            },
+            credentials:"include",
+            headers: { 'content-type': contentType },
             body: JSON.stringify(data)
         });
 
@@ -27,28 +24,28 @@ const fetchData = async (authToken:string, url: string, data: Record<string, any
     }
 };
 
-const ModifyProfileDataController = async (authToken:string, option:string, body:any) => 
+const ModifyProfileDataController = async (option:string, body:any) => 
 {
     const URL = `${url}/UserData/type=${option}`;
     const data: { username: string; password?: undefined;} | { password: string; username?: undefined;} = body; 
-    return await fetchData(authToken, URL, data);
+    return await fetchData(URL, data);
 }
 
-const ModifyUserDataController = async (authToken:string, userId: string, username:string, email:string, gender:string, role:string) => 
+const ModifyUserDataController = async (userId: string, username:string, email:string, gender:string, role:string) => 
 {
     const data = { username, email, gender, role };
     const URL = `${url}/UserData/id=${userId}`;
-    return await fetchData(authToken, URL, data);
+    return await fetchData(URL, data);
 };
 
-const ModifySuspendListDataController = async(authToken:string, userId:string, suspendListID:string, dueDate:Date, description:string) => 
+const ModifySuspendListDataController = async(userId:string, suspendListID:string, dueDate:Date, description:string) => 
 {
     const data =  { suspendListID, dueDate, description };
     const URL = `${url}/SuspendListData/id=${userId}`;
-    return await fetchData(authToken, URL, data);
+    return await fetchData(URL, data);
 }
 
-const ModifyStatusController = async (type:string, authToken:string, userId: string, statusForUserList?: string, ListID?:string, startDate?: Date, dueDate?: Date, description?:string) => 
+const ModifyStatusController = async (type:string, userId: string, statusForUserList?: string, ListID?:string, startDate?: Date, dueDate?: Date, description?:string) => 
 {
     const statusDataConfig =
     {
@@ -59,7 +56,7 @@ const ModifyStatusController = async (type:string, authToken:string, userId: str
     const statusData = statusDataConfig[type as keyof typeof statusDataConfig];
         
     const URL = `${url}/${type}/id=${userId}`;
-    return await fetchData(authToken, URL, statusData) as Response;
+    return await fetchData(URL, statusData) as Response;
 };
 
 export { ModifyUserDataController, ModifyProfileDataController, ModifySuspendListDataController, ModifyStatusController };

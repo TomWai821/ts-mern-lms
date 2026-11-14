@@ -1,25 +1,4 @@
-import { LoanBookInterface, ResultInterface } from '../Model/ResultModel';
-import { SetUserCookie } from './CookieController'
-
-// For Register/Login
-export const handleSuccess = async(result: ResultInterface, stayLogin:boolean) =>
-{
-    const userData = result.data;
-    if(userData)
-    {
-        if(!stayLogin)
-        {
-            sessionStorage.setItem("authToken", userData.authToken as string);
-            sessionStorage.setItem("username", userData.username);
-            sessionStorage.setItem("role", userData.role);
-            sessionStorage.setItem("status", userData.status);
-            sessionStorage.setItem("avatarUrl", userData.avatarUrl as string);
-            return;
-        }
-        
-        SetUserCookie(userData.authToken as string, userData.username, userData.role , userData.status, userData.avatarUrl as string, 30);
-    }
-}
+import { LoanBookInterface, } from '../Model/ResultModel';
 
 export const StatusDetection = (status:string, value:string) =>
 {

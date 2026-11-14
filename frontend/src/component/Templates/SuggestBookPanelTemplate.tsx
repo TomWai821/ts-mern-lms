@@ -1,15 +1,19 @@
 import { Avatar, Box, Typography } from "@mui/material"
 import { FC, Fragment } from "react"
-import { BookDataInterface, LoanBookInterface } from "../../Model/ResultModel"
+import { BookDataInterface, GetResultInterface, LoanBookInterface } from "../../Model/ResultModel"
 import { TransferDateToISOString } from "../../Controller/OtherController";
 import { useModal } from "../../Context/ModalContext";
-import DisplayBookDataModal from "../Modal/Book/DisplayBookDataModal";
+import DisplayBookDataModal from "../../features/book/components/modals/dataDisplay/DisplayBookDataModal";
 
-const SuggestBookPanelTemplate:FC<{value:number, title:string, data:BookDataInterface[] | LoanBookInterface[]}> = (suggestBookPanelData) => 
+interface PropsInterface
 {
-    const { value, title, data } = suggestBookPanelData;
-    const { handleOpen } = useModal();
+    value: number;
+    title: string;
+    recommendationData: LoanBookInterface[] | GetResultInterface[] | [];
+}
 
+const useSuggestBookPanelStyles = () => 
+{
     const PublishPanelSyntax = 
     {
         padding: '20px', display: 'grid', justifyContent: 'center', 
@@ -23,6 +27,16 @@ const SuggestBookPanelTemplate:FC<{value:number, title:string, data:BookDataInte
 
     const PanelSyntax = {display: 'grid', textAlign: 'center', justifyContent: 'center', width: "200px", height: "320px", padding: '10px 0'}
 
+    return {PublishPanelSyntax, ImageSyntax, PanelHoverSyntax, PanelSyntax};
+}
+
+const SuggestBookPanelTemplate:FC<PropsInterface> = (suggestBookPanelData) => 
+{
+    const { value, title, recommendationData } = suggestBookPanelData;
+    const { handleOpen } = useModal();
+
+    const {PublishPanelSyntax, ImageSyntax, PanelHoverSyntax, PanelSyntax} = useSuggestBookPanelStyles();
+
     const isBookDataInterface = (book:any): book is BookDataInterface => 
     {
         return 'image' in book && 'bookname' in book 
@@ -30,18 +44,18 @@ const SuggestBookPanelTemplate:FC<{value:number, title:string, data:BookDataInte
 
     const openDisplayBookDataModal = (data: BookDataInterface | LoanBookInterface) => 
     {
-        handleOpen(<DisplayBookDataModal position={"mainPage"} value={0} data={data}/>);
+        handleOpen(<DisplayBookDataModal value={0} data={data}/>);
     }
     
     return(
-        data.length > 0 ?
+        recommendationData && recommendationData.length > 0 ?
         <Box sx={{padding: '20px 0'}}>
             <Typography sx={{fontSize: '24px', paddingBottom: '10px'}}>{title}</Typography>
             <Box sx={PublishPanelSyntax}>
                 {
-                    data.map((book, index) => 
+                    recommendationData.map((book, index) => 
                     (
-                        <Box key={index} sx={{ ...PanelSyntax, "&:hover": PanelHoverSyntax }} onClick={() => openDisplayBookDataModal(book)}>
+                        <Box key={index} sx={{ ...PanelSyntax, "&:hover": PanelHoverSyntax }} onClick={() => openDisplayBookDataModal(book as BookDataInterface | LoanBookInterface)}>
                             {
                                 isBookDataInterface(book) ? 
                                 (
@@ -58,9 +72,9 @@ const SuggestBookPanelTemplate:FC<{value:number, title:string, data:BookDataInte
                                 : 
                                 (
                                     <Fragment>
-                                        <Avatar src={book.bookDetails?.image?.url} alt="Preview" variant="rounded" sx={ImageSyntax}/>
-                                        <Typography sx={{width: "175px"}}>{book.bookDetails?.bookname}</Typography>
-                                        <Typography>{`(${book.count} Loans)`}</Typography>
+                                        <Avatar src={(book as LoanBookInterface).bookDetails?.image?.url} alt="Preview" variant="rounded" sx={ImageSyntax}/>
+                                        <Typography sx={{width: "175px"}}>{(book as LoanBookInterface).bookDetails?.bookname}</Typography>
+                                        <Typography>{`(${(book as LoanBookInterface).count} Loans)`}</Typography>
                                     </Fragment>
                                 )
                             }

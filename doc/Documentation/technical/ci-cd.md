@@ -17,7 +17,6 @@ Figure 1 - CI/CD process overview <br>
 - Successful builds publish Docker images to Amazon ECR and generate immutable image digests for deployment
 
 
-
 ### Deployment Strategy
 - AWS Lambda deployments are updated using CI-generated image digests rather than mutable tags
 - Frontend deployment is triggered through Vercel Deploy Hooks only after backend deployment succeeds

@@ -54,21 +54,21 @@ export interface BookDataInterface
     _id:string;
     image?: ImageInterface;
     bookname:string;
-    genreID:string;
     genre?:string;
+    genreID:string;
     language?:string;
     languageID:string;
     author?:string;
     authorID:string;
     publisher?:string;
     publisherID:string;
+    publishDate: Date | string;
     status:string;
     description: string;
     genreDetails: DefinitionInterface;
     languageDetails: DefinitionInterface;
     authorDetails: ContactInterface;
     publisherDetails: ContactInterface;
-    publishDate: Date | string;
 }
 
 export interface BookDataInterfaceForEdit

@@ -1,13 +1,16 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ContactType, fetchContactData, fetchContactDataWithFliter } from "../contents/contactService";
+import { useAuthContext } from "../../Context/User/AuthContext";
 import { useContactContext } from "../../Context/Book/ContactContext";
 
 const defaultValue = {author: "", publisher: ""};
-const title = ["Author", "Publisher"];
+const title = ["Author", "Publisher"] as ContactType[];
 
 export const useContactFilter = (tabValue: number) =>
 {
-    const { fetchContactDataWithFilterData } = useContactContext();
     const [searchContact, setSearchContact] = useState(defaultValue);
+    const {isAdmin} = useAuthContext();
+    const {initContacts, refreshContacts, modifyContacts} = useContactContext();
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -15,30 +18,20 @@ export const useContactFilter = (tabValue: number) =>
         setSearchContact({...searchContact, [name]: value});
     }
 
-    const SearchContact = () => 
+    const SearchContact = async() => 
     {
-        switch(tabValue)
-        {
-            case 0:
-                fetchContactDataWithFilterData(title[tabValue], searchContact.author);
-                break;
+        const appliedSearchData = tabValue === 0 ? searchContact.author : searchContact.publisher;
+        const actionType = tabValue === 0 ? "SET_AUTHOR" : "SET_PUBLISHER";
 
-            case 1:
-                fetchContactDataWithFilterData(title[tabValue], searchContact.publisher);
-                break;
-        }
+        const searchResult = await fetchContactDataWithFliter(title[tabValue], isAdmin, appliedSearchData);
+        modifyContacts({type: actionType, payload: searchResult});
     }
 
     const resetFilter = useCallback(() => 
     {
-        fetchContactDataWithFilterData(title[tabValue], "");
+        refreshContacts(title[tabValue]);
         setSearchContact(defaultValue);
-    }, [tabValue, fetchContactDataWithFilterData])
-
-    useEffect(() =>
-    {
-        resetFilter()
-    },[tabValue, resetFilter])
+    }, [tabValue])
 
     return { searchContact, setSearchContact, onChange, SearchContact, resetFilter };
 }

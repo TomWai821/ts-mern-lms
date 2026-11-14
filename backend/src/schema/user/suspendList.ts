@@ -4,6 +4,8 @@ import { printError } from "../../utils/Utils";
 import { FindUserByIDAndUpdate } from "./user";
 import { suspendListStatus } from "../../data/enums";
 
+type SuspendListStatus = typeof suspendListStatus[number];
+
 const SuspendListSchema = new mongoose.Schema<SuspendListInterface>
 (
     {
@@ -47,11 +49,11 @@ export const GetSuspendList = async (data?: Record<string, any>) =>
     }
 }
 
-export const GetSuspendListCount = async (roleID?: string) => 
+export const GetSuspendListCount = async (filter?:{status?: SuspendListStatus;}) => 
 {
-    if(roleID)
+    if(filter)
     {
-        return await SuspendList.countDocuments({ where: { role: roleID }});
+        return await SuspendList.countDocuments(filter);
     }
     return await SuspendList.countDocuments();
 }

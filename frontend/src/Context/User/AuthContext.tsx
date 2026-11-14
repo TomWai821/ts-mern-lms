@@ -1,98 +1,81 @@
-import { createContext, FC, useCallback, useContext, useEffect, useState } from "react";
-import { ChildProps, AuthContextProps } from "../../Model/ContextAndProviderModel";
-import { GetUserCookie } from "../../Controller/CookieController";
+import { createContext, Dispatch, FC, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
+import { ChildProps } from "../../Model/ContextAndProviderModel";
 import { ViewProfileModel } from "../../Model/InputFieldModel";
-import { GetResultInterface } from "../../Model/ResultModel";
-import { UserDataInterface } from "../../Model/UserTableModel";
-import { FetchUserData } from "../../Controller/UserController/UserGetController";
+import { GetCurrentUserController } from "../../Controller/UserController/UserGetController";
+import { LogoutController } from "../../Controller/UserController/UserPostController";
+
+const mainPage:string = process.env.NEXT_PUBLIC_MAIN_PAGE as string;
+
+interface AuthContextProps
+{
+    user: ViewProfileModel | null;
+    setUser: Dispatch<SetStateAction<ViewProfileModel | null>>;
+    isAuthLoading: boolean;
+    isLoggedIn: boolean;
+    isAdmin: boolean;
+    fetchUser: () => Promise<void>;
+    handleLogout: () => Promise<void>;
+}
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: FC<ChildProps> = ({ children }) =>
 {
-    const [Credentials, setCredentials] = useState<ViewProfileModel>({ email: "", gender: "", username: "", role: ""});
-    const mainPage:string = process.env.REACT_APP_MAIN_PAGE as string;
+    const [user, setUser] = useState<ViewProfileModel | null>(null);
+    const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-    const fetchUser = useCallback(async () => 
+    const isLoggedIn = !!user;
+    const isAdmin = user?.role === "Admin";
+
+    const fetchUser = useCallback(async() =>
     {
-        const authToken = GetData("authToken");
+        setIsAuthLoading(true);
 
-        if (authToken) 
+        try
         {
-            try
+            const response = await GetCurrentUserController("Self") as Response;
+
+            if(!response.ok)
             {
-                const userData = await FetchUserData(undefined, authToken);
-    
-                if (userData) 
-                {
-                    updateCredentials(userData);
-                }
-            } 
-            catch (error) 
-            {
-                console.log('Error while fetching user', error);
+                setUser(null);
+                return;
             }
-        }
-    },[])
-    
-    const updateCredentials = (userData: GetResultInterface) =>
-    {
-        const foundUser = Array.isArray(userData.foundUser) 
-        ? userData.foundUser[0] ?? {} 
-        : (userData.foundUser as UserDataInterface) ?? {};
 
-    
-        setCredentials({ username: foundUser.username ?? "", gender: foundUser.gender ?? "", role: foundUser.role ?? "", email: foundUser.email ?? "" });
-    }
-
-    const IsLoggedIn = () => 
-    {
-        const tokenFromCookie = document.cookie.match("authToken");
-    
-        if (tokenFromCookie || sessionStorage.getItem('authToken')) 
-        {
-            return true;
+            const result = await response.json();
+            setUser(result.data);
         }
-        return false;
-    }
-    
-    const GetData = (data:string): string | undefined | null => 
-    {
-        const DataList = ["authToken", "role", "username", "avatarUrl", "status"];
-    
-        if(DataList.includes(data))
+        catch(error)
         {
-            return GetUserCookie(data) as string || sessionStorage.getItem(data);
+            setUser(null);
         }
-    
-        return undefined;
-    }
-    
-    const IsAdmin = (): boolean => 
-    {
-        return GetData("role") === "Admin";
-    }
+        finally
+        {
+            setIsAuthLoading(false);
+        }
+    },[]);
 
     const handleLogout = async() =>
     {
-        if(document.cookie)
+        try
         {
-            document.cookie = "userInfo=" + {} + '; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        }
-        sessionStorage.clear();
-        window.location.href = mainPage;
-    }
+            await LogoutController();
 
-    useEffect(() => 
-    {
-        if(IsLoggedIn())
-        {
-            fetchUser()
+            setUser(null);
+            window.location.href = mainPage;
         }
-    },[fetchUser])
+        catch(error)
+        {
+            console.error(error);
+        }
+    };
+
+    useEffect(() =>
+    {
+        fetchUser();
+    },[fetchUser]);
     
     return(
-        <AuthContext.Provider value={{Credentials, fetchUser, IsLoggedIn, GetData, IsAdmin, handleLogout}}>
+        <AuthContext.Provider value={{ user, setUser, isAuthLoading, isLoggedIn, isAdmin, fetchUser, handleLogout}}>
             {children}
         </AuthContext.Provider>
     )

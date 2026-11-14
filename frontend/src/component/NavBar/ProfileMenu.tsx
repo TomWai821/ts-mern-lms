@@ -1,3 +1,4 @@
+"use client";
 import { FC } from 'react';
 import { Avatar, Box, Button, Divider, IconButton, ListItemIcon, Menu, MenuItem, Typography } from "@mui/material"
 import { ProfileMenuInterface } from '../../Model/NavModel';
@@ -8,14 +9,14 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const ProfileMenu:FC<ProfileMenuInterface> = (navData) => 
 {
-    const {GetData, IsLoggedIn, handleLogout, } = useAuthContext();
-    const {AvatarSize, anchorElUser, handleUserMenu, NavSyntax, MenuItemSyntax} = navData;
+    const { user, isLoggedIn, handleLogout } = useAuthContext();
+    const { AvatarSize, anchorElUser, handleUserMenu, NavSyntax, MenuItemSyntax } = navData;
 
     return(
-        IsLoggedIn() ?
+        isLoggedIn ?
         <Box>
             <IconButton onClick={handleUserMenu}>
-                <Avatar src={GetData("avatarUrl") as string} sx={{ width: AvatarSize, height: AvatarSize }} />
+                <Avatar src={""} sx={{ width: AvatarSize, height: AvatarSize }} />
             </IconButton>
             <Menu
                 sx={{ mt: AvatarSize }}
@@ -27,10 +28,10 @@ const ProfileMenu:FC<ProfileMenuInterface> = (navData) =>
                 onClose={handleUserMenu}
             >
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '10px 0 10px 0' }}>
-                    <Avatar alt="" src={GetData("avatarUrl") as string} sx={{ width: AvatarSize, height: AvatarSize, margin: '0 5px 0 10px' }} />
+                    <Avatar alt="" src={""} sx={{ width: AvatarSize, height: AvatarSize, margin: '0 5px 0 10px' }} />
                     <Box sx={{ display: 'block', flexDirection: 'column', marginRight: '20%' }}>
-                        <Typography sx={{ fontWeight: 'bold'}}>{GetData("username")}</Typography>
-                        <Typography>{GetData("role") as string}</Typography>
+                        <Typography sx={{ fontWeight: 'bold'}}>{user?.username}</Typography>
+                        <Typography>{user?.role}</Typography>
                     </Box>
                 </Box>
                 
@@ -45,7 +46,7 @@ const ProfileMenu:FC<ProfileMenuInterface> = (navData) =>
                     </MenuItem>
                 ))}
                 
-                <MenuItem onClick={(event: React.MouseEvent<HTMLElement>) => { handleUserMenu(event); handleLogout(GetData("username") as string | null); }} sx={{ MenuItemSyntax, NavSyntax }}>
+                <MenuItem onClick={(event: React.MouseEvent<HTMLElement>) => { handleUserMenu(event); handleLogout(); }} sx={{ MenuItemSyntax, NavSyntax }}>
                         <ListItemIcon>
                             <ExitToAppIcon />
                         </ListItemIcon>

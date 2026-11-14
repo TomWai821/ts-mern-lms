@@ -1,0 +1,61 @@
+"use client";
+import { useEffect } from "react";
+import { Box, TableContainer, Paper } from "@mui/material";
+
+// Context
+import { useBookContext } from "../../../Context/Book/BookContext";
+
+// Data (CSS Syntax and dropdown)
+import { PageItemToCenter } from "../../../Data/Style";
+import { BookTabLabel, PaginationOption } from "../../../Data/TableData";
+import { useAuthContext } from "../../../Context/User/AuthContext";
+
+// Custom Hook in services (Page Data and Filter)
+import { getTablePageTitle, usePageService } from "../../../services/pages/pageService";
+import { useBookFilter } from "../../../services/filters/bookFilter";
+
+import CustomTab from "../../../component/UIFragment/CustomTab";
+import TableTitle from "../../../component/UIFragment/TableTitle";
+import BookFilter from "../components/BookFilter";
+import BookTabPanel from "../components/BookTabPanel";
+
+
+const BookPage = () =>
+{
+    const { bookData, initBooks } = useBookContext();
+    const { isAdmin, isAuthLoading } = useAuthContext();
+
+    const { tabValue, paginationValue, changeValue } = usePageService();
+    const { searchBook, setSearchBook, onChange, SearchBook, resetFilter } = useBookFilter(tabValue);
+
+    const { title } = getTablePageTitle("Book", tabValue, isAdmin);
+
+    useEffect(() => 
+    { 
+        if(isAuthLoading) return;
+
+        if(!isAdmin) 
+        { 
+            changeValue("Tab", 0);
+        }
+
+        initBooks(isAdmin);
+    },[isAuthLoading, isAdmin, changeValue])
+     
+    return( 
+        <Box sx={{ ...PageItemToCenter, flexDirection: 'column', padding: '0 50px'}}>
+            <TableTitle title={title} dataLength={bookData[tabValue].length}/>
+
+            <BookFilter value={tabValue} onChange={onChange} searchData={searchBook} Search={SearchBook} resetFilter={resetFilter}/>
+
+            <CustomTab value={tabValue} changeValue={changeValue} paginationValue={paginationValue} tabLabel={BookTabLabel}
+                paginationOption={PaginationOption} type={"Book"}/>
+
+            <TableContainer sx={{ marginTop: 5 }} component={Paper}>
+                <BookTabPanel value={tabValue} bookData={bookData} paginationValue={paginationValue} changeValue={changeValue} setSearchBook={setSearchBook} searchBook={searchBook}/>
+            </TableContainer>
+        </Box>
+    );
+}
+
+export default BookPage

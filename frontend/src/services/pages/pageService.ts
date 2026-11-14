@@ -2,10 +2,8 @@ import { useCallback, useState } from "react";
 
 type pageList = "User" | "Book" | "Contact" | "Definition" | "SelfRecord";
 
-export const getTablePageTitle = (pageList: pageList, tabValue: number, IsAdmin?: () => boolean) =>
+export const getTablePageTitle = (pageList: pageList, tabValue: number, isAdmin?: boolean) =>
 {
-    const isAdmin = IsAdmin !== undefined ? IsAdmin() : false;
-
     const TitleList: Record<pageList, string[]> =
     {
         "User": isAdmin ? ["Manage User Record", "Manage Suspend User"] : ["","View Suspend List"],

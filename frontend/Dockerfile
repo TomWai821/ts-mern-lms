@@ -1,30 +1,34 @@
 # For Test 
-FROM node:24.22.1 as test
+FROM node:24.22.1 AS test
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
 CMD ["npm", "test"]
 
-# For Production
-FROM node:24.22.1 as development
+# For Development
+FROM node:24.22.1 AS development
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 
-FROM node:24.22.1 as build
+# For Production
+FROM node:24.22.1 AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --silent
 COPY . .
 RUN npm run build
 
-FROM node:24.22.1 as production
+FROM node:24.22.1 AS production
 WORKDIR /app
-COPY --from=build /app/build ./build
-RUN npm install -g serve
+ENV NODE_ENV=production
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
 EXPOSE 3000
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["npm", "run", "start"]

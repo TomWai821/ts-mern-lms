@@ -125,12 +125,6 @@ export interface LoanBookModalInterface
     imageUrl:string;
 }
 
-export interface QRCodeInterface
-{
-    username:string;
-    authToken:string;
-}
-
 export interface UserLoanBookModalBodyInterface extends LoanBookModalInterface
 {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;

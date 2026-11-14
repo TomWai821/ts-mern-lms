@@ -1,29 +1,27 @@
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 const contentType:string = 'application/json';
 const url:string = `${localhost}/api/user`;
 
-const LoginController = async (email:String, password:String): Promise<any> => 
+const LoginController = async (email: string, password: string, stayLogin:boolean) =>
 {
-    const user = {email, password};
-
     try
     {
-        const response:Response = await fetch(`${url}/Login`, 
-            {
-                method: 'POST',
-                headers: { 'content-type': contentType },
-                body: JSON.stringify(user)
-            }
-        );
-
-        return response;
+        return fetch(`${url}/Login`,
+        {
+            method: "POST",
+            credentials: "include",
+            headers:{ "Content-Type": contentType },
+            body: JSON.stringify({ email, password, stayLogin })
+        }
+    );
     }
     catch(error)
     {
         console.log(error);
     }
-}
+    
+};
 
 const RegisterController = async (username:string, email:string, password:string, role:string, gender:string, birthDay:string): Promise<any> => 
 {
@@ -34,6 +32,7 @@ const RegisterController = async (username:string, email:string, password:string
         const response: Response = await fetch(`${url}/Register`,
             {
                 method: 'POST',
+                credentials: "include",
                 headers: { 'content-type': contentType },
                 body: JSON.stringify(user)
             }
@@ -47,4 +46,21 @@ const RegisterController = async (username:string, email:string, password:string
     }
 }
 
-export {LoginController, RegisterController}
+const LogoutController = async () =>
+{
+    try
+    {
+        return fetch(`${url}/Logout`,
+            {
+                method: "POST",
+                credentials: "include"
+            }
+        );
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+};
+
+export {LoginController, RegisterController, LogoutController}

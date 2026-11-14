@@ -19,7 +19,7 @@ export const comparePassword = async(inputPassword:string, comparePassword:strin
 
 export const jwtSign = async(UserID:Record<string, any>) => 
 {
-    return jwt.sign(UserID, JWT_SECRET);
+    return jwt.sign(UserID, JWT_SECRET, { expiresIn: "7d" });
 }
 
 export const jwtVerify = async(token:string) =>

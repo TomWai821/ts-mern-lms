@@ -1,3 +1,4 @@
+"use client";
 import { Box,  Menu, Typography } from "@mui/material"
 
 import { FC } from "react";
@@ -6,12 +7,10 @@ import { externalUserPage, adminPage, userPage } from "../../Data/MenuData";
 import CustomMenuItem from "../UIFragment/CustomMenuItem";
 import { useAuthContext } from "../../Context/User/AuthContext";
 
-
-
 const NavMenu:FC<NavMenuInterface> = ({AvatarSize, anchorElNav, handleNavMenu, NavSyntax}) => 
 {
-    const {GetData, IsLoggedIn, IsAdmin} = useAuthContext(); 
-    const SetNavName = IsAdmin() ? "Manage" : "View";
+    const {isLoggedIn, isAdmin} = useAuthContext(); 
+    const SetNavName = isAdmin ? "Manage" : "View";
 
     return(
         <Box sx={{ flexGrow: 1 }}>
@@ -29,7 +28,7 @@ const NavMenu:FC<NavMenuInterface> = ({AvatarSize, anchorElNav, handleNavMenu, N
                     onClose={handleNavMenu}
                 >
                 {
-                    !IsLoggedIn() ?  <CustomMenuItem pages={externalUserPage}/> : (GetData("role") === 'Admin' ? <CustomMenuItem pages={adminPage}/> : <CustomMenuItem pages={userPage}/>)
+                    !isLoggedIn ? <CustomMenuItem pages={externalUserPage}/> : (isAdmin ? <CustomMenuItem pages={adminPage}/> : <CustomMenuItem pages={userPage}/>)
                 }
                 </Menu>
         </Box>

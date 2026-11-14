@@ -84,7 +84,7 @@ const getRecommendedBooksForUserService = async (userId: string) =>
         .slice(0, 8);
     }
 
-    return foundBook
+    return foundBook;
 };
 
 const formatBookMetadata = (book: any): Book => 

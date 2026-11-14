@@ -1,7 +1,11 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useContactContext } from "../../Context/Book/ContactContext";
 import { useDefinitionContext } from "../../Context/Book/DefinitionContext";
+import { fetchFavouriteBookWithFilter, fetchSelfLoanBookWithFilter } from "../contents/selfRecordService";
 import { useSelfBookRecordContext } from "../../Context/Book/SelfBookRecordContext";
+import { useAuthContext } from "../../Context/User/AuthContext";
+import { BookDataInterface, LoanBookInterface } from "../../Model/ResultModel";
+
 
 const defaultValue = {bookname: "", status: "All", author: "All", publisher: "All", genre: "All", language: "All"};
 
@@ -9,16 +13,18 @@ export const useSelfRecordFilter = (tabValue:number) =>
 {
     const { contact } = useContactContext();
     const { definition } = useDefinitionContext();
-    const { fetchSelfFavouriteBookWithFilterData, fetchSelfLoanBookWithFilterData } = useSelfBookRecordContext();
+    const { initSelfRecords, refreshSelfRecords, modifySelfRecords } = useSelfBookRecordContext();
+    const { isLoggedIn, isAuthLoading } = useAuthContext();
 
     const [searchData, setSearchData] = useState(defaultValue);
 
-    const searchSelfRecord = () => 
+    const searchSelfRecord = async () => 
     {
         switch(tabValue)
         {
             case 0:
-                fetchSelfLoanBookWithFilterData("Self", searchData.bookname, searchData.status);
+                const selfLoanBook = await fetchSelfLoanBookWithFilter("Self", searchData.bookname, searchData.status);
+                modifySelfRecords({type: "SET_SELF_LOAN_BOOK", payload: selfLoanBook as LoanBookInterface[]});
                 break;
 
             case 1:
@@ -27,7 +33,8 @@ export const useSelfRecordFilter = (tabValue:number) =>
                 
                 const authorID = contact[0].find((author) => author.author === searchData.author)?._id as string;
                 const publisherID = contact[1].find((publisher) => publisher.publisher === searchData.publisher)?._id as string;
-                fetchSelfFavouriteBookWithFilterData(searchData.bookname, searchData.status, genreID, languageID, authorID, publisherID);
+                const favouriteBook = await fetchFavouriteBookWithFilter(searchData.bookname, searchData.status, genreID, languageID, authorID, publisherID);
+                modifySelfRecords({type: "SET_FAVOURITE_BOOK", payload: favouriteBook as BookDataInterface[]});
                 break;
         }
     }
@@ -43,21 +50,28 @@ export const useSelfRecordFilter = (tabValue:number) =>
         switch(tabValue)
         {
             case 0:
-                fetchSelfLoanBookWithFilterData("Self", "", "");
+                fetchSelfLoanBookWithFilter("Self", "", "");
+                refreshSelfRecords("LoanBook");
                 break;
 
             case 1:
-                fetchSelfFavouriteBookWithFilterData("", "All", "All", "All", "All", "All");
+                fetchFavouriteBookWithFilter("", "All", "All", "All", "All", "All");
+                refreshSelfRecords("FavouriteBook");
                 break;
         }
 
         setSearchData(defaultValue);
-    }, [tabValue, fetchSelfLoanBookWithFilterData, fetchSelfFavouriteBookWithFilterData])
+    }, [tabValue, fetchSelfLoanBookWithFilter, fetchFavouriteBookWithFilter])
 
     useEffect(() =>
     {
-        resetFilter()
-    },[tabValue, resetFilter])
+        if(isAuthLoading) return;
+
+        if(isLoggedIn)
+        {
+            initSelfRecords();
+        }
+    },[isAuthLoading, isLoggedIn])
 
     return { searchData, onChange, searchSelfRecord, resetFilter };
 }

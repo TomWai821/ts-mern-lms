@@ -1,4 +1,4 @@
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 const contentType = "application/json";
 
 const baseUrl = `${localhost}/api/contact`
@@ -43,7 +43,7 @@ export const GetContact = async (type:string, filterData?:string) =>
     }
 }
 
-export const CreateContact = async (authToken:string, type:string, contactName:string, phoneNumber:string, email:string) => 
+export const CreateContact = async (type:string, contactName:string, phoneNumber:string, email:string) => 
 {
     const body = BuildBodyData(type, contactName, phoneNumber, email);
 
@@ -52,7 +52,8 @@ export const CreateContact = async (authToken:string, type:string, contactName:s
         const response: Response = await fetch(`${baseUrl}/type=${type}`,
             {
                 method: 'POST',
-                headers: { 'content-type': contentType, 'authToken': authToken },
+                credentials:"include",
+                headers: { 'content-type': contentType},
                 body: JSON.stringify(body)
             }
         );
@@ -68,7 +69,7 @@ export const CreateContact = async (authToken:string, type:string, contactName:s
     }
 }
 
-export const EditContact = async (authToken:string, type:string, contactName:string, phoneNumber:string, email:string, id?:string) => 
+export const EditContact = async (type:string, contactName:string, phoneNumber:string, email:string, id?:string) => 
 {
     const body = BuildBodyData(type, contactName, phoneNumber, email, id);
 
@@ -77,7 +78,8 @@ export const EditContact = async (authToken:string, type:string, contactName:str
         const response: Response = await fetch(`${baseUrl}/type=${type}`,
             {
                 method: 'PUT',
-                headers: { 'content-type': contentType, 'authToken': authToken },
+                credentials:"include",
+                headers: { 'content-type': contentType },
                 body: JSON.stringify(body)
             }
         );
@@ -93,14 +95,15 @@ export const EditContact = async (authToken:string, type:string, contactName:str
     }
 }
 
-export const DeleteContact= async (authToken:string, type:string, id:string) => 
+export const DeleteContact= async (type:string, id:string) => 
 {
     try
     {
         const response: Response = await fetch(`${baseUrl}/type=${type}`,
             {
                 method: 'DELETE',
-                headers: { 'content-type': contentType, 'authToken': authToken },
+                credentials:"include",
+                headers: { 'content-type': contentType },
                 body: JSON.stringify({id: id})
             }
         );

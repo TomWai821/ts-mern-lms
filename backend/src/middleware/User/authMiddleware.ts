@@ -3,11 +3,11 @@ import { AuthRequest } from "../../model/requestInterface";
 import { jwtVerify } from "../../controller/hashing";
 import { FindUser } from "../../schema/user/user";
 
-export const FetchUserFromHeader = async (req: AuthRequest, res: Response, next: NextFunction) => 
+export const FetchAuthTokenFromCookie = async (req: AuthRequest, res: Response, next: NextFunction) => 
 {
     try 
     {
-        const authToken = req.header("authToken");
+        const authToken = req.cookies.authToken;
 
         if(authToken)
         {

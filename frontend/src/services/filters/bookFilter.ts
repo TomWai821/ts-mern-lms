@@ -1,16 +1,21 @@
 import { useState, ChangeEvent, useCallback } from "react";
-import { useBookContext } from "../../Context/Book/BookContext";
 import { useContactContext } from "../../Context/Book/ContactContext";
 import { useDefinitionContext } from "../../Context/Book/DefinitionContext";
 import { BookSearchInterface } from "../../Model/BookTableModel";
+import { fetchBookWithFliterData, fetchLoanBookWithFliterData } from "../contents/bookService";
+import { useBookContext } from "../../Context/Book/BookContext";
+import { BookDataInterface, LoanBookInterface } from "../../Model/ResultModel";
+import { useAuthContext } from "../../Context/User/AuthContext";
 
+const bookType = ["AllBook", "LoanBook"];
 const defaultValue = { bookname: "", username: "", language: "All", status:"All", genre: "All", author: "All", publisher: "All", finesPaid: "All" };
 
 export const useBookFilter = (tabValue:number) => 
 {
-    const { fetchBookWithFliterData, fetchLoanBookWithFliterData } = useBookContext();
     const { definition } = useDefinitionContext();
     const { contact } = useContactContext();
+    const { isAdmin } = useAuthContext();
+    const { refreshBooks, modifyBooks } = useBookContext();
 
     const [searchBook, setSearchBook] = useState<BookSearchInterface>(defaultValue);
     
@@ -20,7 +25,7 @@ export const useBookFilter = (tabValue:number) =>
         setSearchBook({ ...searchBook, [name]: value });
     };
 
-    const SearchBook = () => 
+    const SearchBook = async () => 
     {
         switch(tabValue)
         {
@@ -30,11 +35,13 @@ export const useBookFilter = (tabValue:number) =>
                 
                 const authorID = contact[0].find((author) => author.author === searchBook.author)?._id as string;
                 const publisherID = contact[1].find((publisher) => publisher.publisher === searchBook.publisher)?._id as string;
-                fetchBookWithFliterData(searchBook.bookname, searchBook.status, genreID, languageID, authorID, publisherID);
+                const filteredBooks = await fetchBookWithFliterData(searchBook.bookname, searchBook.status, genreID, languageID, authorID, publisherID);
+                modifyBooks({type: "SET_ALL_BOOK", payload: filteredBooks as BookDataInterface[]});
                 break;
 
             case 1:
-                fetchLoanBookWithFliterData("AllUser", searchBook.bookname, searchBook.username, searchBook.status, searchBook.finesPaid);
+                const filteredLoanBooks = await fetchLoanBookWithFliterData("AllUser", searchBook.bookname, searchBook.username, searchBook.status, searchBook.finesPaid);
+                modifyBooks({type: "SET_LOAN_BOOK", payload: filteredLoanBooks as LoanBookInterface[] });
                 break;
         }
     }
@@ -52,6 +59,7 @@ export const useBookFilter = (tabValue:number) =>
                 break;
         }
         setSearchBook(defaultValue);
+        refreshBooks(bookType[tabValue], isAdmin);
     }, [tabValue, fetchBookWithFliterData, fetchLoanBookWithFliterData]);
 
     return { searchBook, setSearchBook, onChange, SearchBook, resetFilter };

@@ -1,7 +1,18 @@
 import mongoose, { PipelineStage } from 'mongoose';
-import { BookInterface } from '../../model/bookSchemaInterface';
+import { AuthorInterface, BookInterface, GenreInterface, LanguageInterface, PublisherInterface } from '../../model/bookSchemaInterface';
 import { lookupAndUnwind, printError } from '../../utils/Utils';
-import { bookStatusArray } from '../../data/enums';
+import { bookStatus } from '../../data/enums';
+
+type BookStatus = typeof bookStatus[number];
+
+export type AllBooksAggregationResult = BookInterface &
+{
+    _id: string;
+    authorDetails: AuthorInterface;
+    publisherDetails: PublisherInterface;
+    genreDetails: GenreInterface;
+    languageDetails: LanguageInterface;
+};
 
 const BookSchema = new mongoose.Schema<BookInterface>(
     {
@@ -15,7 +26,7 @@ const BookSchema = new mongoose.Schema<BookInterface>(
         genreID: { type: mongoose.Types.ObjectId, ref: 'Genre', required: true },
         authorID: { type: mongoose.Types.ObjectId, ref: 'Author', required: true },
         publisherID: { type: mongoose.Types.ObjectId, ref: 'Publisher', required: true }, 
-        status: { type: String, required: true, default: 'OnShelf', enum: bookStatusArray },
+        status: { type: String, required: true, default: 'OnShelf', enum: bookStatus },
         description: { type: String, default: 'N/A' },
         publishDate: { type: Date, default: Date.now, index: true } 
     }
@@ -118,6 +129,22 @@ export const FindBookByIDAndDelete = async (bookID: string) =>
     try
     {
         return await Book.findByIdAndDelete(bookID);
+    }
+    catch(error)
+    {
+        printError(error);
+    }
+}
+
+export const GetBookCount = async(filters?: {status: BookStatus}) =>
+{
+    try
+    {
+        if(filters)
+        {
+            return await Book.countDocuments(filters);
+        }
+        return await Book.countDocuments();
     }
     catch(error)
     {

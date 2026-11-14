@@ -2,7 +2,7 @@ import { FC } from "react";
 import { TableCell } from "@mui/material";
 
 // Another Modal
-import DisplayUserDataModal from "../Modal/User/DisplayUserDataModal";
+import DisplayUserDataModal from "../../features/user/components/modals/actions/DisplayUserDataModal";
 
 // Context
 import { useModal } from "../../Context/ModalContext";
@@ -10,7 +10,7 @@ import { useModal } from "../../Context/ModalContext";
 // Models
 import { ContentTableCellProps } from "../../Model/ContextAndProviderModel";
 import { BookDataInterface, UserResultDataInterface } from "../../Model/ResultModel";
-import DisplayBookDataModal from "../Modal/Book/DisplayBookDataModal";
+import DisplayBookDataModal from "../../features/book/components/modals/dataDisplay/DisplayBookDataModal";
 
 const ContentTableCell:FC<ContentTableCellProps> = (contentTableCellData) => 
 {

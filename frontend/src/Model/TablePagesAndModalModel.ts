@@ -2,6 +2,7 @@ import { ChangeEvent } from "react";
 import { BookDataInterface, ContactInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
 import { UserDataInterface } from "./UserTableModel";
 import { BookTableDataInterface, BookSearchInterface, SelfLoanBookSearchInterface, ContactSearchInterface } from "./BookTableModel"
+import { tableNameType } from "../features/shared/configs/ActionTableCellForAdmin";
 
 interface AllFilterInterface
 {
@@ -34,7 +35,7 @@ export interface UserActionTableCellInterface
 export interface ActionTableCellInterface extends UserActionTableCellInterface
 {
     value: number;
-    TableName: string;
+    TableName: tableNameType;
     changeValue?: (type:string, newValue: number) => void;
     setSearchBook?: (data: BookSearchInterface) => void;
     searchBook?: BookSearchInterface;

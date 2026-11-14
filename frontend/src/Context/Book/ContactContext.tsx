@@ -1,15 +1,22 @@
-import { createContext, FC, useCallback, useContext, useEffect } from "react";
+import { createContext, FC, useContext, useEffect } from "react";
 
-import { CreateContact, DeleteContact, EditContact, GetContact } from "../../Controller/BookController/ContactController";
+import { ChildProps } from "../../Model/ContextAndProviderModel";
+import { ContactInterface } from "../../Model/ResultModel";
 
-import { ChildProps, ContactProps } from "../../Model/ContextAndProviderModel";
-import { ContactInterface, GetResultInterface } from "../../Model/ResultModel";
-
-import { useAuthContext } from "../User/AuthContext";
 import { useContactReducer } from "../../Reducer/ContactReducer";
 import { ContactwsEventToActionMap } from "../../services/ws/config/WSConfig";
-import { useWebSocket } from "../../customhook/WebSocket";
-import { executeMutationWithFallback } from "../../Controller/MutationWithFallback";
+import { useWebSocket } from "../../hooks/customhook/WebSocket";
+import { fetchContactData } from "../../services/contents/contactService";
+import { AuthorAction } from "../../Reducer/Contact/AuthorReducer";
+import { PublisherAction } from "../../Reducer/Contact/PublisherReducer";
+
+export interface ContactProps
+{
+    contact: ContactInterface[][];
+    initContacts: () => Promise<void>;
+    refreshContacts: (type: string) => Promise<void>;
+    modifyContacts: (action: AuthorAction | PublisherAction) => void;
+}
 
 const ContactContext = createContext<ContactProps | undefined>(undefined);
 
@@ -18,90 +25,46 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
     const { state, dispatch } = useContactReducer();
     const contact = [state.Author, state.Publisher];
 
-    const {GetData} = useAuthContext();
-    const authToken = GetData("authToken") as string;
-
     useWebSocket(dispatch, ContactwsEventToActionMap);
 
-    const fetchAllContactData = useCallback(async () => 
+    const initContacts = async () => 
     {
-        const [getAuthorData, getPublisherData] = await Promise.allSettled([GetContact("Author", undefined), GetContact("Publisher", undefined)])
+        const [author, publisher] = await Promise.allSettled([fetchContactData("Author"), fetchContactData("Publisher")]);
+
+        const authorResult: ContactInterface[] | undefined = author.status === 'fulfilled' ? author.value : undefined; 
+        const publisherResult: ContactInterface[] | undefined = publisher.status === 'fulfilled' ? publisher.value : undefined;
+
+        if(authorResult && Array.isArray(authorResult))
+        {
+            dispatch({ type: "SET_AUTHOR", payload: authorResult });
+        }
+
+        if(publisherResult && Array.isArray(publisherResult))
+        {
+            dispatch({ type: "SET_PUBLISHER", payload: publisherResult });
+        }
+    }
+
+    const refreshContacts = async (type:string) => 
+    {
+        const result = type === "Author" ? await fetchContactData("Author") : await fetchContactData("Publisher");
+        const actionType = type === "Author" ? "SET_AUTHOR": "SET_PUBLISHER"
         
-        if(getAuthorData.status === "fulfilled" && getAuthorData.value)
-        {
-            const AuthorResponse = getAuthorData.value;
-            const AuthorData: GetResultInterface = await AuthorResponse.json();
-
-            if(Array.isArray(AuthorData.foundContact as ContactInterface[]))
-            {
-                dispatch({ type: "SET_AUTHOR", payload: AuthorData.foundContact as ContactInterface[] });
-            }
-        }
-        
-        if(getPublisherData.status === "fulfilled" && getPublisherData.value)
-        {
-            const PublisherResponse = getPublisherData.value;
-            const PublisherData: GetResultInterface = await PublisherResponse.json();
-
-            if(Array.isArray(PublisherData.foundContact as ContactInterface[]))
-            {
-                dispatch({ type: "SET_PUBLISHER", payload: PublisherData.foundContact as ContactInterface[] });
-            }
-        }
+        dispatch({ type: actionType, payload: result });
     }
-    ,[dispatch])
 
-    const fetchContactDataWithFilterData = useCallback(async (type:string, filtData:string) => 
+    const modifyContacts = (action: AuthorAction | PublisherAction) => 
     {
-        const getData = await GetContact(type, filtData);
-            
-        if((getData as Response).ok)
-        {
-            const ContactData: GetResultInterface = await (getData as Response).json();
-
-            if(Array.isArray(ContactData.foundContact as ContactInterface[]))
-            {
-                switch(type)
-                {
-                    case "Author":
-                        dispatch({ type: "SET_AUTHOR", payload: ContactData.foundContact as ContactInterface[] });
-                        break;
-
-                    case "Publisher":
-                        dispatch({ type: "SET_PUBLISHER", payload: ContactData.foundContact as ContactInterface[] });
-                        break;
-                }
-            }
-        }
+        dispatch(action);
     }
-    ,[dispatch])
-
-    const createContactData = useCallback(async (type:string, contactName:string, phoneNumber:string, email:string) => 
-    {
-        return executeMutationWithFallback(() => CreateContact(authToken, type, contactName, phoneNumber, email) , fetchAllContactData);
-    }
-    ,[authToken, fetchAllContactData])
-
-    const editContactData = useCallback( async (type:string, id:string, contactName:string, phoneNumber:string, email:string) => 
-    {
-        return executeMutationWithFallback(() => EditContact(authToken, type, contactName, phoneNumber, email, id), fetchAllContactData);
-    }
-    ,[authToken, fetchAllContactData])
-
-    const deleteContactData = useCallback(async (type:string, id:string) => 
-    {
-        return executeMutationWithFallback(() => DeleteContact(authToken, type, id), fetchAllContactData);
-    }
-    ,[authToken, fetchAllContactData])
 
     useEffect(() => 
     {
-        fetchAllContactData();
-    }
-    ,[fetchAllContactData])
+        initContacts();
+    },[])
 
     return (
-        <ContactContext.Provider value={{ contact, fetchAllContactData, fetchContactDataWithFilterData, createContactData, editContactData, deleteContactData}}>
+        <ContactContext.Provider value={{ contact, initContacts, refreshContacts, modifyContacts}}>
             {children}
         </ContactContext.Provider>
     );

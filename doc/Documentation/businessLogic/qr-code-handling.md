@@ -1,15 +1,31 @@
 ## QR Code Handling
-- QR codes are generated entirely on the client side without requiring a dedicated backend endpoint
-- The encoded payload follows a simple JSON structure:
-  ```json
-  {
-    "username": "<string>",
-    "userID": "<string>"
-  }
-- Generated QR codes are displayed within a frontend modal and used as part of the book loan verification workflow
-- The lightweight payload design avoids unnecessary backend processing while keeping the QR generation process responsive
 
+### QR Code Generation
+- Members can request their personal QR code after authentication
+- The backend retrieves the authenticated member information and returns a QR payload
+- The frontend generates and displays the QR code from the returned payload
 
-### Design Note
-- The current implementation prioritises simplicity and low infrastructure overhead
-- For production environments with stronger security requirements, the QR payload could be replaced with signed tokens or short-lived server-generated identifiers to mitigate replay and unauthorised reuse risks
+### QR Code Schema
+```json
+{
+  "userId": "<string>",
+  "username": "<string>",
+  "type": "library-member"
+}
+```
+
+### Loan Process
+- Members present their QR code during the borrowing process
+- Librarians input the QR data into the loan form
+- The system validates the QR payload and extracts the member identifier for loan processing
+
+### Design Considerations
+- The QR code contains member identification data instead of authentication credentials
+- Authentication and authorization remain enforced by backend APIs
+- A type field is included in the payload to support future QR code categories and validation rules
+
+### References
+- [QR code endpoint](../../../backend/src/routes/api/me.ts)
+- [Auth controller](../../../backend/src/controller/authController.ts)
+- [QR display modal](../../../frontend/src/features/profile/components/modals/DisplayQRCodeModal.tsx)
+- [Loan flow](../../../frontend/src/features/book/components/modals/confirms/LoanBookConfirmationModal.tsx)

@@ -7,7 +7,7 @@ import { BookCreateRules } from '../../validator/expressBodyValidator';
 
 import { CreateLoanBookRecord, GetLoanBookRecord, UpdateLoanBookRecord } from '../../controller/loanBookController';
 import { BookGenreIDAndLanguageIDValidation, BookNameValidation, BookRecordIDValidation, FoundBookLoanRecord } from '../../middleware/Book/bookValidationMiddleware';
-import { FetchUserFromHeader } from '../../middleware/User/authMiddleware';
+import { FetchAuthTokenFromCookie } from '../../middleware/User/authMiddleware';
 import { CreateFavouriteBookRecord, DeleteFavouriteBookRecord, GetFavouriteBookRecord } from '../../controller/favouriteBookController';
 import { HandleEditImage } from '../../service/image/bookEditImageService';
 import { GetBookDataMiddleware } from '../../middleware/Book/BookMiddleware';
@@ -23,7 +23,7 @@ router.put('/record/id=:id', upload.single("image"), ...ValidateAuthTokenAsAdmin
 router.delete('/record/id=:id', ...ValidateAuthTokenAsAdmin, BookRecordIDValidation, DeleteBookRecord);
 
 // For Loan book records
-router.get('/loanRecord/type=:type', FetchUserFromHeader, GetLoanBookRecord);
+router.get('/loanRecord/type=:type', FetchAuthTokenFromCookie, GetLoanBookRecord);
 router.post('/loanRecord', ...ValidateAuthTokenAsAdmin, CreateLoanBookRecord);
 router.put('/loanRecord/id=:id', ...ValidateAuthTokenAsAdmin, FoundBookLoanRecord, UpdateLoanBookRecord);
 

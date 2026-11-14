@@ -1,59 +1,59 @@
 ## Completed Improvements
 
 ### Frontend Side
-- **Performance Optimisation (Route-based Lazy Loading)**
-    - Implemented React Lazy & Suspense for Page Component Lazy Loading, significantly reducing the initial bundle size and improving the First Contentful Paint (FCP)
+- **Application Architecture**
+    - Migrated page-level business logic into reusable custom hooks to improve separation of concerns and code reuse
+    - Refactored Context providers to use reducer-based state management for more predictable state transitions
+    - Introduced a layered architecture that separates shared state, service operations, and mutation workflows
 
-- **Clean Architecture (View/Service Decoupling)**
-    - Refactored Table Page components by extracting business logic into Custom Hooks<br>
-      (This successfully decoupled View rendering from Service/Controller logic, enhancing testability and code reusability)<br>
-      (Ref: [Frontend Service Directory](../../../frontend/src/services/))
 
-- **Context State Management (useReducer over useState)**
-    - Refactored Context Providers to adopt useReducer instead of multiple useState hooks
-    - Extracted state transition logic out of Context into pure reducer functions<br>
-      (This separation prevents Context from becoming bloated, while improving predictability, scalability, and testability of state management)<br>
-      (Ref: [BookReducer.tsx](../../../frontend/src/Reducer/Book/BookReducer.tsx), [UserContext.tsx](../../../frontend/src/Context/Reducer/UserReducer.tsx))
-  
-- **State Management with WebSocket + Reducer (Client Side - Local)**
-    - Eliminated redundant get API calls after every Create / Update / Delete (CUD) action
-    - Leveraged WebSocket events bound to a reducer to update state directly in real time (with useWebSocket custom hook)<br>
+- **Performance & State Management**
+    - Implemented route-based lazy loading to reduce initial bundle size
+    - Added WebSocket-driven state synchronisation to reduce unnecessary data refetching after Create, Update, and Delete operations
+
+
+- **References**
+    - **Application Architecture**
+        - [Book context](../../../frontend/src/Context/Book/BookContext.tsx)
+        - [Book content service](../../../frontend/src/services/contents/bookService.ts)
+        - [Book action hook](../../../frontend/src/hooks/actionhook/useBookAction.ts)
+
+    - **Performance & State Management**
+        - [Mutation feedback and sync](../../../frontend/src/hooks/customhook/useMutation.ts)
+        - [WebSocket hook](../../../frontend/src/hooks/customhook/WebSocketts)
+        - [WebSocket event maps](../../../frontend/src/services/ws/config/WSConfig.ts)
       
 <hr>
 
 ### Backend Side
-- **Modularised backend routes for cleaner structure**
-    - Decoupled monolithic routes into modularised controllers, implementing Middleware for centralised authentication and validation to ensure DRY (Don't Repeat Yourself) principles
+- **API Architecture**
+    - Refactored backend routes into modular controllers and middleware-based request pipelines
+    - Centralised authentication and validation logic to improve maintainability and enforce DRY principles
 
-- **Automated Library Compliance & Fine Processing**
-    - Engineered a custom task scheduler to automate mission-critical daily operations (Expired Loans, Fines Calculation, Suspend Records) at UTC+8 midnight
+- **Domain Automation**
+    - Implemented scheduled jobs for automated library operations such as expired loan processing and fine calculations
 
-- **Pipeline Filtering**
-   - Engineered a multi-stage Middleware Pipeline for granular request filtering
-   - Decoupled Type Validation, Data Integrity checks, and Query Sanitisation into discrete, reusable stages to enforce strict Domain Logic before reaching the controller layer<br>
-     (Ref: [ContactValidationMiddleware.ts](../../../backend/src/middleware/Book/ContactValidationMiddleware.ts), [DefinitionValidationMiddleware.ts](../../../backend/src/middleware/Book/DefinitionValidationMiddleware.ts))
+- **Infrastructure Abstraction**
+    - Added support for both local file storage and Amazon S3 through a configurable storage abstraction layer
 
-- **Hybrid Image Storage Engine**
-    - Engineered a dual-strategy storage layer that dynamically switches between Local FS and Amazon S3 via environment toggles
-    - This decouples business logic from infrastructure<br>
-      (Ensure a zero-dependency local setup while optimising for the Stateless architecture of AWS Lambda)<br>
-      (Ref: [Image Service Directory](../../../backend/src/service/image/))
-
-<hr>
-
-### Infrastructure and Security
-- **Multi-Environment Containerization (Docker)**
-    - Implemented Dockerization with dedicated configurations for different stages<br>
-      (docker-compose.yaml for production-ready consistency and docker-compose.test.yaml for automated testing workflows)<br>
+- **API Architecture**
+    - **Domain Automation**
+        - [AuthMiddleware.ts](../../../backend/src/middleware/USer/authMiddleware.ts)
+        - [ContactValidationMiddleware.ts](../../../backend/src/middleware/Contact/ContactValidationMiddleware.ts)
+        - [DefinitionValidationMiddleware.ts](../../../backend/src/middleware/Definition/DefinitionValidationMiddleware.ts)
+    
+    - **Infrastructure Abstraction**
+        - [Image Service Directory](../../../backend/src/service/image/)
 
 <hr>
 
-### CI/CD
-- **Automated Quality Gates** (GitHub Actions)
-    - Automatically triggers Jest test suites and ESLint on every functional Push and Pull Request
-    - Implemented Path-based Filtering to bypass CI/CD triggers for non-documentation changes (e.g. Markdown files, Images)<br>
-      (It ensures CI resources are focused only on code-related regressions)
-  
-- **Security & Secret Orchestration** (OWASP Compliance)
-    - Decoupled sensitive credentials (JWT Secrets, MongoDB URIs) from the source code using Platform Environment Variables and GitHub Action Secrets<br>
-      (Adheres to OWASP security standards by ensuring zero-credential exposure and secure injection of production secrets at runtime)
+### Infrastructure & DevOps
+- **Containerisation**
+    - Introduced Docker-based development and deployment environments to improve consistency across environments
+
+- **CI/CD**
+    - Implemented automated testing and linting through GitHub Actions
+    - Added path-based workflow filtering to avoid unnecessary CI executions
+
+- **Security**
+    - Moved sensitive configuration into environment variables and GitHub Secrets

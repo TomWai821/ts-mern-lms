@@ -1,37 +1,81 @@
 ## Technical Tradeoff
 
-### Real-time Synchronisation – WebSocket vs CRUD Fetch
-- **WebSocket Advantages**
-    - Persistent connection enables instant push updates from server
-    - Lower network overhead compared to repeated polling/fetch
-    - Ensures immediate UI synchronisation across all connected clients
-    - Particularly effective for admin/management dashboards with multi-user monitoring<br>
-      (Ref: [Web Socket Service and Config](../../../frontend/src/services/ws), [useWebSocket](../../../frontend/src/customhook/WebSocket.tsx))
+### Frontend Architecture
+- **Option A: Context-centric Architecture**
+    - Advantages
+        - Centralises CRUD operations, state management, and synchronisation logic in a single location
+        - Easier for small projects with limited business logic
+        - Fewer abstractions and files to maintain
 
-- **Frequent Fetch (CRUD GET) Advantages**
-    - Simple and stateless, easier to implement and scale
-    - Reliable for ensuring eventual consistency (always re-fetch latest data)
-    - Works well with serverless environments (e.g. Lambda) where persistent connections are not feasible
+- **Option B: Layered Architecture (Context + Service + Custom Hooks)**
+    - Advantages
+        - Context focuses on shared state, reducer logic, and refresh operations
+        - Services encapsulate CRUD and API communication logic
+        - Custom hooks coordinate mutation workflows, user feedback, and synchronisation behaviour
+        - Improves maintainability, testability, and code reuse as the application grows
 
-- **Trade-off Decision**
-    - WebSocket chosen for local/EC2 deployment to achieve real-time synchronisation and reduce redundant GET calls
-    - Frequent fetch retained as a fallback pattern in serverless contexts (Lambda)<br>
-     (Where long-lived connections are unsuitable)
+- **Design Decision**
+    - Adopted the layered architecture to separate state management, API access, and UI-side mutation handling
+    - Although it introduces additional abstraction, it reduces coupling and scales more effectively for feature-rich applications
+
+- **References**
+    - **Layered CRUD Architecture (Context + Service + Custom Hooks)**
+        - [Book context](../../../frontend/src/Context/Book/BookContext.tsx)
+        - [Book content service](../../../frontend/src/services/contents/bookService.ts)
+        - [Book action hook](../../../frontend/src/hooks/actionhook/useBookAction.ts)
+
+    - **State Synchronisation**
+        - [Mutation feedback and sync](../../../frontend/src/hooks/customhook/useMutation.ts)
+        - [WebSocket hook](../../../frontend/src/hooks/customhook/WebSocketts)
+        - [WebSocket event maps](../../../frontend/src/services/ws/config/WSConfig.ts)
 
 <hr>
 
-### Cloud backend architecture trade-off - Lambda (Serverless) vs EC2
-- **Lambda (Serverless) Advantages**
-    - Automatic scaling with no server management required
-    - Pay-per-use model, ideal for event-driven or intermittent workloads
-    - Well-suited for APIs, scheduled tasks, and batch processing
 
-- **EC2 Advantages**
-    - Full control over OS, runtime, and networking
-    - Stable environment for long-lived connections and continuous services
-    - Better fit for applications requiring persistent sessions, such as WebSocket
+### Authentication
+- **Option A: Client-managed Session Storage / Local Storage**
+    - Advantages
+        - User information and tokens are immediately accessible from frontend code
+        - Simpler to attach authentication headers to requests
+        - Reduces the number of API calls required to retrieve user state
 
-- **WebSocket Limitation with Lambda**
-    - Lambda’s short execution lifecycle makes it unsuitable for maintaining persistent WebSocket connections (Cold start)
-    - WebSocket deployment is therefore restricted to local or EC2 environments<br>
-      (While Lambda is leveraged for stateless API endpoints)
+- **Option B: Server-managed Authentication (HttpOnly Cookies)**
+    - Advantages
+        - Authentication tokens are inaccessible to frontend JavaScript
+        - Reduces exposure to XSS-related attacks
+        - Authentication state remains authoritative on the server
+        - Simplifies frontend token lifecycle management
+
+- **Design Decision**
+    - Chose server-managed authentication using HttpOnly cookies
+    - User-specific data is retrieved from authenticated backend APIs rather than trusted directly from client-side storage
+    - This approach prioritises security and consistency over minor reductions in network requests
+
+- **References**
+    - **Frontend Authentication**
+        - [Frontend auth requests](../../../frontend/src/Controller/UserController/UserPostController.ts)
+        - [Next.js middleware](../../../frontend/src/middleware.ts)
+
+    - **Backend Authentication**
+        - [Auth controller](../../../backend/src/controller/authController.ts)
+        - [Backend auth middleware](../../../backend/src/middleware/User/authMiddleware.ts)
+
+<hr>
+
+### Cloud Architecture
+- **Option A: AWS Lambda (Serverless)**
+    - Advantages
+        - Automatic scaling
+        - Lower operational overhead
+        - Cost-effective for stateless and event-driven workloads
+
+- **Option B: EC2**
+    - Advantages
+        - Full control over runtime and networking
+        - Better support for long-lived connections
+        - Suitable for continuously running services
+
+- **Design Decision**
+    - Stateless API endpoints are deployed using Lambda
+    - Real-time WebSocket services are hosted on EC2 due to their persistent connection requirements
+    - This balances operational efficiency with real-time communication needs

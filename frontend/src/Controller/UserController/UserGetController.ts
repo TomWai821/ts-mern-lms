@@ -1,24 +1,14 @@
 import { GetResultInterface } from "../../Model/ResultModel";
 
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 const contentType:string = 'application/json';
 const url:string = `${localhost}/api/user`;
 
-export const FetchUserData = async(tableName?: string, authToken?:string,  username?: string, role?: string , status?: string, gender?: string, startDate?:Date, dueDate?: Date) => 
+export const FetchUserData = async(tableName?: string, username?: string, role?: string , status?: string, gender?: string, startDate?:Date, dueDate?: Date) => 
 {
     try
-    {
-        const headers: Record<string, string> = 
-        {
-            'content-type': contentType
-        }
-
-        if(authToken)
-        {
-            headers['authToken'] = authToken;
-        }
-
+    {   
         let queryParams = BuildQuery({username, role, status, gender, startDate, dueDate});
 
         const queryString = queryParams.toString();
@@ -27,7 +17,8 @@ export const FetchUserData = async(tableName?: string, authToken?:string,  usern
         const response = await fetch(URL,
             {
                 method: 'GET',
-                headers
+                credentials:"include",
+                headers: { 'content-type': contentType }
             }
         )
 
@@ -64,3 +55,23 @@ const BuildQuery = (params:Record<string, number | string | Date | undefined>) =
 
     return queryParams.toString();
 }
+
+type CurrentUserData = "Self" | "QRCode";
+
+export const GetCurrentUserController = async (dataType: CurrentUserData) =>
+{
+    const dataUrl = dataType === "Self" ? `${localhost}/api/me/` : `${localhost}/api/me/qrCode`;
+    try
+    {
+        return fetch(`${dataUrl}`,
+            {
+                method:"GET",
+                credentials:"include"
+            }
+        );
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+};

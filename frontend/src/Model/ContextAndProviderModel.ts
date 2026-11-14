@@ -1,9 +1,8 @@
 import { ReactNode } from "react";
-import { BookDataInterface, ContactInterface, DefinitionInterface, DetailsInterfaceForSuspend, GetResultInterface, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
+import { BookDataInterface, ContactInterface, DetailsInterfaceForSuspend, LoanBookInterface, UserResultDataInterface } from "./ResultModel";
 import { BookTableDataInterface } from "./BookTableModel";
 import { ViewProfileModel } from "./InputFieldModel";
-import { IBookCreationData } from "../Controller/BookController/BookPostController";
-import { IBookUpdateData } from "../Controller/BookController/BookPutController";
+import { tableNameType } from "../features/shared/configs/ActionTableCellForAdmin";
 
 export interface ChildProps
 {
@@ -41,82 +40,13 @@ export interface ModalTemplateProps extends ChildProps
     cancelButtonEvent?: () => void;
 }
 
-export interface AuthContextProps
-{
-    Credentials: ViewProfileModel;
-    fetchUser: () => Promise<void>;
-    IsLoggedIn: () => boolean;
-    GetData: (data:string)  => string | undefined | null;
-    IsAdmin: () => boolean;
-    handleLogout: (username: string | null) => void;
-}
-
 // For Context
-export interface UserContextProps
-{
-    userData:  (UserResultDataInterface[] | DetailsInterfaceForSuspend[])[];
-    fetchAllUser: () => Promise<void>;
-    fetchUser: (type:string, UserData: {username?: string, role?: string , status?: string, gender?: string} | undefined) => Promise<void>;
-    createUser: (username:string, email:string, password:string, role:string, gender:string, birthDay:string) => Promise<Response>;
-    editUserData: (userId:string, username: string, email: string, gender: string, role: string) => Promise<Response>;
-    editSuspendUserData: (userId:string, suspendedListID: string, dueDate: Date, description: string) => Promise<Response>;
-    changeUserStatus: (type:string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => Promise<Response>;
-    actualDeleteUser: (userId:string) => Promise<Response>;
-}
-
-export interface BookContextProps
-{
-    bookData:(BookDataInterface[] | LoanBookInterface[])[];
-    fetchAllRecord: () => Promise<void>;
-    fetchAllBook: () => Promise<void>;
-    fetchBookWithFliterData: (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => Promise<void>;
-    fetchLoanBookWithFliterData: (type:string, bookname?:string, username?:string, status?:string, finesPaid?:string) => Promise<void>;
-    createBook: (bookCreationData: IBookCreationData) => Promise<Response>;
-    editBook: (bookID:string, bookUpdateData: IBookUpdateData) => Promise<Response>;
-    loanBook: (bookID:string, userID?:string) => Promise<Response>;
-    returnBook: (loanRecordID:string, finesPaid?:string) => Promise<Response>;
-    deleteBook: (bookID:string) => Promise<Response>;
-    getExternalData: (bookname: string, author: string) => Promise<GetResultInterface | undefined>;
-}
-
 export interface RecommendBookContextProps
 {
     suggestBook: (BookDataInterface[] | LoanBookInterface[])[];
     fetchRecommendBook: () => void;
     fetchNewPublishBook: () => Promise<void>;
     fetchMostPopularBook: () => Promise<void>;    
-}
-
-export interface SelfBookRecordContextProps
-{
-    BookRecordForUser: LoanBookInterface[][];
-    bookForUser: BookDataInterface[];
-    fetchFavouriteRecord: () => Promise<void>;
-    fetchSelfLoanRecord: () => Promise<void>;
-    fetchSelfFavouriteBookWithFilterData: (bookname?:string, status?:string, genreID?:string, languageID?:string, authorID?:string, publisherID?:string) => Promise<void>;
-    fetchSelfLoanBookWithFilterData: (type:string, bookname?:string, status?:string) => Promise<void>;
-    favouriteBook: (bookID:string) => Promise<Response>;
-    noLongerFavouriteBook: (favouriteBookID:string) => Promise<Response>;
-}
-
-export interface DefinatonProps
-{
-    definition: DefinitionInterface[][];
-    fetchAllDefinition: () => Promise<void>;
-    fetchDefinitionDataWithFilterData:(type:string, data:string) => Promise<void>;
-    createDefinition:(type:string, shortName:string, detailsName:string) => Promise<Response>;
-    editDefinition:(type:string, id:string, shortName:string, detailsName:string) => Promise<Response>;
-    deleteDefinition:(type:string, id:string) => Promise<Response>;
-}
-
-export interface ContactProps
-{
-    contact: ContactInterface[][];
-    fetchAllContactData: () => Promise<void>;
-    fetchContactDataWithFilterData: (type:string, filtData:string) => Promise<void>;
-    createContactData:(type:string, contactName:string, phoneNumber:string, email:string) => Promise<Response>;
-    editContactData:(type:string, id:string, contactName:string, phoneNumber:string, email:string) => Promise<Response>;
-    deleteContactData:(type:string, id:string) => Promise<Response>;
 }
 
 // For Tab Panel
@@ -129,7 +59,7 @@ export interface TabPanelProps extends ChildProps
 // For ContentTableCell
 export interface ContentTableCellProps extends ChildProps
 {
-    TableName: string;
+    TableName: tableNameType;
     value: number;
     textColor?:string;
     Information: UserResultDataInterface | BookDataInterface | BookTableDataInterface | LoanBookInterface | ContactInterface;

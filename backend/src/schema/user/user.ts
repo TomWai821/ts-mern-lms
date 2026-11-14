@@ -3,6 +3,9 @@ import { UserInterface } from '../../model/userSchemaInterface';
 import { printError } from '../../utils/Utils';
 import { userRole, userStatus } from '../../data/enums';
 
+type UserRole = typeof userRole[number];
+type UserStatus = typeof userStatus[number];
+
 const UserSchema = new mongoose.Schema<UserInterface>
 (
     {
@@ -40,7 +43,7 @@ export const GetUser = async (data?: Record<string, any>) =>
         {
             return await User.find({});
         }
-        return await User.find(data as Record<string, any>);
+        return await User.find(data as Record<string, any>).select("-password");
     }  
     catch (error) 
     {
@@ -48,11 +51,11 @@ export const GetUser = async (data?: Record<string, any>) =>
     }
 }
 
-export const GetUserCount = async (roleID?: string) => 
+export const GetUserCount = async (filters?: {role?: UserRole; status?: UserStatus; }) => 
 {
-    if(roleID)
+    if(filters)
     {
-        return await User.countDocuments({where: { role: roleID }});
+        return await User.countDocuments(filters);
     }
     return await User.countDocuments();
 }

@@ -1,8 +1,8 @@
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 const url:string = `${localhost}/api/book`;
 const contentType:string = "application/json";
 
-export const deleteBookRecord = async (type:string ,authToken:string, ID:string) => 
+export const deleteBookRecord = async (type:string, ID:string) => 
 {
     try
     {
@@ -15,7 +15,8 @@ export const deleteBookRecord = async (type:string ,authToken:string, ID:string)
         const response = await fetch(finalUrl[type],
             {
                 method: 'DELETE',
-                headers: {'content-type': contentType, 'authToken': authToken}
+                credentials:"include",
+                headers: {'content-type': contentType }
             }
         )
 

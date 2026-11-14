@@ -3,6 +3,8 @@ services:
     build:
       context: ./backend
       target: test
+    environment:
+      MONGO_URI: mongodb://mongo:27017/test
     depends_on:
       mongo:
         condition: service_healthy
@@ -13,9 +15,6 @@ services:
     build:
       context: ./frontend
       target: test
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
 
   mongo:
     image: mongo:6.0

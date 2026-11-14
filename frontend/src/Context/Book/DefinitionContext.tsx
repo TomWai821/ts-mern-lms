@@ -1,108 +1,71 @@
-import { createContext, FC, useCallback, useContext, useEffect } from "react";
-import { ChildProps, DefinatonProps } from "../../Model/ContextAndProviderModel";
+import { createContext, FC, useContext, useEffect } from "react";
+import { ChildProps } from "../../Model/ContextAndProviderModel";
 
-import { DefinitionInterface, GetResultInterface } from "../../Model/ResultModel";
-import { CreateDefinitionData, DeleteDefinitionData, EditDefinitionData, GetDefinition } from "../../Controller/BookController/DefinitionController";
+import { DefinitionInterface } from "../../Model/ResultModel";
 
-import { useAuthContext } from "../User/AuthContext";
 import { useDefinitionReducer } from "../../Reducer/DefinitionReducer";
 import { DefinitionwsEventToActionMap } from "../../services/ws/config/WSConfig";
-import { useWebSocket } from "../../customhook/WebSocket";
-import { executeMutationWithFallback } from "../../Controller/MutationWithFallback";
+
+import { fetchDefinitionData } from "../../services/contents/definitionService";
+import { GenreAction } from "../../Reducer/Definition/GenreReducer";
+import { LanguageAction } from "../../Reducer/Definition/LanguageReducer";
+import { useWebSocket } from "../../hooks/customhook/WebSocket";
+
+interface DefinatonProps
+{
+    definition: DefinitionInterface[][];
+    initDefinitions: () => Promise<void>;
+    refreshDefinitions: (type: string) => Promise<void>;
+    modifyDefinitions: (action: GenreAction | LanguageAction) => void;
+}
 
 const DefinitionContext = createContext<DefinatonProps | undefined>(undefined);
 
 export const DefinitionProvider:FC<ChildProps> = ({children}) => 
 {
-    const { GetData } = useAuthContext();
-    const { state, dispatch } = useDefinitionReducer();
-    
+    const { state, dispatch } = useDefinitionReducer();   
     const definition = [state.Genre, state.Language];
     
-    const authToken = GetData("authToken") as string;
-
     useWebSocket(dispatch, DefinitionwsEventToActionMap);
 
-    const fetchAllDefinition = useCallback(async () => 
+    const initDefinitions = async () => 
     {
-        const [getGenreData, getLanguageData] = await Promise.allSettled([GetDefinition("Genre"), GetDefinition("Language")])
+        const [genre, language] = await Promise.allSettled([fetchDefinitionData("Genre"), fetchDefinitionData("Language")]);
 
-        if(getGenreData.status === "fulfilled" && getGenreData.value)
+        const genreResult: DefinitionInterface[] | undefined = genre.status === 'fulfilled' ? genre.value : undefined; 
+        const languageResult: DefinitionInterface[] | undefined = language.status === 'fulfilled' ? language.value : undefined;
+
+        if(genreResult && Array.isArray(genreResult))
         {
-            const GenreResponse = getGenreData.value;
-            const GenreData: GetResultInterface = await GenreResponse.json();
-
-            if(Array.isArray(GenreData.foundDefinition as DefinitionInterface[]))
-            {
-                dispatch({ type: "SET_GENRE", payload: GenreData.foundDefinition as DefinitionInterface[] });
-            }
+            dispatch({ type: "SET_GENRE", payload: genreResult });
         }
-        
-        if(getLanguageData.status === "fulfilled" && getLanguageData.value)
+
+        if(languageResult && Array.isArray(languageResult))
         {
-            const LanguageResponse = getLanguageData.value;
-            const LanguageData: GetResultInterface = await LanguageResponse.json();
-
-            if(Array.isArray(LanguageData.foundDefinition as DefinitionInterface[]))
-            {
-                dispatch({ type: "SET_LANGUAGE", payload: LanguageData.foundDefinition as DefinitionInterface[] });
-            }
-        }    
-    }
-    ,[dispatch])
-
-    const fetchDefinitionDataWithFilterData = useCallback(async (type:string, data?:string) => 
-    {
-        const getData = await GetDefinition(type, data);
-    
-        if((getData as Response).ok)
-        {
-            const DefinitionData: GetResultInterface = await (getData as Response).json();
-
-            if(Array.isArray(DefinitionData.foundDefinition as DefinitionInterface[]))
-            {
-                
-                switch(type)
-                {
-                    case "Genre":
-                        dispatch({ type: "SET_GENRE", payload: DefinitionData.foundDefinition as DefinitionInterface[] });
-                        break;
-        
-                    case "Language":
-                        dispatch({ type: "SET_LANGUAGE", payload: DefinitionData.foundDefinition as DefinitionInterface[] });
-                        break;
-                }
-            }
+            dispatch({ type: "SET_LANGUAGE", payload: languageResult });
         }
     }
-    ,[dispatch])
 
-    const createDefinition = useCallback(async (type:string, shortName:string, detailsName:string) => 
+    const refreshDefinitions = async (type: string) => 
     {
-        return executeMutationWithFallback(() => CreateDefinitionData(type, authToken, shortName, detailsName), fetchAllDefinition);
-    }
-    ,[authToken, fetchAllDefinition])
+        const result = type === "Genre" ? await fetchDefinitionData("Genre") : await fetchDefinitionData("Language");
+        const actionType = type === "Genre" ? "SET_GENRE" : "SET_LANGUAGE";
 
-    const editDefinition = useCallback( async (type:string, id:string, shortName:string, detailsName:string) => 
-    {
-        return executeMutationWithFallback(() => EditDefinitionData(type, authToken, id, shortName, detailsName), fetchAllDefinition);
+        dispatch({ type: actionType, payload: result });
     }
-    ,[authToken, fetchAllDefinition])
 
-    const deleteDefinition = useCallback(async (type:string, id:string) => 
+    const modifyDefinitions = (action: GenreAction | LanguageAction) => 
     {
-        return executeMutationWithFallback(() => DeleteDefinitionData(type, authToken, id), fetchAllDefinition);
+        dispatch(action);
     }
-    ,[authToken, fetchAllDefinition])
 
     useEffect(() => 
     {
-        fetchAllDefinition();
-    }
-    ,[fetchAllDefinition])
+        initDefinitions();
+    },[])
 
     return (
-        <DefinitionContext.Provider value={{ definition, fetchAllDefinition, fetchDefinitionDataWithFilterData, createDefinition, editDefinition, deleteDefinition}}>
+        <DefinitionContext.Provider value={{ definition, initDefinitions, refreshDefinitions, modifyDefinitions}}>
             {children}
         </DefinitionContext.Provider>
     );

@@ -1,14 +1,16 @@
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { DefinitionType, fetchDefinitionDataWithFliter } from "../contents/definitionService";
+import { useAuthContext } from "../../Context/User/AuthContext";
 import { useDefinitionContext } from "../../Context/Book/DefinitionContext";
 
-
 const defaultValue = {genre:"", language: ""};
-const title = ["Genre", "Language"];
+const title = ["Genre", "Language"] as DefinitionType[];
 
 export const useDefinitionFilter = (tabValue: number) =>
 {
-    const { fetchDefinitionDataWithFilterData } = useDefinitionContext();
     const [searchData, setSearchData] = useState({genre:"", language: ""});
+    const {isAdmin} = useAuthContext();
+    const {refreshDefinitions, modifyDefinitions} = useDefinitionContext();
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -16,30 +18,20 @@ export const useDefinitionFilter = (tabValue: number) =>
         setSearchData({...searchData, [name]: value});
     }
 
-    const SearchDefinition = () => 
+    const SearchDefinition = async () => 
     {
-        switch(tabValue)
-        {
-            case 0:
-                fetchDefinitionDataWithFilterData(title[tabValue], searchData.genre);
-                break;
-            
-            case 1:
-                fetchDefinitionDataWithFilterData(title[tabValue], searchData.language);
-                break;
-        }
+        const appliedSearchData = tabValue === 0 ? searchData.genre : searchData.language;
+        const actionType = tabValue === 0 ? "SET_GENRE" : "SET_LANGUAGE";
+
+        const searchResult = await fetchDefinitionDataWithFliter(title[tabValue], isAdmin, appliedSearchData);
+        modifyDefinitions({type: actionType, payload: searchResult});
     }
 
     const resetFilter = useCallback(() => 
     {
-        fetchDefinitionDataWithFilterData(title[tabValue], "");
         setSearchData(defaultValue);
-    },[tabValue, fetchDefinitionDataWithFilterData])
-
-    useEffect(() =>
-    {
-        resetFilter()
-    },[tabValue, resetFilter])
+        refreshDefinitions(title[tabValue]);
+    },[tabValue])
 
     return { searchData, onChange, SearchDefinition, resetFilter };
 }

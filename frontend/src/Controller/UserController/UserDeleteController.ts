@@ -1,20 +1,17 @@
-const localhost = process.env.REACT_APP_BACKEND_BASE_URL;
+const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 const url:string = `${localhost}/api/user`;
 const contentType:string = 'application/json';
 
-const DeleteUserController = async(authToken:string, userId:string) => 
+const DeleteUserController = async(userId:string) => 
 {
     try
     {
         const response = await fetch(`${url}/User/id=${userId}`,
             {
                 method: 'DELETE',
-                headers: 
-                { 
-                    'content-type': contentType,
-                    'authToken': authToken
-                }
+                credentials:"include",
+                headers: { 'content-type': contentType,}
             }
         )
 

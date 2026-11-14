@@ -6,6 +6,8 @@ import bookRoutes from './api/books';
 import definitionRoutes from './api/definition'
 import contactRoutes from './api/contact'
 import recommendRoutes from './api/recommend'
+import selfRecordRoutes from './api/me'
+import dashboardRoutes from './api/dashboard'
 import healthRoutes from './health'
 import taskRoutes from './task'
 
@@ -16,6 +18,8 @@ const routerList:Record<string, Router> =
     '/api/definition': definitionRoutes,
     '/api/contact': contactRoutes,
     '/api/recommend': recommendRoutes,
+    '/api/me': selfRecordRoutes,
+    '/api/dashboard': dashboardRoutes,
     '/health': healthRoutes,
     '/tasks': taskRoutes
 }

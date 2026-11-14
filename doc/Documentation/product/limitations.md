@@ -1,42 +1,20 @@
-## Product Limitation
-
-### Technical Limitations
-- **Architecture**
-    - **3NF Schema** 
-        - Adopted early to accelerate prototyping (Note: This increases cross‑collection lookups, complicating server‑side RBAC and raising runtime costs)
-        
-    - **Query Strategy**
-        - Initially relied on aggregation pipelines; later recognised that many join functions are more efficiently handled with `.populate()` for better readability
-
-
-- **Frontend**
-    - **Production Optimisation Still Pending** 
-        - No production-grade optimisations (e.g. component memo, advanced caching)
-
-
-
-- **Backend**
-    - **Testing Coverage** 
-        - Integration test coverage is constrained by project scope (Core authentication flows are validated)
-
-    - **Error Handling** 
-        - Minimalised for demo clarity (Using `console.error` and standard 400/500 HTTP status codes)
-
-
-
-- **Security**
-    - **Client-side Token Storage** 
-        - Authentication tokens are temporarily stored client-side to simplify demo and scanner-free testing workflows
-        - This introduces XSS exposure risks and would be replaced by HttpOnly cookies in a production deployment
-
-<hr>
-
-### Operational Constraints
-- **QR Code Scanner Requirement** 
-    - QR-based workflows currently require either a physical scanner or manual token injection during local testing
-
-<hr>
+## Current Limitations
 
 ### Summary
-- These limitations reflect deliberate trade-offs made to prioritise prototyping speed, architectural experimentation, and demonstration clarity
-- Core business workflows are fully functional, while production-grade concerns such as advanced security, scalability, and comprehensive testing remain part of the long-term roadmap
+- These limitations represent conscious trade-offs made to prioritise rapid prototyping and architectural exploration
+
+- Core business workflows are fully functional, while production-oriented concerns such as advanced security controls, broader test coverage, and scalability enhancements remain part of the future roadmap
+
+### Architecture
+- The current data model prioritises rapid prototyping over query efficiency, resulting in additional cross-collection lookups for some workflows
+- Certain query implementations rely on aggregation pipelines where simpler alternatives could improve maintainability
+
+### Security
+- Authentication currently uses client-accessible token storage for demonstration simplicity
+- Production deployments should migrate to HttpOnly cookie-based authentication
+
+### Testing
+- Integration and end-to-end test coverage remains limited due to project scope
+
+### Operations
+- QR-code-based workflows currently require manual data entry or external scanning devices

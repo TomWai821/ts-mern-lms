@@ -1,7 +1,22 @@
 import mongoose, { PipelineStage } from "mongoose";
-import { BookLoanedInterface } from "../../model/bookSchemaInterface";
+import { AuthorInterface, BookInterface, BookLoanedInterface, GenreInterface, LanguageInterface, PublisherInterface } from "../../model/bookSchemaInterface";
 import { lookupAndUnwind, printError, setToMidnight } from "../../utils/Utils";
 import { bookReturnStatus, finesPaidStatus } from "../../data/enums";
+import { UserInterface } from "@/model/userSchemaInterface";
+
+export type BookReturnStatus = typeof bookReturnStatus[number];
+type FinesPaidStatus = typeof finesPaidStatus[number];
+
+export type BookLoanedAggregationResult = BookLoanedInterface &
+{
+    _id: string;
+    userDetails: UserInterface;
+    bookDetails: BookInterface;
+    authorDetails: AuthorInterface;
+    publisherDetails: PublisherInterface;
+    genreDetails: GenreInterface;
+    languageDetails: LanguageInterface;
+};
 
 const BookLoanedSchema = new mongoose.Schema<BookLoanedInterface>
 (   
@@ -62,7 +77,7 @@ const GetBooksWithOtherDetails = async (data?:Record<string, any>) =>
     );
 
     if (data) { pipeline.push( {$match: {...data}} )}
-    return await BookLoaned.aggregate(pipeline);
+    return await BookLoaned.aggregate(pipeline) as BookLoanedAggregationResult[];
 }
  
 const GetSuggestBookDetails = async (data?: Record<string, any>, limit?: number, sortRequirements?: Record<string, any>) => 
@@ -154,6 +169,22 @@ export const FindBookLoanedAndDelete = async (data: Record<string, any>) =>
     try
     {
         return await BookLoaned.deleteMany(data);
+    }
+    catch(error)
+    {
+        printError(error);
+    }
+}
+
+export const GetBookLoanedCount = async(filters?: {finesPaidStatus?: FinesPaidStatus, bookreturnStatus?: BookReturnStatus}) =>
+{
+    try
+    {
+        if(filters)
+        {
+            return await BookLoaned.countDocuments(filters);
+        }
+        return await BookLoaned.countDocuments();
     }
     catch(error)
     {

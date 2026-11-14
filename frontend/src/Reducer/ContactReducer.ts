@@ -4,7 +4,7 @@ import { ContactInterface } from "../Model/ResultModel";
 import { publisherReducer } from "./Contact/PublisherReducer";
 import { authorReducer } from "./Contact/AuthorReducer";
 
-interface ContactState
+export interface ContactState
 {
     Author: ContactInterface[];
     Publisher: ContactInterface[];

@@ -65,11 +65,10 @@ This Information Technology Project (ITP) is a library management system enginee
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Technology Stack](#technology-stack)
-- [Key Features](#key-features)
-- [Core Business Logic Overview](#core-business-logic-overview)
+- [Core Features](#core-features)
+- [Core Business Workflows](#core-business-workflows)
 - [Technical Documentation](#technical-documentation)
-- [Product Evolution and Roadmap](#product-evolution-and-roadmap)
-- [Product Limitations](#product-limitations)
+- [Engineering Journey](#engineering-journey)
 - [Installation](#installation)
 - [Contributing](#contributing)
 - [License](#license)
@@ -78,14 +77,12 @@ This Information Technology Project (ITP) is a library management system enginee
 
 ## Introduction
 
-### The Original Goal
-Developed as an Information Technology Project (ITP) to modernise traditional library operations. The initial focus was on functional implementation: CRUD operations, QR Code integration, and a TF-IDF recommendation engine using the MERN stack
+### Project Background
+- This project was originally developed as an Information Technology Project (ITP) aimed at modernising traditional library operations
 
-- [Engineering Evolution](/doc/Documentation/technicalLearns/engineering-evolution.md)
-    - Refactoring journey after graduation — architecture redesign, API integration refactoring, security improvements, frontend standardisation, and DevOps adoption
+- The initial implementation focused on delivering core functionality, including catalog management, loan processing, QR-code-assisted workflows, and a TF-IDF-based recommendation engine using the MERN stack
 
-- [Technical Trade-offs & Architecture Decisions](/doc/Documentation/technicalLearns/technical-tradeoff.md)
-    - Evaluation of WebSocket vs CRUD Fetch, Lambda vs EC2, and other engineering decisions made throughout the project
+- Following graduation, the project evolved beyond its academic scope and became a platform for exploring production-oriented architecture, cloud deployment, security design, and engineering best practices
 
 
 
@@ -109,7 +106,7 @@ docker-compose -f compose.yaml up --build -d
 
 ## Technology Stack
 - **Frontend** 
-    - React, Typescript, Material-UI, Chart.js
+    - Next.js(React), Typescript, Material-UI, Chart.js
 
 - **Backend** 
     - Node.js, Express.js, WebSocket
@@ -118,8 +115,10 @@ docker-compose -f compose.yaml up --build -d
     - MongoDB, Mongoose
 
 - **Cloud & DevOps**
-    - GitHub Actions, Jest, ESLint
     - AWS (Lambda, ECR, S3, IAM, EventBridge)
+
+- **Testing & Quality**
+    -  GitHub Actions, Jest, ESLint
 
 - **Security** 
     - JWT(JSON web token), Bcrypt
@@ -129,26 +128,26 @@ docker-compose -f compose.yaml up --build -d
 
 
 
-## Key Features 
-- **Intelligent Recommendation**
-    - Developed a custom TF-IDF engine to provide data-driven book recommendations based on user history, enhancing personalised content discovery
-      
-- **External Data Enrichment**
-    - Integrated Google Books API on the client side to fetch and display extended metadata, providing a rich user experience without bloating the backend database
-      
-- **Automated Loan Tracking**
-    - Built an automated tracking system for loaned books and return statuses, ensuring real-time data consistency and operational visibility
-      
-- **QR-based Operations**
-    - Client-side QR code workflow for loan verification, reducing manual user identification during borrowing operations
-      
-- **Security Architecture**
-    - Implemented JWT-based Authentication with Bcrypt hashing, utilising Frontend Route Guards and Role-aware UI rendering for access control
+## Core Features
+- **Book Discovery & Recommendation**
+    - Provides personalised book recommendations using a TF-IDF–based recommendation engine
+
+- **External Metadata Integration**
+    - Integrates Google Books metadata to enrich catalogue information and improve content discovery
+
+- **Loan & Return Management**
+    - Tracks borrowing activities, due dates, and return status throughout the loan lifecycle
+
+- **QR-assisted Borrowing Workflow**
+    - Supports member identification during borrowing operations through QR-code-based workflows
+
+- **Role-aware Access Control**
+    - Provides authentication and role-specific interfaces for members and librarians
 
 
 
-## Core Business Logic Overview
-This document outlines the implementation of the system's background automation, focusing on task scheduling and asynchronous execution stability
+## Core Business Workflows
+Documentation covering the key business processes and service behaviours within the system
 
 - [Automated Logic](./doc/Documentation/businessLogic/automated-logic.md)
     - Background task execution using setTimeout, setInterval and Promise.allSettled
@@ -160,7 +159,7 @@ This document outlines the implementation of the system's background automation,
     - Google Books API integration for metadata enrichment and catalogue enhancement
 
 - [QR Code Handling](./doc/Documentation/businessLogic/qr-code-handling.md)
-    - Client-side QR generation for loan verification workflows with lightweight JSON payload encoding
+    - QR-based member identification workflow for borrowing operations
 
 
 
@@ -189,19 +188,24 @@ For a detailed look at the system's engineering standards and design patterns, p
 
 
 
-## Product Evolution and Roadmap
-This project focuses on high-standard engineering practices. Key highlights include:
-- [Complete Improvements](./doc/Documentation/product/completed-improvements.md)
-    - Delivered engineering improvements across frontend, backend, infrastructure, and CI/CD, including route-based lazy loading, layered backend architecture, Dockerised environments, automated testing, and AWS-ready deployment workflows
+## Engineering Journey
+This section highlights the architectural evolution, engineering decisions, and future direction of the project
 
-- [Planned Improvements](./doc/Documentation/product/planned-improvements.md)
-    - Future roadmap focused on production-grade security, transactional consistency, automated testing, and architectural scalability
+- **Key highlights include**
+    - [Engineering Evolution](/doc/Documentation/technicalLearns/engineering-evolution.md)
+        - Lessons learned and major architectural refactoring decisions made after the initial release
 
+    - [Technical Trade-offs & Architecture Decisions](/doc/Documentation/technicalLearns/technical-tradeoff.md)
+        - Evaluation of WebSocket vs CRUD Fetch, Lambda vs EC2, and other engineering decisions made throughout the project
 
+    - [Completed Improvements](./doc/Documentation/product/completed-improvements.md)
+        - Key enhancements across frontend architecture, backend services, infrastructure, and deployment workflows
 
-## Product Limitations
-- [Product Limitation](./doc/Documentation/product/limitations.md)
-    - Strategic Limitations: A transparent analysis of current architectural trade-offs (3NF vs Performance), security considerations (XSS/JWT), and the future engineering roadmap
+    - [Current Limitations](./doc/Documentation/product/limitations.md)
+        - Known technical and operational constraints, together with their associated trade-offs
+
+    - [Future Enhancements](./doc/Documentation/product/future-enhancements.md)
+        - Planned improvements focused on security, scalability, testing, and operational resilience
 
 
 

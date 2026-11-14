@@ -40,6 +40,7 @@ export enum DefinitionEvent
     LANGUAGE_DELETE = "language_delete"
 }
 
+
 type WebSocketEvent = UserEvent | BookEvent | ContactEvent | DefinitionEvent;
 
 let wss: WebSocketServer;

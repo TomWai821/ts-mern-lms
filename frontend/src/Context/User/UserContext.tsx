@@ -1,134 +1,74 @@
-import { createContext, FC, useCallback, useContext, useEffect } from "react";
-
-// Another Useful Function
-import { FetchUserData } from "../../Controller/UserController/UserGetController";
-import { CalculateDueDate, GetCurrentDate } from "../../Controller/OtherController";
-import { ModifySuspendListDataController, ModifyStatusController, ModifyUserDataController } from "../../Controller/UserController/UserPutController";
-import { RegisterController } from "../../Controller/UserController/UserPostController";
+import { createContext, FC, useContext } from "react";
 
 // Models
-import { GetResultInterface } from "../../Model/ResultModel";
-import { FindUserInterface } from "../../Model/UserTableModel";
-import { ChildProps, UserContextProps } from "../../Model/ContextAndProviderModel";
-import { DeleteUserController } from "../../Controller/UserController/UserDeleteController";
-
-import { useAuthContext } from "./AuthContext";
+import { DetailsInterfaceForSuspend, UserResultDataInterface } from "../../Model/ResultModel";
+import { ChildProps } from "../../Model/ContextAndProviderModel";
 import { useUserRecordReducer } from "../../Reducer/UserRecordReducer";
 import { UserRecordwsEventToActionMap } from "../../services/ws/config/WSConfig";
-import { useWebSocket } from "../../customhook/WebSocket";
-import { executeMutationWithFallback } from "../../Controller/MutationWithFallback";
+import { useWebSocket } from "../../hooks/customhook/WebSocket";
+import { fetchSuspendUser, fetchUsers } from "../../services/contents/userService";
+import { SuspendUserAction } from "../../Reducer/User/SuspendUserReducer";
+import { UserAction } from "../../Reducer/User/UserReducer";
+
+interface UserContextProps
+{
+    userData:  (UserResultDataInterface[] | DetailsInterfaceForSuspend[])[];
+    initUsers: (isAdmin: boolean, isLoggedin: boolean, isAuthLoading:boolean) => Promise<void>;
+    refreshUsers: (type: string, isAdmin: boolean, isLoggedin: boolean, isAuthLoading: boolean) => Promise<void>;
+    modifyUsers: (action: UserAction | SuspendUserAction) => void;
+}
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider: FC<ChildProps> = ({ children }) =>
 {
-    const { GetData } = useAuthContext();
     const { dispatch, state } = useUserRecordReducer();
 
     const userData = [state.AllUser, state.SuspendUser];
-    const authToken = GetData("authToken") as string;
-
     useWebSocket(dispatch, UserRecordwsEventToActionMap);
 
-    // For init
-    const fetchAllUser = useCallback(async () => 
+    const initUsers = async (isAdmin: boolean, isLoggedin:boolean) => 
     {
-        const resultForAllUser: GetResultInterface | undefined = await FetchUserData("AllUser", authToken);
-        const resultForSuspendUser: GetResultInterface | undefined = await FetchUserData("SuspendUser", authToken);
+        const [Users, SuspendUsers] = await Promise.allSettled([fetchUsers(isAdmin), fetchSuspendUser(isLoggedin)]);
 
-        if(resultForAllUser && Array.isArray(resultForAllUser.foundUser))
+        const UsersResult: UserResultDataInterface[] | undefined = Users.status === "fulfilled" ? Users.value : undefined;
+        const SuspendUsersResult:  UserResultDataInterface[] | undefined = SuspendUsers.status === "fulfilled" ? SuspendUsers.value : undefined;
+
+        if (UsersResult && Array.isArray(UsersResult)) 
         {
-            dispatch({ type: "SET_ALL_USER", payload: resultForAllUser.foundUser });
+            modifyUsers({ type: "SET_ALL_USER", payload: UsersResult});
         }
 
-        if(resultForSuspendUser && Array.isArray(resultForSuspendUser.foundUser))
+        if (SuspendUsersResult && Array.isArray(SuspendUsersResult)) 
         {
-            dispatch({ type: "SET_SUSPEND_USER", payload: resultForSuspendUser.foundUser });
+            modifyUsers({ type: "SET_SUSPEND_USER", payload: SuspendUsersResult });
         }
+    }
 
-    },[authToken, dispatch])
-
-
-    // For search function
-    const fetchUser = useCallback(async (type:string, UserData: {username?: string, role?: string, status?: string, gender?: string} | undefined) => 
+    const refreshUsers = async (type: string, isAdmin: boolean, isLoggedin:boolean) => 
     {
-        const {username, role, status, gender} = UserData as FindUserInterface;
-
-        const result : GetResultInterface | undefined = await FetchUserData(type, authToken, username, role, status, gender);
-
-        if(result && Array.isArray(result.foundUser))
+        switch(type)
         {
-            switch(type)
-            {
-                case "AllUser":
-                    dispatch({ type: "SET_ALL_USER", payload: result.foundUser });
-                    break;
-
-                case "SuspendUser":
-                    dispatch({ type: "SET_SUSPEND_USER", payload: result.foundUser });
-                    break;
-            }
+            case "AllUser":
+                const UsersResult: UserResultDataInterface[] | undefined  = await fetchUsers(isAdmin);
+                modifyUsers({ type: "SET_ALL_USER", payload: UsersResult});
+                break;
             
+            case "SuspendUser":
+                const SuspendUsersResult: UserResultDataInterface[] | undefined  = await fetchSuspendUser(isLoggedin);
+                modifyUsers({ type: "SET_SUSPEND_USER", payload: SuspendUsersResult });
+                break;
         }
+
     }
-    ,[authToken, dispatch])
 
-
-    const createUser = useCallback((username:string, email:string, password:string, role:string, gender:string, birthDay:string) => 
+    const modifyUsers = (action: UserAction | SuspendUserAction) => 
     {
-        return executeMutationWithFallback(() => RegisterController(username, email, password, role, gender, birthDay), fetchAllUser);
+        dispatch(action);
     }
-    ,[fetchAllUser])
-
-
-    const editUserData = useCallback((userId: string, username:string, email:string, gender:string, role:string) => 
-    {
-        return executeMutationWithFallback(() => ModifyUserDataController(authToken, userId, username, email, gender, role), fetchAllUser);
-    }
-    ,[authToken, fetchAllUser])
-    
-
-    const editSuspendUserData = useCallback((userId:string, suspendedListID:string, dueDate:Date, description:string) => 
-    {
-        return executeMutationWithFallback(() => ModifySuspendListDataController(authToken, userId, suspendedListID, dueDate, description), fetchAllUser);
-    }
-    ,[authToken, fetchAllUser])
-
-
-    const changeUserStatus = useCallback((type: string, userId:string, status:string, ListID?:string, duration?:number, description?:string) => 
-    {
-        const startDate = GetCurrentDate("Date") as Date;
-        const dueDate = CalculateDueDate(duration as number);
         
-        return executeMutationWithFallback(() => 
-        {
-            if(type === "UnSuspend")
-            {
-                return ModifyStatusController(type, authToken, userId, status, ListID);
-            }
-
-            return ModifyStatusController(type, authToken, userId, status, undefined, startDate, dueDate, description);
-        }, fetchAllUser)
-    
-    }
-    ,[authToken, fetchAllUser]);
-
-
-    const actualDeleteUser = useCallback((userId:string) => 
-    {
-        return executeMutationWithFallback(() => DeleteUserController(authToken, userId), fetchAllUser);
-    }
-    ,[authToken, fetchAllUser]);
-    
-
-    useEffect(() => 
-        {
-            fetchAllUser();
-        }, [fetchAllUser]
-    )
-
     return (
-        <UserContext.Provider value={{ userData, fetchAllUser, fetchUser, createUser, editUserData, editSuspendUserData, changeUserStatus, actualDeleteUser }}>
+        <UserContext.Provider value={{ userData, initUsers, refreshUsers, modifyUsers }}>
             {children}
         </UserContext.Provider>
     );
