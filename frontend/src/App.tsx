@@ -1,3 +1,4 @@
+/*
 import './App.css';
 
 // React functions
@@ -25,3 +26,4 @@ const App: React.FC = () =>
 }
 
 export default App;
+*/
