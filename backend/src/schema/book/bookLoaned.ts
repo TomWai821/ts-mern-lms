@@ -2,7 +2,7 @@ import mongoose, { PipelineStage } from "mongoose";
 import { AuthorInterface, BookInterface, BookLoanedInterface, GenreInterface, LanguageInterface, PublisherInterface } from "../../model/bookSchemaInterface";
 import { lookupAndUnwind, printError, setToMidnight } from "../../utils/Utils";
 import { bookReturnStatus, finesPaidStatus } from "../../data/enums";
-import { UserInterface } from "@/model/userSchemaInterface";
+import { UserInterface } from "../model/userSchemaInterface";
 
 export type BookReturnStatus = typeof bookReturnStatus[number];
 type FinesPaidStatus = typeof finesPaidStatus[number];
