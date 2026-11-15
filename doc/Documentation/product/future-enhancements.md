@@ -5,7 +5,7 @@
 - Introduce a unified API transport layer for standardised request and error handling
 
 - **References**
-    - [customhook Directory](../../../frontend/src/customhook)
+    - [customhook Directory](../../../frontend/src/hooks/customhook)
     - [AjaxUtils.ts](../../../frontend/src/improvement/AjaxUtils.ts)
 
 <hr>

@@ -20,7 +20,7 @@
 
     - **Performance & State Management**
         - [Mutation feedback and sync](../../../frontend/src/hooks/customhook/useMutation.ts)
-        - [WebSocket hook](../../../frontend/src/hooks/customhook/WebSocketts)
+        - [WebSocket hook](../../../frontend/src/hooks/customhook/WebSocket.ts)
         - [WebSocket event maps](../../../frontend/src/services/ws/config/WSConfig.ts)
       
 <hr>

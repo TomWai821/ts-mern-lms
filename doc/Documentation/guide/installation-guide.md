@@ -100,14 +100,14 @@ docker compose up --build -d
 <summary>Environment Configuration Reference</summary>
 
 1. **Expected URLs**
-    | Variable                    | Value                    |
-    | --------------------------- | ------------------------ |
-    | ORIGIN_URI                  | http://localhost:3000    |
+    | Variable                      | Value                    |
+    | ----------------------------- | ------------------------ |
+    | ORIGIN_URI                    | http://localhost:3000    |
     | NEXT_PUBLIC_BACKEND_BASE_URL  | http://localhost:5000    |
     | NEXT_PUBLIC_MAIN_PAGE         | http://localhost:3000    |
-    | BACKEND_BASE_URL            | http://localhost:5000    |
-    | STORAGE_TYPE                | LOCAL                    |
-    | NEXT_PUBLIC_WEB_SOCKET_SERVER | ws://localhost:5000/ws |
+    | BACKEND_BASE_URL              | http://localhost:5000    |
+    | STORAGE_TYPE                  | LOCAL                    |
+    | NEXT_PUBLIC_WEB_SOCKET_SERVER | ws://localhost:5000/ws   |
 
     - **Remarks**
         - NEXT_PUBLIC_WEB_SOCKET_SERVER can be ignored for cloud - Lambda deployment
