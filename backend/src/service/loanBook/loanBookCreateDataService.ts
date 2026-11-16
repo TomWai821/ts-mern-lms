@@ -4,15 +4,16 @@ import { CreateBookLoaned, GetBookLoaned } from "../../schema/book/bookLoaned";
 import { FindUser } from "../../schema/user/user";
 import { BookEvent, broadcast } from "../../ws";
 import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
+import { RefreshRecommendationCache } from "../book/bookRecommendationService";
+import { RefreshDashboard } from "../dashboard/dashboardService";
 
 export const CreateLoanBookRecordService = async (userID: string, librarianUserID: string, bookID: string, loanDate: Date, dueDate: Date) => 
 {
-    let UserID;
+    let UserID = userID;
             
     if (userID) 
     {
         const user = await FindUser({ _id: UserID }) as UserInterface;
-        console.log(user);
         
         if(user.status === "Suspend")
         {
@@ -40,8 +41,11 @@ export const CreateLoanBookRecordService = async (userID: string, librarianUserI
 
     const loanRecord = await GetBookLoaned({_id: createLoanRecord._id}) as BookLoanedInterface[];
     const bookRecord = await GetBook({_id: changeBookState._id}) as BookInterface[];
+    await Promise.all([RefreshRecommendationCache("mostPopular"), RefreshRecommendationCache("forUser", UserID)]);
 
     broadcast(BookEvent.LOAN_BOOK_CREATE, loanRecord[0]);
     broadcast(BookEvent.BOOK_UPDATE, bookRecord[0]);
+    void RefreshDashboard("books");
+    void RefreshDashboard("fines");
     return {success: true, statusCode: 200, message: "Loaned Book Successfully!"};
 }

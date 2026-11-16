@@ -18,7 +18,7 @@ const useFinanceData = (dashboardData: FinesDashboardData) =>
     [
         { title: "Paid Records", recordAmount: dashboardData.FinesPaidCount ?? 0 },
         { title: "Not Paid Records", recordAmount: dashboardData.FinesPaidCount ?? 0 },
-        { title: "Total Fines Amount (HKD$)", recordAmount: dashboardData.TotalFinesAmount["sum"] ?? 0 }
+        { title: "Total Fines Amount (HKD$)", recordAmount: dashboardData.TotalFinesAmount ?? 0 }
     ];
 
     return {FinanceCardData};

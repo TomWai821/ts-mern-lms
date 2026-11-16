@@ -1,9 +1,12 @@
 import { FindBookFavouriteAndDeleteMany } from "../../schema/book/bookFavourite";
-import { FindBookLoanedAndDelete } from "../../schema/book/bookLoaned";
-import { BookInterface } from "../../model/bookSchemaInterface";
+import { FindBookLoaned, FindBookLoanedAndDelete } from "../../schema/book/bookLoaned";
+import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
 import { FindBookByID, FindBookByIDAndDelete } from "../../schema/book/book";
 import { HandleDeleteImage } from "../image/bookDeleteImageService";
 import { BookEvent, broadcast } from "../../ws";
+import { RefreshRecommendationCache } from "./bookRecommendationService";
+import { DeleteDataFromDynamoDB } from "../dynamoDB/dynamoDBService";
+import { RefreshDashboard } from "../dashboard/dashboardService";
 
 interface ServiceResponse 
 {
@@ -31,12 +34,17 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
         return { success: false, statusCode: 500, error: "Failed to delete book master record" };
     }
 
+    const WillDeletedLoanBook = await FindBookLoaned({bookID}) as BookLoanedInterface[];
+
+    const affectedUserIds = [...new Set(WillDeletedLoanBook.map(loan => loan.userID.toString()))];
+
     // 3. Fire-and-forget background cleanup: do not await to avoid blocking primary delete
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    void ExecuteBackgroundCleanup(bookID, bookRecord.image.filename);
+    await ExecuteBackgroundCleanup(bookID, bookRecord.image.filename, affectedUserIds);
 
     broadcast(BookEvent.BOOK_DELETE, bookID);
     broadcast(BookEvent.LOAN_BOOK_DELETE, bookID);
+    void RefreshDashboard("books");
+    void RefreshDashboard("fines");
 
     // 4. Return success response (If main deletion succeeded)
     return { success: true, statusCode: 200, message: "Delete Book Record Successfully"};
@@ -64,24 +72,28 @@ export const BookDeletionService = async (bookID: string): Promise<ServiceRespon
  * @returns void
  * 
  */
-const ExecuteBackgroundCleanup = (bookID: string, filename: string): void => 
+const ExecuteBackgroundCleanup = async (bookID: string, filename: string, affectedUserIds: string[]): Promise<void> => 
 {
-    // 1. Delete related records in parallel (Loaned and Favourite)
-    Promise.allSettled([FindBookLoanedAndDelete({ bookID }), FindBookFavouriteAndDeleteMany({ bookID })])
-        .then(([loanResult, favouriteResult]) => 
-        {
-            // Log any failures in related record cleanup (But do not affect the main response)
-            if (loanResult.status === 'rejected' || favouriteResult.status === 'rejected')
-            {
-                console.warn(`Book ${bookID} database shadow cleanup incomplete:`,
-                {
-                    loanError: loanResult.status === 'rejected' ? loanResult.reason : null,
-                    favouriteError: favouriteResult.status === 'rejected' ? favouriteResult.reason : null
-                });
-            }
-        });
+    const [loanResult, favouriteResult] = await Promise.allSettled([ FindBookLoanedAndDelete({ bookID }), FindBookFavouriteAndDeleteMany({ bookID }) ]);
 
-    // 2. Delete the associated image (Non-blocking)
+    if (loanResult.status === "rejected" || favouriteResult.status === "rejected")
+    {
+        console.warn(`Book ${bookID} database shadow cleanup incomplete:`,
+            {
+                loanError: loanResult.status === 'rejected' ? loanResult.reason : null,
+                favouriteError: favouriteResult.status === 'rejected' ? favouriteResult.reason : null
+            }
+        );
+    }
+
+    await Promise.all(
+        [
+            RefreshRecommendationCache("newPublish"), 
+            RefreshRecommendationCache("mostPopular"),
+            ...affectedUserIds.map(userId =>DeleteDataFromDynamoDB("RecommendBook", "forUser",userId))
+        ]
+    );
+
     HandleDeleteImage(filename)
         .catch(storageError => 
         {

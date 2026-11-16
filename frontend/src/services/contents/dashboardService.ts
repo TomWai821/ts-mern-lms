@@ -31,7 +31,7 @@ export interface FinesDashboardData
 {
     FinesNotPaidCount: number;
     FinesPaidCount: number;
-    TotalFinesAmount: {"sum": number};
+    TotalFinesAmount: number;
     FinesDetails: {"Paid": number, "Not Paid": number};
     NotPaidFinesRecordDetails: {"Not Return Book": number, "Return Book": number};
 }
@@ -59,6 +59,5 @@ async function GetData<T extends DashboardDataType>(type: T): Promise<DashboardR
     });
 
     const result: DashboardDataResponse = await response.json();
-    console.log(result);
     return result.data as DashboardResponseMap[T];
 }

@@ -2,6 +2,7 @@ import { BookEvent, broadcast } from "../../ws";
 import { FindBookByIDAndUpdate, GetBook } from "../../schema/book/book";
 import { GetBookLoaned, FindBookLoanedByIDAndUpdate } from "../../schema/book/bookLoaned";
 import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
+import { RefreshDashboard } from "../dashboard/dashboardService";
 
 export const LoanBookRecordUpdateService = async (foundLoanedRecord: BookLoanedInterface, finesPaid: string) => 
 {
@@ -32,5 +33,7 @@ export const LoanBookRecordUpdateService = async (foundLoanedRecord: BookLoanedI
 
     broadcast(BookEvent.LOAN_BOOK_UPDATE, loanBookRecord[0]);
     broadcast(BookEvent.BOOK_UPDATE, bookRecord[0]);
+    void RefreshDashboard("books");
+    void RefreshDashboard("fines");
     return {success: true, statusCode: 200, message: "Return Loan Book Successfully!"};
 }

@@ -3,7 +3,7 @@ import { FindBook, FindBookByID } from '../../schema/book/book';
 import { AuthRequest } from '../../model/requestInterface';
 import { FindLanguageByID } from '../../schema/definition/language';
 import { FindGenreByID } from '../../schema/definition/genre';
-import { FindBookLoaned } from '../../schema/book/bookLoaned';
+import { FindBookLoanedByID } from '../../schema/book/bookLoaned';
 
 export const BookNameValidation = async (req:Request, res:Response, next: NextFunction) => 
 {
@@ -82,7 +82,7 @@ export const FoundBookLoanRecord = async (req:AuthRequest, res:Response, next: N
 
     try
     {
-        const foundLoanRecord = await FindBookLoaned({_id: loanBookID});
+        const foundLoanRecord = await FindBookLoanedByID(loanBookID as string);
 
         if(!foundLoanRecord) 
         {

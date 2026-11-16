@@ -3,41 +3,92 @@ import { AllBooksAggregationResult, GetBook, GetBookCount } from "../../schema/b
 import { GetSuspendListCount } from "../../schema/user/suspendList";
 import { GetUserCount } from "../../schema/user/user";
 import { BookLoanedInterface } from "../../model/bookSchemaInterface";
+import { GetDataFromDynamoDB, PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
 
 export type dashboardDataType = "users" | "books" | "fines";
 
+const DashboardServicesMap =
+{
+    users: userDashboardDTO,
+    books: bookDashboardDTO,
+    fines: finesDashboardDTO
+}
+
 export const DashboardService = async (type: dashboardDataType) => 
 {
-    switch(type)
+    const cacheData = await GetDashboardDataFromDynamoDB(type);
+
+    if(cacheData)
     {
-        case "users":
-            return await userDashboardDTO();
+        return cacheData;
+    }
 
-        case "books":
-            return await bookDashboardDTO();
+    return await DashboardServicesMap[type]();
+}
 
-        case "fines":
-            return await finesDashboardDTO();
-
-        default:
-            console.error(`Invalid dashboard type: ${type}`);
-            return {success: false, statusCode: "", message: `Invalid dashboard type: ${type}`, data: []};
+export const RefreshDashboard = async (type: dashboardDataType): Promise<void> =>
+{
+    try
+    {
+        await DashboardServicesMap[type]();
+    }
+    catch (error)
+    {
+        console.error(`Refresh dashboard failed: ${type}`, error);
     }
 }
 
-const userDashboardDTO = async () => 
+export const InitialiseDashboardCache = async (): Promise<void> =>
+{
+    await Promise.all([
+        DashboardServicesMap.users(),
+        DashboardServicesMap.books(),
+        DashboardServicesMap.fines()
+    ]);
+}
+
+const GetDashboardDataFromDynamoDB = async (type: dashboardDataType) =>
+{
+    const result = await GetDataFromDynamoDB("DashboardData", type);
+
+    if(!result.Item)
+    {
+        return null;
+    }
+
+    return {success: true, statusCode: 200, message: `Get ${type} dashboard data successfully!`, data: result.Item.data};
+}
+
+export interface UserDashboardData
+{
+    UserCount: number;
+    UserCurrentlySuspendCount: number;
+    SuspendListSuspendUserCount: number;
+    SuspendListUnsuspendUserCount: number;
+}
+
+async function userDashboardDTO()
 {
     const [UserCount, UserCurrentlySuspendCount, SuspendListSuspendUserCount, SuspendListUnsuspendUserCount] = await Promise.all(
         [GetUserCount(), GetUserCount({status: "Suspend"}), GetSuspendListCount({status: "Suspend"}), GetSuspendListCount({status: "Unsuspend"})]
     );
 
-    const DataHandler = {UserCount, UserCurrentlySuspendCount, SuspendListSuspendUserCount, SuspendListUnsuspendUserCount};
+    const DataHandler: UserDashboardData = {UserCount, UserCurrentlySuspendCount, SuspendListSuspendUserCount, SuspendListUnsuspendUserCount};
+    await PutDataIntoDynamoDB("DashboardData", "users", DataHandler);
 
     return { success: true, statusCode: 200, message: "Get user dashboard data successfully!", data: DataHandler}
 }
 
+export interface BookDashboardData
+{
+    BooksCount: number | undefined;
+    BookLoanedCount: number | undefined;
+    LoanedStatusCount: Record<"Returned" | "Loaned" | "Returned(Late)", number>;
+    AllBooksGenresCount: Record<string, number>;
+    BookLoanedGenresCount: Record<string, number>;
+}
 
-const bookDashboardDTO = async () => 
+async function bookDashboardDTO()
 {
     const [BooksCount, BookLoanedCount, AllLoanBooks, AllBooks ] = await Promise.all(
         [GetBookCount(), GetBookLoanedCount(), GetBookLoaned(), GetBook()]
@@ -75,12 +126,22 @@ const bookDashboardDTO = async () =>
         {}
     )
 
-    const DataHandler = {BooksCount, BookLoanedCount, LoanedStatusCount, AllBooksGenresCount, BookLoanedGenresCount}
+    const DataHandler: BookDashboardData = {BooksCount, BookLoanedCount, LoanedStatusCount, AllBooksGenresCount, BookLoanedGenresCount};
+    await PutDataIntoDynamoDB("DashboardData", "books", DataHandler);
 
     return { success: true, statusCode: 200, message: "Get book dashboard data successfully!", data: DataHandler }
 }
 
-const finesDashboardDTO = async () => 
+export interface FinesDashboardData
+{
+    FinesPaidCount: number | undefined;
+    FinesNotPaidCount: number | undefined;
+    TotalFinesAmount: number;
+    FinesDetails: { "Paid": number, "Not Paid": number };
+    NotPaidFinesRecordDetails: { "Return Book": number; "Not Return Book": number; };
+}
+
+async function finesDashboardDTO()
 {
     const [FinesPaidCount, FinesNotPaidCount, AllLoanBooks ] = await Promise.all(
         [GetBookLoanedCount({finesPaidStatus: "Paid"}), GetBookLoanedCount({finesPaidStatus: "Not Paid"}), GetBookLoaned()]
@@ -89,22 +150,16 @@ const finesDashboardDTO = async () =>
     const LoanBookRecords = AllLoanBooks as BookLoanedInterface[];
     const NotPaidFinesRecords = LoanBookRecords.filter(loanBooks => loanBooks.finesPaid === "Not Paid");
 
-    const TotalFinesAmount: Record<string, number> = LoanBookRecords.reduce((prev, curr) => 
-        {   
-            prev["sum"] += curr.fineAmount; 
-            return prev; 
-        },
-        { sum: 0 }
-    );
+    const TotalFinesAmount = LoanBookRecords.reduce((sum, curr) => sum += curr.fineAmount, 0);
 
-    const FinesDetails: Record<string, number> = LoanBookRecords.reduce((prev, curr) => 
+    const FinesDetails = LoanBookRecords.reduce((prev, curr) => 
         {   
-            if(curr.finesPaid === "Paid")
+            if (curr.finesPaid === "Paid")
             {
-                prev["Paid"] += curr.fineAmount;
+                prev["Paid"]  += curr.fineAmount;
             }
 
-            if(curr.finesPaid === "Not Paid")
+            if (curr.finesPaid === "Not Paid")
             {
                 prev["Not Paid"] += curr.fineAmount;
             }
@@ -114,13 +169,25 @@ const finesDashboardDTO = async () =>
         { "Paid": 0, "Not Paid": 0 }
     );
 
-    const NotPaidFinesRecordDetails = 
-    {
-        "Return Book": NotPaidFinesRecords.filter(notPaidFinesRecord => notPaidFinesRecord.status === "Returned(Late)").length,
-        "Not Return Book": NotPaidFinesRecords.filter(notPaidFinesRecord => notPaidFinesRecord.status === "Loaned").length
-    }
+    const NotPaidFinesRecordDetails = NotPaidFinesRecords.reduce((prev, curr) =>
+        {
+            if (curr.status === "Returned(Late)")
+            {
+                prev["Return Book"]++;
+            }
 
-    const DataHandler = {FinesPaidCount, FinesNotPaidCount, TotalFinesAmount, FinesDetails, NotPaidFinesRecordDetails}
+            if (curr.status === "Loaned")
+            {
+                prev["Not Return Book"]++;
+            }
+
+            return prev;
+        },
+        { "Return Book": 0, "Not Return Book": 0 }
+    );
+
+    const DataHandler: FinesDashboardData = {FinesPaidCount, FinesNotPaidCount, TotalFinesAmount, FinesDetails, NotPaidFinesRecordDetails}
+    await PutDataIntoDynamoDB("DashboardData", "fines", DataHandler);
 
     return { success: true, statusCode: 200, message: "Get fines dashboard data successfully!", data: DataHandler }
 }

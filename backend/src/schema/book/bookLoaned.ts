@@ -116,7 +116,7 @@ export const FindBookLoaned = async (data: Record<string, any>) =>
 {
     try
     {
-        return await BookLoaned.findOne(data);
+        return await BookLoaned.find(data);
     }
     catch(error)
     {

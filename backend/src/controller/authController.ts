@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { AuthRequest, CreateUserInterface } from '../model/requestInterface';
-import { jwtSign, bcryptHash, jwtVerify } from './hashing'
+import { jwtSign} from './hashing'
 import { UserInterface } from '../model/userSchemaInterface';
-import { CreateUser, FindUserByID } from '../schema/user/user';
+import { FindUserByID } from '../schema/user/user';
 import { broadcast, UserEvent } from '../ws';
 import { Schema } from 'mongoose';
+import { RegisterService } from '../service/auth/LoginService';
+import { RefreshDashboard } from '../service/dashboard/dashboardService';
 
 export const UserRegister = async(req: Request, res: Response) =>
 {
@@ -13,28 +15,20 @@ export const UserRegister = async(req: Request, res: Response) =>
 
     try
     {   
-        const initals = (username.split(' ').map((word) => word[0].toUpperCase())).slice(0, 2);
-        const avatarUrl = `https://via.placeholder.com/150?text=${initals}`
+        const RegisterData = { email, username, password, gender, birthDay, role, status };
+        const {message, newUser, data} = await RegisterService(RegisterData);
 
-        // Hash password with bcrypt after validate email and username
-        const hashedPassword = await bcryptHash(password); 
-        const mongoDate = new Date(birthDay);
-    
-        // Create a new user after hashing the password
-        const newUser = await CreateUser({ email, username, password: hashedPassword, gender, role, status, birthDay: mongoDate, avatarUrl});
-
-        if(!newUser)
+        if (!newUser)
         {
-            return res.status(400).json({success, error: "Failed to create User"});
+            return res.status(400).json({ success: false, message: message });
         }
         
         // Get user id after create the user and Transfer user id as authToken with jsonWebToken
-        const data = { user: { _id: newUser?._id } }; 
-
         await CookieAuthTokenHandler(res, data);
-
         broadcast(UserEvent.USER_CREATE, newUser);
-        res.json({ success: true, message: "Register Successfully!"})
+        void RefreshDashboard("users");
+
+        res.status(200).json({ success: true, message: "Register Successfully!"})
     }
     catch (error) 
     { 

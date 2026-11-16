@@ -14,6 +14,7 @@ import { UnsuspendUserService } from '../service/user/UnSuspendUserService';
 import { SuspendUserService } from '../service/user/SuspendUserService';
 import { UserDataUpdateService } from '../service/user/userUpdateDataService';
 import { GetUserDataService } from '../service/user/GetUserDataService';
+import { RefreshDashboard } from '../service/dashboard/dashboardService';
 
 export const GetUserData = async (req: AuthRequest, res: Response) =>
 {
@@ -142,6 +143,12 @@ export const SuspendUser = async(req: AuthRequest, res: Response) =>
         if(foundUser.status === "Normal")
         {
             const { statusCode, success, message } = await SuspendUserService(userId as unknown as string, description, startDate, dueDate, foundUser);
+
+            if(success)
+            {
+                void RefreshDashboard("users");
+            }
+
             return res.status(statusCode).json({success, message});
         }
 
@@ -162,6 +169,12 @@ export const UnsuspendUser = async(req: AuthRequest, res: Response) =>
     try
     {
         const {statusCode, success, message} = await UnsuspendUserService(suspendListID);
+
+        if(success)
+        {
+            void RefreshDashboard("users");
+        }
+        
         res.status(statusCode).json({ success, message });
     }
     catch(error)
@@ -205,6 +218,7 @@ export const DeleteUser = async (req: AuthRequest, res: Response) =>
     try 
     {
         const {statusCode, success, message} = await DeleteUserService(foundUser);
+        void RefreshDashboard("users");
         res.status(statusCode).json({ success, message });
     }
     catch(error)

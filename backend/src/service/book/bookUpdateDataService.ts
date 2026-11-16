@@ -5,6 +5,7 @@ import { HandleDeleteImage } from "../image/bookDeleteImageService";
 import { EditImageInterface } from "../../model/requestInterface";
 import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
 import { GetBookLoaned } from "../../schema/book/bookLoaned";
+import { RefreshDashboard } from "../dashboard/dashboardService";
 
 export const BookUpdateDataService = async (bookID: string, editBookData: BookInterface, editImageData: EditImageInterface, fileData: Express.Request["file"]) => 
 {
@@ -37,6 +38,8 @@ export const BookUpdateDataService = async (bookID: string, editBookData: BookIn
     {
         broadcast(BookEvent.LOAN_BOOK_UPDATE, loanBookRecord[0]);
     }
+
+    void RefreshDashboard("books");
     
     return {success: true, statusCode: 200, message: "Book Record Updated Successfully!"}
 }

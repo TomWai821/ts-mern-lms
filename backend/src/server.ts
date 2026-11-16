@@ -5,6 +5,7 @@ import { config } from './config/config';
 import { initWsServer } from './ws';
 import http from "http";
 import app from './app'
+import { checkDynamoDBConnection, InitialiseSystem } from './init/connectToDynamoDB';
 
 export const startServer = async () =>
 {
@@ -13,6 +14,8 @@ export const startServer = async () =>
     try
     {  
         await connectToMongoDB();
+        await InitialiseSystem();
+        await checkDynamoDBConnection();
 
         switch (config.STORAGE_TYPE)
         {

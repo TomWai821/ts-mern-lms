@@ -1,49 +1,55 @@
-import { NextFunction, Response } from "express";
-import { AuthRequest, Book } from "../../model/requestInterface";
+import { Book } from "../../model/requestInterface";
 import { calculateTFIDF } from "../../controller/TF-IDF_Logic";
-import { GetBookLoaned } from "../../schema/book/bookLoaned";
+import { BookLoanedAggregationResult, GetBookLoaned } from "../../schema/book/bookLoaned";
 import { BookInterface } from "../../model/bookSchemaInterface";
 import { GetBook } from "../../schema/book/book";
 import { ObjectId } from "mongodb";
+import { DynamoDBTableMap, GetDataFromDynamoDB, PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
+import { RecommendBookType } from "../../controller/bookRecommendationController";
 
-export const GetSuggestBookDataService = async (req: AuthRequest, res: Response, next: NextFunction) => 
+export const GetBookRecommendationService = async (suggestType: RecommendBookType, userId?: string) => 
 {
-    const suggestType = req.params.type;
-    const userId = req.user?._id;
-    let foundBook: any = null;
-
-    try 
+    if(suggestType === "forUser" && !userId)
     {
-        switch (suggestType) 
-        {
-            case "newPublish":
-                foundBook = await GetBook(undefined, { publishDate: -1 }, 8);
-                break;
+        return {success: false, statusCode: 400, message: "This suggestion type requires authToken!"};
+    }
 
-            case "forUser":
-                if (!userId) 
-                {
-                    return res.status(400).json({ success: false, error: `This suggestion type requires authToken!` });
-                }
-                foundBook = await getRecommendedBooksForUserService(userId as unknown as string);
-                break;
+    const cacheResult = await GetDataFromDynamoDB("RecommendBook", suggestType, userId);
+    let foundBook = cacheResult.Item?.data as DynamoDBTableMap["RecommendBook"][typeof suggestType] | undefined;
 
-            case "mostPopular": 
-                foundBook = await GetBookLoaned(undefined, 8);
-                break;
-
-            default:
-                return res.status(400).json({ success: false, error: "Invalid Suggest Type: " + suggestType });
-        }
-
-        req.foundBook = foundBook;
-        next();
-
-    } 
-    catch (error) 
+    if(!foundBook)
     {
-        console.error("GetSuggestBook Error:", error);
-        return res.status(500).json({ success: false, error: "Internal Server Error" });
+        foundBook = await RefreshRecommendation(suggestType, userId);
+    }
+
+    return {success: true, statusCode: 200, foundBook};
+};
+
+const RefreshRecommendation = async ( suggestType: RecommendBookType, userId?: string) =>
+{
+    const freshData = await BuildRecommendationData(suggestType, userId);
+    await PutDataIntoDynamoDB("RecommendBook", suggestType, freshData, userId);
+
+    return freshData;
+};
+
+export const RefreshRecommendationCache = async (suggestType: RecommendBookType, userId?: string): Promise<void> =>
+{
+    await RefreshRecommendation(suggestType, userId);
+};
+
+const BuildRecommendationData = async (suggestType: RecommendBookType, userId?: string) =>
+{
+    switch (suggestType)
+    {
+        case "newPublish":
+            return GetBook(undefined, { publishDate: -1 }, 8);
+
+        case "mostPopular":
+            return GetBookLoaned(undefined, 8);
+
+        case "forUser":
+            return getRecommendedBooksForUserService(userId!);
     }
 };
 

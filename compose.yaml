@@ -12,10 +12,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: production
+      target: deployment
     command: npm run dev
     environment:
-      NODE_ENV: production    
+      NODE_ENV: deployment
+      DYNAMODB_ENDPOINT: http://dynamodb:8000
     volumes:
       - ./backend:/app
       - backend_node_modules:/app/node_modules
@@ -29,6 +30,8 @@ services:
     depends_on: 
       mongo: 
         condition: service_healthy
+      dynamodb:
+        condition: service_started
       
   frontend:
     build:
@@ -63,6 +66,12 @@ services:
     volumes: 
       - db-data:/data/db
       - ./backend/MongoDBSeed:/docker-entrypoint-initdb.d
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
 
 volumes:
   db-data:

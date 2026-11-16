@@ -2,6 +2,8 @@ import { broadcast, BookEvent } from "../../ws";
 import { CreateBook, FindBookByIDAndDelete, GetBook } from "../../schema/book/book";
 import { ImageDataBuilder, UploadImage } from "../image/bookCreateImageService";
 import { BookInterface } from "../../model/bookSchemaInterface";
+import { RefreshRecommendationCache } from "./bookRecommendationService";
+import { RefreshDashboard } from "../dashboard/dashboardService";
 
 interface BookDataInterface
 {
@@ -46,8 +48,11 @@ export const CreateBookRecordService = async (bookData: BookDataInterface, file?
         }
 
         const newBookRecord = await GetBook({ _id: createBook._id }) as unknown as BookInterface[];
+
+        await RefreshRecommendationCache("newPublish");
         
         broadcast(BookEvent.BOOK_CREATE, newBookRecord[0]);
+        void RefreshDashboard("books");
         return { success: true, statusCode: 200, message: "Book Record Created Successfully!"};
     } 
     catch (error) 

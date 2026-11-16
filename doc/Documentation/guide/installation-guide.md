@@ -93,24 +93,44 @@ docker compose up --build -d
 3. **JWT authentication issues**
     - Changing JWT_SECRET invalidates all existing authentication tokens
     - Users must log in again
+
+
+4. **Backend dependency not found in Docker**
+    - Refresh the backend's persistent `node_modules` volume after adding dependencies:
+```Shell
+docker compose run --rm backend npm ci --include=dev
+docker compose up --build -d
+```
 </details>
 
 
 <details>
 <summary>Environment Configuration Reference</summary>
 
-1. **Expected URLs**
-    | Variable                      | Value                    |
-    | ----------------------------- | ------------------------ |
-    | ORIGIN_URI                    | http://localhost:3000    |
-    | NEXT_PUBLIC_BACKEND_BASE_URL  | http://localhost:5000    |
-    | NEXT_PUBLIC_MAIN_PAGE         | http://localhost:3000    |
-    | BACKEND_BASE_URL              | http://localhost:5000    |
-    | STORAGE_TYPE                  | LOCAL                    |
-    | NEXT_PUBLIC_WEB_SOCKET_SERVER | ws://localhost:5000/ws   |
+1. **Expected URLs - Local**
+    - **Frontend**
+        | Variable                             | Value                    |
+        | ------------------------------------ | ------------------------ |
+        | NEXT_PUBLIC_BACKEND_BASE_URL         | http://localhost:5000    |
+        | NEXT_PUBLIC_MAIN_PAGE                | http://localhost:3000    |
+        | NEXT_PUBLIC_WEB_SOCKET_SERVER        | ws://localhost:5000/ws   |
+
+    - **Backend**
+        | Variable                             | Value                    |
+        | ------------------------------------ | ------------------------ |
+        | PORT                                 | 5000                     |
+        | ORIGIN_URI                           | http://localhost:3000    |
+        | MONGO_URI                            | mongodb://mongo:27017    |
+        | BACKEND_BASE_URL                     | http://localhost:5000    |
+        | DYNAMODB_ENDPOINT                    | http://localhost:8000    |
+        | STORAGE_TYPE                         | LOCAL                    |
+        | AWS_ACCESS_KEY_ID                    | local                    |
+        | AWS_SECRET_ACCESS_KEY                | local                    |
+
 
     - **Remarks**
         - NEXT_PUBLIC_WEB_SOCKET_SERVER can be ignored for cloud - Lambda deployment
+        - AWS_SECRET_ACCESS_KEY and AWS_ACCESS_KEY_ID can be ignored in cloud
 
 
 2. **Ports and hostnames**
