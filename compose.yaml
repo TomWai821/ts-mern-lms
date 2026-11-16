@@ -12,10 +12,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: deployment
+      target: production
     command: npm run dev
     environment:
-      NODE_ENV: deployment
+      NODE_ENV: production
       DYNAMODB_ENDPOINT: http://dynamodb:8000
     volumes:
       - ./backend:/app
