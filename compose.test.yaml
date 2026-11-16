@@ -5,9 +5,15 @@ services:
       target: test
     environment:
       MONGO_URI: mongodb://mongo:27017/test
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      DYNAMODB_ENDPOINT: http://dynamodb:8000
     depends_on:
       mongo:
         condition: service_healthy
+      dynamodb:
+        condition: service_started
     volumes:
       - ./backend/coverage:/app/coverage
 
@@ -18,8 +24,6 @@ services:
 
   mongo:
     image: mongo:6.0
-    ports:
-      - "27017:27017"
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -28,6 +32,9 @@ services:
     volumes: 
       - db-data:/data/db
       - ./backend/MongoDBSeed:/docker-entrypoint-initdb.d
+
+  dynamodb:
+    image: amazon/dynamodb-local
 
 volumes:
   db-data:

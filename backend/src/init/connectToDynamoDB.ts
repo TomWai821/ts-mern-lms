@@ -1,6 +1,6 @@
 import { RefreshRecommendationCache } from "../service/book/bookRecommendationService";
 import { InitialiseDashboardCache } from "../service/dashboard/dashboardService";
-import { CreateTableCommand, DescribeTableCommand, ListTablesCommand, DynamoDBClient, ResourceNotFoundException, waitUntilTableExists } from "@aws-sdk/client-dynamodb";
+import { CreateTableCommand, DescribeTableCommand, ListTablesCommand, DynamoDBClient, ResourceInUseException, ResourceNotFoundException, waitUntilTableExists } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 const dynamoClient = new DynamoDBClient(
@@ -51,12 +51,22 @@ const CreateDashboardDataTableIfNotExists = async () =>
             throw error;
         }
 
-        await dynamoDB.send(new CreateTableCommand({
-            TableName: "DashboardData",
-            KeySchema: [{ AttributeName: "dataType", KeyType: "HASH" }],
-            AttributeDefinitions: [{ AttributeName: "dataType", AttributeType: "S" }],
-            BillingMode: "PAY_PER_REQUEST"
-        }));
+        try
+        {
+            await dynamoDB.send(new CreateTableCommand({
+                TableName: "DashboardData",
+                KeySchema: [{ AttributeName: "dataType", KeyType: "HASH" }],
+                AttributeDefinitions: [{ AttributeName: "dataType", AttributeType: "S" }],
+                BillingMode: "PAY_PER_REQUEST"
+            }));
+        }
+        catch (createError)
+        {
+            if (!(createError instanceof ResourceInUseException))
+            {
+                throw createError;
+            }
+        }
     }
 
     await waitUntilTableExists({ client: dynamoClient, maxWaitTime: 60 }, { TableName: "DashboardData" });
@@ -76,19 +86,29 @@ const CreateRecommendBookTableIfNotExists = async () =>
             throw error;
         }
 
-        await dynamoDB.send(new CreateTableCommand({TableName: "RecommendBook",
-            KeySchema:
-            [
-                { AttributeName: "dataType", KeyType: "HASH" },
-                { AttributeName: "userId", KeyType: "RANGE" }
-            ],
-            AttributeDefinitions: 
-            [
-                { AttributeName: "dataType", AttributeType: "S" },
-                { AttributeName: "userId", AttributeType: "S" }
-            ],
-            BillingMode: "PAY_PER_REQUEST"
-        }));
+        try
+        {
+            await dynamoDB.send(new CreateTableCommand({TableName: "RecommendBook",
+                KeySchema:
+                [
+                    { AttributeName: "dataType", KeyType: "HASH" },
+                    { AttributeName: "userId", KeyType: "RANGE" }
+                ],
+                AttributeDefinitions: 
+                [
+                    { AttributeName: "dataType", AttributeType: "S" },
+                    { AttributeName: "userId", AttributeType: "S" }
+                ],
+                BillingMode: "PAY_PER_REQUEST"
+            }));
+        }
+        catch (createError)
+        {
+            if (!(createError instanceof ResourceInUseException))
+            {
+                throw createError;
+            }
+        }
 
         await waitUntilTableExists({ client: dynamoClient, maxWaitTime: 60 }, { TableName: "RecommendBook" });
         console.log("RecommendBook table created");

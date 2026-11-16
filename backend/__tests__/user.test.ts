@@ -1,13 +1,16 @@
 import request from 'supertest'
 import app from '../src/app'
+import { InitialiseSystem } from '../src/init/connectToDynamoDB'
 import { FindUserAndDelete } from '../src/schema/user/user'
-import { connectTestDB, closeTestDB } from './utils/dbHandler'
+import { connectTestDB, closeTestDB, waitForTestDynamoDB } from './utils/dbHandler'
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 
 beforeAll(async () => 
 {
     await connectTestDB();
+    await waitForTestDynamoDB();
+    await InitialiseSystem();
 });
 
 afterAll(async () => 

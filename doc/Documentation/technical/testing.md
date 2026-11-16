@@ -9,19 +9,9 @@
 <details>
 <summary>Docker test compose</summary>
 
-- Build test containers
+- Run backend integration tests with MongoDB and DynamoDB Local
 ```bash
-docker compose -f compose.test.yaml build
-```
-
-- Start test environment
-```bash
-docker-compose -f docker-compose.test.yml up
-```
-
-- Run Jest tests inside container  
-```bash
-docker exec backend npm test
+docker compose -f compose.test.yaml up --build --exit-code-from backend-test backend-test
 ```
 </details>
 
@@ -96,7 +86,7 @@ npm run test
         - Recommendation endpoints
 
 - **Remarks**
-    - Integration tests execute against a real MongoDB container
+    - Integration tests execute against MongoDB and DynamoDB Local containers
     - Test data is automatically cleaned up after execution
     - Database connections are established during setup and closed during teardown
 

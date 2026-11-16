@@ -3,9 +3,10 @@ import { connectToMongoDB } from './init/connectToMongo';
 import { scheduleDailyMidnightTasks } from './utils/detectRecord';
 import { config } from './config/config';
 import { initWsServer } from './ws';
+import { checkDynamoDBConnection, InitialiseSystem } from './init/connectToDynamoDB';
+
 import http from "http";
 import app from './app'
-import { checkDynamoDBConnection, InitialiseSystem } from './init/connectToDynamoDB';
 
 export const startServer = async () =>
 {
@@ -14,7 +15,10 @@ export const startServer = async () =>
     try
     {  
         await connectToMongoDB();
-        await InitialiseSystem();
+        if(process.env.DYNAMODB_ENDPOINT)
+        {
+            await InitialiseSystem();
+        }
         await checkDynamoDBConnection();
 
         switch (config.STORAGE_TYPE)

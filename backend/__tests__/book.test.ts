@@ -1,12 +1,15 @@
 import request from 'supertest'
 import app from '../src/app'
-import { connectTestDB, closeTestDB } from './utils/dbHandler'
+import { InitialiseSystem } from '../src/init/connectToDynamoDB'
+import { connectTestDB, closeTestDB, waitForTestDynamoDB } from './utils/dbHandler'
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 
 beforeAll(async () => 
 {
     await connectTestDB();
+    await waitForTestDynamoDB();
+    await InitialiseSystem();
 });
 
 afterAll(async () => 
@@ -14,8 +17,8 @@ afterAll(async () =>
     await closeTestDB();
 });
 
-// Get All Book Data
-describe("Book API Test", () => 
+// Get All Book Data with invalid filter data 
+describe("Book Records API Test", () => 
 {
     it("GET /api/book/record, should get all book data", async () => 
     {
@@ -23,22 +26,14 @@ describe("Book API Test", () =>
 
         expect(res.statusCode).toBe(200);
     });
-});
 
-// Get All Book Data with filter data (bookname)
-describe("Book API Test (with filter data)", () => 
-{
     it("GET /api/book/record, should get all book data with filter data", async () => 
     {
         const res = await request(app).get("/api/book/record?bookname=Harry")
 
         expect(res.statusCode).toBe(200);
     });
-});
 
-// Get All Book Data with invalid filter data 
-describe("Book API Test (with invalid filter data)", () => 
-{
     it("GET /api/book/record, should return null", async () => 
     {
         const res = await request(app).get("/api/book/record?bookname=zzz")
@@ -49,7 +44,7 @@ describe("Book API Test (with invalid filter data)", () =>
 });
 
 // Get Recommend Book (New Publish)
-describe("Book API Test (Get Recommend Book which new publish)", () => 
+describe("Book Recommendation API Test", () => 
 {
     it("GET /api/recommend/type=newPublish, should get new Publish book", async () => 
     {
@@ -58,16 +53,12 @@ describe("Book API Test (Get Recommend Book which new publish)", () =>
         expect(res.statusCode).toBe(200);
         expect(res.body.foundBook).toHaveLength(8);
     });
-});
 
-// Get Recommend Book (Most Loaned)
-describe("Book API Test (Get Recommend Book which most loaned)", () => 
-{
     it("GET /api/recommend/type=mostPopular, should get most loaned book", async () => 
     {
         const res = await request(app).get("/api/recommend/type=mostPopular")
 
         expect(res.statusCode).toBe(200);
-        expect(res.body.foundLoanBook)
+        expect(res.body.foundBook).toBeInstanceOf(Array);
     });
 });

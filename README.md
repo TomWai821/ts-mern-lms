@@ -115,7 +115,7 @@ docker-compose -f compose.yaml up --build -d
     - MongoDB, Mongoose
 
 - **Cloud & DevOps**
-    - AWS (Lambda, ECR, S3, IAM, EventBridge)
+    - AWS (Lambda, ECR, S3, IAM, EventBridge, DynamoDB)
 
 - **Testing & Quality**
     -  GitHub Actions, Jest, ESLint
