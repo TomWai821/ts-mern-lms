@@ -45,7 +45,7 @@ export const startServer = async () =>
                 break;
 
             default:
-                console.warn('No valid STORAGE_TYPE specified. Scheduled tasks will not run.');
+                console.warn('No valid STORAGE_TYPE specified, Scheduled tasks will not run');
                 break;
         }
     }
