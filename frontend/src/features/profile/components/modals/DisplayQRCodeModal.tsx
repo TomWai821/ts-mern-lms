@@ -4,7 +4,6 @@ import QRCode from "react-qr-code";
 import ModalTemplate from "../../../../component/Templates/ModalTemplate";
 import { ModalBodySyntax } from "../../../../Data/Style";
 import { GetCurrentUserController } from "../../../../Controller/UserController/UserGetController";
-import { useEffect, useState } from "react";
 
 export interface QRCodeInterface
 {

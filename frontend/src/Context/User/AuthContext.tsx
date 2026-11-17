@@ -25,7 +25,7 @@ export const AuthProvider: FC<ChildProps> = ({ children }) =>
     const [isAuthLoading, setIsAuthLoading] = useState(true);
 
     const isLoggedIn = !!user;
-    const isAdmin = user?.role === "Admin";
+    const isAdmin = isLoggedIn && user?.role === "Admin";
 
     const fetchUser = useCallback(async() =>
     {

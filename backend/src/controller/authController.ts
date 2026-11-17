@@ -83,8 +83,8 @@ export const UserLogout = async (req: Request, res: Response) =>
     res.clearCookie("authToken",
         {
             httpOnly: true,
-            sameSite: "lax",
-            secure: process.env.NODE_ENV === "production"
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
         }
     );
 

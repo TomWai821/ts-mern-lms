@@ -52,7 +52,10 @@ export const useAuthAction = () =>
     const successAction = async () => 
     {
         await fetchUser();
-        ChangePage("/");
+        setTimeout(() =>
+        {
+            ChangePage("/");
+        }, 1500);
     }
 
     return {UserLogin, UserRegister};
