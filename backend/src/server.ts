@@ -19,6 +19,8 @@ export const startServer = async () =>
         {
             await InitialiseSystem();
         }
+
+         console.log(process.env.DYNAMODB_ENDPOINT);
         
         await checkDynamoDBConnection();
 
