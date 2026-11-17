@@ -71,7 +71,7 @@ const CookieAuthTokenHandler = async (res: Response, data: UserDataType, stayLog
         {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: cookieAge
         }
     );
