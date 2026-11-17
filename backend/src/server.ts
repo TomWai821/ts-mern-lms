@@ -18,7 +18,7 @@ export const startServer = async () =>
         {
             await InitialiseSystem();
         }
-        
+        await connectToMongoDB();
         await checkDynamoDBConnection();
 
         switch (config.STORAGE_TYPE)
