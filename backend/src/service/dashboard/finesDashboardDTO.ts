@@ -1,6 +1,6 @@
 import { BookLoanedInterface } from "../../model/bookSchemaInterface";
 import { GetBookLoanedCount, GetBookLoaned } from "../../schema/book/bookLoaned";
-import { GetDataFromDynamoDB, PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
+import { PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
 
 export interface FinesDashboardData
 {
@@ -58,9 +58,7 @@ export const finesDashboardDTO = async() =>
 
     const DataHandler: FinesDashboardData = {FinesPaidCount, FinesNotPaidCount, TotalFinesAmount, FinesDetails, NotPaidFinesRecordDetails}
     await PutDataIntoDynamoDB("DashboardData", "fines", DataHandler);
-    const insight = GenerateFinesDashboardInsight(DataHandler);
-
-    return { success: true, statusCode: 200, message: "Get fines dashboard data successfully!", data: DataHandler, insight: insight.insightItems }
+    return { success: true, statusCode: 200, message: "Get fines dashboard data successfully!", data: DataHandler }
 }
 
 export const GenerateFinesDashboardInsight = (data: FinesDashboardData) =>

@@ -30,9 +30,7 @@ const SelfRecordPage = () =>
     const { BookRecordForUser, initSelfRecords } = useSelfBookRecordContext();
 
     const { tabValue, paginationValue, changeValue } = usePageService();
-    
     const { searchData, onChange, searchSelfRecord, resetFilter } = useSelfRecordFilter(tabValue);
-
     const { title } = getTablePageTitle("SelfRecord", tabValue);
 
     useEffect(() => 

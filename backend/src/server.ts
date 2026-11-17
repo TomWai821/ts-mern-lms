@@ -14,11 +14,13 @@ export const startServer = async () =>
 
     try
     {  
+        await connectToMongoDB();
+
         if(process.env.DYNAMODB_LOCAL_INIT === "true")
         {
             await InitialiseSystem();
         }
-        await connectToMongoDB();
+
         await checkDynamoDBConnection();
 
         switch (config.STORAGE_TYPE)

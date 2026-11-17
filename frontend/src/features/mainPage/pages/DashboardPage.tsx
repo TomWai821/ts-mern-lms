@@ -8,9 +8,9 @@ import { useAuthContext } from "../../../Context/User/AuthContext";
 
 export interface IDashboardData
 {
-    usersData: UserDashboardData;
-    booksData: BookDashboardData;
-    finesData: FinesDashboardData;
+    usersData: {data: UserDashboardData, insight: string[]};
+    booksData: {data: BookDashboardData, insight: string[]};
+    finesData: {data: FinesDashboardData, insight: string[]};
 }
 
 const DashboardPage = () => 

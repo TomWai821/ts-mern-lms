@@ -4,10 +4,11 @@ const contentType:string = "application/json";
 
 type DashboardDataType = "users" | "books" | "fines";
 
-interface DashboardDataResponse
+export interface DashboardDataResponse<T>
 {
     success: boolean;
-    data: UserDashboardData | BookDashboardData | FinesDashboardData;
+    data: T;
+    insight: string[];
 }
 
 export interface UserDashboardData
@@ -16,7 +17,6 @@ export interface UserDashboardData
     UserCurrentlySuspendCount: number;
     SuspendListSuspendUserCount: number;
     SuspendListUnsuspendUserCount: number;
-    insight: string[];
 }
 
 export interface BookDashboardData
@@ -26,7 +26,6 @@ export interface BookDashboardData
     AllBooksGenresCount: Record<string, number>;
     BookLoanedGenresCount: Record<string, number>;
     LoanedStatusCount: Record<string, number>;
-    insight: string[];
 }
 
 export interface FinesDashboardData
@@ -36,14 +35,13 @@ export interface FinesDashboardData
     TotalFinesAmount: number;
     FinesDetails: {"Paid": number, "Not Paid": number};
     NotPaidFinesRecordDetails: {"Not Return Book": number, "Return Book": number};
-    insight: string[];
 }
 
 type DashboardResponseMap = 
 {
-    users: UserDashboardData;
-    books: BookDashboardData;
-    fines: FinesDashboardData;
+    users: DashboardDataResponse<UserDashboardData>;
+    books: DashboardDataResponse<BookDashboardData>;
+    fines: DashboardDataResponse<FinesDashboardData>;
 };
 
 export async function GetDashboardData() 
@@ -61,6 +59,6 @@ async function GetData<T extends DashboardDataType>(type: T): Promise<DashboardR
         headers: { "content-type": contentType }
     });
 
-    const result: DashboardDataResponse = await response.json();
-    return result.data as DashboardResponseMap[T];
+    const result = await response.json();
+    return result as DashboardResponseMap[T];
 }

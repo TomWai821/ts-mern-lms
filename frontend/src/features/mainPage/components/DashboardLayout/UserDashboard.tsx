@@ -8,7 +8,7 @@ import InsightCard from "../../../../component/UIFragment/InsightCard";
 
 interface UserDashboardProps
 {
-    dashboardData: UserDashboardData;
+    dashboardData: {data: UserDashboardData, insight: string[]};
 }
 
 const useUserData = (dashboardData: UserDashboardData) => 
@@ -28,7 +28,7 @@ const CardContentDisplaySyntax = { ...displayAsRow, gap: '15px 30px', gridTempla
 const UserDashboard:FC<UserDashboardProps> = (props) => 
 {
     const {dashboardData} = props;
-    const {UserCardData} = useUserData(dashboardData);
+    const {UserCardData} = useUserData(dashboardData.data);
     
         return(
             <Box sx={CardSectionSyntax}>
@@ -43,16 +43,16 @@ const UserDashboard:FC<UserDashboardProps> = (props) =>
 
                 <Divider/>
 
-                <Box sx={{...ItemToCenter, addingBottom: "50px"}}>
+                <Box sx={{...ItemToCenter, paddingBottom: "50px"}}>
                     <SuspendListDataPieChart 
-                        suspendUser={dashboardData.SuspendListSuspendUserCount} 
-                        UnsuspendUser={dashboardData.SuspendListUnsuspendUserCount}
+                        suspendUser={dashboardData.data.SuspendListSuspendUserCount} 
+                        UnsuspendUser={dashboardData.data.SuspendListUnsuspendUserCount}
                     />
                 </Box>
 
                 <Divider/>
 
-                {dashboardData.insight && dashboardData.insight.length > 0 && <InsightCard content={ dashboardData.insight }/>}
+                <InsightCard content={ dashboardData.insight }/>
             </Box>
         )
 }

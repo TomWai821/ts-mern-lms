@@ -1,6 +1,6 @@
 import { GetSuspendListCount } from "../../schema/user/suspendList";
 import { GetUserCount } from "../../schema/user/user";
-import { GetDataFromDynamoDB, PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
+import { PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
 
 export interface UserDashboardData
 {
@@ -18,9 +18,8 @@ export const userDashboardDTO = async() =>
 
     const DataHandler: UserDashboardData = {UserCount, UserCurrentlySuspendCount, SuspendListSuspendUserCount, SuspendListUnsuspendUserCount};
     await PutDataIntoDynamoDB("DashboardData", "users", DataHandler);
-    const insight = GenerateUserDashboardInsight(DataHandler);
 
-    return { success: true, statusCode: 200, message: "Get user dashboard data successfully!", data: DataHandler, insight: insight.insightItems}
+    return { success: true, statusCode: 200, message: "Get user dashboard data successfully!", data: DataHandler}
 }
 
 export const GenerateUserDashboardInsight = (data: UserDashboardData) =>

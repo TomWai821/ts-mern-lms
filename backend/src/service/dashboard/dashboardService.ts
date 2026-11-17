@@ -9,19 +9,16 @@ const DashboardServicesMap =
 {
     users: { DTO: userDashboardDTO, Insight: GenerateUserDashboardInsight },
     books: { DTO: bookDashboardDTO, Insight: GenerateBookDashboardInsight },
-    fines: {DTO: finesDashboardDTO, Insight: GenerateFinesDashboardInsight }
+    fines: { DTO: finesDashboardDTO, Insight: GenerateFinesDashboardInsight }
 }
 
-export const DashboardService = async (type: dashboardDataType) => 
+export const DashboardService = async (type: dashboardDataType) =>
 {
     const cacheData = await GetDashboardDataFromDynamoDB(type);
+    const result = cacheData ?? await DashboardServicesMap[type]["DTO"]();
+    const insight = DashboardServicesMap[type]["Insight"](result.data);
 
-    if(cacheData)
-    {
-        return cacheData;
-    }
-
-    return await DashboardServicesMap[type]["DTO"]();
+    return { ...result, insight: insight.insightItems };
 }
 
 export const RefreshDashboard = async (type: dashboardDataType): Promise<void> =>
@@ -54,7 +51,5 @@ const GetDashboardDataFromDynamoDB = async (type: dashboardDataType) =>
         return null;
     }
 
-    const insight = DashboardServicesMap[type]["Insight"](result.Item.data);
-
-    return {success: true, statusCode: 200, message: `Get ${type} dashboard data successfully!`, data: result.Item.data, insight: insight.insightItems};
+    return {success: true, statusCode: 200, message: `Get ${type} dashboard data successfully!`, data: result.Item.data};
 }

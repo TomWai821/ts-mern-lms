@@ -2,8 +2,7 @@ import { FC, lazy, Suspense } from "react";
 import { Fragment } from "react/jsx-runtime";
 
 import CustomTabPanel from "../../../../component/UIFragment/CustomTabPanel";
-import { BookDashboardData, FinesDashboardData, UserDashboardData } from "../../../../services/contents/dashboardService";
-import { IDashboardData } from "../../pages/DashboardPage";
+import type { IDashboardData } from "../../pages/DashboardPage";
 
 const UserDashboard = lazy(() => import("../DashboardLayout/UserDashboard"));
 const FinanceDashboard = lazy(() => import("../DashboardLayout/FinanceDashboard"));
@@ -12,7 +11,7 @@ const BookDashboard = lazy(() => import("../DashboardLayout/BookDashboard"));
 interface PropsInterface
 {
     tabValue: number;
-    dashboardData: IDashboardData | null;
+    dashboardData: IDashboardData;
 }
 
 const DashboardTabPanel:FC<PropsInterface> = (props) =>
@@ -21,9 +20,9 @@ const DashboardTabPanel:FC<PropsInterface> = (props) =>
 
     const DashboardComponent = 
     [
-        <UserDashboard dashboardData={dashboardData?.usersData as UserDashboardData}/>,
-        <BookDashboard dashboardData={dashboardData?.booksData as BookDashboardData}/>,
-        <FinanceDashboard dashboardData={dashboardData?.finesData as FinesDashboardData}/>
+        <UserDashboard dashboardData={dashboardData.usersData}/>,
+        <BookDashboard dashboardData={dashboardData.booksData}/>,
+        <FinanceDashboard dashboardData={dashboardData.finesData}/>
     ];
     
     return(

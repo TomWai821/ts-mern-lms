@@ -11,7 +11,7 @@ import InsightCard from "../../../../component/UIFragment/InsightCard";
 
 interface BookDashboardProps
 {
-    dashboardData: BookDashboardData;
+    dashboardData: {data: BookDashboardData, insight: string[]};
 }
 
 const useBookData = (dashboardData: BookDashboardData) => 
@@ -31,7 +31,7 @@ const CardContentDisplaySyntax = { ...displayAsRow, gap: '15px 30px', gridTempla
 const BookDashboard:FC<BookDashboardProps> = (props) =>
 {
     const { dashboardData } = props;
-    const {BookCardData} = useBookData(dashboardData);
+    const {BookCardData} = useBookData(dashboardData.data);
 
     return(
         <Box sx={CardSectionSyntax}>
@@ -46,21 +46,21 @@ const BookDashboard:FC<BookDashboardProps> = (props) =>
 
             <Divider/>
 
-            <Box sx={{...ItemToCenter, addingBottom: "50px"}}>
+            <Box sx={{...ItemToCenter, paddingBottom: "50px"}}>
                 <LoanBookPieChart 
-                    loanedCount={ dashboardData.LoanedStatusCount["Loaned"] } 
-                    returnCount={ dashboardData.LoanedStatusCount["Returned"] } 
-                    lateReturnCount={ dashboardData.LoanedStatusCount["Returned(Late)"] }
+                    loanedCount={ dashboardData.data.LoanedStatusCount["Loaned"] } 
+                    returnCount={ dashboardData.data.LoanedStatusCount["Returned"] } 
+                    lateReturnCount={ dashboardData.data.LoanedStatusCount["Returned(Late)"] }
                 />
 
-                <BookGenrePieChart Genre={dashboardData.AllBooksGenresCount}/>
+                <BookGenrePieChart Genre={dashboardData.data.AllBooksGenresCount}/>
 
-                <LoanBookGenrePieChart Genre={dashboardData.BookLoanedGenresCount}/>
+                <LoanBookGenrePieChart Genre={dashboardData.data.BookLoanedGenresCount}/>
             </Box>
 
             <Divider/>
             
-            {dashboardData.insight && dashboardData.insight.length > 0 && <InsightCard content={ dashboardData.insight }/>}
+            <InsightCard content={ dashboardData.insight }/>
         </Box>
     )
 }

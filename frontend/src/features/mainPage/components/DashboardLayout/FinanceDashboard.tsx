@@ -10,7 +10,7 @@ import InsightCard from "../../../../component/UIFragment/InsightCard";
 
 interface BookDashboardProps
 {
-    dashboardData: FinesDashboardData;
+    dashboardData: {data: FinesDashboardData, insight: string[]};
 }
 
 const useFinanceData = (dashboardData: FinesDashboardData) => 
@@ -31,7 +31,7 @@ const CardContentDisplaySyntax = { ...displayAsRow, gap: '15px 30px', gridTempla
 const FinanceDashboard:FC<BookDashboardProps> = (props) => 
 {
     const { dashboardData } = props;
-    const {FinanceCardData} = useFinanceData(dashboardData);
+    const { FinanceCardData } = useFinanceData(dashboardData.data);
 
     return(
         <Box sx={CardSectionSyntax}>
@@ -46,21 +46,21 @@ const FinanceDashboard:FC<BookDashboardProps> = (props) =>
 
             <Divider/>
 
-            <Box sx={{...ItemToCenter, addingBottom: "50px"}}>
+            <Box sx={{...ItemToCenter, paddingBottom: "50px"}}>
                 <FinesDataPieChart 
-                    PaidFines={dashboardData.FinesDetails["Paid"]} 
-                    NotPaidFines={dashboardData.FinesDetails["Not Paid"]}
+                    PaidFines={dashboardData.data.FinesDetails["Paid"]} 
+                    NotPaidFines={dashboardData.data.FinesDetails["Not Paid"]}
                 />
 
                 <FinesNotPaidDataPieChart 
-                    ReturnBook={dashboardData.NotPaidFinesRecordDetails["Return Book"]} 
-                    NotReturnBook={dashboardData.NotPaidFinesRecordDetails["Not Return Book"]}
+                    ReturnBook={dashboardData.data.NotPaidFinesRecordDetails["Return Book"]} 
+                    NotReturnBook={dashboardData.data.NotPaidFinesRecordDetails["Not Return Book"]}
                 />
             </Box>
             
             <Divider/>
 
-            {dashboardData.insight && dashboardData.insight.length > 0 && <InsightCard content={ dashboardData.insight }/>}
+            <InsightCard content={ dashboardData.insight }/>
         </Box>
     )
 }

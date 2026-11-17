@@ -7,9 +7,8 @@ export const GetDashboardData = async (req:Request, res:Response) =>
 
     try
     {
-        const {success, statusCode, message, data} = await DashboardService(type as dashboardDataType);
-
-        res.status(statusCode as number).json({success, message, data});
+        const {success, statusCode, message, data, insight} = await DashboardService(type as dashboardDataType);
+        res.status(statusCode as number).json({success, message, data, insight: insight});
     }
     catch
     {

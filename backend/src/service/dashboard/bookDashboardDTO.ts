@@ -1,6 +1,6 @@
 import { GetBookCount, GetBook, AllBooksAggregationResult } from "../../schema/book/book";
 import { GetBookLoanedCount, GetBookLoaned, BookLoanedAggregationResult, BookReturnStatus } from "../../schema/book/bookLoaned";
-import { GetDataFromDynamoDB, PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
+import { PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
 
 export interface BookDashboardData
 {
@@ -51,9 +51,7 @@ export const bookDashboardDTO = async () =>
 
     const DataHandler: BookDashboardData = {BooksCount, BookLoanedCount, LoanedStatusCount, AllBooksGenresCount, BookLoanedGenresCount};
     await PutDataIntoDynamoDB("DashboardData", "books", DataHandler);
-    const insight = await GenerateBookDashboardInsight(DataHandler);
-
-    return { success: true, statusCode: 200, message: "Get book dashboard data successfully!", data: DataHandler, insight: insight.insightItems }
+    return { success: true, statusCode: 200, message: "Get book dashboard data successfully!", data: DataHandler }
 }
 
 
