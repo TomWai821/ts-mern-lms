@@ -1,8 +1,12 @@
 import { dynamoDB } from "../../init/connectToDynamoDB";
 import { DeleteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { BookLoanedAggregationResult } from "../../schema/book/bookLoaned";
-import { UserDashboardData, BookDashboardData, FinesDashboardData } from "../dashboard/dashboardService";
+
 import { BookInterface } from "../../model/bookSchemaInterface";
+
+import { BookDashboardData } from "../dashboard/bookDashboardDTO";
+import { FinesDashboardData } from "../dashboard/finesDashboardDTO";
+import { UserDashboardData } from "../dashboard/userDashboardDTO";
 
 export type DynamoDBTableMap = 
 {

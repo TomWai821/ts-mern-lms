@@ -6,6 +6,7 @@ import BookGenrePieChart from "./Piechart/BookGenrePieChart";
 import LoanBookGenrePieChart from "./Piechart/LoanBookGenrePieChart";
 import { BookDashboardData } from "../../../../services/contents/dashboardService";
 import { FC } from "react";
+import InsightCard from "../../../../component/UIFragment/InsightCard";
 
 
 interface BookDashboardProps
@@ -42,7 +43,9 @@ const BookDashboard:FC<BookDashboardProps> = (props) =>
                     ))
                 }
             </Box>
+
             <Divider/>
+
             <Box sx={ItemToCenter}>
                 <LoanBookPieChart 
                     loanedCount={ dashboardData.LoanedStatusCount["Loaned"] } 
@@ -54,6 +57,10 @@ const BookDashboard:FC<BookDashboardProps> = (props) =>
 
                 <LoanBookGenrePieChart Genre={dashboardData.BookLoanedGenresCount}/>
             </Box>
+
+            <Divider/>
+            
+            <InsightCard content={ dashboardData.insight }/>
         </Box>
     )
 }

@@ -15,5 +15,4 @@ export const GetDashboardData = async (req:Request, res:Response) =>
     {
         return res.status(401).json({ success: false });
     }
-    
 }

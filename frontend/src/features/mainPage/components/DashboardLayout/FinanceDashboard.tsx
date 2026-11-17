@@ -5,6 +5,7 @@ import FinesDataPieChart from "./Piechart/FinesDataPieChart";
 import FinesNotPaidDataPieChart from "./Piechart/FinesNotPaidDataPieChart";
 import { FinesDashboardData } from "../../../../services/contents/dashboardService";
 import { FC } from "react";
+import InsightCard from "../../../../component/UIFragment/InsightCard";
 
 
 interface BookDashboardProps
@@ -42,7 +43,9 @@ const FinanceDashboard:FC<BookDashboardProps> = (props) =>
                     ))
                 }
              </Box>
+
             <Divider/>
+
             <Box sx={ItemToCenter}>
                 <FinesDataPieChart 
                     PaidFines={dashboardData.FinesDetails["Paid"]} 
@@ -55,6 +58,9 @@ const FinanceDashboard:FC<BookDashboardProps> = (props) =>
                 />
             </Box>
             
+            <Divider/>
+
+            <InsightCard content={ dashboardData.insight }/>
         </Box>
     )
 }

@@ -16,6 +16,7 @@ export interface UserDashboardData
     UserCurrentlySuspendCount: number;
     SuspendListSuspendUserCount: number;
     SuspendListUnsuspendUserCount: number;
+    insight: string[];
 }
 
 export interface BookDashboardData
@@ -25,6 +26,7 @@ export interface BookDashboardData
     AllBooksGenresCount: Record<string, number>;
     BookLoanedGenresCount: Record<string, number>;
     LoanedStatusCount: Record<string, number>;
+    insight: string[];
 }
 
 export interface FinesDashboardData
@@ -34,6 +36,7 @@ export interface FinesDashboardData
     TotalFinesAmount: number;
     FinesDetails: {"Paid": number, "Not Paid": number};
     NotPaidFinesRecordDetails: {"Not Return Book": number, "Return Book": number};
+    insight: string[];
 }
 
 type DashboardResponseMap = 

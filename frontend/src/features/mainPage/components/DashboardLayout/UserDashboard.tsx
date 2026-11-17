@@ -4,6 +4,7 @@ import { displayAsColumn, displayAsRow, ItemToCenter } from "../../../../Data/St
 import SuspendListDataPieChart from "./Piechart/SuspendListDataPieChart";
 import { UserDashboardData } from "../../../../services/contents/dashboardService";
 import { FC } from "react";
+import InsightCard from "../../../../component/UIFragment/InsightCard";
 
 interface UserDashboardProps
 {
@@ -38,14 +39,20 @@ const UserDashboard:FC<UserDashboardProps> = (props) =>
                             <DashboardCard key={item.title}  title={item.title} recordAmount={item.recordAmount} />
                         ))
                     }
-                 </Box>
+                </Box>
+
                 <Divider/>
+
                 <Box sx={ItemToCenter}>
                     <SuspendListDataPieChart 
                         suspendUser={dashboardData.SuspendListSuspendUserCount} 
                         UnsuspendUser={dashboardData.SuspendListUnsuspendUserCount}
                     />
                 </Box>
+
+                <Divider/>
+
+                <InsightCard content={ dashboardData.insight }/>
             </Box>
         )
 }
