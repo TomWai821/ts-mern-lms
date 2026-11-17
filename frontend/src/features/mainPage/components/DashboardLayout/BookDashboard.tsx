@@ -46,7 +46,7 @@ const BookDashboard:FC<BookDashboardProps> = (props) =>
 
             <Divider/>
 
-            <Box sx={ItemToCenter}>
+            <Box sx={{...ItemToCenter, addingBottom: "50px"}}>
                 <LoanBookPieChart 
                     loanedCount={ dashboardData.LoanedStatusCount["Loaned"] } 
                     returnCount={ dashboardData.LoanedStatusCount["Returned"] } 

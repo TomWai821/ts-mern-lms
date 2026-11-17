@@ -1,6 +1,7 @@
 import { LightbulbOutlined } from "@mui/icons-material";
 import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { FC } from "react";
+import { ItemToCenter } from "../../Data/Style";
 
 interface InsightCardProps
 {
@@ -12,7 +13,7 @@ const InsightCard:FC<InsightCardProps> = (props) =>
     const {content} = props;
 
     return(
-        <Box>
+        <Box sx={{...ItemToCenter, addingBottom: "50px"}}>
             <Typography>Dashboard Insight</Typography>
             <List dense>
             {

@@ -46,7 +46,7 @@ const FinanceDashboard:FC<BookDashboardProps> = (props) =>
 
             <Divider/>
 
-            <Box sx={ItemToCenter}>
+            <Box sx={{...ItemToCenter, addingBottom: "50px"}}>
                 <FinesDataPieChart 
                     PaidFines={dashboardData.FinesDetails["Paid"]} 
                     NotPaidFines={dashboardData.FinesDetails["Not Paid"]}

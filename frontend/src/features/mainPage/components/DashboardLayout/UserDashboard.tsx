@@ -43,7 +43,7 @@ const UserDashboard:FC<UserDashboardProps> = (props) =>
 
                 <Divider/>
 
-                <Box sx={ItemToCenter}>
+                <Box sx={{...ItemToCenter, addingBottom: "50px"}}>
                     <SuspendListDataPieChart 
                         suspendUser={dashboardData.SuspendListSuspendUserCount} 
                         UnsuspendUser={dashboardData.SuspendListUnsuspendUserCount}
