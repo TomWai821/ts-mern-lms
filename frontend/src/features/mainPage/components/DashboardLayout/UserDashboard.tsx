@@ -52,7 +52,7 @@ const UserDashboard:FC<UserDashboardProps> = (props) =>
 
                 <Divider/>
 
-                <InsightCard content={ dashboardData.insight }/>
+                {dashboardData.insight && dashboardData.insight.length > 0 && <InsightCard content={ dashboardData.insight }/>}
             </Box>
         )
 }

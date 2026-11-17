@@ -17,17 +17,15 @@ describe("Dashboard service", () =>
             UserCount: 4,
             UserCurrentlySuspendCount: 1,
             SuspendListSuspendUserCount: 1,
-            SuspendListUnsuspendUserCount: 0
+            SuspendListUnsuspendUserCount: 0,
         };
 
         (GetDataFromDynamoDB as jest.Mock).mockResolvedValue({ Item: { dataType: "users", data } });
 
-        await expect(DashboardService("users")).resolves.toEqual(
-        {
-            success: true,
-            statusCode: 200,
-            message: "Get users dashboard data successfully!",
-            data
-        });
+        const result = await DashboardService("users");    
+
+        expect(result).toMatchObject({success: true, statusCode: 200, data});
+
+        expect(result.insight).toEqual( expect.arrayContaining([expect.any(String)]));
     });
 });
