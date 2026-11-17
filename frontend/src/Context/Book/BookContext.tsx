@@ -33,7 +33,6 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
 
         const booksResult: BookDataInterface[] | undefined = books.status === 'fulfilled' ? books.value : undefined;
         const loanBooksResult: LoanBookInterface[] | undefined = loanBooks.status === 'fulfilled' ? loanBooks.value : undefined;
-        console.log(books);
     
         if (booksResult && Array.isArray(booksResult)) 
         {

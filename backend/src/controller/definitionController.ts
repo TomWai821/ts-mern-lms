@@ -3,6 +3,7 @@ import { DefinitionConfig, DefinitionType } from "../config/definitionConfig";
 import { validateDefinition } from "../middleware/Definition/DefinitionHelper";
 
 import { DefinitionEvent, broadcast } from '../ws';
+import { RefreshDashboard } from "../service/dashboard/dashboardService";
 
 interface DefinitionEventMap 
 {
@@ -130,6 +131,12 @@ export const UpdateDefinitionRecord = async (req: Request, res: Response) =>
         }
 
         broadcast(DefinitionEventMap[definitionType].update, record);
+
+        if(definitionType === "Genre")
+        {
+            await RefreshDashboard("books");
+        }
+
         return res.json({ success: true, message: `Update ${definitionType} successfully!`, data: record });
     } 
     catch(error) 
