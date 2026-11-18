@@ -1,4 +1,4 @@
-import { GetBookRecommendationService } from "../service/book/bookRecommendationService";
+import { GetBookRecommendationService } from "../service/recommendation/bookRecommendationService";
 import { AuthRequest } from "../model/requestInterface";
 import { Response } from "express";
 

@@ -1,4 +1,4 @@
-import { RefreshRecommendationCache } from "../service/book/bookRecommendationService";
+import { RefreshRecommendationCache } from "../service/recommendation/bookRecommendationService";
 import { InitialiseDashboardCache } from "../service/dashboard/dashboardService";
 import { CreateTableCommand, DescribeTableCommand, ListTablesCommand, DynamoDBClient, ResourceInUseException, ResourceNotFoundException, waitUntilTableExists } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";

@@ -15,6 +15,7 @@
     "@aws-sdk/client-dynamodb": "^3.1169.0",
     "@aws-sdk/client-s3": "^3.1024.0",
     "@aws-sdk/lib-dynamodb": "^3.1169.0",
+    "@google/genai": "^3.4.0",
     "@types/ws": "^8.18.1",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",

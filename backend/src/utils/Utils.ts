@@ -1,8 +1,8 @@
-export const printError = async (error:any) => 
+export const printError = (error: unknown): never =>
 {
     if (error instanceof Error) 
     {
-        throw new Error(error.message);
+        throw error;
     } 
     else 
     {

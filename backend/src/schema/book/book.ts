@@ -43,11 +43,11 @@ export const CreateBook = async (data:Record<string, any>) =>
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
-export const GetBook = async (data?:Record<string, any>, sortRequirement?:Record<string, any>, limit?:number) =>
+export const GetBook = async (data?:Record<string, any>, sortRequirement?:Record<string, any>, limit?:number): Promise<AllBooksAggregationResult[]> =>
 {
     try
     {
@@ -55,13 +55,13 @@ export const GetBook = async (data?:Record<string, any>, sortRequirement?:Record
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 };
 
 
 // Local variable(For get suspend user data)
-const GetBooksWithOtherDetails = async (data?:Record<string, any>, sortRequirement?:Record<string, any>, limit?:number) => 
+const GetBooksWithOtherDetails = async (data?:Record<string, any>, sortRequirement?:Record<string, any>, limit?:number): Promise<AllBooksAggregationResult[]> =>
 {
     let pipeline:PipelineStage[] = [];
 
@@ -81,7 +81,7 @@ const GetBooksWithOtherDetails = async (data?:Record<string, any>, sortRequireme
 
     pipeline.push(...otherRequirement);
 
-    return await Book.aggregate(pipeline);
+    return await Book.aggregate<AllBooksAggregationResult>(pipeline);
 }
         
 export const FindBook = async (data: Record<string, any>) => 
@@ -92,7 +92,7 @@ export const FindBook = async (data: Record<string, any>) =>
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -108,7 +108,7 @@ export const FindBookByID = async (bookID: string, select?: Record<string, any>)
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -120,7 +120,7 @@ export const FindBookByIDAndUpdate = async (bookID: string, data: Record<string,
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -132,7 +132,7 @@ export const FindBookByIDAndDelete = async (bookID: string) =>
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -148,6 +148,6 @@ export const GetBookCount = async(filters?: {status: BookStatus}) =>
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }

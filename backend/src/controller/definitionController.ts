@@ -4,7 +4,7 @@ import { validateDefinition } from "../middleware/Definition/DefinitionHelper";
 
 import { DefinitionEvent, broadcast } from '../ws';
 import { RefreshDashboard } from "../service/dashboard/dashboardService";
-import { RefreshRecommendationCache } from "../service/book/bookRecommendationService";
+import { RefreshRecommendationCache } from "../service/recommendation/bookRecommendationService";
 
 interface DefinitionEventMap 
 {
@@ -136,7 +136,7 @@ export const UpdateDefinitionRecord = async (req: Request, res: Response) =>
         if(definitionType === "Genre")
         {
             await RefreshDashboard("books");
-            await Promise.all([RefreshRecommendationCache("forUser"), RefreshRecommendationCache("mostPopular"), RefreshRecommendationCache("newPublish")]);
+            await Promise.all([RefreshRecommendationCache("mostPopular"), RefreshRecommendationCache("newPublish")]);
         }
 
         return res.json({ success: true, message: `Update ${definitionType} successfully!`, data: record });

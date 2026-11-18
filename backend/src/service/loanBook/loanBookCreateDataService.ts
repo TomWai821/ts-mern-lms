@@ -4,7 +4,7 @@ import { CreateBookLoaned, GetBookLoaned } from "../../schema/book/bookLoaned";
 import { FindUser } from "../../schema/user/user";
 import { BookEvent, broadcast } from "../../ws";
 import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
-import { RefreshRecommendationCache } from "../book/bookRecommendationService";
+import { RefreshRecommendationCache } from "../recommendation/bookRecommendationService";
 import { RefreshDashboard } from "../dashboard/dashboardService";
 
 export const CreateLoanBookRecordService = async (userID: string, librarianUserID: string, bookID: string, loanDate: Date, dueDate: Date) => 

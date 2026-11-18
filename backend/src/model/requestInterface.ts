@@ -51,16 +51,6 @@ export interface EditImageInterface
     oldImageName: string;
 }
 
-export interface Book 
-{
-    _id: string;
-    bookname: string;
-    genre: string;
-    author: string;
-    publisher: string;
-    readonly corpus: string;
-}
-
 export interface externalDataInterface
 {
     items: ItemsInterface[];

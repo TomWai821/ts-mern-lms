@@ -42,11 +42,11 @@ export const CreateBookLoaned = async (data:Record<string, any>) =>
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
-export const GetBookLoaned = async (data?:Record<string, any>, limit?:number, sortRequirements?: Record<string, any>) =>
+export const GetBookLoaned = async (data?:Record<string, any>, limit?:number, sortRequirements?: Record<string, any>): Promise<BookLoanedAggregationResult[]> =>
 {
     try
     {
@@ -58,12 +58,12 @@ export const GetBookLoaned = async (data?:Record<string, any>, limit?:number, so
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 };
 
 // Local variable(For get suspend user data)
-const GetBooksWithOtherDetails = async (data?:Record<string, any>) => 
+const GetBooksWithOtherDetails = async (data?:Record<string, any>): Promise<BookLoanedAggregationResult[]> =>
 {
     let pipeline:PipelineStage[] = [];
 
@@ -77,10 +77,10 @@ const GetBooksWithOtherDetails = async (data?:Record<string, any>) =>
     );
 
     if (data) { pipeline.push( {$match: {...data}} )}
-    return await BookLoaned.aggregate(pipeline) as BookLoanedAggregationResult[];
+    return await BookLoaned.aggregate<BookLoanedAggregationResult>(pipeline);
 }
  
-const GetSuggestBookDetails = async (data?: Record<string, any>, limit?: number, sortRequirements?: Record<string, any>) => 
+const GetSuggestBookDetails = async (data: Record<string, any> | undefined, limit: number, sortRequirements?: Record<string, any>): Promise<BookLoanedAggregationResult[]> =>
 {
     let pipeline: PipelineStage[] = [];
 
@@ -108,7 +108,7 @@ const GetSuggestBookDetails = async (data?: Record<string, any>, limit?: number,
 
     pipeline.push({ $unwind: { path: "$bookDetails",  preserveNullAndEmptyArrays: true }});
 
-    return await BookLoaned.aggregate(pipeline);
+    return await BookLoaned.aggregate<BookLoanedAggregationResult>(pipeline);
 };
 
         
@@ -120,7 +120,7 @@ export const FindBookLoaned = async (data: Record<string, any>) =>
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -136,7 +136,7 @@ export const FindBookLoanedByID = async (bookLoanedId: string, select?: Record<s
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -148,7 +148,7 @@ export const FindBookLoanedByIDAndUpdate = async (bookLoanedId: string, data: Re
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -160,7 +160,7 @@ export const FindBookLoanedByIDAndDelete = async (bookLoanedId: string, data: Re
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -172,7 +172,7 @@ export const FindBookLoanedAndDelete = async (data: Record<string, any>) =>
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 
@@ -188,7 +188,7 @@ export const GetBookLoanedCount = async(filters?: {finesPaidStatus?: FinesPaidSt
     }
     catch(error)
     {
-        printError(error);
+        return printError(error);
     }
 }
 

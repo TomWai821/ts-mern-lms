@@ -4,7 +4,7 @@ import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterf
 import { FindBookByID, FindBookByIDAndDelete } from "../../schema/book/book";
 import { HandleDeleteImage } from "../image/bookDeleteImageService";
 import { BookEvent, broadcast } from "../../ws";
-import { RefreshRecommendationCache } from "./bookRecommendationService";
+import { RefreshRecommendationCache } from "../recommendation/bookRecommendationService";
 import { DeleteDataFromDynamoDB } from "../dynamoDB/dynamoDBService";
 import { RefreshDashboard } from "../dashboard/dashboardService";
 
