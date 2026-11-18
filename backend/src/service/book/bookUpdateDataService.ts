@@ -5,6 +5,7 @@ import { HandleDeleteImage } from "../image/bookDeleteImageService";
 import { EditImageInterface } from "../../model/requestInterface";
 import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
 import { GetBookLoaned } from "../../schema/book/bookLoaned";
+import { DeleteAllRecommendationCache } from "../dynamoDB/dynamoDBService";
 import { RefreshDashboard } from "../dashboard/dashboardService";
 
 export const BookUpdateDataService = async (bookID: string, editBookData: BookInterface, editImageData: EditImageInterface, fileData: Express.Request["file"]) => 
@@ -40,6 +41,8 @@ export const BookUpdateDataService = async (bookID: string, editBookData: BookIn
     }
 
     void RefreshDashboard("books");
+    void DeleteAllRecommendationCache()
+        .catch(error => console.error("Recommendation cache invalidation failed after book update:", error));
     
     return {success: true, statusCode: 200, message: "Book Record Updated Successfully!"}
 }

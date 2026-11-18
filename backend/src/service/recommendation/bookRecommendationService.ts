@@ -1,5 +1,5 @@
 import { GetBook } from "../../schema/book/book";
-import { DynamoDBTableMap, GetDataFromDynamoDB, PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
+import { DeleteDataFromDynamoDB, DynamoDBTableMap, GetDataFromDynamoDB, PutDataIntoDynamoDB } from "../dynamoDB/dynamoDBService";
 import { RecommendBookType } from "../../controller/bookRecommendationController";
 import { getRecommendedBooksForUserService } from "./recommendationEngine";
 import { GetBookLoaned } from "../../schema/book/bookLoaned";
@@ -13,7 +13,7 @@ export const GetBookRecommendationService = async (recommendType: RecommendBookT
 
     const cacheResult = await GetDataFromDynamoDB("RecommendBook", recommendType, userId);
     let foundBook = cacheResult.Item?.data as DynamoDBTableMap["RecommendBook"][typeof recommendType] | undefined;
-
+    
     if(!foundBook)
     {
         foundBook = await RefreshRecommendation(recommendType, userId);
@@ -22,7 +22,7 @@ export const GetBookRecommendationService = async (recommendType: RecommendBookT
     return {success: true, statusCode: 200, foundBook};
 };
 
-const RefreshRecommendation = async (recommendType: RecommendBookType, userId?: string) =>
+export const RefreshRecommendation = async (recommendType: RecommendBookType, userId?: string) =>
 {
     let freshData = [];
 
@@ -61,3 +61,23 @@ export const RefreshRecommendationCache = async (suggestType: RecommendBookType,
 {
     await RefreshRecommendation(suggestType, userId);
 };
+
+export const DeleteNewPublishCacheIfChanged = async (): Promise<void> =>
+{
+    const cacheResult = await GetDataFromDynamoDB("RecommendBook", "newPublish");
+    const cachedBooks = cacheResult.Item?.data as DynamoDBTableMap["RecommendBook"]["newPublish"] | undefined;
+
+    if (!Array.isArray(cachedBooks))
+    {
+        return;
+    }
+
+    const freshBooks = await GetBook(undefined, { publishDate: -1 }, 8);
+    const hasSameBooks = cachedBooks.length === freshBooks.length
+        && cachedBooks.every((book, index) => book._id?.toString() === freshBooks[index]?._id?.toString());
+
+    if (!hasSameBooks)
+    {
+        await DeleteDataFromDynamoDB("RecommendBook", "newPublish");
+    }
+}

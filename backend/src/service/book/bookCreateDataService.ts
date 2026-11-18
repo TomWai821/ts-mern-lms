@@ -2,7 +2,8 @@ import { broadcast, BookEvent } from "../../ws";
 import { CreateBook, FindBookByIDAndDelete, GetBook } from "../../schema/book/book";
 import { ImageDataBuilder, UploadImage } from "../image/bookCreateImageService";
 import { BookInterface } from "../../model/bookSchemaInterface";
-import { RefreshRecommendationCache } from "../recommendation/bookRecommendationService";
+import { DeleteNewPublishCacheIfChanged } from "../recommendation/bookRecommendationService";
+import { DeleteAllRecommendationCache } from "../dynamoDB/dynamoDBService";
 import { RefreshDashboard } from "../dashboard/dashboardService";
 
 interface BookDataInterface
@@ -49,10 +50,13 @@ export const CreateBookRecordService = async (bookData: BookDataInterface, file?
 
         const newBookRecord = await GetBook({ _id: createBook._id }) as unknown as BookInterface[];
 
-        await RefreshRecommendationCache("newPublish");
-        
         broadcast(BookEvent.BOOK_CREATE, newBookRecord[0]);
         void RefreshDashboard("books");
+        void Promise.all([
+            DeleteNewPublishCacheIfChanged(),
+            DeleteAllRecommendationCache("forUser")
+        ]).catch(error => console.error("Recommendation cache invalidation failed after book creation:", error));
+
         return { success: true, statusCode: 200, message: "Book Record Created Successfully!"};
     } 
     catch (error) 

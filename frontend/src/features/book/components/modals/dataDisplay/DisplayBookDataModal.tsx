@@ -12,9 +12,14 @@ import AllBookDataBody from "./DisplayBookDataBody/AllBookDataBody";
 import LoanBookDataBody from "./DisplayBookDataBody/LoanBookDataBody";
 import { BookDataInterface } from "../../../../../Model/ResultModel";
 
-const DisplayBookDataModal:FC<DisplayDataModalInterface> = (displayUserData) => 
+interface PropsInterface extends DisplayDataModalInterface
 {
-    const {value, data} = displayUserData;
+    recommendationReason?: string;
+}
+
+const DisplayBookDataModal:FC<PropsInterface> = (displayUserData) => 
+{
+    const {value, data, recommendationReason} = displayUserData;
     const width = '600px';
 
     const setTitle = () => 
@@ -24,7 +29,7 @@ const DisplayBookDataModal:FC<DisplayDataModalInterface> = (displayUserData) =>
         {
             case 0:
                 displayData.title = "Book Information";
-                displayData.displayBody = <AllBookDataBody data={data as BookDataInterface}/>
+                displayData.displayBody = <AllBookDataBody data={data as BookDataInterface} recommendationReason={recommendationReason}/>
                 break;
 
             case 1:

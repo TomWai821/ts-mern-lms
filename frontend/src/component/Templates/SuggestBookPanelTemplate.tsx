@@ -1,15 +1,16 @@
 import { Avatar, Box, Typography } from "@mui/material"
 import { FC, Fragment } from "react"
-import { BookDataInterface, GetResultInterface, LoanBookInterface } from "../../Model/ResultModel"
+import { BookDataInterface, LoanBookInterface } from "../../Model/ResultModel"
 import { TransferDateToISOString } from "../../Controller/OtherController";
 import { useModal } from "../../Context/ModalContext";
 import DisplayBookDataModal from "../../features/book/components/modals/dataDisplay/DisplayBookDataModal";
+import { RecommendationPanelItem } from "../../services/contents/bookRecommendatonService";
 
 interface PropsInterface
 {
     value: number;
     title: string;
-    recommendationData: LoanBookInterface[] | GetResultInterface[] | [];
+    recommendationData: RecommendationPanelItem[];
 }
 
 const useSuggestBookPanelStyles = () => 
@@ -22,9 +23,7 @@ const useSuggestBookPanelStyles = () =>
     }
 
     const ImageSyntax = { width: "175px", height: "250px" }
-
     const PanelHoverSyntax = { backgroundColor: 'white', opacity: '60%', cursor: 'pointer', borderRadius: '10px'}
-
     const PanelSyntax = {display: 'grid', textAlign: 'center', justifyContent: 'center', width: "200px", height: "320px", padding: '10px 0'}
 
     return {PublishPanelSyntax, ImageSyntax, PanelHoverSyntax, PanelSyntax};
@@ -37,14 +36,15 @@ const SuggestBookPanelTemplate:FC<PropsInterface> = (suggestBookPanelData) =>
 
     const {PublishPanelSyntax, ImageSyntax, PanelHoverSyntax, PanelSyntax} = useSuggestBookPanelStyles();
 
-    const isBookDataInterface = (book:any): book is BookDataInterface => 
+    const isBookDataInterface = (book: RecommendationPanelItem): book is BookDataInterface => 
     {
         return 'image' in book && 'bookname' in book 
     }
 
-    const openDisplayBookDataModal = (data: BookDataInterface | LoanBookInterface) => 
+    const openDisplayBookDataModal = (data: RecommendationPanelItem) => 
     {
-        handleOpen(<DisplayBookDataModal value={0} data={data}/>);
+        const recommendationReason = "recommendationReason" in data ? data.recommendationReason : undefined;
+        handleOpen(<DisplayBookDataModal value={0} data={data} recommendationReason={recommendationReason}/>);
     }
     
     return(
@@ -55,7 +55,7 @@ const SuggestBookPanelTemplate:FC<PropsInterface> = (suggestBookPanelData) =>
                 {
                     recommendationData.map((book, index) => 
                     (
-                        <Box key={index} sx={{ ...PanelSyntax, "&:hover": PanelHoverSyntax }} onClick={() => openDisplayBookDataModal(book as BookDataInterface | LoanBookInterface)}>
+                        <Box key={index} sx={{ ...PanelSyntax, "&:hover": PanelHoverSyntax }} onClick={() => openDisplayBookDataModal(book)}>
                             {
                                 isBookDataInterface(book) ? 
                                 (

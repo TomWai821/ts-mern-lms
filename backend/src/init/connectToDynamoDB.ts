@@ -17,7 +17,6 @@ export const checkDynamoDBConnection = async () =>
     try
     {
         await dynamoDB.send(new ListTablesCommand({}) );
-
         console.log("DynamoDB connected");
     }
     catch(error)
@@ -32,10 +31,7 @@ export const InitialiseSystem = async () =>
     await CreateRecommendBookTableIfNotExists();
     await CreateDashboardDataTableIfNotExists();
 
-    await Promise.all([
-        InitialiseRecommendationCache(),
-        InitialiseDashboardCache()
-    ]);
+    await Promise.all([InitialiseRecommendationCache(), InitialiseDashboardCache()]);
 };
 
 const CreateDashboardDataTableIfNotExists = async () =>
@@ -117,9 +113,5 @@ const CreateRecommendBookTableIfNotExists = async () =>
 
 export const InitialiseRecommendationCache = async () =>
 {
-    await Promise.all(
-    [
-        RefreshRecommendationCache("newPublish"),
-        RefreshRecommendationCache("mostPopular")
-    ]);
+    await Promise.all([RefreshRecommendationCache("newPublish"), RefreshRecommendationCache("mostPopular")]);
 };

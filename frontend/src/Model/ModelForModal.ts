@@ -95,6 +95,7 @@ export interface BookDataBodyInterface
     BookData: Record<string, {label:string, value:any}>; 
     status:string;
     descriptionData?:string; 
+    recommendationReason?: string;
 }
 
 export interface GoogleBookDataInterface

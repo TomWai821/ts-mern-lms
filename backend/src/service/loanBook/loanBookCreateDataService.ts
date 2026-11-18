@@ -4,7 +4,7 @@ import { CreateBookLoaned, GetBookLoaned } from "../../schema/book/bookLoaned";
 import { FindUser } from "../../schema/user/user";
 import { BookEvent, broadcast } from "../../ws";
 import { BookInterface, BookLoanedInterface } from "../../model/bookSchemaInterface";
-import { RefreshRecommendationCache } from "../recommendation/bookRecommendationService";
+import { DeleteDataFromDynamoDB } from "../dynamoDB/dynamoDBService";
 import { RefreshDashboard } from "../dashboard/dashboardService";
 
 export const CreateLoanBookRecordService = async (userID: string, librarianUserID: string, bookID: string, loanDate: Date, dueDate: Date) => 
@@ -41,7 +41,13 @@ export const CreateLoanBookRecordService = async (userID: string, librarianUserI
 
     const loanRecord = await GetBookLoaned({_id: createLoanRecord._id}) as BookLoanedInterface[];
     const bookRecord = await GetBook({_id: changeBookState._id}) as BookInterface[];
-    await Promise.all([RefreshRecommendationCache("mostPopular"), RefreshRecommendationCache("forUser", UserID)]);
+    
+    void Promise.all(
+        [
+            DeleteDataFromDynamoDB("RecommendBook", "mostPopular"),
+            DeleteDataFromDynamoDB("RecommendBook", "forUser", UserID)
+        ]
+    ).catch(error => console.error("Recommendation cache invalidation failed after loan creation:", error));
 
     broadcast(BookEvent.LOAN_BOOK_CREATE, loanRecord[0]);
     broadcast(BookEvent.BOOK_UPDATE, bookRecord[0]);

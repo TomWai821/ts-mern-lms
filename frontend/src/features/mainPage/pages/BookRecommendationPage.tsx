@@ -2,14 +2,14 @@ import { Fragment } from "react/jsx-runtime";
 import SuggestBookPanelTemplate from "../../../component/Templates/SuggestBookPanelTemplate";
 import { GetRecommendationData } from "../../../services/contents/bookRecommendatonService";
 import { useEffect, useState } from "react";
-import { GetResultInterface, LoanBookInterface } from "../../../Model/ResultModel";
 import { useAuthContext } from "../../../Context/User/AuthContext";
+import { RecommendationPanelItem } from "../../../services/contents/bookRecommendatonService";
 
 interface IRecommendationPageConfig
 {
     value: number;
     title: "Recommend For You" | "New Publish" | "Most Popular";
-    data: GetResultInterface[] | LoanBookInterface[] | [];
+    data: RecommendationPanelItem[];
 }
 
 const useRecommendationPageConfig = () =>

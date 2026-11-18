@@ -8,15 +8,19 @@ import { BookImageFormat, displayAsRow} from "../../../../../../Data/Style";
 import { BookDataInterface, ExternalBookDataInterface, LoanBookInterface } from "../../../../../../Model/ResultModel";
 import { TransferDateToISOString } from "../../../../../../Controller/OtherController";
 
-import { BookDataTabLabel } from "../../../../../../Data/TableData";
 import CustomTabPanel from "../../../../../../component/UIFragment/CustomTabPanel";
 import BookDataBody from "./ModalBody/BookDataBody";
-import GoogleBookDataBody from "./ModalBody/GoogleBookDataBody";
+import EnrichDataBody from "./ModalBody/EnrichDataBody";
 import { TabProps } from "../../../../../../Controller/OtherUsefulController";
 import { useAuthContext } from "../../../../../../Context/User/AuthContext";
 
 import CircularProgress from '@mui/material/CircularProgress';
 import { getExternalData } from "../../../../../../services/contents/bookService";
+
+interface PropsInterface extends DisplayDataModalBody
+{
+    recommendationReason?: string;
+}
 
 const useBookDataRenderHandler = (data: BookDataInterface | LoanBookInterface) => 
 {
@@ -80,11 +84,11 @@ const useExternalDataHandler = (bookname:string, author:string) =>
     return {externalBookData, loading, RatingAsNumber};
 }
 
-const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) => 
+const AllBookDataBody:FC<PropsInterface> = (AllUserData) => 
 {
     const { isLoggedIn } = useAuthContext();
 
-    const { data } = AllUserData;
+    const { data, recommendationReason } = AllUserData;
 
     const {BookData, bookname, author} = useBookDataRenderHandler(data as BookDataInterface | LoanBookInterface);
     const {imageUrl, descriptionData, status} = useBookImageRenderHandler(data as BookDataInterface | LoanBookInterface);
@@ -96,6 +100,12 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
     {
         setTabValue(newValue);
     }
+
+    const BookDataTabLabel =
+    [
+        {label: "BOOK DETAILS"},
+        {label: "ENRICHED DATA"}
+    ]
 
     return(
         <Box>
@@ -115,7 +125,7 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
                 <Avatar src={imageUrl} alt="Preview" variant="rounded" sx={{...BookImageFormat, paddingTop: '50px'}}/>
                 
                 <CustomTabPanel index={tabValue} value={0}>
-                    <BookDataBody BookData={BookData} status={status as string} descriptionData={descriptionData}/>
+                    <BookDataBody BookData={BookData} status={status as string} descriptionData={descriptionData} recommendationReason={recommendationReason}/>
                 </CustomTabPanel>
                
                 <CustomTabPanel index={tabValue} value={1}>
@@ -126,7 +136,7 @@ const AllBookDataBody:FC<DisplayDataModalBody> = (AllUserData) =>
                             <CircularProgress/>
                         </Box> 
                         : 
-                        <GoogleBookDataBody externalBookData={externalBookData} RatingAsNumber={RatingAsNumber}/>
+                        <EnrichDataBody externalBookData={externalBookData} RatingAsNumber={RatingAsNumber}/>
                     }
                 </CustomTabPanel>
             </Box>

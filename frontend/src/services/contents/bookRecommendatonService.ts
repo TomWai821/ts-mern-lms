@@ -1,23 +1,35 @@
-import { BookDataInterface, GetResultInterface } from "../../Model/ResultModel";
+import { BookDataInterface, LoanBookInterface } from "../../Model/ResultModel";
 
 const localhost = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 const baseUrl = `${localhost}/api/recommend`
 const contentType:string = "application/json";
 
+export interface RecommendedBook extends BookDataInterface
+{
+    recommendationReason: string;
+}
+
 export interface RecommendationDataInterface
 {
-    recommendBooks: BookDataInterface[] | [];
-    newPublishBooks: BookDataInterface[] | [];
-    mostPopularBooks: BookDataInterface[] | [];
+    recommendBooks: RecommendedBook[];
+    newPublishBooks: BookDataInterface[];
+    mostPopularBooks: LoanBookInterface[];
+}
+
+export type RecommendationPanelItem = (BookDataInterface & { recommendationReason?: string }) | LoanBookInterface;
+
+interface RecommendationResponse<T>
+{
+    foundBook?: T[];
 }
 
 export async function GetRecommendationData(isLoggedin: boolean) 
 {
     const [recommendBooks, newPublishBooks, mostPopularBooks] = await Promise.all([GetRecommendBooks(isLoggedin), GetNewPublishBooks(), GetMostPopularBooks()]);
-    return {recommendBooks, newPublishBooks, mostPopularBooks} as RecommendationDataInterface;
+    return {recommendBooks, newPublishBooks, mostPopularBooks};
 }
 
-async function GetRecommendBooks(isLoggedin: boolean)
+async function GetRecommendBooks(isLoggedin: boolean): Promise<RecommendedBook[]>
 {
     if(!isLoggedin)
     {
@@ -36,24 +48,24 @@ async function GetRecommendBooks(isLoggedin: boolean)
         return [];
     }
 
-    const result:GetResultInterface = await response.json();
-    return result.foundBook;
+    const result = await response.json() as RecommendationResponse<RecommendedBook>;
+    return result.foundBook ?? [];
 }
 
 
-async function GetNewPublishBooks()
+async function GetNewPublishBooks(): Promise<BookDataInterface[]>
 {
-    return fetchBooks(`${baseUrl}/type=newPublish`);
+    return fetchBooks<BookDataInterface>(`${baseUrl}/type=newPublish`);
 }
 
 
-async function GetMostPopularBooks()
+async function GetMostPopularBooks(): Promise<LoanBookInterface[]>
 {
-    return fetchBooks(`${baseUrl}/type=mostPopular`);
+    return fetchBooks<LoanBookInterface>(`${baseUrl}/type=mostPopular`);
 }
 
 
-async function fetchBooks(url:string)
+async function fetchBooks<T>(url:string): Promise<T[]>
 {
     const response = await fetch(url, 
         {
@@ -67,6 +79,6 @@ async function fetchBooks(url:string)
         return [];
     }
 
-    const result:GetResultInterface = await response.json();
-    return result.foundBook;
+    const result = await response.json() as RecommendationResponse<T>;
+    return result.foundBook ?? [];
 }

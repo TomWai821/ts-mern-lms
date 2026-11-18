@@ -2,7 +2,7 @@ import { GetBook, AllBooksAggregationResult } from "../../schema/book/book";
 import { GetBookLoaned, BookLoanedAggregationResult } from "../../schema/book/bookLoaned";
 import { Types } from "mongoose";
 import { calculateTFIDF } from "./TF-IDF_Logic";
-//import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 
 interface AllBooksCorpus
 {
@@ -18,15 +18,19 @@ interface BookMetadata
     author: string;
     publisher: string;
 }
-/*
+
 interface ExplanationResult
 {
     bookId: string,
     reason: string
 }
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-*/
+if (!process.env.DEEPSEEK_API_KEY)
+{
+    throw new Error("DEEPSEEK_API_KEY is missing");
+}
+
+const ai = new OpenAI({ apiKey: process.env.DEEPSEEK_API_KEY, baseURL: "https://api.deepseek.com" });
 
 export const getRecommendedBooksForUserService = async (userId: string) => 
 {
@@ -42,8 +46,17 @@ export const getRecommendedBooksForUserService = async (userId: string) =>
     const allBooksCorpus = await buildCandidateCorpus();
     const { scoreMap, topBookIds, excludedIds } = generateRecommendationCandidates(loanedBooksCorpus, genreFrequencyMap, allBooksCorpus);
     const rankedBook = await rankAndFetchBooks(scoreMap, topBookIds, excludedIds);
-    /*
-    const explanations = await generateExplanation(genreFrequencyMap, rankedBook);
+
+    let explanations: ExplanationResult[] = [];
+
+    try
+    {
+        explanations = await generateExplanation(genreFrequencyMap, rankedBook);
+    }
+    catch(error)
+    {
+        console.error("Explanation generation failed", error);
+    }
 
     const reasonMap = new Map(explanations.map(item => [item.bookId, item.reason]));
 
@@ -52,9 +65,6 @@ export const getRecommendedBooksForUserService = async (userId: string) =>
         ...book,
         recommendationReason: reasonMap.get(book._id.toString()) ?? "Recommended based on your reading history."
     }));
-    */
-
-    return rankedBook;
 };
 
 
@@ -115,30 +125,36 @@ const rankAndFetchBooks = async (scoreMap: Map<string, number>, topBookIds: stri
     })
     .slice(0, 8);
 }
-/*
+
+
 const generateExplanation = async (genreFrequencyMap: Map<string, number>, foundBook: AllBooksAggregationResult[]) => 
 {
     const prompt = promptBuilder(genreFrequencyMap, foundBook);
 
-    const result = await ai.models.generateContent({ model: "gemini-2.0-flash-001", contents: prompt });
+    const response = await ai.chat.completions.create(
+    {
+        model: "deepseek-chat",
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" },
+        temperature: 0.3
+    });
 
-    const text = result.text;
+    const text = response.choices[0].message.content;
 
     if (!text)
     {
-        throw new Error("Failed to get Gemini response");
+        throw new Error("No response from DeepSeek");
     }
 
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    const parsed =JSON.parse(cleanedText);
 
-    try
+    if (parsed &&Array.isArray(parsed.recommendations))
     {
-        return JSON.parse(cleanedText) as ExplanationResult[];
+        return parsed.recommendations;
     }
-    catch
-    {
-        return [];
-    }
+
+    return [];
 }
 
 const promptBuilder = (genreFrequencyMap: Map<string, number>, foundBook: AllBooksAggregationResult[]) => 
@@ -156,6 +172,9 @@ const promptBuilder = (genreFrequencyMap: Map<string, number>, foundBook: AllBoo
         5. Do not recommend the same book generically.
         6. Make each explanation different.
         7. Do not use markdown.
+        8. Return all recommendation reasons in English.
+        9. Keep each reason under 40 words.
+        10. Only explain similarities that are strongly supported by the user's reading profile, avoid weak or speculative comparisons.
 
         User Reading Profile:
         ${JSON.stringify(Object.fromEntries(genreFrequencyMap))}
@@ -171,16 +190,16 @@ const promptBuilder = (genreFrequencyMap: Map<string, number>, foundBook: AllBoo
             ))
         )}
 
-        Response:
+        Example Response:
         [
             {
-                "bookId": "...",
-                "reason": "..."
+                "bookId":"123",
+                "reason":"Because you recently read several fantasy novels, this book offers a similar magical adventure and world-building style."
             }
         ]
     `;
 }
-*/
+
 const mapLoanRecordToMetadata = (loanRecord: BookLoanedAggregationResult): BookMetadata =>
 (
     {

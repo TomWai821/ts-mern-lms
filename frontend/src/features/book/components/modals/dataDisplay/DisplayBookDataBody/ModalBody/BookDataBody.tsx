@@ -10,7 +10,7 @@ import { setDataTextColor } from "../../../../../../../Controller/SetTextControl
 const BookDataBody:FC<BookDataBodyInterface> = (bookBodyData) => 
 {
     const {isLoggedIn} = useAuthContext();
-    const {BookData, status, descriptionData} = bookBodyData;
+    const {BookData, status, descriptionData, recommendationReason} = bookBodyData;
       
     return(
             <Box sx={{ display: 'grid', gap: '20px 50px', width:'350px', gridTemplateColumns: '100%', paddingLeft: '10px'}}>
@@ -32,6 +32,7 @@ const BookDataBody:FC<BookDataBodyInterface> = (bookBodyData) =>
                 }
                 
                 <ExpandableTypography title={"Description"}>{descriptionData}</ExpandableTypography>
+                {recommendationReason && <ExpandableTypography title={"AI Recommendation"}>{recommendationReason}</ExpandableTypography>}
             </Box>
     );
 }

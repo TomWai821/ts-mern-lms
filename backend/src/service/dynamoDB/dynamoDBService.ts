@@ -1,5 +1,5 @@
 import { dynamoDB } from "../../init/connectToDynamoDB";
-import { DeleteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DeleteCommand, GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { BookLoanedAggregationResult } from "../../schema/book/bookLoaned";
 
 import { BookInterface } from "../../model/bookSchemaInterface";
@@ -8,13 +8,18 @@ import { BookDashboardData } from "../dashboard/bookDashboardDTO";
 import { FinesDashboardData } from "../dashboard/finesDashboardDTO";
 import { UserDashboardData } from "../dashboard/userDashboardDTO";
 
+interface RecommendedBook extends BookInterface
+{
+    recommendationReason: string;
+}
+
 export type DynamoDBTableMap = 
 {
     RecommendBook: 
     {
         newPublish: BookInterface[];
         mostPopular: BookLoanedAggregationResult[];
-        forUser: BookInterface[];
+        forUser: RecommendedBook[];
     };
 
     DashboardData: 
@@ -43,6 +48,35 @@ export const PutDataIntoDynamoDB = async<T extends keyof DynamoDBTableMap, D ext
 export const DeleteDataFromDynamoDB = async<T extends keyof DynamoDBTableMap>(tableName: T, dataType: keyof DynamoDBTableMap[T], userId?: string) => 
 {
     return await dynamoDB.send(new DeleteCommand({ TableName: tableName, Key: BuildKey(tableName, dataType, userId) }));
+}
+
+export const DeleteAllRecommendationCache = async (dataType?: keyof DynamoDBTableMap["RecommendBook"]): Promise<void> =>
+{
+    let lastEvaluatedKey: Record<string, unknown> | undefined;
+
+    do
+    {
+        const result = await dynamoDB.send(new ScanCommand({
+            TableName: "RecommendBook",
+            ProjectionExpression: "#dataType, #userId",
+            ExpressionAttributeNames: { "#dataType": "dataType", "#userId": "userId" },
+            ...(dataType
+                ? { FilterExpression: "#dataType = :dataType", ExpressionAttributeValues: { ":dataType": dataType } }
+                : {}),
+            ...(lastEvaluatedKey ? { ExclusiveStartKey: lastEvaluatedKey } : {})
+        }));
+
+        await Promise.all((result.Items ?? []).map(item =>
+            dynamoDB.send(new DeleteCommand(
+            {
+                TableName: "RecommendBook",
+                Key: { dataType: item.dataType, userId: item.userId }
+            }))
+        ));
+
+        lastEvaluatedKey = result.LastEvaluatedKey;
+    }
+    while (lastEvaluatedKey);
 }
 
 const BuildKey = <T extends DynamoDBTableName>(tableName: T, dataType: keyof DynamoDBTableMap[T], userId?: string) =>

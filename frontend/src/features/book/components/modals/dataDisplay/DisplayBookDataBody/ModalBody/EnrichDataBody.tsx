@@ -8,7 +8,7 @@ import { FC } from "react"
 import { GoogleBookDataInterface } from "../../../../../../../Model/ModelForModal";
 import BarcodeField from "../../../../../../../component/UIFragment/BarcodeFIeld";
 
-const GoogleBookDataBody:FC<GoogleBookDataInterface> = (GoogleBookDatabody) => 
+const EnrichDataBody:FC<GoogleBookDataInterface> = (GoogleBookDatabody) => 
 {
     const {externalBookData, RatingAsNumber} = GoogleBookDatabody;
 
@@ -54,4 +54,4 @@ const GoogleBookDataBody:FC<GoogleBookDataInterface> = (GoogleBookDatabody) =>
     )
 }
 
-export default GoogleBookDataBody
+export default EnrichDataBody

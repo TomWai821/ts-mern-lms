@@ -3,6 +3,7 @@ import { ContactConfig, ContactType } from "../config/contactConfig";
 import { validateContact } from "../middleware/Contact/ContactHelper";
 
 import { ContactEvent, broadcast } from '../ws';
+import { DeleteAllRecommendationCache } from "../service/dynamoDB/dynamoDBService";
 
 interface ContactEventMap 
 {
@@ -136,6 +137,9 @@ export const UpdateContactRecord = async (req: Request, res: Response) =>
         }
 
         broadcast(ContactEventMap[type].update, record);
+        void DeleteAllRecommendationCache()
+            .catch(error => console.error(`Recommendation cache invalidation failed after ${type} update:`, error));
+
         return res.json({ success: true, message: `Updated ${type} successfully!`, data: record });
     } 
     catch (error: any) 
