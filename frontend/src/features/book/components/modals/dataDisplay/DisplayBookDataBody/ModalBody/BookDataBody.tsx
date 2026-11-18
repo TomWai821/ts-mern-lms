@@ -1,6 +1,6 @@
 "use client";
-import { FC } from "react";
-import { Box, Typography } from "@mui/material";
+import { FC, Fragment } from "react";
+import { Box, Divider, Typography } from "@mui/material";
 import { BookDataBodyInterface } from "../../../../../../../Model/ModelForModal";
 
 import ExpandableTypography from "../../../../../../../component/UIFragment/ExpandableTypography";
@@ -32,7 +32,13 @@ const BookDataBody:FC<BookDataBodyInterface> = (bookBodyData) =>
                 }
                 
                 <ExpandableTypography title={"Description"}>{descriptionData}</ExpandableTypography>
-                {recommendationReason && <ExpandableTypography title={"AI Recommendation"}>{recommendationReason}</ExpandableTypography>}
+
+                {recommendationReason && 
+                    <Fragment>
+                        <Divider/>
+                        <ExpandableTypography title={"AI Recommendation"}>{recommendationReason}</ExpandableTypography>
+                    </Fragment>
+                }
             </Box>
     );
 }
