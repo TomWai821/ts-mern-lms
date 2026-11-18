@@ -25,13 +25,6 @@ interface ExplanationResult
     reason: string
 }
 
-if (!process.env.DEEPSEEK_API_KEY)
-{
-    throw new Error("DEEPSEEK_API_KEY is missing");
-}
-
-const ai = new OpenAI({ apiKey: process.env.DEEPSEEK_API_KEY, baseURL: "https://api.deepseek.com" });
-
 export const getRecommendedBooksForUserService = async (userId: string) => 
 {
     const userObjectId = new Types.ObjectId(userId);
@@ -129,6 +122,14 @@ const rankAndFetchBooks = async (scoreMap: Map<string, number>, topBookIds: stri
 
 const generateExplanation = async (genreFrequencyMap: Map<string, number>, foundBook: AllBooksAggregationResult[]) => 
 {
+    const apiKey = process.env.DEEPSEEK_API_KEY;
+    
+    if (!apiKey)
+    {
+        return [];
+    }
+
+    const ai = new OpenAI({ apiKey, baseURL: "https://api.deepseek.com" });
     const prompt = promptBuilder(genreFrequencyMap, foundBook);
 
     const response = await ai.chat.completions.create(
