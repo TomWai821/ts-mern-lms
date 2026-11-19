@@ -11,13 +11,12 @@ This Information Technology Project (ITP) is a library management system enginee
 
 
 ## Architecture Highlights
-- React + TypeScript frontend with reusable hooks and role-aware UI rendering
-- Express.js backend following a layered architecture (Router → Middleware → Controller → Service → Model)
-- MongoDB Atlas persistence with Mongoose-based data access
-- AWS Lambda serverless deployment with Amazon ECR container images
-- GitHub Actions CI/CD pipeline with automated testing and immutable deployments
-- JWT authentication with frontend route guards and bcrypt password hashing
-
+- Layered architecture across frontend and backend to enforce separation of concerns
+- Decoupled service boundaries for improved maintainability and scalability
+- Cloud-native deployment using AWS Lambda, EC2, Docker and GitHub Actions
+- Real-time state synchronisation using WebSocket-driven update workflows
+- Security-first design with HttpOnly authentication and approval-based business workflows
+- Automated domain operations through scheduled background processing
 
 
 ## Live Demo
@@ -123,14 +122,18 @@ docker-compose -f compose.yaml up --build -d
 - **Security** 
     - JWT(JSON web token), Bcrypt
 
-- **Algorithm**
+- **Recommendation Engine**
     - TF-IDF Recommendation Service
+
+- **AI Integration**
+    - DeepSeek API
 
 
 
 ## Core Features
 - **Book Discovery & Recommendation**
     - Provides personalised book recommendations using a TF-IDF–based recommendation engine
+    - Generates natural-language recommendation explanations through DeepSeek integration
 
 - **External Metadata Integration**
     - Integrates Google Books metadata to enrich catalogue information and improve content discovery
@@ -153,7 +156,7 @@ Documentation covering the key business processes and service behaviours within 
     - Background task execution using setTimeout, setInterval and Promise.allSettled
     
 - [Recommendation Service](./doc/Documentation/businessLogic/recommendation-service.md)
-    - TF-IDF-based recommendation engine for similarity scoring and book discovery
+    - Featured and personalised book recommendations with content-based filtering
 
 - [External Metadata Integration](./doc/Documentation/businessLogic/external-metadata.md)
     - Google Books API integration for metadata enrichment and catalogue enhancement
@@ -169,10 +172,10 @@ For a detailed look at the system's engineering standards and design patterns, p
     - Development, backend and production architecture with key design decisions
 
 - [System Design](./doc/Documentation/technical/system-design.md)
-    - Authentication workflows, external integrations and feature-level sequence diagrams
+    - Authentication workflows, external integrations, caching workflows and feature-level sequence diagrams
 
 - [Database Design](./doc/Documentation/technical/database-design.md)
-    - Entity relationships and core MongoDB collection design
+    - Entity relationships, core MongoDB collection design, and DynamoDB caching with event-driven invalidation
 
 - [UI Layout](./doc/Documentation/technical/ui-design.md)
     - Role-based UI rendering and component organisation

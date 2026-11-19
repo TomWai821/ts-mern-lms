@@ -12,7 +12,7 @@ Figure 1 - ERD of Library Management Plafrotm
 - Figure 1 illustrates the relationships between the primary entities within the Library Management System
 
 
-### Book Collection
+#### Book Collection
 | Key Attribute | Type     | Description                                                              |
 | ------------- | ---------| ------------------------------------------------------------------------ |
 | image         | Object   | Stores book cover image details, including URL and filename              |
@@ -27,7 +27,7 @@ Figure 1 - ERD of Library Management Plafrotm
 
 
 
-### User Collection
+#### User Collection
 | Key Attribute | Type    | Description                                   |
 | ------------- | ------- | --------------------------------------------- |
 | Username      | String  | The unique display name chosen by the user    |
@@ -41,7 +41,7 @@ Figure 1 - ERD of Library Management Plafrotm
 
 
 
-### BookLoaned Collection
+#### BookLoaned Collection
 
 | Key Attribute | Type     | Description                                                                                          |
 | ------------- | -------- | ---------------------------------------------------------------------------------------------------- |
@@ -55,7 +55,50 @@ Figure 1 - ERD of Library Management Plafrotm
 | finesPaid	    | String   | Indicate whether the fine was paid, with predefined statuses, like Paid, Not Paid, or No Fine Needed |
 
 
-### Remarks
+#### Remarks
 - Every collection contains a MongoDB ObjectId (_id) as its primary identifier
 - Relationships between collections are established through referenced ObjectId fields rather than embedded documents
 - Supporting collections (Author, Genre, Publisher and Language) are designed to minimise data duplication and simplify maintenance
+
+
+
+### DynamoDB Caching
+
+#### Purpose
+DynamoDB is used as an application-level cache for dashboard metrics and book recommendation results<br>
+These datasets are computationally expensive to generate but updated infrequently<br>
+
+Caching reduces repeated database queries, lowers system load, and improves API response times<br>
+
+DynamoDB serves solely as a caching layer and is not the system of record. Cached entries can be regenerated from the primary database whenever they are invalidated
+
+
+#### Tables
+| Table         | Partition Key | Sort Key | Purpose                             |
+| ------------- | ------------- | -------- | ----------------------------------- |
+| DashboardData | dataType      | -        | Cache aggregated dashboard metrics  |
+| RecommendBook | dataType      | userId   | Cache recommendation results        |
+
+
+#### Cache Strategy
+- Cached entries are read frequently but updated infrequently
+- Cache invalidation follows an event-driven strategy rather than a TTL-based approach
+- Cache entries are invalidated when relevant business events occur
+- Invalidated entries are regenerated on demand during subsequent requests
+
+
+#### Key Pattern
+- RRecommendBook stores both global and user-specific recommendations within the same table to avoid maintaining separate data structures for shared and personalised recommendation results
+
+| dataType    | userId  |
+| ----------- | ------- |
+| newPublish  | global  |
+| mostPopular | global  |
+| forUser     | user123 |
+
+- The userId attribute acts as a namespace, where global represents shared recommendation data and actual user identifiers represent personalised recommendations
+
+#### Design Rationale
+- An event-driven invalidation model was chosen over TTL expiration because dashboard metrics and recommendation results change infrequently and are naturally tied to domain events
+
+- This approach reduces unnecessary cache refreshes while ensuring cached data remains consistent with business operations

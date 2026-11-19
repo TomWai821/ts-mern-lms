@@ -4,35 +4,49 @@
 <img src="../../Image/Diagrams/ArchitectureDiagram_CD.png" style="width:90%;"/><br>
 Figure 1 - Deployment Architecture Diagram<br>
 
-- The production stack leverages managed Cloud/SaaS solutions for high availability and performance:
-  - **Frontend**: Vercel
-  - **Backend**: AWS Lambda + ECR
-  - **Storage**: Amazon S3
-  - **Database**: MongoDB Atlas
-  - **Automation**: EventBridge Scheduler
+#### Production Infrastructure
+- The production environment leverages managed Cloud and SaaS services to minimise operational overhead while providing scalability, availability, and performance
 
+- **Frontend**: Vercel (Next.js hosting and edge delivery)
+- **Backend**: AWS Lambda deployed from Amazon ECR container images
+- **Primary Database**: MongoDB Atlas (System of Record)
+- **Cache Layer**: Amazon DynamoDB (Application-level caching)
+- **Object Storage**: Amazon S3
+- **External Services**
+  - Google Books API (Book metadata retrieval)
+  - DeepSeek API (AI-powered recommendation and analysis)
+- **Automation**: Amazon EventBridge Scheduler
+- **CI/CD**: GitHub Actions for automated build, testing, and deployment workflows
 
 
 ### Development Architecture
 <img src="../../Image/Diagrams/ArchitectureDiagram_Development.png" style="width:90%;"/><br>
 Figure 2 - Development Architecture Diagram<br>
 
-**Development Infrastructure**
-- **Environment Parity**
-  - Docker Compose is used to replicate the application stack in a local development environment
-  - This reduces "works on my machine" issues by ensuring consistent containerized services and configurations across development environments
 
-- **Network Isolation**
-  - Frontend, backend, and database services communicate through an isolated Docker network
-  - MongoDB is not directly exposed to external clients and can only be accessed through the backend service
+#### Development Infrastructure
+- **Local Environment Consistency**
+  - Docker Compose is used to replicate the application's production-like architecture in a local development environment
+  - Containerised services ensure consistent runtime dependencies and configurations across developer workstations
+  - This approach reduces environment-specific issues and improves development reproducibility
 
-- **Persistence & Configuration Management**
-  - Docker Volumes provide persistent database storage across container restarts
-  - Environment-specific configurations are managed through separate .env files, enabling secure and flexible deployment settings
+- **Service Isolation**
+  - Frontend, backend, and data services communicate through an isolated Docker network
+  - Data stores are not directly accessible from client-facing components and can only be accessed through backend APIs
+  - This mirrors the security boundaries used in the production environment
+
+- **Data Persistence**
+  - Persistent storage is provided through Docker Volumes to retain MongoDB and DynamoDB data across container restarts
+  - Local databases can be reused between development sessions without requiring reinitialisation
+
+- **External Service Integration**
+  - Google Books API is used as the primary external source for book metadata and search results
+  - DeepSeek API is integrated to support AI-driven features such as recommendation generation and content analysis
+  - External services are kept outside the local container network to reflect real-world deployment dependencies
 
 - **Continuous Integration**
-  - GitHub Actions is integrated as the CI/CD pipeline for automated build and testing processes
-  - Quality assurance checks are executed before code changes are integrated into the codebase
+  - GitHub Actions provides automated build and testing workflows
+  - Quality assurance checks are executed before changes are merged, helping maintain deployment readiness and code quality
 
           
 

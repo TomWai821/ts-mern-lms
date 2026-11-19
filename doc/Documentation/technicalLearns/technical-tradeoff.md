@@ -64,13 +64,13 @@
 
 ### Cloud Architecture
 - **Option A: AWS Lambda (Serverless)**
-    - Advantages
+    - **Advantages**
         - Automatic scaling
         - Lower operational overhead
         - Cost-effective for stateless and event-driven workloads
 
 - **Option B: EC2**
-    - Advantages
+    - **Advantages**
         - Full control over runtime and networking
         - Better support for long-lived connections
         - Suitable for continuously running services
@@ -79,3 +79,30 @@
     - Stateless API endpoints are deployed using Lambda
     - Real-time WebSocket services are hosted on EC2 due to their persistent connection requirements
     - This balances operational efficiency with real-time communication needs
+
+<hr>
+
+### Recommendation Strategy
+- **Option A: Collaborative Filtering**
+    - **Advantages**
+        - Identifies recommendations based on behavioural patterns across users
+        - Can surface books outside a user's established interests
+
+    - **Challenges**
+        - Requires a large volume of user interaction data
+        - More difficult to validate recommendation quality
+        - Higher implementation and testing complexity
+
+- **Option B: Content-Based Filtering**
+    - **Advantages**
+        - Uses existing book metadata and borrowing history
+        - Easier to explain recommendation results
+        - Simpler to validate through real borrowing scenarios
+
+    - **Challenges**
+        - Recommendations may be biased towards existing user interests
+
+    - **Design Decision**
+        - Chose Content-Based Filtering using TF-IDF vectorisation, Cosine Similarit and genre weighting
+        - The project has a relatively limited user interaction dataset
+        - Content-based recommendations provided a more predictable implementation path and allowed recommendation quality to be validated directly against borrowing history

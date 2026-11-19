@@ -15,12 +15,40 @@ Figure 2 - Google Books Integration Sequence Diagram
 
 - This sequence diagram illustrates the external book information retrieval workflow through the Google Books API
 - The backend acts as an integration layer that validates requests, consumes external APIs and transforms the response into a consistent format for frontend consumption
-    
 
 
-### Feature Workflow
+
+### Recommendation Workflow 
+<img src="../../Image/Diagrams/SequenceDiagramForBookRecommendation.png" style="width:90%;"/><br>
+Figure 3 - Book Recommendation Sequence Diagram
+
+- This sequence diagram illustrates the personalised book recommendation workflow
+- When a user requests book recommendations, the frontend sends an authenticated request to the backend
+- After the authentication token is validated, the recommendation service first attempts to retrieve recommendation data from DynamoDB
+
+- **If a cache hit occurs**
+    - The cached recommendation result is returned immediately, reducing response latency and avoiding unnecessary processing
+
+- **If a cache miss occurs**
+    - The service retrieves recommendation source data from MongoDB, including the user's profile and loan history
+    - The retrieved data is submitted to the DeepSeek API to generate personalised book recommendations
+    - The generated recommendation result is stored in DynamoDB before being returned to the frontend
+
+- This workflow implements the Cache-Aside Pattern:
+    - MongoDB acts as the system of record
+    - DynamoDB serves as the application-level cache
+    - DeepSeek provides recommendation generation capabilities
+
+- **Remarks**
+    - Cache invalidation follows an event-driven strategy rather than a TTL-based expiration model
+    - Recommendation caches are regenerated only when relevant business events occur
+    - This approach reduces unnecessary recomputation while maintaining data consistency and improving response performance
+
+
+
+### QR Code data Workflow
 <img src="../../Image/Diagrams/QRCodeModalSequenceDiagram.png" style="width:90%;"/><br>
-Figure 3 - QR Code Generation Sequence Diagram
+Figure 4 - QR Code Generation Sequence Diagram
 
 
 - This sequence diagram illustrates the QR code generation workflow for authenticated users

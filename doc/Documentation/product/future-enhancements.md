@@ -17,7 +17,7 @@
 
 - **References**
     - [GenericRepository.ts](../../../backend/src/Improvement/GenericRepository.ts)
-    - [AjaxUtils.ts](../../../frontend/src/improvement/AjaxUtils.ts)
+    - [RepositoryFactory.ts](../../../backend/src/improvement/RepositoryFactory.ts)
 
 <hr>
 

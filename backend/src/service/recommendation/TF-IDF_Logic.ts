@@ -16,12 +16,17 @@ const inverseDocumentFrequency = (term: string, docs: string[][]): number =>
 }
 
 // Cosine Similarity (Data Comparing)
-const cosineSimilarity = (vecA: number[], vecB: number[]): number =>
+const cosineSimilarity = (userVector: number[], bookVector: number[]): number =>
 {
-    const dot = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
-    const magA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
-    const magB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
-    return magA && magB ? dot / (magA * magB) : 0;
+    // Measure feature overlap between user preferences and candidate books
+    const dotProduct  = userVector.reduce((sum, a, i) => sum + a * bookVector[i], 0);
+
+    // Vector length used for cosine similarity normalisation
+    const userVectorMagnitude  = Math.sqrt(bookVector.reduce((sum, a) => sum + a * a, 0));
+    // Vector length used for cosine similarity normalisation
+    const candidateVectorMagnitude  = Math.sqrt(bookVector.reduce((sum, b) => sum + b * b, 0));
+    
+    return userVectorMagnitude && candidateVectorMagnitude ? dotProduct / (userVectorMagnitude * candidateVectorMagnitude) : 0;
 }
 
 export const calculateTFIDF = (loanCorpus: string[], allBooksCorpus: BookCorpusType, genreFrequencyMap: Map<string, number>, totalUserLoans: number ): ScoreType => 
