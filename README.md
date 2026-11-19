@@ -53,11 +53,16 @@ This Information Technology Project (ITP) is a library management system enginee
     - 13:55 User
     - 15:52 Guest
 
-- Key features demonstrated:
+- **Key features demonstrated**
     - Dashboard & Analytics
     - Book Recommendation Service
     - Book Management
     - User Loan History & Filtering
+
+- **Note**
+    - The demonstration video reflects an earlier version of the application
+    - Recent enhancements, including dashboard analytics improvements, DynamoDB-backed caching, and AI-assisted recommendation explanations, were introduced after the recording
+    - Refer to the documentation sections below for the latest implementation details
 
 
 ## Table of Contents

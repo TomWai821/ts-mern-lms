@@ -21,7 +21,7 @@ Image 1.3 - Navigation For Admin(Librarian)<br>
 
 
 <details>
-<summary>2. Main page (Book recommendation)</summary>
+<summary>2. Main page - Book recommendation</summary>
 <img src="../../Image/UILayout/MainPage-Guest.png" style="width:90%;"/><br>
 Image 2.1 - Main Page For User / Authenticated User (who does not have a loan book record)<br>
 
@@ -36,7 +36,7 @@ Image 2.2 - Main Page For Authenticated User<br>
 
 
 <details>
-<summary>3. Main Page (For librarian)</summary>
+<summary>3. Main Page - For librarian</summary>
 
 <img src="../../Image/UILayout/MainPage-Librarian.png" style="width:90%;"/><br>
 Image 3.1 - Main Page For Librarian (Admin)<br>
@@ -140,7 +140,7 @@ Image 7.4 - Book data modal (Google Book - For Authenticated User)<br>
 
 
 <details>
-<summary>8. Modal for CRUD operations (Librarian only)</summary>
+<summary>8. Modal for CRUD operations</summary>
 <img src="../../Image/UILayout/CreateBookModal.png" style="width:50%;"/><br>
 Image 8.1 - Book record Creation Modal <br>
 
