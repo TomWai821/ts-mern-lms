@@ -40,7 +40,7 @@ After graduation, I refactored the entire system to align with industry-standard
 <hr>
 
 ### Security as Part of Business Logic
-- **Challenge
+- **Challenge**
     - Certain operations require approval from multiple actors rather than a single authenticated user
 
 - **Evolution**

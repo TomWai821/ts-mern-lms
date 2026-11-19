@@ -17,7 +17,7 @@
 
 - **References**
     - [GenericRepository.ts](../../../backend/src/Improvement/GenericRepository.ts)
-    - [RepositoryFactory.ts](../../../backend/src/improvement/RepositoryFactory.ts)
+    - [RepositoryFactory.ts](../../../backend/src/Improvement/RepositoryFactory.ts)
 
 <hr>
 

@@ -22,7 +22,7 @@
 - **Source Code Reference**
     - [bookRecommendationService.ts](../../../backend/src/service/recommendation/bookRecommendationService.ts)
 
-
+<hr>
 
 ### Personal Recommendation
 - The Personal Recommendation feature generates personalised book suggestions based on a user's borrowing history and book metadata
