@@ -149,7 +149,7 @@ docker-compose -f compose.yaml up --build -d
 - **QR-assisted Borrowing Workflow**
     - Supports member identification during borrowing operations through QR-code-based workflows
 
-- **Role-aware Access Control**
+- **Role-based Authentication and Interfaces**
     - Provides authentication and role-specific interfaces for members and librarians
 
 
