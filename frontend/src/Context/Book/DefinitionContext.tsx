@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect } from "react";
+import { createContext, FC, useCallback, useContext, useEffect } from "react";
 import { ChildProps } from "../../Model/ContextAndProviderModel";
 
 import { DefinitionInterface } from "../../Model/ResultModel";
@@ -28,7 +28,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
     
     useWebSocket(dispatch, DefinitionwsEventToActionMap);
 
-    const initDefinitions = async () => 
+    const initDefinitions = useCallback(async () =>
     {
         const [genre, language] = await Promise.allSettled([fetchDefinitionData("Genre"), fetchDefinitionData("Language")]);
 
@@ -44,7 +44,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
         {
             dispatch({ type: "SET_LANGUAGE", payload: languageResult });
         }
-    }
+    }, [dispatch]);
 
     const refreshDefinitions = async (type: string) => 
     {
@@ -62,7 +62,7 @@ export const DefinitionProvider:FC<ChildProps> = ({children}) =>
     useEffect(() => 
     {
         initDefinitions();
-    },[])
+    }, [initDefinitions])
 
     return (
         <DefinitionContext.Provider value={{ definition, initDefinitions, refreshDefinitions, modifyDefinitions}}>

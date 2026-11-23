@@ -34,7 +34,7 @@ const ViewProfilePage = () =>
         {
             ChangePage('/');
         }
-    },[isLoggedIn])
+    },[isLoggedIn, isAuthLoading])
 
     return (
         <Box sx={PageItemToCenter}>

@@ -44,7 +44,7 @@ const UserPage = () =>
         }
 
         initUsers(isAdmin, isLoggedIn, isAuthLoading);
-    },[isAuthLoading, isAdmin, changeValue]);
+    },[isAuthLoading, isAdmin, isLoggedIn, changeValue, initUsers]);
     
     return(
         <Box sx={{ ...PageItemToCenter, flexDirection: 'column', padding: '0 50px'}}>

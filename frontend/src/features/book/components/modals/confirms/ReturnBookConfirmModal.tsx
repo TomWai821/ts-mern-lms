@@ -27,7 +27,7 @@ const useFinesStateHandler = (Data: LoanBookInterface) =>
     return {finesPaid, CalculateLateReturn, modifyFinesPaid}
 }
 
-const pageConfig = (data: ReturnBookInterface["data"], modalOpenPosition: ReturnBookInterface["modalOpenPosition"], CalculateLateReturn: number) =>
+const usePageConfig = (data: ReturnBookInterface["data"], modalOpenPosition: ReturnBookInterface["modalOpenPosition"], CalculateLateReturn: number) =>
 {
     const {isAdmin} = useAuthContext();
 
@@ -52,7 +52,7 @@ const ReturnBookConfirmModal:FC<ReturnBookInterface> = (returnBookModalData) =>
     const {modalOpenPosition, data} = returnBookModalData;
     
     const { finesPaid, CalculateLateReturn, modifyFinesPaid } = useFinesStateHandler(data);
-    const {setTitle, ReturnBookData} = pageConfig(data, modalOpenPosition, CalculateLateReturn);
+    const {setTitle, ReturnBookData} = usePageConfig(data, modalOpenPosition, CalculateLateReturn);
     const { ReturnBook } = useLoanBookAction();
 
     

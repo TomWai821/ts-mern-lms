@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { DefinitionType, fetchDefinitionDataWithFliter } from "../contents/definitionService";
 import { useAuthContext } from "../../Context/User/AuthContext";
 import { useDefinitionContext } from "../../Context/Book/DefinitionContext";
@@ -31,7 +31,7 @@ export const useDefinitionFilter = (tabValue: number) =>
     {
         setSearchData(defaultValue);
         refreshDefinitions(title[tabValue]);
-    },[tabValue])
+    },[tabValue, refreshDefinitions])
 
     return { searchData, onChange, SearchDefinition, resetFilter };
 }

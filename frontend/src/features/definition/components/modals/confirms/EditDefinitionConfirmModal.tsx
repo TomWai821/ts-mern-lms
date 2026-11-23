@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, useMemo } from "react";
 
 // Models
 import { DefinitionInterface } from "../../../../../Model/ResultModel";
@@ -24,7 +24,6 @@ const EditDefinitionConfirmModal:FC<EditModalInterface>  = (data) =>
     const { value, compareData, editData } = data;
     const { handleOpen } = useModal();
 
-    const [differences, setDifferences] = useState<string[]>([]);
     const type = value === 0 ? "Genre" : "Language";
 
     const { EditDefinition } = useDefinitionAction();
@@ -34,24 +33,21 @@ const EditDefinitionConfirmModal:FC<EditModalInterface>  = (data) =>
         handleOpen(<EditDefinitionModal value={value} editData={editData} compareData={compareData}/>);
     }
 
-    const compareDifference = (editData: DefinitionInterface, compareData: DefinitionInterface) => 
+    const differences = useMemo(() =>
     {
+        const editValues = editData as DefinitionInterface;
+        const compareValues = compareData as DefinitionInterface;
         const newDifferences = [];
-        for(const key in editData)
+        for(const key in editValues)
         {
-            if(editData[key as keyof DefinitionInterface] !== compareData[key as keyof DefinitionInterface])
+            if(editValues[key as keyof DefinitionInterface] !== compareValues[key as keyof DefinitionInterface])
             {
                 const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-                newDifferences.push(`${capitalizedKey}: ${compareData[key as keyof DefinitionInterface]} -> ${editData[key as keyof DefinitionInterface]}`);
+                newDifferences.push(`${capitalizedKey}: ${compareValues[key as keyof DefinitionInterface]} -> ${editValues[key as keyof DefinitionInterface]}`);
             }
         }
-        setDifferences(newDifferences);
-    }
-
-    useEffect(() => 
-    {
-        compareDifference(editData as DefinitionInterface, compareData as DefinitionInterface);
-    },[editData, compareData]);
+        return newDifferences;
+    }, [editData, compareData]);
     
     return(
         <ModalTemplate title={`Edit ${type} Confirmation`} width="400px"  cancelButtonName={"No"} cancelButtonEvent={returnEditDefinitionModal}>
@@ -63,7 +59,7 @@ const EditDefinitionConfirmModal:FC<EditModalInterface>  = (data) =>
                         (
                             <Typography key={index}>{difference}</Typography>
                         )):
-                   <Typography>- "No Change detected"</Typography>
+                   <Typography>- &quot;No Change detected&quot;</Typography>
                 }
 
                 <Typography sx={ModalRemarkSyntax}>Please ensure this information is correct</Typography>

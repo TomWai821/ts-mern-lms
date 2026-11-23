@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
-import { FC, ReactElement, useEffect, useState } from "react";
+import { FC, ReactElement, useMemo } from "react";
 
 // Context
 import { useModal } from "../../../../../Context/ModalContext";
 
 // Models
-import { DetailsInterfaceForSuspend, GetResultInterface, UserResultDataInterface } from "../../../../../Model/ResultModel";
+import { DetailsInterfaceForSuspend, UserResultDataInterface } from "../../../../../Model/ResultModel";
 import { UserDataInterface } from "../../../../../Model/UserTableModel";
 import { EditModalInterface } from "../../../../../Model/ModelForModal";
 
@@ -122,16 +122,14 @@ const CompareUserDifference = (differences: ReactElement[], editData: UserDataIn
 const EditUserConfirmModal:FC<EditModalInterface> = (editModalData) => 
 {
     const {value, editData, compareData} = editModalData;
-    const [differences, setDifferences] = useState<ReactElement[]>([]);
-
     const {handleOpen} = useModal();
     
     const type = value === 0 ? "User" : "Suspend User";
 
-    const compareDifference = (editData: UserDataInterface | DetailsInterfaceForSuspend, compareData: UserDataInterface | DetailsInterfaceForSuspend) => 
+    const differences = useMemo(() =>
     {
         let differences: ReactElement[] = [];
-       
+
         switch(value)
         {
             case 1:
@@ -142,18 +140,16 @@ const EditUserConfirmModal:FC<EditModalInterface> = (editModalData) =>
                 differences = CompareUserDifference(differences, editData as UserDataInterface, compareData as UserDataInterface);
                 break;
         }
-        
+
         if (differences.length === 0) 
         {
             differences.push(<Typography key={"nothingChange"}>- No Change detected</Typography>);
         }
-    
-        setDifferences(differences);
-    };
+        return differences;
+    }, [value, editData, compareData]);
 
     const returnEditUserModal = () =>
     {
-        setDifferences([]);
         switch(value)
         {
             case 0:
@@ -166,12 +162,6 @@ const EditUserConfirmModal:FC<EditModalInterface> = (editModalData) =>
         }
         
     }
-
-    useEffect(() => 
-    {
-        compareDifference(editData as UserDataInterface | DetailsInterfaceForSuspend, compareData as UserDataInterface | DetailsInterfaceForSuspend);
-    },
-    [editData, compareData]);
 
     return(
         <ModalTemplate title={`Edit ${type} Record Confirmation`} width="400px" cancelButtonName={"No"} cancelButtonEvent={returnEditUserModal}>

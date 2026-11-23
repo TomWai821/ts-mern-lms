@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import SearchOptionField from "../../../component/UIFragment/SearchOptionField";
 import { OptionFieldsInterface } from "../../../Model/TablePagesAndModalModel";
 
@@ -14,18 +14,18 @@ const SearchOptionConfig:FC<OptionFieldsInterface> = (searchOptionFieldData) =>
     {
         Book:
         [
-            <SearchOptionFieldForBook optionVisiable={optionVisiable} onChange={onChange} searchData={searchData}/>,
-            <SearchOptionFieldForBook optionVisiable={optionVisiable} onChange={onChange} SearchField={SearchLoanBookInputField} searchData={searchData}/>,
+            <SearchOptionFieldForBook key="all-books" optionVisiable={optionVisiable} onChange={onChange} searchData={searchData}/>,
+            <SearchOptionFieldForBook key="loaned-books" optionVisiable={optionVisiable} onChange={onChange} SearchField={SearchLoanBookInputField} searchData={searchData}/>,
         ],
         User:
         [
-            <SearchOptionField optionVisiable={optionVisiable} onChange={onChange} SearchField={AllUserSearchField} searchData={searchData} />,
-            <SearchOptionField optionVisiable={optionVisiable} onChange={onChange} SearchField={OtherUserSearchField} searchData={searchData} />
+            <SearchOptionField key="all-users" optionVisiable={optionVisiable} onChange={onChange} SearchField={AllUserSearchField} searchData={searchData} />,
+            <SearchOptionField key="other-users" optionVisiable={optionVisiable} onChange={onChange} SearchField={OtherUserSearchField} searchData={searchData} />
         ],
         Record:
         [
-            <></>,
-            <SearchOptionFieldForBook optionVisiable={optionVisiable} onChange={onChange} searchData={searchData}/>
+            <Fragment key="empty-record-search"/>,
+            <SearchOptionFieldForBook key="record-book-search" optionVisiable={optionVisiable} onChange={onChange} searchData={searchData}/>
         ]
     }
 

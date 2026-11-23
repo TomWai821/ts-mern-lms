@@ -1,4 +1,4 @@
-import { createContext, FC, useContext } from "react";
+import { createContext, FC, useCallback, useContext } from "react";
 
 import { ChildProps } from "../../Model/ContextAndProviderModel";
 
@@ -27,7 +27,7 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
     
     useWebSocket(dispatch, BookRecordwsEventToActionMap);
 
-    const initBooks = async (isAdmin: boolean) =>
+    const initBooks = useCallback(async (isAdmin: boolean) =>
     {
         const [ books, loanBooks ] = await Promise.allSettled([fetchAllBooks(), fetchAllLoanBook(isAdmin)]);
 
@@ -36,14 +36,14 @@ export const BookProvider:FC<ChildProps> = ({children}) =>
     
         if (booksResult && Array.isArray(booksResult)) 
         {
-            modifyBooks({ type: "SET_ALL_BOOK", payload: booksResult});
+            dispatch({ type: "SET_ALL_BOOK", payload: booksResult});
         }
 
         if (loanBooksResult && Array.isArray(loanBooksResult)) 
         {
-            modifyBooks({ type: "SET_LOAN_BOOK", payload: loanBooksResult });
+            dispatch({ type: "SET_LOAN_BOOK", payload: loanBooksResult });
         }
-    };
+    }, [dispatch]);
 
     const refreshBooks = async (type:string, isAdmin: boolean) =>
     {

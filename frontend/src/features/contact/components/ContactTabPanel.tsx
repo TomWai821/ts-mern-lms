@@ -16,8 +16,8 @@ const ContactTabPanel:FC<ContactTableInterface> = (TabData) =>
 
     const ContactTable = 
     [
-        <AuthorTable value={value} contactData={contactData} paginationValue={paginationValue}/>,
-        <PublisherTable value={value} contactData={contactData} paginationValue={paginationValue}/>
+        <AuthorTable key="authors" value={value} contactData={contactData} paginationValue={paginationValue}/>,
+        <PublisherTable key="publishers" value={value} contactData={contactData} paginationValue={paginationValue}/>
     ];
     
     return(

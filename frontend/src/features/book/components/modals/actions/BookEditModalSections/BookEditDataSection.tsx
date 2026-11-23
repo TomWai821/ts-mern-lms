@@ -32,10 +32,15 @@ export const useDataHandler = (editData: IEditBookData, compareData: IEditBookDa
     const onDataChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
         const {name, value} = event.target;
-        setBook({ ...book, [name]: value });
+        setBook(currentBook => ({ ...currentBook, [name]: value }));
     }
 
-    return {book, EditData, CompareData, CompareBook, onDataChange};
+    const onImageDataChange = (imageData: Partial<IEditBookData>) =>
+    {
+        setBook(currentBook => ({ ...currentBook, ...imageData }));
+    }
+
+    return {book, EditData, CompareData, CompareBook, onDataChange, onImageDataChange};
 }
 
 interface BookEditDataSectionProps

@@ -1,5 +1,5 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { ContactType, fetchContactData, fetchContactDataWithFliter } from "../contents/contactService";
+import { ChangeEvent, useCallback, useState } from "react";
+import { ContactType, fetchContactDataWithFliter } from "../contents/contactService";
 import { useAuthContext } from "../../Context/User/AuthContext";
 import { useContactContext } from "../../Context/Book/ContactContext";
 
@@ -10,7 +10,7 @@ export const useContactFilter = (tabValue: number) =>
 {
     const [searchContact, setSearchContact] = useState(defaultValue);
     const {isAdmin} = useAuthContext();
-    const {initContacts, refreshContacts, modifyContacts} = useContactContext();
+    const { refreshContacts, modifyContacts } = useContactContext();
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -31,7 +31,7 @@ export const useContactFilter = (tabValue: number) =>
     {
         refreshContacts(title[tabValue]);
         setSearchContact(defaultValue);
-    }, [tabValue])
+    }, [tabValue, refreshContacts])
 
     return { searchContact, setSearchContact, onChange, SearchContact, resetFilter };
 }

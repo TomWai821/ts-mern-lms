@@ -20,9 +20,9 @@ const DashboardTabPanel:FC<PropsInterface> = (props) =>
 
     const DashboardComponent = 
     [
-        <UserDashboard dashboardData={dashboardData.usersData}/>,
-        <BookDashboard dashboardData={dashboardData.booksData}/>,
-        <FinanceDashboard dashboardData={dashboardData.finesData}/>
+        <UserDashboard key="users" dashboardData={dashboardData.usersData}/>,
+        <BookDashboard key="books" dashboardData={dashboardData.booksData}/>,
+        <FinanceDashboard key="finance" dashboardData={dashboardData.finesData}/>
     ];
     
     return(

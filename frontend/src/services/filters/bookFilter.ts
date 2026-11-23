@@ -60,7 +60,7 @@ export const useBookFilter = (tabValue:number) =>
         }
         setSearchBook(defaultValue);
         refreshBooks(bookType[tabValue], isAdmin);
-    }, [tabValue, fetchBookWithFliterData, fetchLoanBookWithFliterData]);
+    }, [tabValue, isAdmin, refreshBooks]);
 
     return { searchBook, setSearchBook, onChange, SearchBook, resetFilter };
 }

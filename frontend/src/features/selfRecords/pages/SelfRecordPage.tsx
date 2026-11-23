@@ -43,7 +43,7 @@ const SelfRecordPage = () =>
         }
         
         initSelfRecords();
-    },[isLoggedIn])
+    },[isLoggedIn, isAuthLoading, initSelfRecords])
 
     return(
         <Box sx={{ ...PageItemToCenter, flexDirection: 'column', padding: '0 50px'}}>

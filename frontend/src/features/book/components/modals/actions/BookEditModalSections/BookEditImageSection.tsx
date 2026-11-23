@@ -1,38 +1,14 @@
-import { ChangeEvent, FC, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { BookDataInterfaceForEdit } from "../../../../../../Model/ResultModel";
 import { IEditBookData } from "../EditBookModal";
 import { Box, Avatar, Typography, Button } from "@mui/material";
 import { displayAsColumn, BookImageFormat, DeleteButton } from "../../../../../../Data/Style";
 
-export const useImageHandler = (book: IEditBookData, EditData: BookDataInterfaceForEdit, CompareData: BookDataInterfaceForEdit) => 
+export const useImageHandler = (book: IEditBookData, CompareData: BookDataInterfaceForEdit, onImageDataChange: (imageData: Partial<IEditBookData>) => void) =>
 {
     // For Iamge input
     const [imageFile, setImageFile] = useState<File | null>(book.image || null); 
     const [previewUrl, setPreviewUrl] = useState<string | null>(book.imageUrl || null);
-
-     const fetchImage = useCallback(async (imageURL: string) => 
-    {
-        try 
-        {
-            const response = await fetch(imageURL);
-    
-            if (!response.ok) 
-            {
-                throw new Error("Failed to fetch image");
-            }
-    
-            const blob = await response.blob(); 
-            const file = new File([blob], CompareData.filename as string, { type: blob.type });
-    
-            setImageFile(file);
-            const preview = URL.createObjectURL(blob);
-            setPreviewUrl(preview);
-        } 
-        catch (error) 
-        {
-            console.error("Error fetching image:", error);
-        }
-    },[CompareData.filename])
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => 
     {
@@ -41,11 +17,10 @@ export const useImageHandler = (book: IEditBookData, EditData: BookDataInterface
         if (file) 
         {
             setImageFile(file);
-            book.filename = file.name;
 
             const newFile = URL.createObjectURL(file);
             setPreviewUrl(newFile);
-            book.imageUrl = newFile;
+            onImageDataChange({filename: file.name, imageUrl: newFile, image: file});
         }
         target.value = ""; 
     };
@@ -56,17 +31,46 @@ export const useImageHandler = (book: IEditBookData, EditData: BookDataInterface
         {
             URL.revokeObjectURL(previewUrl); 
             setPreviewUrl(null);
-            book.imageUrl = "";
-
             setImageFile(null);
-            book.filename = "";
+            onImageDataChange({filename: "", imageUrl: "", image: undefined});
         }
     };
 
     useEffect(() => 
     {
-        fetchImage(CompareData.imageUrl);
-    }, [EditData.imageUrl, CompareData.imageUrl, CompareData.filename, fetchImage]);
+        let isCurrent = true;
+
+        fetch(CompareData.imageUrl)
+            .then((response) =>
+            {
+                if (!response.ok)
+                {
+                    throw new Error("Failed to fetch image");
+                }
+
+                return response.blob();
+            })
+            .then((blob) =>
+            {
+                if (!isCurrent)
+                {
+                    return;
+                }
+
+                const file = new File([blob], CompareData.filename as string, { type: blob.type });
+                setImageFile(file);
+                setPreviewUrl(URL.createObjectURL(blob));
+            })
+            .catch((error: unknown) =>
+            {
+                console.error("Error fetching image:", error);
+            });
+
+        return () =>
+        {
+            isCurrent = false;
+        };
+    }, [CompareData.imageUrl, CompareData.filename]);
 
     return { imageFile, previewUrl, handleFileChange, removeImage }
 }

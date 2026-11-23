@@ -38,8 +38,8 @@ const validationList = {bookname: "", author: "", genre: "", publisher: "", publ
 const EditBookModal:FC<EditModalInterface> = (editModalData) => 
 {
     const { value, editData, compareData } = editModalData;
-    const { book, EditData, CompareData, CompareBook, onDataChange } = useDataHandler(editData, compareData);
-    const { imageFile, previewUrl, handleFileChange, removeImage } = useImageHandler(book, EditData, CompareData);
+    const { book, EditData, CompareData, CompareBook, onDataChange, onImageDataChange } = useDataHandler(editData, compareData);
+    const { imageFile, previewUrl, handleFileChange, removeImage } = useImageHandler(book, CompareData, onImageDataChange);
    
     const { isSubmitted, errors, helperTexts, handleDataValidate } = useDataValidation<IEditBookData>(
         book, validationList, ignoreList,

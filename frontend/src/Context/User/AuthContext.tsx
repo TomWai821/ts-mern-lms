@@ -27,22 +27,25 @@ export const AuthProvider: FC<ChildProps> = ({ children }) =>
     const isLoggedIn = !!user;
     const isAdmin = isLoggedIn && user?.role === "Admin";
 
+    const requestUser = useCallback(async(): Promise<ViewProfileModel | null> =>
+    {
+        const response = await GetCurrentUserController("Self") as Response;
+
+        if(!response.ok)
+        {
+            return null;
+        }
+
+        const result = await response.json();
+        return result.data as ViewProfileModel;
+    },[]);
+
     const fetchUser = useCallback(async() =>
     {
         setIsAuthLoading(true);
-
         try
         {
-            const response = await GetCurrentUserController("Self") as Response;
-
-            if(!response.ok)
-            {
-                setUser(null);
-                return;
-            }
-
-            const result = await response.json();
-            setUser(result.data);
+            setUser(await requestUser());
         }
         catch(error)
         {
@@ -52,7 +55,7 @@ export const AuthProvider: FC<ChildProps> = ({ children }) =>
         {
             setIsAuthLoading(false);
         }
-    },[]);
+    }, [requestUser]);
 
     const handleLogout = async() =>
     {
@@ -71,8 +74,36 @@ export const AuthProvider: FC<ChildProps> = ({ children }) =>
 
     useEffect(() =>
     {
-        fetchUser();
-    },[fetchUser]);
+        let isCurrent = true;
+
+        requestUser()
+            .then((currentUser) =>
+            {
+                if (isCurrent)
+                {
+                    setUser(currentUser);
+                }
+            })
+            .catch(() =>
+            {
+                if (isCurrent)
+                {
+                    setUser(null);
+                }
+            })
+            .finally(() =>
+            {
+                if (isCurrent)
+                {
+                    setIsAuthLoading(false);
+                }
+            });
+
+        return () =>
+        {
+            isCurrent = false;
+        };
+    }, [requestUser]);
     
     return(
         <AuthContext.Provider value={{ user, setUser, isAuthLoading, isLoggedIn, isAdmin, fetchUser, handleLogout}}>

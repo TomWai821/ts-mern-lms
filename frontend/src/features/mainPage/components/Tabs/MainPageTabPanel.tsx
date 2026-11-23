@@ -18,8 +18,8 @@ const MainPageTabPanel:FC<PropsInterface> = (props) =>
 
     const MainPages = 
     [
-        <DashboardPage/>,
-        <BookRecommendationPage />
+        <DashboardPage key="dashboard"/>,
+        <BookRecommendationPage key="recommendations" />
     ];
 
     const TabSyntax = {padding: "20px 20px"};

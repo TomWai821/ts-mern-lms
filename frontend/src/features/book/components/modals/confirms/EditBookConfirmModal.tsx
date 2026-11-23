@@ -1,4 +1,4 @@
-import { FC, JSX, useCallback, useContext, useEffect, useState } from "react"
+import { FC, JSX, useContext, useMemo } from "react"
 import { Avatar, Box, Button, Typography } from "@mui/material";
 
 // Template
@@ -28,26 +28,25 @@ import { useBookAction } from "../../../../../hooks/actionhook/useBookAction";
 
 const useDataComparingHandler = (CompareData: BookDataInterfaceForEdit, EditData: BookDataInterfaceForEdit) => 
 {
-    const [differences, setDifferences] = useState<JSX.Element[]>([]);
     const sameImage = (EditData.imageUrl === CompareData.imageUrl);
 
-    const generateChangeTypography = useCallback((editData:BookDataInterfaceForEdit, compareData:BookDataInterfaceForEdit) => 
+    const differences = useMemo(() =>
     {
         let differences: JSX.Element[] = [];
         const ignoreList = ["imageUrl", "filename", "description"]
     
-        for (const key in compareData) 
+        for (const key in CompareData)
         {
             if(ignoreList.includes(key))
             {
                 continue;
             }
 
-            if (editData[key as keyof BookDataInterfaceForEdit] !== compareData[key as keyof BookDataInterfaceForEdit]) 
+            if (EditData[key as keyof BookDataInterfaceForEdit] !== CompareData[key as keyof BookDataInterfaceForEdit])
             {
                 differences.push(
                     <Typography key={key}>
-                        {`- ${key}: ${compareData[key as keyof BookDataInterfaceForEdit]} -> ${editData[key as keyof BookDataInterfaceForEdit]}`}
+                        {`- ${key}: ${CompareData[key as keyof BookDataInterfaceForEdit]} -> ${EditData[key as keyof BookDataInterfaceForEdit]}`}
                     </Typography>
                 );
             }
@@ -55,7 +54,7 @@ const useDataComparingHandler = (CompareData: BookDataInterfaceForEdit, EditData
 
         if(CompareData.description.trim() !== EditData.description.trim())
         {
-            differences.push(<ExpandableTypography title={"Description"}>{`${CompareData.description} -> ${EditData.description}`}</ExpandableTypography>);
+            differences.push(<ExpandableTypography key="description" title={"Description"}>{`${CompareData.description} -> ${EditData.description}`}</ExpandableTypography>);
         }
 
         if (differences.length === 0 && sameImage && CompareData.description.trim() === EditData.description.trim()) 
@@ -63,16 +62,10 @@ const useDataComparingHandler = (CompareData: BookDataInterfaceForEdit, EditData
             differences.push(<Typography key={"noChange"}>- No Change detected</Typography>);
         }
     
-        setDifferences(differences);
-    },[CompareData.description, EditData.description, sameImage])
+        return differences;
+    }, [CompareData, EditData, sameImage]);
 
-    useEffect(() => 
-    {
-        generateChangeTypography(EditData, CompareData);
-    },
-    [EditData, CompareData, generateChangeTypography]);
-
-    return {sameImage, differences, setDifferences};
+    return {sameImage, differences};
 }
 
 const useEditDataHandler = (CompareData: BookDataInterfaceForEdit, EditData: BookDataInterfaceForEdit) => 
@@ -104,13 +97,12 @@ const EditBookConfirmModal:FC<EditModalInterface> = (editModalData) =>
     const CompareData = compareData as BookDataInterfaceForEdit;
     const EditData = editData as BookDataInterfaceForEdit;
 
-    const {sameImage, differences, setDifferences} = useDataComparingHandler(CompareData, EditData);
+    const {sameImage, differences} = useDataComparingHandler(CompareData, EditData);
     const { updateData } = useEditDataHandler(CompareData, EditData);
     const { EditBook } = useBookAction();
        
     const returnEditBookModal = () => 
     {
-        setDifferences([]);
         handleOpen(<EditBookModal value={value} editData={EditData} compareData={CompareData} />);
     }
     

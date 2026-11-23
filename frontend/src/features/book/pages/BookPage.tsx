@@ -40,7 +40,7 @@ const BookPage = () =>
         }
 
         initBooks(isAdmin);
-    },[isAuthLoading, isAdmin, changeValue])
+    },[isAuthLoading, isAdmin, changeValue, initBooks])
      
     return( 
         <Box sx={{ ...PageItemToCenter, flexDirection: 'column', padding: '0 50px'}}>

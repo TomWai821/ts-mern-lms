@@ -15,8 +15,8 @@ const UserTabPanel:FC<UserDataTableInterface> = (userTableData) =>
 
     const UserRecordTables = 
     [
-        <AllUserTable userData={userData} value={value} paginationValue={paginationValue} changeValue={changeValue} setSearchUserData={setSearchUserData} searchUserData={searchUserData}/>, 
-        <SuspendedUserTable userData={userData} value={value} paginationValue={paginationValue}/>
+        <AllUserTable key="all-users" userData={userData} value={value} paginationValue={paginationValue} changeValue={changeValue} setSearchUserData={setSearchUserData} searchUserData={searchUserData}/>,
+        <SuspendedUserTable key="suspended-users" userData={userData} value={value} paginationValue={paginationValue}/>
     ];
 
     return(

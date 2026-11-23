@@ -30,13 +30,13 @@ export const useUserFilter = (tabValue:number) =>
         const actionType = tabValue === 0 ? "SET_SUSPEND_USER": "SET_SUSPEND_USER";
         modifyUsers({type: actionType, payload: result});
     }
-    ,[tabValue, TableName, searchUserData])
+    ,[tabValue, searchUserData, modifyUsers])
 
     const resetFilter = useCallback(() => 
     {
         setSearchUserData(defaultValue);
         refreshUsers(TableName[tabValue], isAdmin, isLoggedIn, isAuthLoading);
-    }, [tabValue, TableName]);
+    }, [tabValue, isAdmin, isAuthLoading, isLoggedIn, refreshUsers]);
 
     return { searchUserData, setSearchUserData, onChange, SearchUser, resetFilter };
 }

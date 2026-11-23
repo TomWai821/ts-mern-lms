@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect } from "react";
+import { createContext, FC, useCallback, useContext, useEffect } from "react";
 
 import { ChildProps } from "../../Model/ContextAndProviderModel";
 import { ContactInterface } from "../../Model/ResultModel";
@@ -27,7 +27,7 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
 
     useWebSocket(dispatch, ContactwsEventToActionMap);
 
-    const initContacts = async () => 
+    const initContacts = useCallback(async () =>
     {
         const [author, publisher] = await Promise.allSettled([fetchContactData("Author"), fetchContactData("Publisher")]);
 
@@ -43,7 +43,7 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
         {
             dispatch({ type: "SET_PUBLISHER", payload: publisherResult });
         }
-    }
+    }, [dispatch]);
 
     const refreshContacts = async (type:string) => 
     {
@@ -61,7 +61,7 @@ export const ContactProvider:FC<ChildProps> = ({children}) =>
     useEffect(() => 
     {
         initContacts();
-    },[])
+    }, [initContacts])
 
     return (
         <ContactContext.Provider value={{ contact, initContacts, refreshContacts, modifyContacts}}>

@@ -61,7 +61,7 @@ export const useSelfRecordFilter = (tabValue:number) =>
         }
 
         setSearchData(defaultValue);
-    }, [tabValue, fetchSelfLoanBookWithFilter, fetchFavouriteBookWithFilter])
+    }, [tabValue, refreshSelfRecords])
 
     useEffect(() =>
     {
@@ -71,7 +71,7 @@ export const useSelfRecordFilter = (tabValue:number) =>
         {
             initSelfRecords();
         }
-    },[isAuthLoading, isLoggedIn])
+    },[isAuthLoading, isLoggedIn, initSelfRecords])
 
     return { searchData, onChange, searchSelfRecord, resetFilter };
 }

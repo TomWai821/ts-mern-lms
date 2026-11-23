@@ -1,5 +1,5 @@
 "use client";
-import { FC, useCallback, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 import { Avatar, Box, Tab, Tabs } from "@mui/material";
 
 import { DisplayDataModalBody } from "../../../../../../Model/ModelForModal"
@@ -66,20 +66,36 @@ const useExternalDataHandler = (bookname:string, author:string) =>
 
     const [loading, setLoading] = useState(true);
 
-    const getBookDataFromExternal = useCallback(async () => 
+    useEffect(() =>
     {
-        if(isLoggedIn) 
+        if (!isLoggedIn)
         {
-            const result = await getExternalData(bookname, author);
-            setExternalBookData(result?.foundExternalBook as ExternalBookDataInterface);
-            setLoading(false);
+            return;
         }
-    }, [isLoggedIn, getExternalData, bookname, author]);
 
-    useEffect(() => 
-    {
-        getBookDataFromExternal()
-    },[getBookDataFromExternal])
+        let isCurrent = true;
+
+        getExternalData(bookname, author)
+            .then((result) =>
+            {
+                if (!isCurrent)
+                {
+                    return;
+                }
+
+                setExternalBookData(result?.foundExternalBook as ExternalBookDataInterface);
+                setLoading(false);
+            })
+            .catch((error: unknown) =>
+            {
+                console.error(error);
+            });
+
+        return () =>
+        {
+            isCurrent = false;
+        };
+    }, [isLoggedIn, bookname, author]);
 
     return {externalBookData, loading, RatingAsNumber};
 }

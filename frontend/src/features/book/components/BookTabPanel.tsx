@@ -15,8 +15,8 @@ const BookTabPanel:FC<BookRecordTableInterface> = (TabData) =>
 
     const BookRecordTable = 
     [
-        <AllBookTable bookData={bookData} value={value} paginationValue={paginationValue} changeValue={changeValue} setSearchBook={setSearchBook} searchBook={searchBook}/>,
-        <LoanBookTable bookData={bookData} value={value} paginationValue={paginationValue}/>
+        <AllBookTable key="all-books" bookData={bookData} value={value} paginationValue={paginationValue} changeValue={changeValue} setSearchBook={setSearchBook} searchBook={searchBook}/>,
+        <LoanBookTable key="loaned-books" bookData={bookData} value={value} paginationValue={paginationValue}/>
     ];
     
     return(

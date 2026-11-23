@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react"
+import { FC, useMemo } from "react"
 import ModalTemplate from "../../../../../component/Templates/ModalTemplate"
 import { EditModalInterface } from "../../../../../Model/ModelForModal"
 import EditContactModal from "../actions/EditContactModal";
@@ -16,7 +16,6 @@ const EditContactConfirmModal:FC<EditModalInterface> = (data) =>
     const { EditContact } = useContactAction();
     const { handleOpen } = useModal();
 
-    const [differences, setDifferences] = useState<string[]>([]);
     const type = value === 0 ? "Author" : "Publisher";
 
     const returnEditDefinitionModal = () => 
@@ -24,8 +23,10 @@ const EditContactConfirmModal:FC<EditModalInterface> = (data) =>
         handleOpen(<EditContactModal value={value} editData={editData} compareData={compareData}/>);
     }
 
-    const compareDifference = useCallback((editData: ContactInterface, compareData: ContactInterface) => 
+    const differences = useMemo(() =>
     {
+        const editValues = editData as ContactInterface;
+        const compareValues = compareData as ContactInterface;
         let ignoreList: string | string[] = [];
 
         switch(value)
@@ -40,35 +41,30 @@ const EditContactConfirmModal:FC<EditModalInterface> = (data) =>
         }
 
         const newDifferences = [];
-        for(const key in editData)
+        for(const key in editValues)
         {
             if(ignoreList.includes(key))
             {
                 continue;
             }
 
-            if(editData[key as keyof ContactInterface] !== compareData[key as keyof ContactInterface])
+            if(editValues[key as keyof ContactInterface] !== compareValues[key as keyof ContactInterface])
             {
                 const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
 
-                if(editData[key as keyof ContactInterface] !== "")
+                if(editValues[key as keyof ContactInterface] !== "")
                 {
-                    newDifferences.push(`${capitalizedKey}: ${compareData[key as keyof ContactInterface]} -> ${editData[key as keyof ContactInterface]}`);
+                    newDifferences.push(`${capitalizedKey}: ${compareValues[key as keyof ContactInterface]} -> ${editValues[key as keyof ContactInterface]}`);
                 }
                 else
                 {
-                    newDifferences.push(`${capitalizedKey}: ${compareData[key as keyof ContactInterface]} -> N/A`);
+                    newDifferences.push(`${capitalizedKey}: ${compareValues[key as keyof ContactInterface]} -> N/A`);
                 }
 
             }
         }
-        setDifferences(newDifferences);
-    },[value])
-
-    useEffect(() => 
-    {
-        compareDifference(editData as ContactInterface, compareData as ContactInterface);
-    },[editData, compareData, compareDifference]);
+        return newDifferences;
+    }, [value, editData, compareData]);
 
     return(
         <ModalTemplate title={`Edit ${type} Record`} width="400px" cancelButtonName={"Exit"} cancelButtonEvent={returnEditDefinitionModal}>
@@ -81,7 +77,7 @@ const EditContactConfirmModal:FC<EditModalInterface> = (data) =>
                         (
                             <Typography key={index}>{difference}</Typography>
                         )):
-                   <Typography>- "No Change detected"</Typography>
+                   <Typography>- &quot;No Change detected&quot;</Typography>
                 }
 
                 <Typography sx={ModalRemarkSyntax}>Please ensure this information is correct</Typography>

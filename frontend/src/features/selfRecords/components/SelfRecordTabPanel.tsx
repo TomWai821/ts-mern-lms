@@ -16,8 +16,8 @@ const SelfRecordTabPanel:FC<BookRecordTableInterface> = (TabData) =>
     
     const SelfRecordTables = 
     [
-        <SelfLoanBookTable value={value} bookData={bookData} paginationValue={paginationValue}/>, 
-        <FavouriteBookTable value={value} bookData={bookData} paginationValue={paginationValue}/>
+        <SelfLoanBookTable key="loans" value={value} bookData={bookData} paginationValue={paginationValue}/>,
+        <FavouriteBookTable key="favourites" value={value} bookData={bookData} paginationValue={paginationValue}/>
     ];
 
     return(
