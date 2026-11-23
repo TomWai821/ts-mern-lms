@@ -59,7 +59,7 @@ const EditDefinitionConfirmModal:FC<EditModalInterface>  = (data) =>
                         (
                             <Typography key={index}>{difference}</Typography>
                         )):
-                   <Typography>- &quot;No Change detected&quot;</Typography>
+                   <Typography>- No Change detected</Typography>
                 }
 
                 <Typography sx={ModalRemarkSyntax}>Please ensure this information is correct</Typography>
