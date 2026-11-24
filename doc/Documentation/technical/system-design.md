@@ -18,31 +18,27 @@ Figure 2 - Google Books Integration Sequence Diagram
 
 
 
-### Recommendation Workflow 
+### Personlised Book Recommendation Workflow 
 <img src="../../Image/Diagrams/SequenceDiagramForBookRecommendation.png" style="width:90%;"/><br>
 Figure 3 - Book Recommendation Sequence Diagram
 
 - This sequence diagram illustrates the personalised book recommendation workflow
 - When a user requests book recommendations, the frontend sends an authenticated request to the backend
-- After the authentication token is validated, the recommendation service first attempts to retrieve recommendation data from DynamoDB
+- After the authentication token is validated, the recommendation service first attempts to retrieve cached recommendation results from DynamoDB
 
 - **If a cache hit occurs**
-    - The cached recommendation result is returned immediately, reducing response latency and avoiding unnecessary processing
+    - The cached recommendation package is returned immediately
+    - This avoids unnecessary recommendation computation and AI inference, improving response performance and reducing operational cost
 
 - **If a cache miss occurs**
-    - The service retrieves recommendation source data from MongoDB, including the user's profile and loan history
-    - The retrieved data is submitted to the DeepSeek API to generate personalised book recommendations
-    - The generated recommendation result is stored in DynamoDB before being returned to the frontend
+    - The service retrieves the user's 10 most recent borrowing records and candidate book metadata from MongoDB.
+    - The service derives a genre-frequency profile from the borrowed books.
+    - A custom TF-IDF recommendation engine ranks candidate books using content similarity and genre-weighted scoring
+    - DeepSeek generates a personalised natural-language explanation for each recommended book
+      (If DeepSeek is unavailable, a generic default explanation is used instead)<br>
+    - DeepSeek generates a natural-language explanation for each recommended book
+    - The recommendation package, including the recommended books and their explanations, is stored in DynamoDB before being returned to the frontend
 
-- This workflow implements the Cache-Aside Pattern:
-    - MongoDB acts as the system of record
-    - DynamoDB serves as the application-level cache
-    - DeepSeek provides recommendation generation capabilities
-
-- **Remarks**
-    - Cache invalidation follows an event-driven strategy rather than a TTL-based expiration model
-    - Recommendation caches are regenerated only when relevant business events occur
-    - This approach reduces unnecessary recomputation while maintaining data consistency and improving response performance
 
 
 

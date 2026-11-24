@@ -1,5 +1,13 @@
 type ScoreType = { id: string; score: number }[];
-type BookCorpusType = { id: string; metadata: string }[];
+
+export interface BookCorpusEntry 
+{
+    id: string;
+    metadata: string;
+    genre: string;
+}
+
+type BookCorpusType = BookCorpusEntry[];
 
 // Calculate TF (Term Frequency)
 const termFrequency = (term: string, doc: string[]): number =>
@@ -47,8 +55,7 @@ export const calculateTFIDF = (loanCorpus: string[], allBooksCorpus: BookCorpusT
         const docVector = vocab.map(term => termFrequency(term, doc) * inverseDocumentFrequency(term, docs));
         const tfidfScore = cosineSimilarity(userVector, docVector);
 
-        const currentBookGenre = doc[1];
-        const genreCount = genreFrequencyMap.get(currentBookGenre) || 0;
+        const genreCount = genreFrequencyMap.get(book.genre) || 0;
         
         const genreWeight = genreCount / totalUserLoans;
 

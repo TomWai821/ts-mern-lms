@@ -9,10 +9,6 @@
 - The current data model prioritises rapid prototyping over query efficiency, resulting in additional cross-collection lookups for some workflows
 - Certain query implementations rely on aggregation pipelines where simpler alternatives could improve maintainability
 
-### Security
-- Authentication currently uses client-accessible token storage for demonstration simplicity
-- Production deployments should migrate to HttpOnly cookie-based authentication
-
 ### Testing
 - Integration and end-to-end test coverage remains limited due to project scope
 

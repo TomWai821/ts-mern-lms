@@ -13,9 +13,9 @@ This Information Technology Project (ITP) is a library management system enginee
 ## Architecture Highlights
 - Layered architecture across frontend and backend to enforce separation of concerns
 - Decoupled service boundaries for improved maintainability and scalability
-- Cloud-native deployment using AWS Lambda, EC2, Docker and GitHub Actions
+- Cloud-native deployment using AWS Lambda, Docker and GitHub Actions
 - Real-time state synchronisation using WebSocket-driven update workflows
-- Security-first design with HttpOnly authentication and approval-based business workflows
+- HttpOnly-cookie authentication and approval-based workflows
 - Automated domain operations through scheduled background processing
 
 
@@ -138,10 +138,11 @@ docker-compose -f compose.yaml up --build -d
 ## Core Features
 - **Book Discovery & Recommendation**
     - Provides personalised book recommendations using a TF-IDF–based recommendation engine
-    - Generates natural-language recommendation explanations through DeepSeek integration
+    - Can generate natural-language recommendation explanations with DeepSeek when available
 
 - **External Metadata Integration**
-    - Integrates Google Books metadata to enrich catalogue information and improve content discovery
+    - Displays supplementary Google Books metadata in book details<br>
+      (Such as ratings, categories, pricing, and ISBNs, in the book details view)
 
 - **Loan & Return Management**
     - Tracks borrowing activities, due dates, and return status throughout the loan lifecycle
@@ -161,10 +162,10 @@ Documentation covering the key business processes and service behaviours within 
     - Background task execution using setTimeout, setInterval and Promise.allSettled
     
 - [Recommendation Service](./doc/Documentation/businessLogic/recommendation-service.md)
-    - Featured and personalised book recommendations with content-based filtering
+    - Featured recommendations, plus personalised content-based recommendations using TF-IDF and the user's recent borrowing history
 
 - [External Metadata Integration](./doc/Documentation/businessLogic/external-metadata.md)
-    - Google Books API integration for metadata enrichment and catalogue enhancement
+    - Retrieves and displays supplementary Google Books information
 
 - [QR Code Handling](./doc/Documentation/businessLogic/qr-code-handling.md)
     - QR-based member identification workflow for borrowing operations

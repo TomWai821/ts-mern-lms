@@ -1,7 +1,7 @@
 import { GetBook, AllBooksAggregationResult } from "../../schema/book/book";
 import { GetBookLoaned, BookLoanedAggregationResult } from "../../schema/book/bookLoaned";
 import { Types } from "mongoose";
-import { calculateTFIDF } from "./TF-IDF_Logic";
+import { BookCorpusEntry, calculateTFIDF } from "./TF-IDF_Logic";
 import OpenAI from "openai";
 
 interface AllBooksCorpus
@@ -76,13 +76,17 @@ const buildUserProfile = (bookLoanedRecord: BookLoanedAggregationResult[]) =>
     return {loanedBooksCorpus, genreFrequencyMap};
 }
 
-const buildCandidateCorpus = async () => 
+const buildCandidateCorpus = async (): Promise<BookCorpusEntry[]> => 
 {
     const allBooks = await GetBook();
-    return allBooks.map(mapBookToMetadata).map(book => ({ id: book.id, metadata: buildBookCorpus(book)}));
-}
 
-const generateRecommendationCandidates = (loanedBooksCorpus: BookMetadata[], genreFrequencyMap: Map<string, number>, allBooksCorpus: AllBooksCorpus[]) => 
+    return allBooks.map(mapBookToMetadata).map(book => 
+    (
+        { id: book.id, metadata: buildBookCorpus(book), genre: book.genre}
+    ));
+};
+
+const generateRecommendationCandidates = (loanedBooksCorpus: BookMetadata[], genreFrequencyMap: Map<string, number>, allBooksCorpus: BookCorpusEntry[]) => 
 {
     const TF_IDF_Scores = calculateTFIDF(loanedBooksCorpus.map(buildBookCorpus), allBooksCorpus, genreFrequencyMap, loanedBooksCorpus.length);
     const scoresWithJitter = [...TF_IDF_Scores].sort((a, b)=>

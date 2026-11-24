@@ -16,7 +16,8 @@
 
 ### Loan Process
 - Members present their QR code during the borrowing process
-- Librarians input the QR data into the loan form
+- Librarians manually enter the QR payload into the loan form
+  (No in-app camera scanning is provided)<br>
 - The system validates the QR payload and extracts the member identifier for loan processing
 
 ### Design Considerations
