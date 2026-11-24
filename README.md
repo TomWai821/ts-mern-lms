@@ -141,7 +141,7 @@ docker-compose -f compose.yaml up --build -d
     - Can generate natural-language recommendation explanations with DeepSeek when available
 
 - **External Metadata Integration**
-    - Displays supplementary Google Books metadata in book details<br>
+    - Displays supplementary Google Books information<br>
       (Such as ratings, categories, pricing, and ISBNs, in the book details view)
 
 - **Loan & Return Management**
