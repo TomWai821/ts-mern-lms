@@ -65,6 +65,17 @@ This Information Technology Project (ITP) is a library management system enginee
     - Refer to the documentation sections below for the latest implementation details
 
 
+## Screenshot
+<img src="./doc/Image/UILayout/Dashboard_Book.png" style="width:90%;"/><br>
+Image 1.1 - Library Analytics Dashboard<br>
+
+<img src="./doc/Image/UILayout/MainPage-AuthenticateUser.png" style="width:90%;"/><br>
+Image 1.2 - Book Recommendation Homepage<br>
+
+<img src="./doc/Image/UILayout/BookInfo_PersonalRecommendation-AuthenicateUser.png" style="width:40%;"/><br>
+Image 1.3 - Book Information Modal with AI Recommendation Insight<br>
+
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
